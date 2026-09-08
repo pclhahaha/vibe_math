@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:27
+生成时间：2026-09-09T00:29
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 83 |
-| 微缺(13-15) | 32 |
+| 完整(16) | 87 |
+| 微缺(13-15) | 28 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -24,9 +24,8 @@
 | millennium-problems | 11/16 | — |
 | group-action | 12/16 | — |
 | lorentz-transform | 12/16 | 关键论文 |
-| brownian-motion | 13/16 | 关键论文 |
+| brownian-motion | 14/16 | — |
 | entropy | 14/16 | — |
-| functional-analysis | 14/16 | 关键论文 |
 | godel | 14/16 | — |
 | poincare-conjecture | 14/16 | — |
 | algebraic-K-theory | 15/16 | 关键论文 |
@@ -36,6 +35,7 @@
 | electromagnetism | 15/16 | — |
 | fiber-bundle | 15/16 | 关键论文 |
 | fractal | 15/16 | — |
+| functional-analysis | 15/16 | — |
 | fundamental-group | 15/16 | — |
 | gravitational-lens | 15/16 | 关键论文 |
 | higher-category-theory | 15/16 | 关键论文 |
@@ -47,13 +47,9 @@
 | operator-algebras | 15/16 | 关键论文 |
 | optimal-transport | 15/16 | 关键论文 |
 | qubit-gates | 15/16 | — |
-| real-analysis | 15/16 | 关键论文 |
 | riemann-integral | 15/16 | 关键论文 |
 | soul-conjecture | 15/16 | — |
-| spectral-theorem | 15/16 | 关键论文 |
 | svd | 15/16 | 关键论文 |
-| turing-machine | 15/16 | 关键论文 |
-| uncertainty | 15/16 | 关键论文 |
 | universal-algebra | 15/16 | 关键论文 |
 | variational-calculus | 15/16 | 关键论文 |
 | additive-combinatorics | 16/16 | — |
@@ -124,6 +120,7 @@
 | probability | 16/16 | — |
 | proof-theory | 16/16 | — |
 | random-matrix | 16/16 | — |
+| real-analysis | 16/16 | — |
 | representation-theory | 16/16 | — |
 | riemann-surface | 16/16 | — |
 | schemes | 16/16 | — |
@@ -131,11 +128,14 @@
 | sieve | 16/16 | — |
 | soliton | 16/16 | — |
 | spectral-sequences | 16/16 | — |
+| spectral-theorem | 16/16 | — |
 | standard-model | 16/16 | — |
 | surface-topology | 16/16 | — |
 | symplectic-geometry | 16/16 | — |
 | thermodynamics | 16/16 | — |
+| turing-machine | 16/16 | — |
 | twin-prime | 16/16 | — |
+| uncertainty | 16/16 | — |
 | y combinator | 16/16 | — |
 | yang-mills-mass-gap | 16/16 | — |
 | zeta | 16/16 | — |
