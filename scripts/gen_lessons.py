@@ -68,6 +68,7 @@ PAGE = '''<!DOCTYPE html>
 </div>
 <button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
 <script type="module" src="/src/sketches/{sid}.js"></script>
+<script type="module" src="/src/shared/base-patch.js"></script>
 <script type="module" src="/src/shared/lesson-init.js"></script>
 </body>
 </html>'''

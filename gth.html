@@ -7,16 +7,21 @@
   <meta property="og:title" content="图论与网络 — Vibe Math" />
   <meta property="og:description" content="点击边走一笔画：七桥谜题、欧拉回路与四色问题" />
   <title>图论与网络 — Vibe Math</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="stylesheet" href="/src/shared/lesson.css" />
-  <link rel="stylesheet" href="/src/shared/mobile.css" />
+  <link rel="icon" type="image/svg+xml" href="/vibe_math/favicon.svg" />
+  <script type="module" crossorigin src="/vibe_math/assets/lesson_graph_theory-D4qrZ71M.js"></script>
+  <link rel="modulepreload" crossorigin href="/vibe_math/assets/vendor-p5-DrGfXnd4.js">
+  <link rel="modulepreload" crossorigin href="/vibe_math/assets/modulepreload-polyfill-P2Xu9kJm.js">
+  <link rel="modulepreload" crossorigin href="/vibe_math/assets/vendor-katex-JqRgQYhw.js">
+  <link rel="modulepreload" crossorigin href="/vibe_math/assets/lesson-init-BMTRlobk.js">
+  <link rel="stylesheet" crossorigin href="/vibe_math/assets/vendor-katex-ChN8vJ7_.css">
+  <link rel="stylesheet" crossorigin href="/vibe_math/assets/lesson-init-BHuuD7sj.css">
 </head>
 <body>
 <div class="progress-bar" id="progress-bar"></div>
 <div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
 <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
 <nav class="sidebar open">
-  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+  <div class="sidebar-header"><a href="/vibe_math/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/vibe_math/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/vibe_math/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/vibe_math/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/vibe_math/" style="color:#58a6ff">首页</a></p></div>
 </nav>
 <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
 
@@ -30,8 +35,8 @@
     <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
     
 <div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
-  <a href="/pages/additive-combinatorics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ➕ 加性组合学</a>
-  <a href="/pages/set-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📐 集合论 &rarr;</a>
+  <a href="/vibe_math/pages/additive-combinatorics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ➕ 加性组合学</a>
+  <a href="/vibe_math/pages/set-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📐 集合论 &rarr;</a>
 </div>
   </div>
   <div class="content-col deep">
@@ -210,8 +215,5 @@
   </div>
 </div>
 <button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
-<script type="module" src="/src/sketches/graph-theory.js"></script>
-<script type="module" src="/src/shared/base-patch.js"></script>
-<script type="module" src="/src/shared/lesson-init.js"></script>
 </body>
 </html>
