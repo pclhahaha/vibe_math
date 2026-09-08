@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:08
+生成时间：2026-09-09T00:13
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 56 |
-| 微缺(13-15) | 59 |
+| 完整(16) | 61 |
+| 微缺(13-15) | 54 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -33,13 +33,8 @@
 | qubit-gates | 14/16 | 关键论文 |
 | algebraic-K-theory | 15/16 | 关键论文 |
 | band-structure | 15/16 | 关键论文 |
-| bloch-sphere | 15/16 | 关键论文 |
-| boltzmann | 15/16 | 关键论文 |
-| carnot-cycle | 15/16 | 关键论文 |
 | category-theory-adjoint | 15/16 | 关键论文 |
 | classical-mechanics | 15/16 | — |
-| cmb | 15/16 | 关键论文 |
-| commutative-algebra | 15/16 | 关键论文 |
 | convex-geometry | 15/16 | 关键论文 |
 | determinant | 15/16 | 关键论文 |
 | differential-topology-morse | 15/16 | 关键论文 |
@@ -88,8 +83,13 @@
 | algebraic-number-theory | 16/16 | — |
 | algebraic-topology-homology | 16/16 | — |
 | bifurcation | 16/16 | — |
+| bloch-sphere | 16/16 | — |
+| boltzmann | 16/16 | — |
+| carnot-cycle | 16/16 | — |
 | clt | 16/16 | — |
+| cmb | 16/16 | — |
 | combinatorics | 16/16 | — |
+| commutative-algebra | 16/16 | — |
 | complex-dynamics | 16/16 | — |
 | complex-plane | 16/16 | — |
 | contour-integral | 16/16 | — |
