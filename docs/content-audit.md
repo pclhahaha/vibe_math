@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:15
+生成时间：2026-09-09T00:16
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 64 |
-| 微缺(13-15) | 51 |
+| 完整(16) | 68 |
+| 微缺(13-15) | 47 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -27,7 +27,6 @@
 | brownian-motion | 13/16 | 关键论文 |
 | poincare-conjecture | 13/16 | 关键论文 |
 | entropy | 14/16 | — |
-| fractal | 14/16 | 关键论文 |
 | functional-analysis | 14/16 | 关键论文 |
 | godel | 14/16 | — |
 | qubit-gates | 14/16 | 关键论文 |
@@ -40,16 +39,13 @@
 | electromagnetism | 15/16 | — |
 | entanglement | 15/16 | 关键论文 |
 | fiber-bundle | 15/16 | 关键论文 |
+| fractal | 15/16 | — |
 | fundamental-group | 15/16 | — |
 | galois-theory | 15/16 | 关键论文 |
-| geodesic | 15/16 | 关键论文 |
-| goldbach | 15/16 | 关键论文 |
 | gravitational-lens | 15/16 | 关键论文 |
-| harmonic-oscillator | 15/16 | 关键论文 |
 | higher-category-theory | 15/16 | 关键论文 |
 | hydrogen-atom | 15/16 | 关键论文 |
 | ising-model | 15/16 | 关键论文 |
-| knot-invariant | 15/16 | 关键论文 |
 | lie-algebra | 15/16 | 关键论文 |
 | linear-transform | 15/16 | 关键论文 |
 | lorenz-attractor | 15/16 | 关键论文 |
@@ -105,16 +101,20 @@
 | forcing-ch | 16/16 | — |
 | fourier-series | 16/16 | — |
 | fourier-transform | 16/16 | — |
+| geodesic | 16/16 | — |
 | geometric-group-theory | 16/16 | — |
 | geometric-measure-theory | 16/16 | — |
+| goldbach | 16/16 | — |
 | gradient | 16/16 | — |
 | graph-theory | 16/16 | — |
+| harmonic-oscillator | 16/16 | — |
 | higgs-mechanism | 16/16 | — |
 | high-dim-geometry | 16/16 | — |
 | homology | 16/16 | — |
 | hyperbolic-geometry | 16/16 | — |
 | kakeya | 16/16 | — |
 | kalman-filter | 16/16 | — |
+| knot-invariant | 16/16 | — |
 | laplace-eigenvalue | 16/16 | — |
 | lattice-crypto | 16/16 | — |
 | lie-group-representations | 16/16 | — |
