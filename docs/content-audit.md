@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:21
+生成时间：2026-09-09T00:23
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 75 |
-| 微缺(13-15) | 40 |
+| 完整(16) | 80 |
+| 微缺(13-15) | 35 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -29,7 +29,6 @@
 | functional-analysis | 14/16 | 关键论文 |
 | godel | 14/16 | — |
 | poincare-conjecture | 14/16 | — |
-| qubit-gates | 14/16 | 关键论文 |
 | algebraic-K-theory | 15/16 | 关键论文 |
 | category-theory-adjoint | 15/16 | 关键论文 |
 | classical-mechanics | 15/16 | — |
@@ -44,23 +43,19 @@
 | gravitational-lens | 15/16 | 关键论文 |
 | higher-category-theory | 15/16 | 关键论文 |
 | lie-algebra | 15/16 | 关键论文 |
-| linear-transform | 15/16 | 关键论文 |
-| lorenz-attractor | 15/16 | 关键论文 |
 | measure-theory | 15/16 | 关键论文 |
 | navier-stokes | 15/16 | 关键论文 |
 | noncommutative-geometry | 15/16 | 关键论文 |
-| nuclear-physics | 15/16 | 关键论文 |
 | numerical-methods | 15/16 | 教科书与进一步阅读 |
 | operator-algebras | 15/16 | 关键论文 |
 | optimal-transport | 15/16 | 关键论文 |
+| qubit-gates | 15/16 | — |
 | real-analysis | 15/16 | 关键论文 |
 | riemann-integral | 15/16 | 关键论文 |
-| sieve | 15/16 | 关键论文 |
 | soul-conjecture | 15/16 | — |
 | spectral-theorem | 15/16 | 关键论文 |
 | svd | 15/16 | 关键论文 |
 | turing-machine | 15/16 | 关键论文 |
-| twin-prime | 15/16 | 关键论文 |
 | uncertainty | 15/16 | 关键论文 |
 | universal-algebra | 15/16 | 关键论文 |
 | variational-calculus | 15/16 | 关键论文 |
@@ -114,9 +109,12 @@
 | laplace-eigenvalue | 16/16 | — |
 | lattice-crypto | 16/16 | — |
 | lie-group-representations | 16/16 | — |
+| linear-transform | 16/16 | — |
+| lorenz-attractor | 16/16 | — |
 | martingales | 16/16 | — |
 | model-theory | 16/16 | — |
 | modular-forms | 16/16 | — |
+| nuclear-physics | 16/16 | — |
 | optics | 16/16 | — |
 | p-adic-numbers | 16/16 | — |
 | p-vs-np | 16/16 | — |
@@ -130,12 +128,14 @@
 | riemann-surface | 16/16 | — |
 | schemes | 16/16 | — |
 | several-complex-variables | 16/16 | — |
+| sieve | 16/16 | — |
 | soliton | 16/16 | — |
 | spectral-sequences | 16/16 | — |
 | standard-model | 16/16 | — |
 | surface-topology | 16/16 | — |
 | symplectic-geometry | 16/16 | — |
 | thermodynamics | 16/16 | — |
+| twin-prime | 16/16 | — |
 | y combinator | 16/16 | — |
 | yang-mills-mass-gap | 16/16 | — |
 | zeta | 16/16 | — |
