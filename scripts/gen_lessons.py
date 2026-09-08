@@ -121,4 +121,8 @@ for i, lesson in enumerate(lessons):
     with open(f'pages/{sid}.html', 'w', encoding='utf-8') as f:
         f.write(html)
 
+# Keep the served copy of curriculum metadata in sync (public/ is copied by Vite)
+import shutil
+shutil.copyfile('curriculum.json', 'public/curriculum.json')
+
 print(f'{len(lessons)} pages ({deep_count} with deep content)')
