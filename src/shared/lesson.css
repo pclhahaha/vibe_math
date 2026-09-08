@@ -110,3 +110,12 @@ html,body{touch-action:manipulation}
   .sidebar-overlay{display:none!important}
   .sidebar-toggle{display:none}
 }
+
+/* ===== Width fit on phones (P: hardening 2) ===== */
+html,body{overflow-x:hidden}
+@media (max-width:768px){
+  .content-col,.content-col.deep{min-width:0!important;width:100%}
+  .formula.display{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+  .katex-display{max-width:100%}
+  .lesson-layout{padding-left:10px;padding-right:10px}
+}
