@@ -1,0 +1,229 @@
+<section>
+<h3>〇、具体动机：找那根怎么揉都不偏的棍子</h3>
+<p>先看带数字的具体问题。取矩阵</p>
+<div class="formula display" data-tex="A=\begin{pmatrix}3&1\\0&2\end{pmatrix}"></div>
+<p>拿一根水平的箭头 v=(1,0) 试一下：</p>
+<div class="formula display" data-tex="A\begin{pmatrix}1\\0\end{pmatrix}=\begin{pmatrix}3\\0\end{pmatrix}=3\begin{pmatrix}1\\0\end{pmatrix}"></div>
+<p>它被 A 一推，<strong>方向一点没变</strong>，只是被拉长了 3 倍。再拿另一根箭头 v=(1,2) 试：</p>
+<div class="formula display" data-tex="A\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}5\\4\end{pmatrix}"></div>
+<p>方向从约 63° 偏到约 39°，<strong>被推歪了</strong>。</p>
+<p>区别在哪？少数像 (1,0) 这样"被矩阵一推、方向不变、只变长短"的箭头，叫<strong>特征向量</strong>；被拉长或缩短的倍数（这里正好是 3）叫<strong>特征值</strong>。为什么值得找它们？因为再乱的变形，也能看成"沿着几个固定方向分别拉一拉"——找到这些不偏的方向，复杂变形就被拆成了几根清清楚楚的轴。</p>
+<div class="key-insight">核心洞察：复杂变形里藏着几根"不偏的轴"。找到它们，整个变形就变得又简单又清晰。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、向量：平面上的箭头</h3>
+<p><strong>向量</strong>（vector）就是平面上的一根<strong>箭头</strong>：有长度、有方向。为了方便，把箭头起点放在原点，向量就完全由末端位置决定，写成 v=(x,y)。比如 v=(2,3) 就是"从原点出发，向右 2 格、再向上 3 格"。</p>
+<p>箭头之间有两种基本运算，后面一直要用：</p>
+<p><strong>加法</strong>：一个箭头接在另一个箭头后面，终点就是两箭头的和。分量分别相加即可，如 (1,0)+(0,1)=(1,1)。</p>
+<p><strong>数乘</strong>：把一个箭头拉长或缩短若干倍。每个分量都乘同一个数，如 2·(1,2)=(2,4)，箭头方向不变，长度变成两倍。</p>
+</section>
+
+<section>
+<h3>二、矩阵 × 向量：手算一步步</h3>
+<p>矩阵 A 是"变换的说明书"，向量 v 是"一根箭头"。那么 <strong>A·v</strong> 就是在问：这份说明书把这根箭头变成了哪根新箭头？</p>
+<p>算法只有一条，先记住：<strong>新箭头的每个分量 = 矩阵对应那一行，与 v 的分量逐项相乘、再全部相加</strong>。公式写成：</p>
+<div class="formula display" data-tex="\begin{pmatrix}a&b\\c&d\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}ax+by\\cx+dy\end{pmatrix}"></div>
+<p><strong>例 1（手算）。</strong>取 A = [[3,1],[0,2]]，v = (1,2)：</p>
+<p>算第一个分量：看矩阵第一行 (3, 1)，和 v 的分量 (1, 2) 配对相乘再相加——<strong>3×1 + 1×2 = 3 + 2 = 5</strong>。</p>
+<p>算第二个分量：看矩阵第二行 (0, 2)，同样处理——<strong>0×1 + 2×2 = 0 + 4 = 4</strong>。</p>
+<div class="formula display" data-tex="\begin{pmatrix}3&1\\0&2\end{pmatrix}\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}3\cdot1+1\cdot2\\0\cdot1+2\cdot2\end{pmatrix}=\begin{pmatrix}5\\4\end{pmatrix}"></div>
+<p>直观理解：横坐标 1 被贡献了 3 份、又搭上纵坐标 2 的 1 份；纵坐标 2 被放大了 2 倍。</p>
+<p><strong>例 2（手算）。</strong>同一矩阵作用在 v=(1,0)（水平向右）上：</p>
+<div class="formula display" data-tex="\begin{pmatrix}3&1\\0&2\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}=\begin{pmatrix}3\\0\end{pmatrix}=3\begin{pmatrix}1\\0\end{pmatrix}"></div>
+<p>结果仍是水平向右，只长了 3 倍——记住这个结果，它就是〇节那根"不偏的棍子"。</p>
+<p><strong>例 3（手算）。</strong>A=[[4,1],[2,3]]，v=(1,1)：第一分量 4·1+1·1=5，第二分量 2·1+3·1=5，得 Av=(5,5)。</p>
+</section>
+
+<section>
+<h3>三、方向变不变？——具体数字比较</h3>
+<p>有了 A·v 的算法，就能观察一个现象了。仍用 A = [[3,1],[0,2]]，随便取箭头 v = (1,2)，前面算过 A·v = (5,4)。</p>
+<p>比较这两个箭头：v 指向 (1,2)，斜向右上约 63°；A·v 指向 (5,4)，只斜约 39°。<strong>方向变了</strong>。被矩阵一推，大多数箭头的方向都会改变——这是常态。</p>
+<p>但少数箭头很特殊。取 v = (1,0)：</p>
+<div class="formula display" data-tex="A\cdot v = \begin{pmatrix}3&1\\0&2\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}=\begin{pmatrix}3\\0\end{pmatrix}=3\begin{pmatrix}1\\0\end{pmatrix}"></div>
+<p>变换后仍是水平向右，只是长了 3 倍——<strong>方向一点没动，只变了长短</strong>。而取 v = (0,1) 时，它被变成 (1,2)，被第一行的 1 带偏了方向，不是这类箭头。</p>
+<p>像 (1,0) 这样"被矩阵一推、方向不变、只是变长或变短"的箭头，就叫<strong>特征向量</strong>；拉长或缩短的倍数（这里恰好是 3）叫<strong>特征值</strong>。</p>
+</section>
+
+<section>
+<h3>四、定义：特征向量与特征值</h3>
+<p>把第三节的观察写成公式，就是定义：<strong>非零向量 v 满足 A·v = λ·v</strong>，则 v 是特征向量，λ 是对应的特征值。</p>
+<div class="formula display" data-tex="A\mathbf{v}=\lambda \mathbf{v},\qquad \mathbf{v}\neq \mathbf{0}"></div>
+<p>为什么要求 v ≠ 0？因为 v=0 时 Av=0=λ·0 对任何 λ 都恒成立，给不出任何信息——特征向量研究的是<strong>方向</strong>，而零向量没有方向。</p>
+<p>λ 的大小有直观含义：λ &gt; 1 表示被拉长；0 &lt; λ &lt; 1 表示被压短；λ &lt; 0 表示方向转过 180° 的"反向拉伸"。</p>
+<p>在这个可视化中：蓝色箭头 = 输入向量；红色箭头 = A·输入（方向通常变了）；绿色虚线 = 特征向量方向——<strong>在这个方向上的蓝色和红色在同一条直线上！</strong>黄色箭头 = λ·v（变换后的特征向量，方向不变，只被拉伸）。</p>
+<div class="key-insight">特征向量 = 变换的"自然坐标轴"。如果你在特征基下看变换——它变成了各个方向上的<strong>独立缩放</strong>，互不干扰。这就是对角化。</div>
+</section>
+
+<section>
+<h3>五、怎么求特征值——特征方程的完整推演</h3>
+<p>条件 Av=λv 是一个方程，但我们的未知数是 λ——而 λ 藏在"向量等式"里面，v 也未知。怎么把 λ 单独求出来？关键是把 v 消掉，一步步来：</p>
+<p><strong>第 1 步：移项。</strong>把右边的 λv 挪到左边：</p>
+<div class="formula display" data-tex="A\mathbf{v}-\lambda\mathbf{v}=\mathbf{0}\;\Longrightarrow\;(A-\lambda I)\mathbf{v}=\mathbf{0}"></div>
+<p>注意这里必须写 λ<strong>I</strong>（I 是单位矩阵 [[1,0],[0,1]]），而不是 λ——"矩阵减数"没有意义，要减的是 λ 倍的单位矩阵。</p>
+<p><strong>第 2 步：看清这是什么。</strong>(A−λI)v=0 是一个齐次线性方程组，而 v 是它的非零解（特征向量非零）。</p>
+<p><strong>第 3 步：非零解 ⟺ 系数矩阵不可逆。</strong>如果 A−λI 可逆，两端左乘 (A−λI)⁻¹ 得 v=0，矛盾。所以 A−λI 必须不可逆——即行列式为 0。</p>
+<div class="formula display" data-tex="\det(A-\lambda I)=0\qquad(\text{特征方程})"></div>
+<p><strong>第 4 步：把 2×2 展开，得到一个二次方程。</strong></p>
+<div class="formula display" data-tex="\det\begin{pmatrix}a-\lambda&b\\c&d-\lambda\end{pmatrix}=(a-\lambda)(d-\lambda)-bc=\lambda^2-(a+d)\lambda+(ad-bc)=0"></div>
+<p>记 tr(A)=a+d（迹，对角线元素之和）、det(A)=ad−bc（行列式），特征方程就写成</p>
+<div class="formula display" data-tex="\lambda^2-\mathrm{tr}(A)\,\lambda+\det(A)=0"></div>
+<p>解这个二次方程，得到的根就是特征值。至此，"求特征值"变成了纯粹的代数解方程——这就是为什么特征值又叫"特征根"。</p>
+</section>
+
+<section>
+<h3>六、怎么求特征向量——完整例题</h3>
+<p>求出特征值 λ 之后，代回 (A−λI)v=0，解这个齐次方程组，就得到对应的特征向量。看一个完整例题。</p>
+<p><strong>例：</strong>仍取 A=[[3,1],[0,2]]。特征方程 λ²−5λ+6=0，因式分解 (λ−2)(λ−3)=0，故 λ₁=2、λ₂=3。</p>
+<p><strong>λ=3 时：</strong>把 λ=3 代入 A−λI：</p>
+<div class="formula display" data-tex="A-3I=\begin{pmatrix}0&1\\0&-1\end{pmatrix},\qquad \begin{pmatrix}0&1\\0&-1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}0\\0\end{pmatrix}\;\Longrightarrow\; y=0"></div>
+<p>解得 y=0，x 自由。所以解是 v=(x,0)=x(1,0)，取 v₁=(1,0)——正是〇节那根水平不偏的箭头。验证：Av₁=(3,0)=3(1,0) ✓。</p>
+<p><strong>λ=2 时：</strong>把 λ=2 代入 A−λI：</p>
+<div class="formula display" data-tex="A-2I=\begin{pmatrix}1&1\\0&0\end{pmatrix},\qquad x+y=0\;\Longrightarrow\; v_2=(1,-1)"></div>
+<p>验证：Av₂=(3·1+1·(−1), 0·1+2·(−1))=(2,−2)=2(1,−1) ✓。</p>
+<p>注意两个细节：① 特征向量乘任意非零倍数仍是特征向量——它是一个<strong>方向</strong>（一维子空间），不是单个向量；② 每个 λ 对应的所有特征向量加上零向量，构成<strong>特征空间</strong> E_λ = ker(A−λI)。</p>
+</section>
+
+<section>
+<h3>七、完整例题：求特征值与特征向量</h3>
+<p>把"求特征值 → 求特征向量"两步写成完整流程，再做两个例题。</p>
+<p><strong>例 1：A=[[4,1],[2,3]]。</strong></p>
+<p>第 1 步（求特征值）：特征方程 λ²−(4+3)λ+(4·3−2·1)=λ²−7λ+10=0，因式分解 (λ−2)(λ−5)=0，故 λ₁=2、λ₂=5。</p>
+<p>第 2 步（λ=2 的特征向量）：</p>
+<div class="formula display" data-tex="A-2I=\begin{pmatrix}2&1\\2&1\end{pmatrix}\;\Longrightarrow\; 2x+y=0\;\Longrightarrow\; v_1=(-1,2)"></div>
+<p>第 3 步（λ=5 的特征向量）：</p>
+<div class="formula display" data-tex="A-5I=\begin{pmatrix}-1&1\\2&-2\end{pmatrix}\;\Longrightarrow\; -x+y=0\;\Longrightarrow\; v_2=(1,1)"></div>
+<p>验证：Av₁=(4·(−1)+1·2, 2·(−1)+3·2)=(−2,4)=2(−1,2) ✓；Av₂=(5,5)=5(1,1) ✓。两个互异特征值 → 特征向量线性无关 → A 可对角化。</p>
+<p><strong>例 2：A=[[0,1],[1,0]]（关于直线 y=x 的反射）。</strong></p>
+<p>第 1 步：特征方程 λ²−(0+0)λ+(0·0−1·1)=λ²−1=0，故 λ₁=1、λ₂=−1。</p>
+<p>第 2 步（λ=1）：A−I=[[−1,1],[1,−1]]，−x+y=0，取 v₁=(1,1)——沿直线 y=x 的箭头反射后不动 ✓。</p>
+<p>第 3 步（λ=−1）：A+I=[[1,1],[1,1]]，x+y=0，取 v₂=(1,−1)——垂直反射轴的箭头被翻到对面，特征值 −1 表示"反向拉伸" ✓。</p>
+<p>观察：v₁、v₂ 是正交的（(1,1)·(1,−1)=0）。因为 A 是对称矩阵——这不是巧合，是定理（见「证明三」）。</p>
+</section>
+
+<section>
+<h3>八、对角化：A=PDP⁻¹ 的完整推演</h3>
+<p>为什么特征向量值得找？因为它们能把矩阵"解耦"：在特征向量组成的坐标下，变换就是各自独立的缩放。</p>
+<p>设 v₁,v₂ 是 A 的两个线性无关特征向量，对应特征值 λ₁,λ₂。把 v₁,v₂ 排成矩阵 P（v₁ 为第一列、v₂ 为第二列），把 λ 排成对角矩阵 D=diag(λ₁,λ₂)。直接算：</p>
+<div class="formula display" data-tex="AP=A\,(v_1\ v_2)=(Av_1\ Av_2)=(\lambda_1v_1\ \lambda_2v_2)=P\begin{pmatrix}\lambda_1&0\\0&\lambda_2\end{pmatrix}=PD"></div>
+<p>两端右乘 P⁻¹（因为 v₁,v₂ 线性无关，P 可逆）：</p>
+<div class="formula display" data-tex="A=PDP^{-1}\qquad(\text{对角化})"></div>
+<p>验证一个数字例子：A=[[4,1],[2,3]]，v₁=(−1,2)、v₂=(1,1)、λ₁=2、λ₂=5：</p>
+<div class="formula display" data-tex="A=\begin{pmatrix}-1&1\\2&1\end{pmatrix}\begin{pmatrix}2&0\\0&5\end{pmatrix}\begin{pmatrix}-1&1\\2&1\end{pmatrix}^{-1}"></div>
+<p>对角化的威力：求 A 的 n 次幂只需对角阵求幂——Aⁿ=PDⁿP⁻¹，而 Dⁿ 就是把每个 λ 分别乘 n 次。再乱的变换，也被拆成"旋转到特征基 → 各方向独立缩放 → 旋转回来"三步。</p>
+<p><strong>注意：</strong>不是每个矩阵都能对角化——需要足够的线性无关特征向量。亏损矩阵（如剪切 [[1,1],[0,1]]）只有一个特征方向，就做不到（见「反例」）。</p>
+</section>
+
+<section>
+<h3>九、为什么特征向量是大自然的"自然方向"</h3>
+<p>特征向量不只在数学课本里重要——它还是自然界反复出现的"自然方向"。看三个最重要的例子：</p>
+<p><strong>量子力学</strong>：Hamiltonian 的特征向量 = 能量本征态。测量能量 → 系统坍缩到某个特征向量。特征值 = 测到的能量值。薛定谔方程的解 = 能量本征态的叠加，每个分量按 e^(−iEt/ħ) 独立演化。</p>
+<p><strong>振动分析</strong>：耦合弹簧系统的特征向量 = 简正模。每个模式独立振动，频率 = √λ。地震工程、乐器设计、分子振动——都在用特征向量找"自然振动方式"。</p>
+<p><strong>PCA (主成分分析)</strong>：协方差矩阵的最大特征向量 = 数据方差最大的方向。这就是"数据中最重要的信号"的数学定义。</p>
+</section>
+
+<section>
+<h3>十、为什么有些矩阵没有实特征向量</h3>
+<p>考虑纯旋转矩阵 R = [[cos θ, −sin θ], [sin θ, cos θ]]。除了 θ=0 或 π，<strong>没有任何非零向量在 R 下保持方向不变</strong>——每个向量都被旋转了。det(R−λI)=0 的解是 λ = cos θ ± i sin θ = e^(±iθ)——特征值是复数。</p>
+<p>所以旋转矩阵在实数域中没有特征向量。但如果在复数域中考虑，它有特征向量——对应复特征值 e^(±iθ)。这在量子力学中至关重要：酉矩阵（复数版的"正交矩阵"，可以想成高维空间里的旋转，它不改变长度和角度）的特征值在单位圆上，对应相位旋转。</p>
+</section>
+
+<section>
+<h3>十一、复数特征值的几何含义</h3>
+<p>旋转矩阵没有实特征向量——特征值是 e^(±iθ)。复数特征值意味着存在一个二维不变子空间，变换在其中是旋转+缩放。量子力学中酉矩阵的特征值在单位圆上——相位旋转，概率守恒。</p>
+</section>
+
+<section>
+<h3>十二、关键公式</h3>
+<div class="formula display" data-tex="A\mathbf{v} = \lambda \mathbf{v}\quad(\mathbf{v}\neq\mathbf{0})"></div>
+<div class="formula display" data-tex="\det(A - \lambda I) = 0\quad(\text{特征方程})"></div>
+<div class="formula display" data-tex="A = PDP^{-1}\quad(\text{对角化})"></div>
+<div class="formula display" data-tex="\mathrm{tr}(A) = \sum\lambda_i,\quad \det(A) = \prod\lambda_i"></div>
+</section>
+
+<section>
+<h3>十三、试试看（带提示）</h3>
+<p>1. 观察到绿色虚线上的蓝色箭头和红色箭头——它们在一条直线上吗？<br><em>提示：这正是特征向量的定义 Av=λv：v 与 Av 共线，差一个倍数 λ。</em></p>
+<p>2. 如果取 v 是绿色虚线上任意倍数（比如 2v），A(2v)=2Av=2λv=λ(2v)——还是特征向量！特征向量是一个<strong>方向</strong>（一维子空间），不是单个向量。<br><em>提示：试着把向量拖到特征方向上的不同位置，观察它始终与红色共线。</em></p>
+<p>3. 求矩阵 A=[[0,1],[1,0]] 的特征值和特征向量。<br><em>提示：λ₁=1, v₁=(1,1); λ₂=−1, v₂=(1,−1)。这两个向量正交吗？算 (1,1)·(1,−1)。A 是对称矩阵，正交不是偶然（见「证明三」）。</em></p>
+<p>4. 求 A=[[2,0],[0,3]] 的特征值和特征向量。<br><em>提示：对角矩阵的特征值就是对角线元素；特征向量是标准基 e₁,e₂。这就是"各方向独立缩放"的原型。</em></p>
+<p>5. 求 A=[[0,−1],[1,0]]（旋转 90°）的特征值。它在实数域有特征向量吗？<br><em>提示：特征方程 λ²+1=0 无实根，判别式 Δ=−4&lt;0。特征值是 ±i——见第六、十节。</em></p>
+</section>
+
+<section>
+<h3>十四、历史注记</h3>
+<p>Lagrange(1788)在天体力学中首次使用特征值。Cauchy(1829)引入特征方程。Hilbert(1904)推广到无穷维->泛函分析->量子力学。1925年Heisenberg和Schrodinger独立发现可观测量=算符的特征值——物理学史上最伟大的巧合之一。</p>
+</section>
+
+<section>
+<h3>十五、进阶问题</h3>
+<p>1. 为什么A(2v)=2lambda v意味着整条直线上的向量都是特征向量的倍数？</p>
+<p>2. 对称矩阵的特征向量是否正交？这在量子力学中为什么重要？</p>
+<p>3. 非对称矩阵可以有实特征值但特征向量不正交——用几何解释。</p>
+</section>
+<section><h3>前沿：随机矩阵的特征向量分布</h3><p>Wigner随机矩阵的特征向量在Haar测度下均匀分布在球面上——"特征向量热化假说"(ETH)是量子混沌的基础。仍开放:非Wigner矩阵(稀疏图、非厄米)的特征向量分布——和Anderson局域化的联系。</p></section>
+<section>
+<h3>证明一：特征方程的推导</h3>
+<p>特征向量 v ≠ 0 满足 Av = λv。移项：Av − λv = 0，即 (A − λI)v = 0。于是 v 是齐次线性方程组 (A−λI)v = 0 的非零解。线性代数基本事实：齐次方程组有非零解 ⟺ 系数矩阵奇异（不可逆）⟺ det(A − λI) = 0。故 λ 是特征值 ⟺ λ 是特征多项式 p(λ) = det(A − λI) 的根。</p>
+<p><strong>为什么非零解 ⟺ 不可逆？</strong> 若 A−λI 可逆，则 (A−λI)v = 0 两端左乘 (A−λI)⁻¹ 得 v = 0，与 v ≠ 0 矛盾。反之若不可逆，则行列式为零、列向量线性相关，行化简必出现自由变量，存在非零解。两个方向都无需引入坐标。</p>
+<p>对 2×2 矩阵 A = [[a,b],[c,d]] 展开：</p>
+<div class="formula display" data-tex="\det(A-\lambda I) = \begin{vmatrix} a-\lambda & b \\ c & d-\lambda \end{vmatrix} = \lambda^2 - (a+d)\lambda + (ad-bc)"></div>
+<p>即 p(λ) = λ² − tr(A)·λ + det(A)。由代数基本定理，n 次多项式在 ℂ 中恰有 n 个根（计重数）——这正是"旋转矩阵的特征值是复数"的根源：解方程需要复数闭包。</p>
+</section>
+
+<section>
+<h3>证明二：不同特征值的特征向量线性无关</h3>
+<p>设 λ₁,…,λₖ 两两不同，v₁,…,vₖ 是相应特征向量，且 Σᵢ cᵢvᵢ = 0。要证所有 cᵢ = 0。</p>
+<p><strong>证明（对 k 归纳）。</strong> k = 1 时 v₁ ≠ 0（特征向量非零），故 c₁ = 0。设结论对 k−1 成立。在 Σᵢ cᵢvᵢ = 0 两端左乘 A：Σᵢ cᵢλᵢvᵢ = 0。用第一个方程乘 λ₁ 后相减，消去含 v₁ 的项：</p>
+<div class="formula display" data-tex="\sum_{i=2}^k c_i(\lambda_i - \lambda_1)v_i = 0"></div>
+<p>由归纳假设 v₂,…,vₖ 线性无关，且 λᵢ − λ₁ ≠ 0（特征值两两不同），故 c₂ = … = cₖ = 0。代回原方程得 c₁v₁ = 0，又 v₁ ≠ 0，故 c₁ = 0。∎</p>
+<p><strong>推论。</strong> 若 A 是 n×n 矩阵且有 n 个互不相同的特征值，则其特征向量构成 ℂⁿ 的一组基——A 可对角化。注意：这是可对角化的<strong>充分</strong>条件，非必要条件（见亏损矩阵反例）。</p>
+</section>
+
+<section>
+<h3>证明三：对称矩阵不同特征值的特征向量正交</h3>
+<p>设 A = Aᵀ，Av₁ = λ₁v₁，Av₂ = λ₂v₂，且 λ₁ ≠ λ₂。考虑内积 v₁ᵀAv₂：</p>
+<p>一方面，v₁ᵀ(Av₂) = v₁ᵀ(λ₂v₂) = λ₂(v₁·v₂)。另一方面，利用 A 对称：v₁ᵀAv₂ = (Av₁)ᵀv₂ = (λ₁v₁)ᵀv₂ = λ₁(v₁·v₂)。两式相等：</p>
+<div class="formula display" data-tex="\lambda_2\,(v_1\cdot v_2) = \lambda_1\,(v_1\cdot v_2) \;\Longrightarrow\; (\lambda_2-\lambda_1)(v_1\cdot v_2) = 0"></div>
+<p>因 λ₁ ≠ λ₂，得 v₁·v₂ = 0。∎</p>
+<p><strong>补充：特征值是实数。</strong> 设 Av = λv（允许复值），取共轭转置并用 A = Aᵀ：v*Av = λ‖v‖²；另一方面 (Av)*v = (v*Aᵀv)* 的计算给出 λ̄‖v‖² = v*Av。故 λ = λ̄。实数性 + 正交性正是谱定理（对称矩阵可被正交矩阵对角化）的内容，也是量子力学中可观测量（自伴算子）必须有实特征值、本征态正交的根源。</p>
+</section>
+
+<section>
+<h3>反例：旋转矩阵与亏损矩阵</h3>
+<p><strong>旋转矩阵无实特征向量。</strong> R = [[cosθ, −sinθ],[sinθ, cosθ]]（θ ∉ {0, π}）。特征多项式：</p>
+<div class="formula display" data-tex="p(\lambda)=\lambda^2 - 2\cos\theta\,\lambda + 1,\qquad \Delta = 4\cos^2\theta - 4 = -4\sin^2\theta < 0"></div>
+<p>判别式小于零，无实根——ℝ² 中不存在方向不变的向量。但 λ = e<sup>±iθ</sup> 是复根，在 ℂ² 中有复特征向量。几何直觉：非平凡的旋转改变每个方向。</p>
+<p><strong>亏损矩阵（不可对角化）。</strong> A = [[1,1],[0,1]]（剪切）。p(λ) = (λ−1)²，唯一特征值 λ = 1（代数重数 2）。但特征空间 ker(A−I) = ker([[0,1],[0,0]]) = span{(1,0)} 只有一维——几何重数 1 &lt; 代数重数 2。特征向量不足两个线性无关者，故 A <strong>不可对角化</strong>；任何声称的 P⁻¹AP = D 都会因 P 不可逆而失败。</p>
+<p><strong>两个重数之别。</strong> 代数重数 = λ 作为特征多项式根的重数；几何重数 = dim ker(A−λI)。A 可对角化 ⟺ 每个特征值的几何重数 = 代数重数。亏损矩阵恰是二者不等的情形。几何解释：剪切 [[1,1],[0,1]] 把每个水平向量平移固定量，只有 x 轴方向被"固定"——缺少独立的特征方向。</p>
+</section>
+
+<section>
+<h3>工作题：特征值、特征向量与可对角化判断</h3>
+<p><strong>题1。</strong> 求 A = [[4,1],[2,3]] 的特征值与特征向量，并判断是否可对角化。</p>
+<details><summary>显示解答</summary><p>特征方程 det(A−λI) = (4−λ)(3−λ) − 2 = λ² − 7λ + 10 = (λ−2)(λ−5) = 0，故 λ₁ = 2，λ₂ = 5（两个互异实根）。λ=2：解 (A−2I)v = 0，即 [[2,1],[2,1]]v = 0 ⟹ 2x + y = 0，取 v₁ = (−1, 2)。λ=5：解 (A−5I)v = 0，即 [[−1,1],[2,−2]]v = 0 ⟹ −x + y = 0，取 v₂ = (1, 1)。两个互异特征值 ⟹ 特征向量线性无关 ⟹ 可对角化：A = PDP⁻¹，P = [[−1,1],[2,1]]，D = diag(2,5)。验证：Av₁ = (4·(−1)+1·2, 2·(−1)+3·2) = (−2, 4) = 2·(−1,2) ✓。</p></details>
+
+<p><strong>题2。</strong> A = [[2,0,0],[0,3,0],[0,0,3]]。求特征值与特征空间，判断是否可对角化。</p>
+<details><summary>显示解答</summary><p>对角矩阵的特征值即对角线元素：λ = 2（重数 1），λ = 3（重数 2）。λ=3 的特征空间 = ker(A−3I) = {v : v₁ = 0} = span{e₂, e₃}，几何重数 2 = 代数重数 2；λ=2 的特征空间 = span{e₁}，几何重数 1 = 代数重数 1。每个特征值几何重数 = 代数重数 ⟹ 可对角化（且本身就是对角形式）。</p></details>
+
+<p><strong>题3。</strong> 判断 A = [[3,1,0],[0,3,1],[0,0,3]] 是否可对角化。</p>
+<details><summary>显示解答</summary><p>特征多项式 (λ−3)³，唯一特征值 λ = 3，代数重数 3。特征空间 ker(A−3I) = ker([[0,1,0],[0,0,1],[0,0,0]])，由 v₂ = v₃ = 0 得特征空间 = span{e₁}，几何重数 1 &lt; 3。故不可对角化（亏损矩阵）。</p></details>
+
+<p><strong>题4。</strong> 设 3×3 矩阵的迹 tr(A) = 5，det(A) = 2，且 1 是特征值。求其余两个特征值。</p>
+<details><summary>显示解答</summary><p>设特征值为 λ₁, λ₂, λ₃，其中 λ₁ = 1。迹 = Σλᵢ = 5 ⟹ λ₂ + λ₃ = 4；行列式 = ∏λᵢ = 2 ⟹ λ₂λ₃ = 2。由 λ₂, λ₃ 是 t² − 4t + 2 = 0 的根，解得 λ₂, λ₃ = 2 ± √2。本题利用两个不变式：tr(A) = 特征值之和、det(A) = 特征值之积——它们不依赖基，是求解特征值的高效工具。</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Axler, Linear Algebra Done Right (4th ed.)</strong></p>
+<p>&rarr; <strong>K. Hoffman & R. Kunze, Linear Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <strong>线性变换</strong>：特征向量是线性变换在自然基下的"骨架"——在特征基下，线性变换退化为各方向独立缩放的对角矩阵。</p>
+<p>&rarr; <strong>行列式</strong>：det(A)=∏λ<sub>i</sub>——行列式等于所有特征值的乘积，这是从特征值角度理解"体积放大倍数"的直接方式。</p>
+<p>&rarr; <strong>SVD</strong>：SVD将任意矩阵分解为UΣV<sup>T</sup>——右奇异向量是A<sup>T</sup>A的特征向量，奇异值是A<sup>T</sup>A特征值的平方根。</p>
+<p>&rarr; <strong>谱定理</strong>：对称/厄米矩阵的特征向量相互正交，构成完备正交基——谱定理保证了这种"完美对角化"的存在性，是量子力学自伴算符理论的基石。</p>
+<p>&rarr; <strong>量子力学相关</strong>：可观测量=自伴算符，其特征值=测量结果，特征向量=本征态——测量使系统坍缩到某个本征态，这正是量子力学公理体系的核心。</p>
+</section>

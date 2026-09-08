@@ -1,0 +1,292 @@
+<section>
+<h3>〇、动机：三维旋转里藏着一份"小步清单"</h3>
+<p>在电脑里把一个立方体绕 z 轴转一个角度 θ。绕 z 轴转 θ 的旋转矩阵是（z 轴保持不动）：</p>
+<div class="formula display" data-tex="R_z(\theta)=\begin{pmatrix}\cos\theta & -\sin\theta & 0\\ \sin\theta & \cos\theta & 0\\ 0 & 0 & 1\end{pmatrix}"></div>
+<p>现在做一件只用到泰勒展开的事：让 θ 变得很小。取 θ = 0.001（弧度），cos θ ≈ 0.9999995，sin θ ≈ 0.001，于是</p>
+<div class="formula display" data-tex="R_z(0.001)\approx\begin{pmatrix}1&-0.001&0\\0.001&1&0\\0&0&1\end{pmatrix}=I+0.001\cdot\underbrace{\begin{pmatrix}0&-1&0\\1&0&0\\0&0&0\end{pmatrix}}_{\text{记作 }L_z}"></div>
+<p>把 0.001 换成一般的微小角度 ε，就有 R_z(ε) ≈ I + ε·L_z。这里 L_z 正是 R_z 在 θ=0 处的<strong>导数</strong>（把 R_z(θ) 逐项求导再代入 θ=0 即可验证）。它编码了"绕 z 轴动一点点"的方向——一个不再依赖具体角度 ε 的<strong>无穷小旋转</strong>。</p>
+<p>整件事的惊人之处是：<strong>一个 L_z 就够了。</strong>任意角度的旋转都能由它"一小步一小步地走出来"：把角度 θ 切成 n 份，每份转 θ/n，再让 n→∞，得到矩阵指数</p>
+<div class="formula display" data-tex="R_z(\theta)=\exp(\theta L_z)=\lim_{n\to\infty}\left(I+\frac{\theta}{n}L_z\right)^n=\sum_{k=0}^{\infty}\frac{(\theta L_z)^k}{k!}"></div>
+<p>你可以自己验算：L_z 的平方在 xy 平面上等于 −I，偶数次幂回到 ±I 型，奇数次幂回到 ±L_z 型，合起来恰好凑出 cos θ 与 sin θ 的级数——这正是第六节例题 2 要完整走一遍的计算。</p>
+<p>于是真正的问题变成：<strong>把绕 x、y、z 三个轴的无穷小旋转 L_x, L_y, L_z 都拿到手后，它们之间满足什么关系？</strong>答案是三个简洁的等式（对易关系）：</p>
+<div class="formula display" data-tex="[L_x,L_y]=L_z,\qquad [L_y,L_z]=L_x,\qquad [L_z,L_x]=L_y,\qquad [A,B]:=AB-BA"></div>
+<p>这三条等式看起来简单，却完全决定了三维旋转的行为——也决定了物理里角动量为什么只能取"一格一格"的分立值（量子化）。这套"无穷小旋转 + 它们之间的对易关系"，就是所谓的<strong>李代数</strong>。</p>
+<div class="key-insight">一句话：连续的对称性（旋转、平移、时空变换、规范变换）可以浓缩成一小张"无穷小步骤"清单；步骤之间怎么互相配合（对易关系）就是李代数。只想理解核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/group-action.html">群作用</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、热身：旋转矩阵与"在单位元处求导"</h3>
+<p>先从最具体的对象出发。三维空间里所有旋转构成的集合记作 SO(3)（special orthogonal group，特殊正交群）。它由两条规则刻画：① 正交性 RᵀR = I（旋转不改变长度和夹角）；② 特殊条件 det R = 1（只转、不镜像）。</p>
+<p>SO(3) 不是"一粒一粒"的离散集合，而是"一整片"的连续体——任意小的角度都能转，还能在它上面光滑地移动。这样的集合叫<strong>光滑流形</strong>（manifold，大白话：像地球表面，每一小块都能摊平成一张普通坐标纸）。所以</p>
+<div class="key-insight"><strong>李群 = 群 + 光滑流形</strong>：既能做乘法、又有"连续可微"的结构。所有连续对称性（旋转、平移、Lorentz 变换、规范变换〔规范＝能随便换、却不改变物理结果的"标尺"〕）都是李群。</div>
+<p>关键的一步：任取一个从单位旋转出发的单参数旋转族 g(θ)（例如 g(θ) = R_z(θ)，满足 g(0) = I 且 g(θ₁+θ₂) = g(θ₁)g(θ₂)），在 θ = 0 处求导：</p>
+<div class="formula display" data-tex="X=\left.\frac{d}{d\theta}\,g(\theta)\right|_{\theta=0}\in T_e\,\mathrm{SO}(3)"></div>
+<p>X 是"单位元处的一个切线方向"。所有这样的方向拼成一个线性空间，叫单位元处的<strong>切空间</strong> T_e G（tangent space，大白话：曲面在某点处所有"切线方向"铺成的小平面）。切空间是<strong>向量空间</strong>——能加减、能数乘，线性代数全部可用的工具都在里面。</p>
+<p><strong>为什么先"求导"再"还原"？</strong>因为李群是弯曲的（SO(3) 是个三维球面型的流形），矩阵乘法在它上面算起来很笨重；可切空间是平直的向量空间，只有加减法和数乘。指数映射 exp 负责把切空间里的方向"滚"回群上去（见第十四节证明一），在"无穷小"与"有限"之间来回翻译。整套策略可以概括为一句：<strong>把弯曲的群局部掰平，在平直处把结构算清楚，再滚回去。</strong></p>
+</section>
+
+<section>
+<h3>二、为什么李代数要"线性化群"？——指数映射与单参数子群</h3>
+<p>上一节说的是"在单位元处求导"。为什么要挑单位元（单位元＝群的"原地不动"元素，即恒等变换）？因为单位元是群结构最均匀的地方：把群元素 g 乘以 g⁻¹ 就把一切"平移"回单位元附近，所以单位元处的切空间已经携带了整群的信息。</p>
+<p>记 𝔤 = T_e G。我们把指数映射定义为"沿 X 方向的单参数子群"：</p>
+<div class="formula display" data-tex="\exp:\mathfrak g\to G,\qquad \exp(tX)=\gamma_X(t)\quad\text{其中 }\gamma_X'(0)=X,\ \gamma_X(s+t)=\gamma_X(s)\gamma_X(t)"></div>
+<p>对矩阵李群（比如 SO(3)），指数映射就是矩阵指数：</p>
+<div class="formula display" data-tex="\exp(tX)=\sum_{n=0}^{\infty}\frac{t^n X^n}{n!}\ =\ I+tX+\frac{t^2}{2}X^2+\cdots"></div>
+<p>它把"无穷小的方向 X"放大成"沿 X 走 t 步的有限元素"。两条基本性质立刻可以看到：</p>
+<ul>
+<li><strong>群的乘法在切空间里"一阶"变成加法：</strong>exp(sX)exp(tX) = exp((s+t)X)——同一方向的小步可以合并。</li>
+<li><strong>不同方向不能合并：</strong>exp(X)exp(Y) ≠ exp(X+Y)，相差的部分正是 X 与 Y "不交换"的度量（下一节）。</li>
+</ul>
+<p><strong>为什么"线性化"可行、而且不丢信息？</strong>这是本课第一个"为什么"。关键在于第十四节的定理：exp 在 0 附近是一个局部微分同胚（光滑的一一映射）——单位元附近，群与切空间"长得一模一样"。所以<strong>群在单位元附近的全部信息，都编码在切空间加上一个叫"李括号"的运算里。</strong>而"单位元附近"足够决定连通李群的整体（连通李群由其李代数唯一确定）。这就是为什么物理里做量子化时用的是对易关系（李代数）而不是群元素本身。</p>
+<p>现在给出正式定义：</p>
+<div class="key-insight"><strong>定义（李代数）。</strong>𝔤 = T_e G，即李群 G 在单位元处的切空间，连同李括号 [·,·] 一起，称为 G 的李代数。李括号把两个方向 X, Y 变成一个方向 [X,Y]，它精确地告诉我们"先走 X 再走 Y"与"先走 Y 再走 X"差在哪里。</div>
+</section>
+
+<section>
+<h3>三、李括号：小步骤怎么互相配合</h3>
+<p>为什么偏偏是"对易子" [A,B] = AB − BA 而不是别的？看下面的展开。对矩阵李群，把 exp 展开到二阶：</p>
+<div class="formula display" data-tex="e^{sX}e^{tY}e^{-sX}e^{-tY}\approx e^{st[X,Y]}\qquad(\text{忽略 }s^2t,\,st^2\text{ 以上各项})"></div>
+<p>左边是"先 X 走 s、再 Y 走 t、再 X 退回 s、再 Y 退回 t"——如果 X 和 Y 交换（AB=BA），这四个步骤正好互相抵消、回到起点；<strong>抵消后剩下的"残留错位"正是 [X,Y]</strong>。所以李括号量化了"两个小步骤不交换的程度"：李代数完全交换（[X,Y]=0 恒成立）⟺ 群阿贝尔（交换群）。这就是"李括号编码群的交换性/非交换性"的精确含义，也是为什么李括号是定义李代数时唯一需要补充的运算。</p>
+<p>把对易关系抽象出来，我们得到一个纯粹代数对象——它不再依赖矩阵，可以搬到任何域上研究：</p>
+<p><strong>定义（抽象李代数）。</strong>域 F 上的李代数是线性空间 𝔤，配双线性映射 [·,·]: 𝔤×𝔤 → 𝔤，满足对一切 X,Y,Z：</p>
+<div class="formula display" data-tex="[X,X]=0\ \Rightarrow\ [X,Y]=-[Y,X]\qquad(\text{反对称})"></div>
+<div class="formula display" data-tex="[X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]]=0\qquad(\text{Jacobi 恒等式})"></div>
+<p><strong>Jacobi 恒等式从哪来？</strong>它对应群乘法的<strong>结合律</strong>：矩阵乘法满足 (AB)C = A(BC)，把这条结合律翻译到"无穷小"层面，得到的正是 Jacobi 恒等式。所以抽象李代数保留了群最重要的两条结构性质（结合律 + 非交换性）的"无穷小版本"。这也是为什么对易子 [X,Y] = XY−YX 自动满足 Jacobi——它不是被强加的，是矩阵乘法结合律的必然推论（第二十节工作题会亲自验证）。</p>
+<p>给定一组基 {e₁,…,e_n}，李括号完全由<strong>结构常数</strong>（structure constants）决定：</p>
+<div class="formula display" data-tex="[e_i,e_j]=\sum_{k}c_{ij}^{k}\,e_k"></div>
+<p>算出结构常数，就等于把李代数"背下来了"。下一节就对 SO(3) 实际算一遍。</p>
+</section>
+
+<section>
+<h3>四、完整例题 1：从 SO(3) 逐步算出 𝔰𝔬(3) 的基、对易关系与结构常数</h3>
+<p>我们把前面所有的抽象话，落成一步步能算到底的具体计算。</p>
+<p><strong>第 1 步：写出三个基本旋转矩阵。</strong>绕 x、y、z 轴转 θ 的矩阵分别是</p>
+<div class="formula display" data-tex="R_x(\theta)=\begin{pmatrix}1&0&0\\0&\cos\theta&-\sin\theta\\0&\sin\theta&\cos\theta\end{pmatrix},\quad R_y(\theta)=\begin{pmatrix}\cos\theta&0&\sin\theta\\0&1&0\\-\sin\theta&0&\cos\theta\end{pmatrix},\quad R_z(\theta)=\begin{pmatrix}\cos\theta&-\sin\theta&0\\\sin\theta&\cos\theta&0\\0&0&1\end{pmatrix}"></div>
+<p><strong>第 2 步：在 θ=0 处求导，得到三个基元。</strong>逐项求导后代入 θ=0（cos 0=1, sin 0=0）：</p>
+<div class="formula display" data-tex="L_x=R_x'(0)=\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix},\quad L_y=R_y'(0)=\begin{pmatrix}0&0&1\\0&0&0\\-1&0&0\end{pmatrix},\quad L_z=R_z'(0)=\begin{pmatrix}0&-1&0\\1&0&0\\0&0&0\end{pmatrix}"></div>
+<p>注意：这三个矩阵都是<strong>反对称的</strong>（Aᵀ = −A）。事实上 T_e SO(3) 恰是全部 3×3 反对称矩阵——因为对正交矩阵 RᵀR = I 求导得 Xᵀ + X = 0。所以</p>
+<div class="formula display" data-tex="\mathfrak{so}(3)=\{X\in M_3(\mathbb R): X^T=-X\}=\mathrm{span}\{L_x,L_y,L_z\},\qquad \dim=3"></div>
+<p><strong>第 3 步：算第一个对易关系 [L_x, L_y]。</strong>用矩阵乘法硬算。先算乘积 L_x L_y（第 i 行第 j 列是 L_x 第 i 行点乘 L_y 第 j 列）：</p>
+<div class="formula display" data-tex="L_xL_y=\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}\begin{pmatrix}0&0&1\\0&0&0\\-1&0&0\end{pmatrix}=\begin{pmatrix}0&0&0\\1&0&0\\0&0&0\end{pmatrix}"></div>
+<p>（逐项核对第 2 行第 1 列：第 2 行 (0, 0, −1) 点乘第 1 列 (0, 0, −1)ᵀ，得 0·0 + 0·0 + (−1)(−1) = 1。）再算反过来的乘积：</p>
+<div class="formula display" data-tex="L_yL_x=\begin{pmatrix}0&0&1\\0&0&0\\-1&0&0\end{pmatrix}\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}=\begin{pmatrix}0&1&0\\0&0&0\\0&0&0\end{pmatrix}"></div>
+<p>相减得</p>
+<div class="formula display" data-tex="[L_x,L_y]=L_xL_y-L_yL_x=\begin{pmatrix}0&-1&0\\1&0&0\\0&0&0\end{pmatrix}=L_z"></div>
+<p><strong>第 4 步：循环计算，并读出结构常数。</strong>完全同样的算法给出 [L_y,L_z] = L_x、[L_z,L_x] = L_y。合起来：</p>
+<div class="formula display" data-tex="[L_x,L_y]=L_z,\quad [L_y,L_z]=L_x,\quad [L_z,L_x]=L_y"></div>
+<p>用 Levi-Civita 符号（ε_123 = 1，交换指标变号）可以压缩成一行：</p>
+<div class="formula display" data-tex="[L_i,L_j]=\sum_k\varepsilon_{ijk}L_k\qquad(i,j\in\{1,2,3\})"></div>
+<p>读结构常数：即 c_{ij}^{k} = ε_{ijk}。<strong>这组对易关系就是 𝔰𝔬(3) 的全部内容</strong>——把三个小旋转矩阵算完，得到的就是李代数本身。</p>
+<p><strong>第 5 步（验证）：用指数映射把 L_z 还原成旋转。</strong>把 2×2 小块 J = [[0,−1],[1,0]] 的幂次算出来：J² = −I，故 J³ = −J、J⁴ = I，于是</p>
+<div class="formula display" data-tex="e^{\theta J}=\cos\theta\,I+\sin\theta\,J,\qquad e^{\theta L_z}=\begin{pmatrix}\cos\theta&-\sin\theta&0\\\sin\theta&\cos\theta&0\\0&0&1\end{pmatrix}=R_z(\theta)"></div>
+<p>出发时的小旋转矩阵 R_z(θ)，被 exp 完整"走"回来了。∎</p>
+<div class="key-insight">这个例子演示了李代数的标准工作流：<strong>先对具体矩阵求导拿到基元 → 算对易关系 → 读出结构常数 → 用指数映射核对。</strong>后面所有李代数（𝔰𝔲(2)、𝔰𝔩(2,ℂ)）都是同一套流程。</div>
+</section>
+<section>
+<h3>五、𝔰𝔬(3) 与角动量量子化——为什么自旋只能是整数或半整数</h3>
+<p>物理里角动量算符 J_x, J_y, J_z 满足的对易关系，和我们刚算出来的 𝔰𝔬(3) 一模一样，只是差一个常数因子：</p>
+<div class="formula display" data-tex="[J_x,J_y]=i\hbar J_z,\qquad [J_y,J_z]=i\hbar J_x,\qquad [J_z,J_x]=i\hbar J_y"></div>
+<p>（i 的出现是因为物理里用厄米算符〔可观测量的对应物〕，而 i·(反对称矩阵) 恰好是厄米的。）这三个对易关系<strong>完全决定了</strong>角动量的量子行为：</p>
+<div class="key-insight">角动量算符的不可约表示（表示＝把抽象的代数"翻译"成具体矩阵来演算，见第七节）按维数 2ℓ+1 分类，其中 ℓ = 0, ½, 1, 3/2, 2, …。于是角动量只能取分立的"格点"：ℓ=0（标量）、½（自旋 ½）、1（矢量）、……<strong>这正是"自旋只能取整数或半整数"的代数根源</strong>。</div>
+<p><strong>为什么是"整数或半整数"？</strong>关键在于第八节的完整例题：𝔰𝔲(2) 的表示维数恰好取遍所有正整数 1, 2, 3, …, 而"角动量量子数"ℓ = (维数 − 1)/2。维数是正整数，ℓ 就只能是整数或半整数——没有第三种可能。这个"只能二选一"的事实，最终源于 SU(2) 到 SO(3) 的<strong>二重覆盖</strong>（见第十五节证明二）：绕任一轴转 2π，自旋 ½ 的波函数变号，转 4π 才回到自身。</p>
+</section>
+
+<section>
+<h3>六、完整例题 2：𝔰𝔲(2) 的基、结构常数与指数映射</h3>
+<p>量子力学里最常用的李代数藏在 2×2 的 Pauli 矩阵里。定义</p>
+<div class="formula display" data-tex="\sigma_1=\begin{pmatrix}0&1\\1&0\end{pmatrix},\quad \sigma_2=\begin{pmatrix}0&-i\\i&0\end{pmatrix},\quad \sigma_3=\begin{pmatrix}1&0\\0&-1\end{pmatrix}"></div>
+<p>𝔰𝔲(2) = {2×2 反厄米无迹矩阵}，实基取 Xᵢ = iσᵢ/2（i = 1,2,3）。</p>
+<p><strong>第 1 步：算 [σ₁, σ₂]。</strong></p>
+<div class="formula display" data-tex="\sigma_1\sigma_2=\begin{pmatrix}0&1\\1&0\end{pmatrix}\begin{pmatrix}0&-i\\i&0\end{pmatrix}=\begin{pmatrix}i&0\\0&-i\end{pmatrix},\qquad \sigma_2\sigma_1=\begin{pmatrix}-i&0\\0&i\end{pmatrix}"></div>
+<div class="formula display" data-tex="[\sigma_1,\sigma_2]=\sigma_1\sigma_2-\sigma_2\sigma_1=\begin{pmatrix}2i&0\\0&-2i\end{pmatrix}=2i\sigma_3"></div>
+<p>循环同理得 [σ₂,σ₃] = 2iσ₁、[σ₃,σ₁] = 2iσ₂。这是 Pauli 矩阵最著名的恒等式。</p>
+<p><strong>第 2 步：换到基 Xᵢ = iσᵢ/2。</strong>用双线性：</p>
+<div class="formula display" data-tex="[X_1,X_2]=\left[\tfrac{i}{2}\sigma_1,\tfrac{i}{2}\sigma_2\right]=\tfrac{i^2}{4}[\sigma_1,\sigma_2]=\tfrac{-1}{4}(2i\sigma_3)=-\tfrac{i}{2}\sigma_3=-X_3"></div>
+<div class="formula display" data-tex="[X_1,X_2]=-X_3,\qquad [X_2,X_3]=-X_1,\qquad [X_3,X_1]=-X_2"></div>
+<p><strong>注意符号：</strong>基 Xᵢ = iσᵢ/2 是对应"反厄米"的约定（𝔰𝔲(2) 是实李代数），它对易关系带负号；而物理上用的厄米基 Jᵢ = σᵢ/2 满足 [J₁,J₂] = iJ₃（正的、且多一个 i）——两种写法只是换了个"乘 i"的基，内容相同。这是初学者最容易踩的符号坑。</p>
+<p><strong>第 3 步：验证 Jacobi 恒等式（用 [X₁,X₂] = −X₃ 等）：</strong></p>
+<div class="formula display" data-tex="[X_1,[X_2,X_3]]+[X_2,[X_3,X_1]]+[X_3,[X_1,X_2]]=[X_1,-X_1]+[X_2,-X_2]+[X_3,-X_3]=0"></div>
+<p>每一项都是形如 [X_i, −X_i] 的组合，全为 0。✓</p>
+<p><strong>第 4 步：算指数映射 e^{iθσ₁}（绕 x 轴的 SU(2) 元）。</strong>用 σ₁² = I：偶数次幂是 I、奇数次幂是 σ₁，于是</p>
+<div class="formula display" data-tex="e^{i\theta\sigma_1}=\sum_{n}\frac{(i\theta)^n}{n!}\sigma_1^n=\cos\theta\,I+i\sin\theta\,\sigma_1=\begin{pmatrix}\cos\theta&i\sin\theta\\ i\sin\theta&\cos\theta\end{pmatrix}"></div>
+<p>核对：det(e^{iθσ₁}) = cos²θ − (i sinθ)² = cos²θ + sin²θ = 1，且 (e^{iθσ₁})†e^{iθσ₁} = I，确在 SU(2) 内。∎</p>
+<p><strong>第 5 步（小结）：</strong>𝔰𝔲(2) 与 𝔰𝔬(3) 都是三维实李代数，且同构（第十五节证明二会给出同构映射）；只是基的选择不同造成对易关系差一个符号。</p>
+</section>
+
+<section>
+<h3>七、表示论入门：为什么抽象李代数要"翻译"成矩阵</h3>
+<p>李代数本身的乘法 [·,·] 很抽象。把抽象元素"翻译"成具体的线性算子，让它们作用在某个向量空间上，得到的就叫<strong>表示</strong>（representation）：</p>
+<p><strong>定义（表示）。</strong>李代数 𝔤 在向量空间 V 上的表示是一个线性映射 ρ: 𝔤 → End(V)，满足 ρ([X,Y]) = ρ(X)ρ(Y) − ρ(Y)ρ(X)。也就是说，ρ 保持李括号（"翻译不破坏结构"）。</p>
+<div class="key-insight"><strong>为什么研究表示？</strong>① 抽象李代数没法直接"作用"在物理态上，可具体矩阵能——量子力学里所有可观测量的取值，都由表示决定。② 任何抽象李代数自身都能作用在自身上（伴随表示 ad_X(Y) = [X,Y]），所以表示论同时是理解李代数<strong>内部结构</strong>的工具。③ 表示论把"李代数的全部信息"浓缩成一张不可约表示的清单——就像元素周期表把化学信息按原子序数排好。</div>
+<p>两个表示若不能拆成更小的、被保持不变的子空间的直和，就称为<strong>不可约表示</strong>。不可约表示是"原子"，任何表示都是它们的直和。𝔰𝔲(2)（也即 𝔰𝔬(3)）的不可约表示正是第五节说的：对每个 ℓ ∈ {0, ½, 1, …} 恰有一个 2ℓ+1 维不可约表示。下一节把这个结论在 𝔰𝔩(2,ℂ) 上完整算出来。</p>
+</section>
+
+<section>
+<h3>八、完整例题 3：𝔰𝔩(2,ℂ) 的最高权表示与维数公式</h3>
+<p>𝔰𝔩(2,ℂ) = {2×2 无迹复矩阵}，是研究表示论的"最小实验室"——所有半单李代数都通过它来理解。取标准基</p>
+<div class="formula display" data-tex="H=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\quad E=\begin{pmatrix}0&1\\0&0\end{pmatrix},\quad F=\begin{pmatrix}0&0\\1&0\end{pmatrix}"></div>
+<p><strong>第 1 步：算对易关系（逐步矩阵乘法）。</strong>例如 [H,E] = HE − EH = E − (−E) = 2E；同理：</p>
+<div class="formula display" data-tex="[H,E]=2E,\qquad [H,F]=-2F,\qquad [E,F]=H"></div>
+<p>这说明 H 是"可对角化的梯子"：E 把 H-特征值抬 2，F 把它降 2。E、F 分别叫"升算子/降算子"。这组对易关系也给出了 𝔰𝔩(2,ℂ) 的根空间分解（见第九节）：根 α: H ↦ 2 对应根空间 ℂE，根 −α 对应 ℂF。</p>
+<p><strong>第 2 步：构造最高权表示。</strong>设 V 是有限维不可约表示，取 H 的一个最高特征值 n（"最高权"）。因为 E 抬高特征值而特征值有限，必有非零向量 v₀ 使 Hv₀ = n·v₀ 且 Ev₀ = 0。依次用 F 作用，记 vₘ = Fᵐv₀。直接代入验证（关键的归纳）：</p>
+<div class="formula display" data-tex="H v_m=(n-2m)v_m,\qquad F v_m=(m+1)v_{m+1},\qquad E v_m=(n-m+1)v_{m-1}"></div>
+<p><strong>第 3 步：链条必须有限——这给出维数公式。</strong>由 [E,F] = H，在 vₘ 上两边作用并代入上式，得到恒等式 (n−2m) = (m+1)(n−m) − m(n−m+1)（自行核对，两边展开相等）。链条不能无限走：某个 v_{n+1} = 0（否则特征值 n−2(n+1) 永无下限）。于是最高权 n 必须是非负整数，且</p>
+<div class="formula display" data-tex="V=\mathrm{span}\{v_0,v_1,\ldots,v_n\},\qquad \dim V=n+1,\qquad \text{权重 }\{n,n-2,\ldots,-n\}"></div>
+<p>每个权重恰出现一次。例如 <strong>n=1</strong>（维数 2，即自旋 ½）：H 特征值为 {1,−1}，v₀ ↔ 特征向量 (1,0)，v₁ ↔ (0,1)，恰是 Pauli 的 J₃ = σ₃/2 表示。<strong>n=2</strong>（维数 3，即自旋 1）：权重 {2,0,−2}。</p>
+<p><strong>第 4 步：维数公式核对。</strong>换成物理记号 ℓ = n/2，维数 2ℓ+1——这就是第五节"自旋 ℓ 的表示维数 2ℓ+1"的完整证明。用 Weyl 维数公式再对一遍（第十节）：dim V_λ = (λ+ρ, α)/(ρ, α) = (n+1)/1 = n+1。✓</p>
+<p><strong>第 5 步（进阶）：张量积分解 ½ ⊗ ½ = 0 ⊕ 1。</strong>两个自旋 ½ 的复合是量子力学最常用的计算。V₁⊗V₁ 的权重是两两相加：{1,−1} + {1,−1} = {2, 0, 0, −2}。挑出最高权 2 → 一个 V₂（权重 2,0,−2）；剩下的一个权重 0 → 一个 V₀。故</p>
+<div class="formula display" data-tex="V_{1/2}\otimes V_{1/2}=V_0\oplus V_1\qquad(\dim:\ 2\times2=1+3)"></div>
+<p>维数核对：2·2 = 4 = 1 + 3。✓ 一般情形的分解系数叫 Clebsch–Gordan 系数，正是把态按"总角动量"重组的线性变换。∎</p>
+</section>
+
+<section>
+<h3>九、半单李代数的完全分类：Cartan 子代数、根系与 Dynkin 图</h3>
+<p>此前的例子（𝔰𝔬(3)、𝔰𝔲(2)、𝔰𝔩(2,ℂ)）其实都归入同一族；而一般李代数远不止这些。问题是：<strong>能不能把所有"好的"李代数像元素周期表一样列全？</strong>答案是能——这是数学中最优雅的分类定理之一。</p>
+<p><strong>第 1 步：挑选"最大的一间可对角化房间"。</strong>选极大交换可对角化子代数 h（<strong>Cartan 子代数</strong>）。例如 𝔰𝔩(2,ℂ) 中取 h = ℂH。李代数随之分解为 Cartan 子代数与根空间的直和：</p>
+<div class="formula display" data-tex="\mathfrak g=\mathfrak h\oplus\bigoplus_{\alpha\in\Phi}\mathfrak g_\alpha,\qquad \mathfrak g_\alpha=\{X\in\mathfrak g:[H,X]=\alpha(H)X\ \forall H\in\mathfrak h\}"></div>
+<p>α 是<strong>根</strong>——对偶空间（对偶＝像照镜子一样掉转箭头、两两配对；对偶空间就是所有"给向量打分"的函数住的空间）h* 中的非零向量。𝔰𝔩(2,ℂ) 的根系是 Φ = {α, −α}，其中 α(H) = 2。</p>
+<p><strong>第 2 步：根系满足苛刻的公理。</strong>Φ 必须只含"夹角和长度比"受限的向量（任意两根根的夹角只能取 90°, 120°, 135°, 150°，长度比只能取 1, √2, √3）。这个限制强到可以用一张图编码整座李代数：</p>
+<div class="formula display" data-tex="\text{Dynkin 图}\ \longleftrightarrow\ \text{Cartan 矩阵}\ \longleftrightarrow\ \text{根系}\ \longleftrightarrow\ \text{半单李代数}"></div>
+<p><strong>第 3 步：读出全部名单（分类定理，Killing 1888–1890、Cartan 1894）。</strong>四大经典系列加五个例外：</p>
+<ul>
+<li><strong>A_n = 𝔰𝔩(n+1)</strong>，n ≥ 1（特殊线性）</li>
+<li><strong>B_n = 𝔰𝔬(2n+1)</strong>，n ≥ 2（奇维正交）</li>
+<li><strong>C_n = 𝔰𝔭(2n)</strong>，n ≥ 3（辛）</li>
+<li><strong>D_n = 𝔰𝔬(2n)</strong>，n ≥ 4（偶维正交）</li>
+<li><strong>五个例外：G₂（14 维）、F₄（52 维）、E₆（78 维）、E₇（133 维）、E₈（248 维）</strong></li>
+</ul>
+<p><strong>为什么"分类"这么值钱？</strong>它把看似无穷多的"对称性"压缩成 4 + 5 个族：任何半单李代数必然同构于其中之一。这直接催生了物理里的对称性清单——尤其是例外群：</p>
+<div class="key-insight"><strong>例外李群与弦论。</strong>E8（248 维）= 最大例外李群。E8×E8 杂化弦：10 维时空 + E8×E8 规范对称。E6（78 维）可容纳标准模型粒子族于其 27 维表示中——大统一候选。G2（14 维）全纯的 7-流形给出 N=1 超对称的 4 维有效理论。</div>
+<p>注意我们刚才手动建立的 𝔰𝔩(2,ℂ) 就是这个体系里的 A₁；整个理论就是反复用"𝔰𝔩(2) 的三元组 (H,E,F)"从根系中读出结构。</p>
+</section>
+
+<section>
+<h3>十、Weyl 特征标公式与表示的"周期表"</h3>
+<p>半单李代数的有限维不可约表示由<strong>最高权 λ</strong>（支配整权）完全分类。给定 λ，表示 V_λ 的所有权重（连同重数）浓缩成一个函数——特征标，由 Weyl 公式给出：</p>
+<div class="formula display" data-tex="\operatorname{ch}(V_\lambda)=\frac{\sum_{w\in W}\varepsilon(w)\,e^{w(\lambda+\rho)}}{\sum_{w\in W}\varepsilon(w)\,e^{w\rho}}"></div>
+<p>其中 W = Weyl 群（根系反射生成的群），ρ = 半正根和，ε(w) = 符号（w 的置换奇偶性）。</p>
+<p><strong>几个关键推论。</strong></p>
+<ul>
+<li><strong>分母恒等式：</strong>令 λ = 0（平凡表示），即得 Weyl 分母公式 Σ_w ε(w) e^{wρ}——一个深刻的组合恒等式。</li>
+<li><strong>Weyl 维数公式：</strong>代入得 dim V_λ = ∏_{α&gt;0} (λ+ρ,α)/(ρ,α)。在 𝔰𝔩(2,ℂ) 上它给出 n+1（第八节已核对）。</li>
+<li><strong>张量积分解（Clebsch–Gordan）：</strong>V_λ ⊗ V_μ = ⊕_ν m_{λμ}^ν V_ν，重数 m_{λμ}^ν 在 A_n 情形由 Littlewood–Richardson 规则给出。</li>
+</ul>
+<p>在物理中，这个公式直接给出粒子态的分类与简并度。它和 Borel–Weil–Bott 定理（用层上同调构造表示）互为补充——一个从代数算，一个从几何造。</p>
+</section>
+
+<section>
+<h3>十一、泛包络代数 U(𝔤)、PBW 定理与 Casimir 算子</h3>
+<p>李代数的乘法 [·,·] 不满足结合律，用起来不顺手。有没有办法把"李括号"变成"普通乘法"？这就是<strong>泛包络代数</strong>：</p>
+<div class="formula display" data-tex="U(\mathfrak g)=T(\mathfrak g)/\langle X\otimes Y-Y\otimes X-[X,Y]\rangle"></div>
+<p>其中 T(𝔤) 是张量代数（张量＝多维"数组"，用一串下标排列的一堆数）。商掉"交换性差一个李括号"的关系，得到的 U(𝔤) 是结合代数，李代数的一切表示自动变成 U(𝔤) 的模（模＝module，一个供代数元素"作用"的空间；这里不是"模形式"的那个模）。</p>
+<p><strong>Poincaré–Birkhoff–Witt（PBW）定理：</strong>取有序基 {x₁,…,x_n} ⊂ 𝔤，则单项式 x₁^{k₁}…x_n^{kₙ} 构成 U(𝔤) 的基。推论：伴随分次代数 gr(U(𝔤)) ≅ S(𝔤)（对称代数）——U(𝔤) 的"一阶骨架"就是把 𝔤 变成普通多项式环。</p>
+<p><strong>Harish–Chandra 同构：</strong>Z(U(𝔤)) ≅ S(h)^W——泛包络代数的中心同构于 Cartan 子代数对称代数的 Weyl 群不变部分。<strong>Casimir 算子</strong>就是中心里对应于二次对称不变量的元素：在物理中它给出角动量平方 J² 和粒子的质量平方算符。对 𝔰𝔩(2,ℂ)，Casimir 是 C = H² + 2(EF + FE)：作用在最高权向量上得 H²v₀ + 2EFv₀ = n²v₀，作用在 v₁ 上可得 n(n+2)——一个很好的小练习。</p>
+</section>
+<section>
+<h3>十二、物理学中的李代数光谱</h3>
+<p>前面学到的同一套机制，在物理里反复以不同名字出现：</p>
+<ul>
+<li><strong>𝔰𝔲(2)：</strong>自旋代数（Pauli 矩阵）→ 角动量量子化（第五节）。</li>
+<li><strong>𝔰𝔲(3)：</strong>夸克模型（Gell-Mann 矩阵）→ 强相互作用的味对称性。</li>
+<li><strong>Lorentz 代数 𝔰𝔬(3,1)：</strong>狭义相对论 → Dirac 方程与自旋。</li>
+<li><strong>超对称：</strong>Lie 超代数 → 玻色子/费米子配对，超 Poincaré 代数。</li>
+<li><strong>仿射 Lie 代数：</strong>中心扩张后的无穷维李代数 → 2D 共形场论中的 Virasoro 代数、WZW 模型的 Kac–Moody 代数。</li>
+</ul>
+<p>观察共性：每一步都是"找出对称性 → 求其李代数 → 分类不可约表示 → 表示即物理态"。这正是本课第三节定义和第八、九、十节分类方法的直接应用。</p>
+</section>
+
+<section>
+<h3>十三、几何表示论：Springer 对应与 Beilinson–Bernstein 局部化</h3>
+<p>表示论最深的分支之一，是把代数对象换成几何对象来研究。</p>
+<ul>
+<li><strong>Springer 对应（1976–78）：</strong>幂零轨道与 Weyl 群表示之间的双射关系——每个幂零轨道赋予 Weyl 群的一个不可约表示。</li>
+<li><strong>Beilinson–Bernstein 局部化（1981）：</strong>𝔤-模 ↔ 旗簇上的 D-模，把表示论转化为几何对象的层上同调——这是几何 Langlands 纲领的核心工具。</li>
+<li><strong>Kazhdan–Lusztig 猜想（1979）：</strong>用奇异层交叉上同调解 Schubert 簇 → Kazhdan–Lusztig 多项式给出 Verma 模所有不可约特征标的重数公式（Lusztig，1990 年证明）。</li>
+</ul>
+</section>
+
+<section>
+<h3>十四、证明一：指数映射与李群-李代数对应</h3>
+<p>现在把第一节"线性化群"的断言严格化。</p>
+<p><strong>定理。</strong>李群 G 的李代数 𝔤 = T_eG。指数映射 exp: 𝔤 → G 定义为 exp(X) = γ_X(1)，其中 γ_X 是左不变向量场 X 的积分曲线（积分＝把无穷小的变化一步步累加出整条路线；这里指单参数子群），满足 γ'(0)=X 且 γ(s+t)=γ(s)γ(t)。</p>
+<div class="formula display" data-tex="\exp(X) = \sum_{n=0}^\infty \frac{X^n}{n!} \quad (\text{对矩阵李群})"></div>
+<p><strong>关键定理。</strong>若 𝔤 是 G 的李代数，则存在唯一的连通李群 G 以 𝔤 为李代数（局部）。而 exp 在 0 附近是局部微分同胚——这是"李群局部由李代数决定"的精确含义。</p>
+<p><strong>深刻点。</strong>尽管一般李群可能有很多连通分量，其单位连通分支由李代数唯一确定。所以连续对称性完全被"无穷小生成元"的对易关系编码——这正是物理中用对易关系而非群元素做量子化的原因。</p>
+</section>
+
+<section>
+<h3>十五、证明二：𝔰𝔲(2) 与 𝔰𝔬(3) 同构（二重覆盖）</h3>
+<p>𝔰𝔲(2) = {2×2 反厄米无迹矩阵}，基：X₁ = iσ₁/2, X₂ = iσ₂/2, X₃ = iσ₃/2。𝔰𝔬(3) = {3×3 反对称矩阵}，基：L₁, L₂, L₃。</p>
+<p><strong>对易关系核对。</strong>第六节已算出 [X₁,X₂] = −X₃ 等；第四节已算出 [L₁,L₂] = L₃ 等。两个代数对易关系只差一个整体符号。取映射</p>
+<div class="formula display" data-tex="\varphi(X_1)=L_1,\qquad \varphi(X_2)=L_2,\qquad \varphi(X_3)=-L_3"></div>
+<p><strong>验证它是同构：</strong>φ([X₁,X₂]) = φ(−X₃) = L₃ = [L₁,L₂] = [φ(X₁),φ(X₂)]；同理 φ([X₂,X₃]) = φ(−X₁) = −L₁ = [L₂,−L₃] = [φ(X₂),φ(X₃)]；φ([X₃,X₁]) = φ(−X₂) = −L₂ = [−L₃,L₁] = [φ(X₃),φ(X₁)]。三条对易关系全部保号，故</p>
+<div class="formula display" data-tex="\mathfrak{su}(2) \cong \mathfrak{so}(3)"></div>
+<p>（如果粗心地把 φ(X₃) 也设为 L₃，就会差一个符号——这是本课最容易犯的错误。）</p>
+<p>但群层面 <strong>SU(2) → SO(3) 是 2 对 1 覆盖</strong>（±I 都映到恒等旋转）。这就是电子自旋 ½ 的几何来源：绕任一轴转 2π，波函数变号，转 4π 才回到自身。二重覆盖的存在是"整数/半整数自旋只能二选一"的拓扑根源。</p>
+</section>
+
+<section>
+<h3>十六、反例：可解、幂零与半单李代数的区分</h3>
+<p><strong>半单</strong>：无非零阿贝尔理想（如 𝔰𝔩(n)，特征标 Killing 形式非退化）。</p>
+<p><strong>可解</strong>：导出列终止于 0（如上三角矩阵代数 𝔟ₙ）。</p>
+<p><strong>幂零</strong>：下中心列终止于 0（如严格上三角矩阵 𝔫ₙ，所有对角元为 0）。</p>
+<p>三者严格递推：<strong>幂零 ⊂ 可解</strong>，但可解未必幂零（𝔟ₙ 可解不幂零）。Lie 定理：域（＝能加减乘除的一整套数，如有理数、实数、复数）上复可解李代数的表示必有公共特征向量——但实域上不成立，这是经典反例。</p>
+</section>
+
+<section>
+<h3>十七、关键公式</h3>
+<div class="formula display" data-tex="[J_x, J_y] = i\hbar J_z,\qquad [J_y,J_z]=i\hbar J_x,\qquad [J_z,J_x]=i\hbar J_y"></div>
+<div class="formula display" data-tex="\exp(tX)=\sum_{n=0}^{\infty}\frac{t^n X^n}{n!}\quad\text{（单参数子群）}"></div>
+<div class="formula display" data-tex="\mathfrak{so}(3)=\{X\in M_3(\mathbb R): X^T=-X\},\qquad [L_i,L_j]=\varepsilon_{ijk}L_k"></div>
+<div class="formula display" data-tex="\mathfrak{sl}(2,\mathbb C):\ [H,E]=2E,\ [H,F]=-2F,\ [E,F]=H,\qquad \dim V_n=n+1"></div>
+<div class="formula display" data-tex="\mathfrak g=\mathfrak h\oplus\bigoplus_{\alpha\in\Phi}\mathfrak g_\alpha,\qquad \operatorname{ch}(V_\lambda)=\frac{\sum_{w\in W}\varepsilon(w)\,e^{w(\lambda+\rho)}}{\sum_{w\in W}\varepsilon(w)\,e^{w\rho}}"></div>
+<div class="formula display" data-tex="\text{半单李代数}\ \longleftrightarrow\ \text{Dynkin 图}\quad (A_n,B_n,C_n,D_n,G_2,F_4,E_6,E_7,E_8)"></div>
+</section>
+
+<section>
+<h3>十八、前沿：Langlands 纲领与几何 Langlands</h3>
+<p>李代数和表示论在 Langlands 纲领中达到顶峰。2018 年 Gaitsgory–Lurie 用导出代数几何证明了数域上的几何 Langlands（余切空间版本）。仍开放：数域和函数域的统一——"global Langlands over Q"。</p>
+</section>
+
+<section>
+<h3>十九、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 写出绕 y 轴转 θ 的矩阵 R_y(θ)，并在 θ=0 处求导，验证你得到的正是第四节里的 L_y。</p>
+<p><em>提示：仿照第四节的 R_z：对 R_y(θ) 逐项求导，注意 (d/dθ)cosθ = −sinθ、(d/dθ)sinθ = cosθ，再代入 θ=0。</em></p>
+<p><strong>2.</strong> 验证 [L_y, L_z] = L_x（对第四节给出的矩阵，硬算 L_yL_z − L_zL_y）。</p>
+<p><em>提示：先算 L_yL_z，再算 L_zL_y，相减。中间有两项（第二行第三列 / 第三行第二列）要特别小心符号。</em></p>
+<p><strong>3.</strong> 用厄米基 Jᵢ = σᵢ/2 验证 [J₁, J₂] = iJ₃。</p>
+<p><em>提示：由第六节 [σ₁,σ₂] = 2iσ₃ 出发，(1/4)·[σ₁,σ₂] = iσ₃/2。这就是物理约定 [J_x,J_y] = iJ_z 的来源。</em></p>
+<p><strong>4.</strong> 证明 e^{iθσ₂}（绕 y 轴的 SU(2) 元）＝ cosθ·I + i sinθ·σ₂，并写出它的矩阵。</p>
+<p><em>提示：σ₂² = I，与第六节第 4 步完全相同的幂次展开；把 σ₂ 的矩阵代入即可。</em></p>
+<p><strong>5.</strong> 对 𝔰𝔩(2,ℂ) 的最高权表示 V₂（权重 {2,0,−2}），算出 Casimir C = H² + 2(EF+FE) 在每个权重向量上的取值，验证它都等于同一个常数。</p>
+<p><em>提示：C = H² + 2EF + 2FE。用第八节的公式 Hvₘ=(2−2m)vₘ、Evₘ=(3−m)vₘ₋₁、Fvₘ=(m+1)vₘ₊₁ 逐项代入。</em></p>
+<p><strong>6.</strong> 验证结构常数 c_{ij}^k = ε_{ijk} 满足 Jacobi 恒等式：对任意的 i,j,k 求和 ε_{iℓm}ε_{jkℓ} = ε_{kℓm}ε_{ijℓ} 的两边组合。</p>
+<p><em>提示：用对易子 [A,B] = AB−BA 自动满足 Jacobi（因为它来自结合律），或用 ε 恒等式 ε_{ijk}ε_{lmk} = δ_{il}δ_{jm} − δ_{im}δ_{jl} 直接展开。</em></p>
+</section>
+
+<section>
+<h3>二十、附：工作题</h3>
+<p><strong>题 1</strong>：计算 𝔰𝔲(2) 的结构常数并验证 Jacobi 恒等式。</p>
+<details><summary>显示解答</summary><p>取基 X=iσ₁/2, Y=iσ₂/2, Z=iσ₃/2，由第六节有 [X,Y]=−Z, [Y,Z]=−X, [Z,X]=−Y（注意整体负号，这是反厄米约定的正确形式）。验证 Jacobi：[X,[Y,Z]]+[Y,[Z,X]]+[Z,[X,Y]] = [X,−X]+[Y,−Y]+[Z,−Z]=0。✓</p></details>
+<p><strong>题 2</strong>：求 e^{iθσₓ}（沿 x 轴旋转的指数映射）。</p>
+<details><summary>显示解答</summary><p>σₓ²=I，所以 e^{iθσₓ}=cosθ·I + i sinθ·σₓ = [[cosθ, i sinθ],[i sinθ, cosθ]]。这是绕 x 轴转 2θ 的 SU(2) 元。</p></details>
+<p><strong>题 3</strong>：证明 SU(2) 的中心是 {±I}，从而 SU(2)→SO(3) 是 2 对 1。</p>
+<details><summary>显示解答</summary><p>若 g∈Z(SU(2))，则 g 与所有 e^{iθσᵢ} 交换，故 g 与 σ₁,σ₂,σ₃ 交换。与三个 Pauli 都交换的 2×2 矩阵只能是标量 λI，又 det(λI)=λ²=1 ⟹ λ=±1。故 Z(SU(2))={±I}，覆盖映射的核的大小为 2。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Humphreys, Introduction to Lie Algebras and Representation Theory</strong></p>
+<p>&rarr; <strong>J.-P. Serre, Lie Algebras and Lie Groups</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/group-action.html">群作用</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/group-action.html">🔺 群作用</a>：同一学科分类「群论」。</p>
+<p>&rarr; <a href="/pages/geometric-group-theory.html">📐 几何群论</a>：同一学科分类「群论」。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：群论核心链。</p>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：代数核心链。</p>
+</section>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="弯曲空间中的直线——球面大圆" />
+  <meta property="og:title" content="测地线 — Vibe Math" />
+  <meta property="og:description" content="弯曲空间中的直线——球面大圆" />
+  <title>测地线 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌐 测地线 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">弯曲空间中的直线——球面大圆</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='geodesic',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/complex-dynamics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🪸 复动力系统：Julia 集与 Mandelbrot 集</a>
+  <a href="/pages/curvature.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📐 曲率 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、具体动机——北京飞纽约，为什么"直线"地图航线不是最短路？</h3>
+<p>先不看抽象定义，先看一个带数字的具体问题。北京约在北纬 39.9°、东经 116.4°，纽约约在北纬 40.7°、西经 74.0°。两地的直线距离（穿越地球内部）约 1.1 万公里——但飞机不能穿地心。飞机能飞的最短路径是多少？</p>
+<p>一个"想当然"的答案：两地纬度几乎相同，那就沿北纬 40° 的纬线飞吧。北纬 40° 的纬线半径是 R·cos40° ≈ 6371 km × 0.766 ≈ <strong>4880 km</strong>，它的周长 ≈ 2π×4880 ≈ <strong>30660 km</strong>。北京的经度到纽约的经度相差约 169.6°，沿纬线飞要飞 (169.6/360)×30660 ≈ <strong>14450 km</strong>。</p>
+<p>但航空公司不这么飞。北京—纽约的实际航线从北京起飞先向东北越过北冰洋再南下，总航程约 <strong>11000 km</strong>——比沿纬线少了约 <strong>3500 公里</strong>。为什么？因为在地球（球面）上，"两点最短的路径"不是"看起来直的纬线"，而是<b>大圆</b>——过球心的平面与球面相交的那个圆（北京—纽约的大圆恰好穿过北极附近）。</p>
+<p>再看一个可以手算的模型。取半径 R = 1 的球面，赤道上取两点，经度差 90°。沿赤道（大圆）走：弧长 = 90° = <strong>π/2 ≈ 1.571</strong>。改走"经线绕北极"：从一点沿经线上到北极（π/2），再沿另一条经线下到另一点（π/2），总长 <strong>π ≈ 3.142</strong>。大圆弧长 1.571 < 3.142，差了整整一倍。</p>
+<div class="key-insight">核心洞察：在弯曲的面上，"最直的路线"并不由地图上的直尺决定，而由<b>面本身的几何</b>决定。这种"最直的弯线"就叫<b>测地线</b>。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/linear-transform.html">线性变换（变换——大白话：把整个空间统一地拉伸、旋转或平移，像整张纸一起动，直线仍保持直线）</a>、<a href="/pages/derivative.html">导数与切线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、具体动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、什么是"最直的线"——从平面直线到球面大圆</h3>
+<p><strong>先回顾平面：</strong>平面上两点间最短路径是直线。为什么？因为平面上的"方向"是全局的——把直线平移一小段，它仍然是直线，仍然最短。这个"平移不变"的直觉，正是后面测地线定义的种子。</p>
+<p><strong>再上球面：</strong>球面上两点间最短路径是<b>大圆</b>。要相信这一点，有三个理由，由浅入深：</p>
+<ul>
+  <li><strong>对称性：</strong>把球面绕连接两点的那个大圆所在的平面旋转，整条大圆都被固定。任何"最短路径"在这种对称下只能是它自己——就像圆的直径是唯一的对称轴一样。</li>
+  <li><strong>数字检验（〇节）：</strong>赤道上经度差 90° 的两点，沿赤道 1.571，绕北极 3.142——大圆确实更短。</li>
+  <li><strong>严格化：</strong>为什么"最短"恰恰会选中大圆？这是第二节的核心——"最短/最直"在数学上会被翻译成一条微分方程（测地线方程），而球面上满足这条方程的正是大圆。</li>
+</ul>
+<p><strong>定义（测地线的两种说法）：</strong>在弯曲空间里，"直线"不再有现成定义，但有两种等价的说法可以接管它：</p>
+<ul>
+  <li><strong>局部最短：</strong>连接两点的所有曲线里，把长度取到"临界值"的那条（足够短的一段里任何扰动都只会变长）；</li>
+  <li><strong>自平行：</strong>它的"方向"沿自身平移不变——直线上每个点的切方向"都是平行的"。（这条定义在《平行移动》课里讲。）</li>
+</ul>
+<p>这两种说法都不需要"外部空间"来定义——你只需要在面本身内部量距离和角度。这一点极其重要：广义相对论说"引力不是力，是几何"，自由落体就是沿弯曲时空的测地线运动；而"弯曲"本身完全由时空内部的度量决定（见《曲率》课的绝妙定理）。</p>
+<div class="key-insight">一句话：自由落体 = 在弯曲时空中沿测地线运动。你感觉不到"引力"——你只是在弯曲时空中自由下落。引力不是力，是几何。</div>
+</section>
+
+<section>
+<h3>二、为什么"最短"会给出测地线方程——从变分原理完整推导</h3>
+<p><strong>为什么测地线 = 变分极值？</strong> 平面上找两点最短路径，直觉是"拉直这根绳子"。弯曲空间里没法画直尺，但有个等价的办法：<strong>把曲线看作一根绳子，轻轻拨动它（固定两端），如果怎么拨长度都不变（一阶意义下），它就是"最直"的</strong>。就像站在山谷最底部：往哪个方向迈一小步，高度都不再下降。这就是"变分极值"——测地线正是长度（或能量）泛函的临界点。</p>
+<p>设 (M, g) 为黎曼流形（流形——大白话：一种"局部看着像普通空间、整体却可以任意弯曲"的形状，球面、轮胎面都是流形），曲线 γ: [a, b] → M。它的<strong>长度</strong>和<strong>能量</strong>分别是：</p>
+<div class="formula display" data-tex="L(\gamma) = \int_a^b \sqrt{g_{\mu\nu}\dot\gamma^\mu\dot\gamma^\nu}\,dt,\qquad E(\gamma) = \int_a^b g_{\mu\nu}\dot\gamma^\mu\dot\gamma^\nu\,dt"></div>
+<p><strong>为什么要同时用长度和能量？</strong> 长度泛函有几何意义（曲线的实际长短），但平方根让计算麻烦；能量泛函没有平方根，算起来干净，而且（由 Cauchy-Schwarz 不等式，见后）两条泛函的极值曲线重合。所以先用能量算方程，得到的曲线同时是长度极值。</p>
+<p><strong>变分是什么？</strong> 取单参数曲线族 γ<sub>s</sub>(t)，s 是"拨动幅度"，s = 0 是原曲线，两端钉死：δγ(a) = δγ(b) = 0。测地线 = E 在 s = 0 处的一阶变化率为零。对 E 求一阶变分：</p>
+<div class="formula display" data-tex="\delta E = \int_a^b \Big[ 2g_{\mu\nu}\dot\gamma^\mu\,\delta\dot\gamma^\nu + \partial_\rho g_{\mu\nu}\dot\gamma^\mu\dot\gamma^\nu\,\delta\gamma^\rho \Big]dt"></div>
+<p><strong>这一项哪里来的？</strong> 第一项来自"速度的变化"（g 里有 ẋẋ，ẋ 被拨动 → 交叉项 2gẋδẋ）；第二项来自"度量本身的弯曲"（g 依赖位置，位置被拨动 → ∂g·ẋẋ·δγ）。</p>
+<p><strong>第一步：处理 δẋ 项（分部积分）。</strong> 第一项里有 δẋ<sup>ν</sup>，但我们想要的是"对任意拨动 δγ 都成立"，所以得把它转成 δγ。用分部积分：∫2gẋ·δẋ = −∫(d/dt)(2gẋ)·δγ + 边界项。因为两端钉死（δγ(a)=δγ(b)=0），<strong>边界项消失</strong>。同时把哑指标统一改写成 ∂<sub>ν</sub>g<sub>αβ</sub>ẋ<sup>α</sup>ẋ<sup>β</sup>δγ<sup>ν</sup>，让每个 δγ<sup>ν</sup> 前都是"ν 形式"：</p>
+<div class="formula display" data-tex="\delta E = \int_a^b \Big[ -2\partial_\alpha g_{\nu\mu}\dot\gamma^\alpha\dot\gamma^\mu - 2g_{\nu\mu}\ddot\gamma^\mu + \partial_\nu g_{\alpha\mu}\dot\gamma^\alpha\dot\gamma^\mu \Big]\delta\gamma^\nu\,dt"></div>
+<p><strong>第二步：用"任意拨动都成立"压出方程。</strong> 既然对<em>任意</em> δγ<sup>ν</sup> 这个积分都为零，被积函数必须处处为零（变分法基本引理）。于是方括号里的系数 = 0：</p>
+<p><strong>第三步：把 ∂ 项整理成对称形式。</strong> 前两项里 g 的导数下标不统一（∂<sub>α</sub>g<sub>νμ</sub> vs ∂<sub>ν</sub>g<sub>αμ</sub>）。利用 ẋ<sup>α</sup>ẋ<sup>μ</sup> 关于 α,μ <strong>对称</strong>（交换它们积分不变），把 ∂<sub>α</sub>g<sub>νμ</sub> 对称化为 ½(∂<sub>α</sub>g<sub>νμ</sub> + ∂<sub>μ</sub>g<sub>να</sub>)——这只是"把一个不对称的量拆成对称+反对称，反对称部分在对称求和下消失"的标准技巧。</p>
+<div class="formula display" data-tex="2g_{\nu\mu}\ddot\gamma^\mu = \big[ -(\partial_\alpha g_{\nu\mu} + \partial_\mu g_{\nu\alpha}) + \partial_\nu g_{\alpha\mu}\big]\dot\gamma^\alpha\dot\gamma^\mu"></div>
+<p><strong>第四步：引入 Christoffel 符号。</strong> 度量有逆 g<sup>σν</sup>（满足 g<sup>σν</sup>g<sub>νμ</sub> = δ<sup>σ</sup><sub>μ</sub>）。两边乘 g<sup>σν</sup> 约掉 g<sub>νμ</sub>，右端恰好凑出 <strong>Christoffel 符号</strong>的定义——它就是把上面那组导数打包成的"联络系数"：</p>
+<div class="formula display" data-tex="\Gamma^\sigma_{\alpha\mu}=\frac12 g^{\sigma\nu}\big(\partial_\alpha g_{\mu\nu} + \partial_\mu g_{\alpha\nu} - \partial_\nu g_{\alpha\mu}\big)"></div>
+<p>于是得到<strong>测地线方程</strong>：</p>
+<div class="formula display" data-tex="\boxed{\;\ddot\gamma^\sigma + \Gamma^\sigma_{\alpha\mu}\,\dot\gamma^\alpha\dot\gamma^\mu = 0\;}"></div>
+<p><strong>读法：</strong> 加速度项 ẍ<sup>σ</sup> 加上"度量弯曲的修正项" Γẋẋ 等于零——意思是"这条曲线自己会知道怎么走最直"，不需要额外外力。这也正是广义相对论里"自由落体=沿测地线"的数学来源：没有受力，加速度却被 Γ 项"借"走，轨迹自动弯曲。Γ 编码了度规的一阶导数：平直时空 Γ = 0 → ẍ = 0 → 匀速直线运动；弯曲时空 Γ ≠ 0 → "自由"轨迹自动弯曲。</p>
+<p><strong>长度与能量的关系：</strong>由 Cauchy-Schwarz（Cauchy——大白话：数学家柯西的名字，这个不等式说的是：两个向量相乘的结果不会超过它们各自长度的乘积），(∫√g dt)² ≤ (∫ dt)(∫ g dt)，即 L² ≤ (b−a)·E，等号当且仅当 g<sub>μν</sub>ẋ<sup>μ</sup>ẋ<sup>ν</sup> 恒为常数（参数化与弧长成正比）。长度泛函对重参数化不变；能量泛函则自动挑出<strong>等速参数化</strong>（弧长参数 s 下 g<sub>μν</sub>ẋ<sup>μ</sup>ẋ<sup>ν</sup> = 1）。两者极值曲线重合——测地线是几何对象，参数化是规范选择（规范——大白话：同一条路线怎么记"里程表/车速"是自由的，怎么标参数不影响最终走的轨迹）。</p>
+<p><strong>物理注：</strong>广义相对论中类时测地线极小化固有时 τ = ∫√(−g<sub>μν</sub>dx<sup>μ</sup>dx<sup>ν</sup>)。自由粒子沿测地线运动这一事实，正是 δS = 0（S = −mc∫dτ）的变分原理结论；改用能量泛函后得到完全相同的方程——这与上面推导一一对应。</p>
+</section>
+
+<section>
+<h3>三、完整例题一——球面上的测地线：一步步解方程</h3>
+<p>把第二节的机器开起来，在球面上解一次方程。球面 S²(R) 用球坐标 (θ, φ)，θ ∈ [0,π] 为余纬（θ=0 是北极），φ ∈ [0,2π) 为经度，度规是</p>
+<div class="formula display" data-tex="ds^2 = R^2\big(d\theta^2 + \sin^2\theta\,d\varphi^2\big)"></div>
+<p><strong>第 1 步：读出 g 的分量。</strong> g<sub>θθ</sub> = R²，g<sub>φφ</sub> = R²sin²θ，g<sub>θφ</sub> = 0。逆度规 g<sup>θθ</sup> = 1/R²，g<sup>φφ</sup> = 1/(R²sin²θ)。</p>
+<p><strong>第 2 步：求非零 Christoffel 符号。</strong> 用定义式，只有 g<sub>φφ</sub> 依赖坐标（∂<sub>θ</sub>g<sub>φφ</sub> = 2R²sinθcosθ），故只有两族非零：</p>
+<div class="formula display" data-tex="\Gamma^\theta_{\varphi\varphi} = \frac12 g^{\theta\theta}\big(-\partial_\theta g_{\varphi\varphi}\big) = -\sin\theta\cos\theta,\qquad \Gamma^\varphi_{\theta\varphi} = \Gamma^\varphi_{\varphi\theta} = \frac12 g^{\varphi\varphi}\big(\partial_\theta g_{\varphi\varphi}\big) = \cot\theta"></div>
+<p><strong>第 3 步：写出测地线方程组。</strong> 代入 ẍ<sup>σ</sup> + Γẋẋ = 0，两个分量方程：</p>
+<div class="formula display" data-tex="\ddot\theta - \sin\theta\cos\theta\,\dot\varphi^2 = 0,\qquad \ddot\varphi + 2\cot\theta\,\dot\theta\,\dot\varphi = 0"></div>
+<p><strong>第 4 步：检验赤道是测地线。</strong> 取 θ ≡ π/2（赤道），则 θ̇ = θ̈ = 0，sinθcosθ = 0，第一式自动成立；第二式化为 φ̈ = 0，即 φ 匀速。所以<strong>赤道匀速运动是测地线</strong>。</p>
+<p><strong>第 5 步：解"沿经线出发"的情形。</strong> 初速取 φ̇ = 0（沿经线走）。第二式自动成立；第一式化为 θ̈ = 0，解得</p>
+<div class="formula display" data-tex="\theta(t) = \theta_0 + \omega t,\qquad \varphi \equiv \varphi_0"></div>
+<p>这是一条经线（大圆的半圆）的等速参数化——<strong>经线是测地线</strong>。由对称性，任意大圆经过坐标旋转都能变成一条经线，所以</p>
+<p><strong>结论：球面上的测地线 = 大圆。</strong></p>
+<p><strong>第 6 步：用数字核对"测地线就是最短"。</strong> 单位球 (R=1) 上取两点 (θ=π/2, φ=0) 与 (θ=π/2, φ=π/2)（赤道上经度差 90°）。沿大圆（赤道）劣弧：弧长 = 1×(π/2) ≈ <strong>1.571</strong>。沿另一条大圆（经线绕北极）：π/2 + π/2 = <strong>3.142</strong>。确实大圆劣弧最短——它的确也是唯一的测地线段，这正是第五节"局部最短性"的显式检验。</p>
+<div class="key-insight">至此，"最直的线"从抽象定义变成了可以手算的方程：给一个度规 → 算 Christoffel → 解 ODE → 得到测地线。球面上解出来就是大圆。</div>
+</section>
+
+<section>
+<h3>四、完整例题二——圆柱上的测地线：展开成平面的威力</h3>
+<p>第二个完整例题，用它展示一个在曲面几何里屡试不爽的武器：<strong>等距展开</strong>。圆柱 C = {x² + y² = R²} 用 (θ, z) 参数化，θ ∈ [0,2π) 为绕轴角、z 为高度。因为 dx = R(cosθ dθ 方向), 线元是</p>
+<div class="formula display" data-tex="ds^2 = R^2 d\theta^2 + dz^2"></div>
+<p><strong>第 1 步：观察度规。</strong> 它与坐标 θ, z 完全无关——g 是常系数矩阵。于是所有 Christoffel 符号 Γ = 0（常度规的一阶导数为零）。</p>
+<p><strong>第 2 步：测地线方程。</strong> θ̈ = 0，z̈ = 0，即</p>
+<div class="formula display" data-tex="\theta(t) = \theta_0 + \omega t,\qquad z(t) = z_0 + v t"></div>
+<p><strong>第 3 步：读解。</strong> 这是直线参数方程——θ 和 z 都以恒定速率走，拼起来就是一条<strong>螺旋线</strong>。三个特例：ω = 0 是竖直线，v = 0 是水平圆（纬圆），两者都不是时是普通螺旋。</p>
+<p><strong>第 4 步：为什么答案这么简单？</strong> 把圆柱沿母线剪开、摊平，就是一块矩形纸片，度规变成 ds² = R²dθ² + dz²，而这正是平面直角坐标（把 Rθ 当横坐标）。平面上的最短路径是直线——摊回去就是螺旋线。<strong>等距保持测地线</strong>：这个"展开"不改长度，所以平面直线映回圆柱后仍是圆柱上的测地线。这里 Rθ 就是"展开后的横坐标"，所以"平面直线"对应螺旋。</p>
+<p><strong>第 5 步：数字与"缠绕数"。</strong> 取 R = 1，从点 (θ=0, z=0) 到 (θ=π, z=1)。这条端点差 (Δθ, Δz) = (π, 1) 可以被很多螺旋线连起来：横坐标（展开后）差可以是 π、3π、−π、5π……对应缠绕圈数 k ∈ ℤ。第 k 条的长度</p>
+<div class="formula display" data-tex="L_k = \sqrt{\big(R(\Delta\theta + 2\pi k)\big)^2 + (\Delta z)^2}\;\Longrightarrow\; L_0 = \sqrt{\pi^2 + 1} \approx 3.30,\quad L_1 = \sqrt{(3\pi)^2 + 1} \approx 9.45"></div>
+<p>缠得越多越长——但注意 <strong>L₁ 也是一条测地线</strong>，只是不是最短。这是"测地线"与"最短路径"第一次分家：测地线是长度临界点，最短还要看全局。完整辨析见第六节。</p>
+<div class="key-insight">圆柱上测地线 = 展开后的直线（螺旋线）。"看起来弯"的螺旋，在圆柱自己的几何里是"最直的"。可展曲面（圆柱、圆锥去顶点）都是这样：铺平了再找直线。</div>
+</section>
+
+<section>
+<h3>五、为什么测地线"局部最短"——证明概要</h3>
+<p>第四节末尾的例子暴露了一个必须回答的问题：测地线到底是"最短"还是"临界点"？答案藏在"局部"两个字里。下面是严格定理。</p>
+<p><strong>定理（局部最短性）：</strong>设 γ 是黎曼流形 (M, g) 中的测地线（弧长参数化）。对 γ 上任一点 p，存在邻域 U ∋ p 使 γ ∩ U 中任意两点在 U 内的最短路径唯一，且就是 γ 本身。</p>
+<p><strong>为什么是"局部"？</strong> 这跟"山谷的谷底是局部最低"是同一个道理：站在谷底，附近怎么走都上坡，但远处的山坡可能更矮。测地线同理——足够短的一段一定最短，长了就未必（见反例）。</p>
+<p><strong>证明思路（四步）：</strong></p>
+<ul>
+  <li><strong>1. 指数映射与 Gauss 引理：</strong>exp_p: T_pM → M 在原点附近是微分同胚（d(exp_p)₀ = id 逆函数定理）。Gauss 引理：对 v ∈ T_pM 与 w ⊥ v，有 ⟨d(exp_p)(v), d(exp_p)(w)⟩ = 0——即 exp_p 的径向线正交于"exp_p 球面"。直观上这是说：径向变分对首阶长度无贡献。</li>
+  <li><strong>2. 指数球内的径向测地线：</strong>存在 ε &gt; 0 使 exp_p 在开球 B(0, ε) ⊂ T_pM 上为嵌入。对 q ∈ exp_p(B(0,ε))，记 v = exp_p⁻¹(q)，则 t ↦ exp_p(tv) 是连接 p、q 的测地线，长度 = |v|。</li>
+  <li><strong>3. 任意曲线不短于径向测地线：</strong>设 α 为连接 p、q 的任意曲线，在 exp_p(B(0,ε)) 内写极坐标 α(t) = exp_p(r(t)u(t))（r ≥ 0，u 单位）。由 Gauss 引理，|α̇|² = ṙ² + r²|ū̇|² ≥ ṙ²，故长度 L(α) = ∫|α̇| ≥ ∫|ṙ| ≥ |r(b) − r(a)| = |v| = L(径向测地线)。等号仅在"角向不变且 r 单调"时取到，即 α 与径向测地线重合。□</li>
+  <li><strong>4. 唯一性：</strong>下界在等号条件（r 单调 + u 不变）下唯一实现，故最短路径唯一且为测地线。</li>
+</ul>
+<p><strong>为什么"局部"在这里会失效：</strong>指数映射在 T_pM 整体上未必是微分同胚；测地线一旦跨越共轭点或焦散线就不再最短。局部性由 Gauss 引理仅在 exp_p 的嵌入半径内成立。共轭点的存在性由曲率的正值强制（球面、测地线超半圈即失效）。</p>
+<p><strong>全局反例（球面）：</strong>球面 S²(R) 上南极到北极，每条大圆半圆（长度 πR）都是测地线也都是最短路径——<strong>最短路径不唯一</strong>。对非对径点 p, q：劣弧（大圆较短段）是唯一最短的，但同一大圆上的<strong>优弧</strong>是另一条测地线，却<strong>不是</strong>最短路径——长度 2πR − d &gt; d，甚至可视为局部极大。结论："测地线"（长度临界点）严格弱于"最短路径"。</p>
+</section>
+
+<section>
+<h3>六、反例辨析——劣弧/优弧、欧氏空间、圆柱环面与圆锥顶点</h3>
+<p>把"测地线 ≠ 最短"的边界用四个反例钉死。</p>
+<p><strong>反例 1（球面上的劣弧与优弧）：</strong>设 p, q ∈ S²(R) 非对径，大圆被 p, q 分成两段：劣弧与优弧，均为同一条大圆的测地线段。</p>
+<ul>
+  <li>劣弧：长度 d(p, q) = R·θ（θ = 大圆圆心角 = arccos(p·q/R²)），是连接 p、q 的<strong>唯一最短路径</strong>；</li>
+  <li>优弧：长度 R(2π − θ)，是一条测地线但<strong>不是最短路径</strong>——它把大圆"绕了一圈"；</li>
+  <li>对径情形（θ = π）：两段等长，最短路径<strong>不唯一</strong>（每一条大圆都最短，甚至沿任意方向的"任意半圆"）。</li>
+</ul>
+<div class="formula display" data-tex="d(p,q) = R\,\arccos\!\Big(\frac{p\cdot q}{R^2}\Big),\qquad L_{\text{优弧}} = 2\pi R - R\theta"></div>
+<p><strong>带数字检验：</strong>R = 1、θ = 1（两点角距 1 弧度）：劣弧长 1，优弧长 2π − 1 ≈ 5.28。都是测地线，只有劣弧最短。</p>
+<p><strong>反例 2（欧氏空间：测地线是直线）：</strong>Rⁿ 中度规 g = δ（常系数）。Christoffel 符号</p>
+<div class="formula display" data-tex="\Gamma^\sigma_{\mu\nu} = \tfrac12\delta^{\sigma\rho}\big(\partial_\mu\delta_{\nu\rho} + \partial_\nu\delta_{\mu\rho} - \partial_\rho\delta_{\mu\nu}\big) = 0"></div>
+<p>（δ 的所有导数均为 0）。测地线方程退化为 ẍ^σ = 0 ⟹ x(t) = a + tv，即<strong>直线</strong>。这正是"平坦 ⟹ 无曲率 ⟹ 最直路径是直线"的自洽检验。</p>
+<p><strong>反例 3（圆柱与环面：测地线可"绕圈"）：</strong>圆柱 C = S¹ × R 可展成平面，测地线是螺旋线（含竖直线、水平圆两个退化情形）。连接同对端点的两条螺旋线（正绕 k 圈、负绕 l 圈）都是测地线，但只有缠绕最少的一条才最短。这再次区分"测地线"与"最短"。环面更极端：缠上去的螺旋线可以在环面上无限绕圈，绝大多数都不是最短。</p>
+<p><strong>反例 4（圆锥顶点）：</strong>去掉顶点后圆锥面平坦（可展），测地线是展开后平面中的直线；但一旦测地线需要"经过顶点"（顶点集中曲率 2π(1−sin半角)），顶点处最短性失效——平面展开法在该处不适用。这是在提醒：可展的技巧只在曲率为零的区域有效。</p>
+</section>
+
+<section>
+<h3>七、物理中的测地线——自由落体就是沿测地线（GR）</h3>
+<p>把测地线的语言搬进广义相对论，弯曲的"面"换成弯曲的"四维时空"。时空度规 g<sub>μν</sub> 中，粒子/光线的世界线满足测地线方程——"无外力"就是沿测地线。</p>
+<p><strong>类时测地线（ds² &lt; 0）：</strong>质量粒子的世界线。地球绕太阳走的不是"受引力弯曲的轨道"，而是太阳质量弯曲时空后，地球沿类时测地线的惯性运动。</p>
+<p><strong>类光测地线（ds² = 0）：</strong>光子的世界线。光线经过太阳附近偏折 <strong>1.75 角秒</strong>——Eddington 1919 年日食观测验证，是广义相对论的第一场胜利。</p>
+<p><strong>Schwarzschild 测地线：</strong>近日点进动（水星轨道每世纪 43 角秒的异常 → GR 精确给出）、引力红移、光线偏折——GR 三大经典检验都是测地线运动的结果。</p>
+<p><strong>测地线偏离与潮汐力：</strong>邻近测地线的分离加速度 = −R<sup>μ</sup><sub>αβγ</sub>v<sup>α</sup>v<sup>γ</sup>ξ<sup>β</sup>。曲率越大，邻近测地线分离越快。这就是<strong>潮汐力</strong>的数学表达——在黑洞附近，头和脚的测地线方向如此不同以至于人被拉长（"意大利面化"）。</p>
+<div class="key-insight">同一句话的三种说法：自由落体 / 测地线 / "最直的弯线"——在 GR 里它们是同一个东西。引力不是力，是时空的弯曲；自由落体只是"弯曲时空里的直线运动"。</div>
+</section>
+
+<section>
+<h3>八、关键公式</h3>
+<div class="formula display" data-tex="\frac{d^2x^\mu}{d\tau^2} + \Gamma^\mu_{\alpha\beta}\frac{dx^\alpha}{d\tau}\frac{dx^\beta}{d\tau} = 0\quad\text{(测地线方程)}"></div>
+<div class="formula display" data-tex="\delta\int ds = 0\quad\text{(最短路径=变分极值)}"></div>
+<div class="formula display" data-tex="\Gamma^\mu_{\alpha\beta} = \frac{1}{2}g^{\mu\sigma}(\partial_\alpha g_{\beta\sigma} + \partial_\beta g_{\alpha\sigma} - \partial_\sigma g_{\alpha\beta})\quad\text{(Christoffel符号)}"></div>
+<div class="formula display" data-tex="\ddot\gamma^\sigma + \Gamma^\sigma_{\alpha\mu}\dot\gamma^\alpha\dot\gamma^\mu = 0,\qquad g_{\mu\nu}\dot\gamma^\mu\dot\gamma^\nu = \text{const}\quad\text{(等速参数化)}"></div>
+</section>
+
+<section>
+<h3>九、试试看（带提示）</h3>
+<p><strong>1. 球面上除了大圆，还有什么曲线是"局部最短"的？</strong><br>提示：关键在"局部"二字。任何大圆的<b>一小段</b>都是局部最短的（只要不跨越对径点/共轭点）。思考：从北极出发沿任意方向走，走多少距离之后才不再是"局部最短"？——答案是走了整圈 πR 到达对径点之后才出问题。</p>
+<p><strong>2. 如果空间是圆柱面，测地线是什么形状？</strong><br>提示：把圆柱沿母线剪开摊平成一张纸（这不动任何长度）。圆柱上的测地线 = 纸上哪条线？摊回去是什么形状？</p>
+<p><strong>3. ISS 上的宇航员处于自由落体状态——他们沿什么测地线运动？为什么他们感觉不到重力？</strong><br>提示：整座空间站 + 宇航员在同一个（类时）测地线上一起下落，彼此没有相对加速度，所以"称不出"重量。想想第一节末的 key-insight。</p>
+</section>
+
+<section><h3>历史：从 Gauss 到 Einstein</h3><p>Gauss(1827)提出 Theorema Egregium:曲面的曲率是内禀的——不需要外部空间来定义。Riemann（Riemann——大白话：数学家黎曼，他把"弯曲"的概念从二维曲面推广到任意维空间，后面的几何都建立在他的框架上）(1854)推广到n维。Christoffel(1869)引入联络符号（联络——大白话：弯曲空间里"平移方向"的规则，告诉你在山路上搬一把尺子该怎么搬才能保持方向不变）。Einstein(1915)将所有拼图汇聚为广义相对论:引力=时空的曲率,自由落体=测地线。</p></section>
+<section><h3>前沿：Lorentzian测地线与奇点定理</h3><p>Penrose(1965)和Hawking(1967)用测地线证明了黑洞奇点（奇点——大白话：时空被压到极致的"死胡同"，密度无限大、现有物理规律在这里统统失效的点）必然存在——"奇点定理"。2020年Nobel奖。仍开放:"宇宙监督假设"——所有奇点必然隐藏在事件视界后(裸奇点不存在)。这是GR最深层未解问题之一。</p></section>
+<section>
+<h3>工作题——球面测地线与极值长度</h3>
+<p><strong>题 1（球面测地线方程与显式解）：</strong>球面度规 ds² = R²(dθ² + sin²θ dφ²)，非零 Christoffel：Γ^θ_{φφ} = −sinθcosθ、Γ^φ_{θφ} = cotθ。写出测地线方程组；证明赤道 θ = π/2 是测地线；求起点 (θ₀, 0) 且初速沿经线（φ̇ = 0）的测地线显式解。</p>
+<p><strong>题 2（两点的最短路径）：</strong>球面上 p = (R, 0, 0)、q = (R cosφ₀, R sinφ₀, 0)（同处赤道，经度差 φ₀ &lt; π）。验证赤道劣弧最短（长度 Rφ₀）；并算出"先沿经线到北极再沿另一经线南下"的折线长度 = πR，与 Rφ₀ 比较。</p>
+<p><strong>题 3（圆柱上的测地线）：</strong>圆柱 x² + y² = R² 参数化为 (θ, z)，线元 ds² = R²dθ² + dz²。求测地线方程，证明 (a) 竖直线是测地线；(b) 螺旋线 (θ, z) = (ωt, vt) 是测地线；(c) 对端点差 (Δθ, Δz)，最短螺旋线满足什么缠绕数条件？</p>
+<p><strong>题 4（长度泛函的直接变分）：</strong>对长度泛函 L(γ) = ∫√(g_{μν}ẋ^μẋ^ν)dt 直接变分，证明其 Euler-Lagrange 方程在等速参数化下与能量泛函相同，并说明参数化自由度的作用。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1：</strong>测地线方程分量形式：θ̈ − sinθcosθ·φ̇² = 0；φ̈ + 2cotθ·θ̇φ̇ = 0。沿赤道 θ = π/2：θ̇ = θ̈ = 0，第一式左端 −sin(π/2)cos(π/2)φ̇² = 0 ✓；第二式 φ̈ = 0（匀速）满足。故赤道是测地线。若 φ̇ = 0（初速沿经线）：第二式恒成立，第一式化为 θ̈ = 0 ⟹ θ(t) = θ₀ + ωt，φ ≡ 0——经线的等速参数化，即大圆（经线）测地线。</p>
+<p><strong>题 2：</strong>赤道劣弧长度 = Rφ₀。折线：先沿经线从赤道到北极（弧长 πR/2），再沿另一条经线南下到赤道 q（πR/2），总长 πR。因 φ₀ &lt; π，Rφ₀ &lt; πR，赤道劣弧更短 ✓。一般结论：球面测地距离 = 大圆劣弧弧长 = 球心角 × R。这也说明"看起来直"的经线绕行并不最短——最短的是大圆本身。</p>
+<p><strong>题 3：</strong>线元 ds² = R²dθ² + dz² 与 (θ, z) 无关，故 Γ = 0，测地线方程 θ̈ = 0、z̈ = 0。(a) θ ≡ θ₀ ⟹ θ̈ = 0 ✓ 竖直线是测地线。(b) (ωt, vt)：θ̈ = z̈ = 0 ✓ 螺旋线是测地线（圆柱平坦，螺旋是"展开后的直线"）。(c) 满足端点的螺旋参数 θ(b) − θ(a) = Δθ + 2πk（k ∈ Z 为缠绕数），长度 L_k = √(R²(Δθ+2πk)² + Δz²)。最小者对应 k 最接近 −Δθ/(2π)；当 Δθ ∈ (−π, π] 时 k = 0 最短。其余 k 对应测地线但非最短。</p>
+<p><strong>题 4：</strong>F = √(g_{μν}ẋ^μẋ^ν)。Euler-Lagrange：d/dt(∂F/∂ẋ^σ) = ∂F/∂x^σ。计算得 d/dt(g_{σν}ẋ^ν/F) = ½∂_σ g_{αβ}ẋ^αẋ^β/F。作等速参数化（g_{μν}ẋ^μẋ^ν = c² 常数 ⟹ F = c 常数），F 提出积分号，方程化为 g_{σν}ẍ^ν + ∂_α g_{σν}ẋ^αẋ^ν = ½∂_σ g_{αβ}ẋ^αẋ^β，即 ẍ^σ + Γ^σ_{αβ}ẋ^αẋ^β = 0——与能量泛函结果相同。参数化自由度：长度泛函关于重参数化不变（测地线是"几何轨迹"），能量泛函则挑选出等速参数化这一"规范"；推导中必须利用等速条件消去 F 因子。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. do Carmo, Differential Geometry of Curves and Surfaces</strong></p>
+<p>&rarr; <strong>J. Lee, Introduction to Smooth Manifolds</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/derivative.html">导数与切线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/curvature.html"><strong>曲率</strong></a>：测地线的偏离由Riemann曲率张量决定——Gauss-Bonnet定理将测地线三角的角盈与曲面积分联系起来，是局部测地线性质与全局拓扑的不朽桥梁。</p>
+<p>&rarr; <a href="/pages/parallel-transport.html"><strong>平行移动</strong></a>：测地线是平行移动的自平行曲线——∇_vv=0，测地线方程中的Christoffel符号就是平行移动的联络系数。</p>
+<p>&rarr; <a href="/pages/light-cone.html"><strong>光锥与时空</strong></a>：类时测地线=质量粒子的世界线，类光测地线=光子的世界线——光锥划定了测地线的因果分类。</p>
+<p>&rarr; <a href="/pages/lorentz-transform.html"><strong>Lorentz 变换</strong></a>：平直时空的测地线=匀速直线运动——Lorentz变换保持测地线的因果类型不变，是闵可夫斯基时空的等距群。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/geodesic.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

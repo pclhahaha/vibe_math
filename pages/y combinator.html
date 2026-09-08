@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="不动点组合子——递归的 lambda 实现" />
+  <meta property="og:title" content="Y Combinator — Vibe Math" />
+  <meta property="og:description" content="不动点组合子——递归的 lambda 实现" />
+  <title>Y Combinator — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>λ Y Combinator <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">不动点组合子——递归的 lambda 实现</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='y combinator',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/qubit-gates.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🚪 量子门</a>
+  <a href="/pages/godel.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⚡ Gödel 不完备 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一个具体 λ 表达式，一步一步归约给你看</h3>
+<p>先看一个可以亲手验算的问题。<strong>在一个"函数不能给自己起名字"的世界里，怎么表示数字、怎么让函数反复呼唤自己？</strong>我们先用 λ 演算（lambda calculus）把"数字 2"写出来，再一步一步做归约，让你亲眼看见计算发生。</p>
+<p>λ 演算里只有三样东西：变量（如 x、f）、构造函数的 λ（如 λx. 表示"以 x 为参数的函数"）、以及"把函数用到一个参数上"（如 f a）。我们用这种语言把自然数编码成<strong> Church 数字</strong>：数字 n 就是"把 f 作用 n 次"这个操作。</p>
+<div class="formula display" data-tex="0=\lambda f.\lambda x.\,x,\qquad 1=\lambda f.\lambda x.\,f\,x,\qquad 2=\lambda f.\lambda x.\,f(f\,x),\qquad 3=\lambda f.\lambda x.\,f(f(f\,x))."></div>
+<p>定义"后继"操作 S（给任意数字 n 加一）：S = λn.λf.λx. f(n f x)。现在来算 S 2。归约的规则只有一条：<strong>遇到 (λx.M) N，就把 M 里所有 x 替换成 N</strong>（这叫一次 β 归约）。一步步来：</p>
+<div class="formula display" data-tex="S\,2=(\lambda n.\lambda f.\lambda x.\,f(n\,f\,x))\,(\lambda f.\lambda x.\,f(f\,x))"></div>
+<div class="formula display" data-tex="\xrightarrow{\ \beta\ }\ \lambda f.\lambda x.\,f\big((\lambda f.\lambda x.\,f(f\,x))\,f\,x\big)"></div>
+<div class="formula display" data-tex="\xrightarrow{\ \beta\ }\ \lambda f.\lambda x.\,f\big(f(f\,x)\big)\ =\ 3."></div>
+<p>我们把 2 喂给后继函数，β 归约两次，得到了 3。数字世界在纯符号替换中成立——这就是"计算"。</p>
+<p><strong>那"没有名字的递归"是什么？</strong>假设想定义阶乘。正常写法是 fact(n) = 若 n=0 则 1 否则 n·fact(n−1)——但这句话里 fact 用了自己的名字，而在 λ 演算里函数<strong>不能指着自己叫名字</strong>。1930 年代，数学家 Haskell Curry 发现一个神奇的公式 Y：它能<strong>把"递归的骨架"变成真正会递归的函数</strong>，而它自己完全没有名字、只有一个固定的形状。它就是本课的主角 Y 组合子。</p>
+<div class="key-insight">洞察：没有名字、没有循环，照样能"自我呼唤"——Y 组合子证明递归是最根本的计算能力之一。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/turing-machine.html">图灵机</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、λ 演算的三件家具——变量、抽象、应用（直觉）</h3>
+<p>先抛开"递归"，把 λ 演算本身讲清楚。它的语法只有三种构造，闭着眼睛都数得完：</p>
+<p><strong>① 变量（variable）：</strong>x、y、f…，一个符号，代表"某个未知的输入"。它没有值，等具体代入时才知道是什么。</p>
+<p><strong>② 抽象（abstraction）：</strong>λx. M，读作"一个以 x 为参数的函数，它的身体是 M"。这是唯一的"造函数"手段。比如 λx. x 就是恒等函数（输入什么返回什么），λx. (x x) 是"把输入用在自己身上"的怪函数。</p>
+<p><strong>③ 应用（application）：</strong>M N，读作"把函数 M 用到参数 N 上"。比如 (λx. x) y 就是把恒等函数应用到 y。</p>
+<p>规则也只有一条（外加两条"保险"规则，见〇·二）：<strong>β 归约</strong>——凡遇到 (λx.M) N 的形状，就整体替换成"把 M 里出现的每个 x 换成 N"。用箭头记作</p>
+<div class="formula display" data-tex="(\lambda x.\,M)\,N\ \longrightarrow\ M[x:=N]."></div>
+<p><strong>为什么这么简单的东西也叫"计算"？</strong>因为替换本身就是机械的：给定一个项，按规则从左到右归约，归约到不能再归约（<strong>范式</strong>）就"算完了"。Church 在 1936 年证明了这套符号替换规则能做到一切图灵机做的计算——这是"计算不需要变量赋值、不需要循环"的最早版本。</p>
+<p>举个立刻能验算的例子：(λx.x)(λy.y)，把恒等函数作用到恒等函数上 → 替换 x 为 λy.y，得 λy.y。再如 (λx.x x)(λx.x x)：把 x x 里的 x 换成 λx.x x，得到 (λx.x x)(λx.x x)——它归约成自己！这是"永远算不完"的第一个例子，我们后面还会见到它。</p>
+<div class="key-insight">λ 演算只有三种语法（变量、抽象、应用）和一条规则（β 归约：遇到 (λx.M)N 就把 M 里的 x 换成 N）。替换就是计算。能归约到范式 = 算出了答案。</div>
+</section>
+
+<section>
+<h3>〇·二、三条铁律——α 等价、β 归约、η 归约（从直觉到严格）</h3>
+<p>为了让"替换"不产生歧义，λ 演算需要三条精确规则。前两条保证替换可靠，第三条让系统更整洁。</p>
+<p><strong>① α 等价（α-conversion）：改名的自由。</strong>λx. x 和 λy. y 是同一个函数——"绑定变量叫什么名字无所谓"。把函数体内受 λ 绑定的变量统一改名，得到的项<strong>同构等价</strong>。这条规则防止了"λx.λy. x 和 λy.λx. y"被误判为同一个（前者第一个参数、后者第二个参数）。</p>
+<p><strong>② β 归约（β-reduction）：真正的计算。</strong>就是〇·一那条：</p>
+<div class="formula display" data-tex="(\lambda x.\,M)\,N\longrightarrow M[x:=N]\qquad(\text{注意绑定变量先 α 改名避开冲突})."></div>
+<p>"避开冲突"很重要：归约 (λx.λy.x) y 时，若直接把 x 换成 y，会得到 λy.y，把原来的外层 y 错当成绑定变量了。正确做法是先把 λy.x 改名成 λz.x，再替换得 λz.y。所以 β 归约前常先做 α 改名——严格的定义必须把这一手写进去。</p>
+<p><strong>③ η 归约（η-reduction）：剥掉多余包装。</strong>λx. (f x) 就是 f 本身（一个"把 x 传给 f"的函数，等于 f）。当 f 里不出现 x 时，λx. f x 可以化简成 f。这条规则对应函数外延性：两个函数对所有输入给出相同输出，就是同一个函数。</p>
+<p><strong>归约的顺序值得规范。</strong>一个项里往往有多个可归约的子项。正规顺序（normal order）先归约最外层、最左边的那个，它保证"只要范式存在，一定能归约到"（Church–Rosser 定理：归约顺序虽然不同，但范式唯一）。后面算阶乘时我们会遵守它。</p>
+<div class="key-insight">三条铁律：α 改名（绑定变量可换名）、β 归约（把参数替换进函数体，是计算本身）、η 归约（λx.f x = f）。正规顺序归约 + Church–Rosser 保证"答案唯一且找得到"。</div>
+</section>
+
+<section>
+<h3>一、完整例题 1：Church 数字与后继函数——β 归约算出 2 + 1 = 3</h3>
+<p>〇节已经预告了结果，本节把它写全、并解释每一步"为什么"。<strong>问题：用 λ 演算计算 2 的后继，即求 S 2，得到 Church 数字 3。</strong></p>
+<p><strong>第一步（准备好零件）。</strong>Church 数字：n = λf.λx. fⁿ(x)。后继函数：S = λn.λf.λx. f(n f x)。</p>
+<p><strong>第二步（做第一次 β 归约）。</strong>S 2 = (λn.λf.λx.f(n f x))(λf.λx.f(f x))。外层 λn 绑定参数，把函数体里所有 n 换成 2 的具体形式：</p>
+<div class="formula display" data-tex="S\,2\ \longrightarrow\ \lambda f.\lambda x.\,f\big((\lambda f.\lambda x.\,f(f\,x))\,f\,x\big)."></div>
+<p>这一步替换的唯一要点：n 出现了三次，全部换成 (λf.λx.f(f x))。</p>
+<p><strong>第三步（第二次 β 归约，喂给内层）。</strong>现在看内层 (λf.λx.f(f x)) f x：先把 λf.λx.f(f x) 应用到 f——把绑定变量 f 换成外来的 f（已 α 改名，无冲突），得 λx.f(f x)；再应用到 x，得 f(f x)：</p>
+<div class="formula display" data-tex="\lambda f.\lambda x.\,f\big(\,\underbrace{(\lambda f.\lambda x.\,f(f\,x))\,f}_{{}\longrightarrow\ \lambda x.\,f(f\,x)}\,x\big)\ \longrightarrow\ \lambda f.\lambda x.\,f(f(f\,x))."></div>
+<p><strong>第四步（读出结果）。</strong>λf.λx.f(f(f x)) 恰好是"把 f 作用 3 次"，即 Church 数字 3。于是 2 + 1 = 3，在纯符号替换中成立。∎</p>
+<p><strong>为什么这套编码叫"数字"？</strong>因为它的行为就是数字的行为：给一个函数 f 和一个起点 x，"2 会用它两次"，和"两次"这个直觉一致。数字的加法、乘法都能用这种编码机械地写出来（试试看 1、2 会让你算）。</p>
+<div class="key-insight">例题 1 教会你读 λ 计算：把 Church 数字当"用多少次"，把后继函数 S 当"多包一层 f"。两轮 β 归约，S 2 → 3。看懂这一步，你就看懂了 λ 演算里的"算术"。</div>
+</section>
+
+<section>
+<h3>二、完整例题 2：阶乘的"递归骨架"——为什么函数需要 Y</h3>
+<p>现在设一个真正"想要自己呼唤自己"的问题：阶乘。<strong>目标：写出一个 λ 项 FACT，使得 FACT n 归约到 n!。</strong>先看"有名字"的版本长什么样，再把它改造成 λ 演算能接受的样子。</p>
+<p><strong>第一步（有名字的递归）。</strong>用伪代码：FACT(n) = if n = 0 then 1 else n × FACT(n−1)。问题：函数体里出现了 FACT 自己——在 λ 演算里没有"变量可以指回整个函数"这回事。</p>
+<p><strong>第二步（把"自己"变成参数——递归骨架）。</strong>关键手法：<strong>把一个额外参数当作"自己"</strong>。定义</p>
+<div class="formula display" data-tex="\text{FACTSTEP}=\lambda f.\lambda n.\ \text{if}\ n=0\ \text{then}\ 1\ \text{else}\ n\times (f\,(n-1))."></div>
+<p>FACTSTEP 不是阶乘，它是个"吃进一个阶乘函数 f，吐出一个阶乘函数"的机器：如果 f 已经会算小一点的阶乘，那 FACTSTEP f 就会算当前的。这种形状叫<strong>递归骨架</strong>（或"一步展开"）。注意 FACTSTEP 本身<strong>没有任何自指</strong>——它只管调用那个作为参数给它的 f。</p>
+<p><strong>第三步（发现不动点）。</strong>我们希望最终函数 F 满足 F = FACTSTEP F——"F 是 FACTSTEP 的不动点"：把 F 喂给 FACTSTEP，吐出来的还是 F。为什么？因为 FACTSTEP F = "会算任意 n! 的函数" = F。所以目标从"定义 F"变成了"找 FACTSTEP 的不动点"。</p>
+<p><strong>第四步（需要一个"求不动点"的机器）。</strong>如果存在一个操作 Y，对任何骨架 g 都满足 Y g = g (Y g)，那么令 F = Y FACTSTEP，就有 F = FACTSTEP (Y FACTSTEP) = FACTSTEP F——F 自动成为不动点。这个 Y 正是本课主角。下一节推导它的形状。</p>
+<div class="key-insight">递归 = 找不动点。把"自己"改造成一个额外参数 f，得到骨架 FACTSTEP；只要有一个满足 Y g = g (Y g) 的操作 Y，F = Y FACTSTEP 就是真正的阶乘。剩下的问题只有一个：Y 长什么样？</div>
+</section>
+
+<section>
+<h3>三、Y 组合子——逐步推导为什么 YF = F(YF)</h3>
+<p>现在推导 Y。先注意一个"自我应用"的怪项 ω = λx. x x，它把输入用在自己身上。试 ω ω：替换后得 (λx.x x)(λx.x x) = ω ω——<strong>它归约成自己</strong>（就是〇·一那个永远算不完的项）。ω 是"无限自我"的雏形，Y 要用到这种自我引用。</p>
+<p><strong>第一步（先做一个"只有一步"的自我）。</strong>考虑 (λx.f(x x))(λx.f(x x))。把它整体记作 A。看 A 归约到什么：把 λx.f(x x) 应用到 λx.f(x x)——函数体里 x 换成 λx.f(x x)：</p>
+<div class="formula display" data-tex="A=(\lambda x.\,f(x\,x))(\lambda x.\,f(x\,x))\ \longrightarrow\ f\big((\lambda x.\,f(x\,x))(\lambda x.\,f(x\,x))\big)=f\,A."></div>
+<p>惊人：<strong>A 归约到 f A</strong>——"A 是 f 作用在 A 自己上"。这已经是不动点的味道了：A = f A。</p>
+<p><strong>第二步（把 f 变成输入）。</strong>上面 A 里的 f 是"外来的自由变量"。把它用 λ 绑起来，得到</p>
+<div class="formula display" data-tex="Y=\lambda f.\,(\lambda x.\,f(x\,x))(\lambda x.\,f(x\,x))."></div>
+<p><strong>第三步（验证 YF = F(YF)）。</strong>把 Y 应用到任意 F，做一轮 β 归约：</p>
+<div class="formula display" data-tex="YF=(\lambda f.\,(\lambda x.\,f(x\,x))(\lambda x.\,f(x\,x)))\,F\ \longrightarrow\ (\lambda x.\,F(x\,x))(\lambda x.\,F(x\,x))."></div>
+<p>再把 (λx.F(x x)) 应用到它自己（即上面第一步 A 的归约，把 f 换成 F）：</p>
+<div class="formula display" data-tex="(\lambda x.\,F(x\,x))(\lambda x.\,F(x\,x))\ \longrightarrow\ F\big((\lambda x.\,F(x\,x))(\lambda x.\,F(x\,x))\big)=F(YF)."></div>
+<p><strong>第四步（结论）。</strong>于是 YF 归约到 F(YF)。这条恒等式</p>
+<div class="formula display" data-tex="YF\ =\ F(YF)"></div>
+<p>就是一切递归的引擎：把"YF"展开成"F 套在 YF 外面"。回到阶乘：FACT = Y FACTSTEP，则 FACT n 会展开为 FACTSTEP (Y FACTSTEP) n → FACTSTEP FACT n → 按骨架展开一层，需要时再展开下一层——直到 n 归约到 0，触底返回 1。∎</p>
+<p><strong>为什么 Y 用两次 x x 而不是别的？</strong>因为"把参数用在自己身上"是符号系统里唯一能产生"无限展开"的机制：x x 让同一个项出现在自己内部，展开一层永远还能再展开。Y 把这种"潜在无限"包装成一个固定的项，让使用者不必自己写自指。</p>
+<div class="key-insight">Y = λf.(λx.f(xx))(λx.f(xx))。它的全部魔法在一行：YF 归约到 F(YF)。遇到递归就展开一层、需要再展开一层——Y 把"自我呼唤"变成了纯粹的形状。</div>
+</section>
+
+<section>
+<h3>四、完整例题 3：用 Y 算阶乘——FACT 2 → 2 的逐步归约</h3>
+<p>把前两节的零件组装起来，算一个具体数字。<strong>问题：设 FACT = Y FACTSTEP，其中 FACTSTEP = λf.λn. if n=0 then 1 else n·(f(n−1))。计算 FACT 2。</strong>（为可读性，用 n·(f(n−1)) 表示 Church 数字乘法，并假设乘法、减一的归约已定义好；你将在工作题 1 里亲手写它们。）</p>
+<p><strong>第一步（展开 Y）。</strong>FACT 2 = (Y FACTSTEP) 2 → (FACTSTEP (Y FACTSTEP)) 2。把 YF = F(YF) 用了一次：递归头露出来了。</p>
+<p><strong>第二步（应用骨架）。</strong>(FACTSTEP (Y FACTSTEP)) 2。骨架是 λf.λn. if n=0 then 1 else n·(f(n−1))，先喂入 f = (Y FACTSTEP)，再喂入 n = 2。2 不是 0，进入 else 分支：</p>
+<div class="formula display" data-tex="2\times\big((Y\,\text{FACTSTEP})\,1\big)."></div>
+<p><strong>第三步（再展开一层）。</strong>对 (Y FACTSTEP) 1 重复第一步：→ (FACTSTEP (Y FACTSTEP)) 1 → else 分支：1 × ((Y FACTSTEP) 0)。</p>
+<p><strong>第四步（触底）。</strong>对 (Y FACTSTEP) 0：→ (FACTSTEP (Y FACTSTEP)) 0，现在 n = 0 走 then 分支，直接给 1。</p>
+<p><strong>第五步（回代）。</strong>从底向上：1 × 1 = 1，2 × 1 = 2。于是 FACT 2 归约到 2 = 2!。∎</p>
+<p><strong>观察。</strong>每一步都只做三件事：展开 Y（把骨架 f 换成 Y 骨架）、按 if 分支、递归调用更小的参数。Y 不"知道"自己在算阶乘——它只是把"展开"这个动作无限提供出来，计算的全部"智慧"都在骨架 FACTSTEP 里。这正是设计良好的接口：Y 负责递归的通用机制，骨架负责具体的算法。</p>
+<div class="key-insight">例题 3 的全程：FACT 2 → 2×(1×(1)) = 2。Y 是"递归引擎"，骨架是"具体算法"。算阶乘 = 一次次调用 Y 展开；触到 n=0 返回 1，层层回乘。</div>
+</section>
+
+<section>
+<h3>五、Turing 完备性——λ 演算 = 图灵机</h3>
+<p>Y 组合子解决的不只是"好看"：它把递归加进了 λ 演算，从而<strong>补上了 λ 演算成为通用计算模型最后一块拼图</strong>。</p>
+<p>1936 年，两个年轻人几乎同时、从完全不同的方向定义了"可计算"：Alonzo Church 的 λ 演算和 Alan Turing 的图灵机。之后证明它们是<strong>等价的</strong>——两个系统定义的是同一个可计算函数类。等价的关键桥梁正是 Y：</p>
+<p><strong>图灵机的"循环"（状态会反复用到同一行表）对应 λ 演算的"递归"（Y 反复展开同一个骨架）。</strong>没有 Y 的 λ 演算只能写"一定终止"的程序，表达能力残缺；有了 Y，任何能用循环/递归写出的算法都能翻译成 λ 项。</p>
+<p>由此得到本课最重要的结论之一：</p>
+<div class="key-insight"><strong>λ 演算 = 图灵机 = 递归函数</strong>（Church 1936 / Turing 1936）。三种完全不同的形式系统定义了完全相同的"可计算"类。Y 组合子正是把"递归"这个能力焊进 λ 演算的那个焊点。</div>
+<p>既然等价，为什么还要学 λ 演算？因为它是<strong>函数式编程的语言理论内核</strong>，也是证明助手类型理论的基石（见第七节）——它把"程序"表现为可读、可代数操作的表达式，而不是难以分析的状态转移表。</p>
+</section>
+
+<section>
+<h3>六、SKI 组合子——不需要变量的计算</h3>
+<p>如果把"λ"和"变量"也去掉，只用三个固定符号，计算照样能做——这是对"计算根本不需要命名"的终极检验。</p>
+<p>定义三个<strong>组合子</strong>（fixed 函数）：</p>
+<div class="formula display" data-tex="S\,x\,y\,z=x\,z\,(y\,z),\qquad K\,x\,y=x,\qquad I\,x=x."></div>
+<p>读法：S 是"分配"（把 z 分别送到 x 和 y）、K 是"常函数"（丢掉第二个参数）、I 是恒等。可证 <strong>SKI 系统与 λ 演算等价</strong>：任何 λ 项都能机械地翻译成只用 S、K 拼出的项（翻译里根本没有变量；λ 的"改名/替换"变成了 S、K 的纯重组）。反过来 SKI 显然能用 λ 写出来。所以"不需要变量、不需要 λ"也能计算。</p>
+<p><strong>用 SKI 写 Y。</strong>Y 也能翻译成 SKI 项。一个经典翻译是</p>
+<div class="formula display" data-tex="Y=S(S(S(KS)(S(KK)I))(K(SII)))(S(S(KS)(S(KK)I))(K(SII)))."></div>
+<p>它看起来像天书，但正是机械翻译的产物——翻译算法对任何 λ 项都能执行，Y 也不例外。这条公式说明：<strong>递归能力可以在连"函数参数名"都不存在的语言里存在</strong>。</p>
+<div class="key-insight">Sxyz = xz(yz)，Kxy = x，Ix = x。SKI 系统等价于 λ 演算——S 和 K 足以表达一切 λ 项，包括 Y（上面那条 Y 的 SKI 展开）。不需要变量、不需要 λ，计算照样完整。</div>
+</section>
+
+<section>
+<h3>七、Curry-Howard 同构——类型即命题</h3>
+<p>本课最深刻的结果出现在逻辑与计算的交界：<strong>程序就是证明</strong>。</p>
+<p>Curry（1934）和 Howard（1969）发现，λ 演算和自然演绎证明之间有一个逐条对应的字典：</p>
+<p><strong>类型（type）= 命题（proposition）</strong>：一个类型 A 就是一条断言 A。</p>
+<p><strong>程序（term）= 证明（proof）</strong>：一个类型为 A 的 λ 项，就是 A 的一个证明。</p>
+<p><strong>β 归约 = 切消（cut-elimination）/证明正规化</strong>：程序的执行（归约）对应证明中"绕弯子引理"的消除。同一个数学结构，在计算这边叫"运行"，在逻辑这边叫"化简证明"。</p>
+<p>逐条验证：函数类型 A → B 就是蕴含 A ⟹ B；"给一个 A 得到 B"的程序就是"假设 A 推出 B"的证明。类型 (A×B) → A 的项 λp. (左分量 p)，正是证明 A∧B ⟹ A 的证明。你的每一个类型正确的程序，都在不动声色地证明一条定理。</p>
+<p><strong>Y 在逻辑里的名字。</strong>Y 的类型是 (A → A) → A（因为 Y 把"骨架"变成不动点）。把它当命题读：<em>(A ⟹ A) ⟹ A</em>。这<strong>不是</strong>一个普遍成立的逻辑公式（仅当 A 恒真时成立）——正是这个"例外"透露了 Y 的本质：<strong>Y 对应的是数学归纳法/递归原理</strong>，而归纳原理在自然数上恰好是真的。于是 Y 组合子 = 数学归纳法，两个看似无关的概念是同一个东西的两张脸。</p>
+<p><strong>为什么这件事改变世界？</strong>因为"证明 = 程序"意味着：写一个类型正确的程序，就等于写了一个证明，而且<strong>类型检查器会自动验证证明</strong>。Coq、Lean、Agda 等证明助手就建立在这个原理上——你把要证的定理声明成类型，把证明写成程序，类型检查就是证明验证。2019 年 Lean 的数学库就是靠这台"程序-证明"机器管理着几十万条定理。</p>
+<div class="key-insight">Curry-Howard 同构：证明 = 程序、命题 = 类型、切消 = β-归约。Y 组合子 = 数学归纳法。Coq / Lean / Agda 的核心机制就是类型检查 = 证明验证。</div>
+</section>
+
+<section>
+<h3>八、函数式编程的根基——递归是循环的语法糖</h3>
+<p>Y 不只是理论玩具：它是<strong>函数式编程语言里递归的最终解释</strong>。</p>
+<p>Haskell、Lisp、Scheme 等语言的递归机制，在理论上都可以追溯到 Y 组合子——"函数能调用自己"在语言层面是内置的便利，但它的数学基础就是"Y 提供了不动点"这一事实。纯函数式语言<strong>没有 while 循环</strong>；所有的重复（遍历、累加、迭代）都被写成递归，而递归能写出来，正是因为语言底层悄悄提供了类似 Y 的能力。</p>
+<p><strong>一个直接的推论。</strong>既然递归 = 不动点，那"计算不需要变量赋值"就成立：不需要先给 x 赋值再反复修改 x，用递归 + 参数传递就能完成一切循环。这也是函数式编程"不可变数据"风格的根基——没有赋值，就没有"状态被意外篡改"的 bug 类别。</p>
+<p>实践上，现代语言不会让你手写 Y（太容易栈溢出），但概念完全同构：Haskell 里的 let f = ... in ... 自带不动点语义；Scheme 的 define 允许递归定义；Rust、OCaml 用代数数据类型 + 模式匹配把"递归数据结构"编码进类型系统。理解 Y，等于理解了这一切共用的<strong>同一个引擎</strong>。</p>
+<div class="key-insight">Haskell / Lisp / Scheme 的递归在理论上都能追溯到 Y 组合子。纯函数式语言没有循环——所有循环都是递归的语法糖。递归 = 不动点，这就是"计算不需要变量赋值"的终极证明。</div>
+</section>
+
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="Y = \lambda f.(\lambda x.f(xx))(\lambda x.f(xx))"></div>
+<div class="formula display" data-tex="YF = F(YF)\qquad(\text{不动点恒等式})"></div>
+<div class="formula display" data-tex="\text{Church}\,n=\lambda f.\lambda x.\,f^{\,n}(x);\qquad S=\lambda n.\lambda f.\lambda x.\,f(n\,f\,x)"></div>
+<div class="formula display" data-tex="S\,x\,y\,z=x\,z\,(y\,z),\quad K\,x\,y=x,\quad I\,x=x"></div>
+</section>
+
+<section>
+<h3>十、工作题（带解答）</h3>
+<p><strong>题 1（Church 算术：乘法）。</strong>给出 Church 数字的乘法函数 MULT = λm.λn.λf.λx. m (n f) x，并说明为什么它计算 m × n。</p>
+<details><summary>显示解答</summary><p>把 m 作用到 (n f) 上：n f 是"把 f 作用 n 次的函数"，那么 m (n f) 是"把 (n f) 作用 m 次的函数"，即把 f 作用 n×m 次。于是 m (n f) x 把 x 经过 n×m 次 f，正是 Church 数字 m×n 的定义 λf.λx. f^{mn}(x)。∎</p></details>
+<p><strong>题 2（验证不动点恒等式）。</strong>对 g = λf.λx. f x，手动展开 Yg 的前两步，确认出现 g(Yg) 的形状。</p>
+<details><summary>显示解答</summary><p>Yg → (λx.g(x x))(λx.g(x x)) → g((λx.g(x x))(λx.g(x x))) = g(Yg)。其中最后一步把圆括号里的项重新认出为 Yg。所以 Yg 归约到 g(Yg)，恒等式成立。∎</p></details>
+<p><strong>题 3（ω 为什么不终止）。</strong>证明 ω ω = (λx.x x)(λx.x x) 归约后还是自己，从而没有范式。</p>
+<details><summary>显示解答</summary><p>ω ω → (x x)[x := ω] = ω ω。每一次归约都回到自身，永远到不了范式。这就是"永不终止的 λ 项"的最小例子，也是 Y 里自指的种子。∎</p></details>
+<p><strong>题 4（SKI 还原 I）。</strong>证明 SKK = I（即 S K K x 对任意 x 归约到 x）。</p>
+<details><summary>显示解答</summary><p>S K K x → K x (K x)（用 S 的定义，x 先取 K、y 取 K、z 取 x）→ x（用 K 的定义丢掉第二个参数 K x）。所以 S K K 作用任何 x 都得 x，即 SKK = I。∎</p></details>
+<p><strong>题 5（Curry-Howard 的对应）。</strong>指出下面这个"程序"对应的逻辑公式：λx.λy. x（类型 A → B → A）。</p>
+<details><summary>显示解答</summary><p>类型 A → B → A 读作命题 A ⟹ B ⟹ A，即 A ⟹ (B ⟹ A)。程序 λx.λy.x：给定 A（x）再给定 B（y），返回 x——这就是"在假设 B 的前提下仍可重申已成立的 A"，是直觉主义逻辑的公理之一（弱化规则）。类型正确的程序自动给出了这条命题的证明。∎</p></details>
+</section>
+
+<section>
+<h3>十一、试试看（带提示）</h3>
+<p><strong>1. Church 数字的加法。</strong>写 ADD = λm.λn.λf.λx. m f (n f x)，验证 ADD 2 1 归约到 3。<strong>提示：</strong>先让 n f 产生"把 f 作用 n 次的函数"，再让 m f 套在它外面：m f (n f x) = 先把 f 作用 n 次、再作用 m 次，共 m+n 次。</p>
+<p><strong>2. 自己推 S 2 = 3。</strong>把〇·二到第一节的归约重写一遍，不看书：从 S 2 出发到 λf.λx.f(f(f x))。<strong>提示：</strong>只有两轮 β 归约；第二轮要把 λf.λx.f(f x) 先应用到 f（得 λx.f(f x)）再应用到 x（得 f(f x)）。</p>
+<p><strong>3. 用 Y 定义"无限循环"。</strong>设 LOOP = Y (λx. x)（骨架是恒等函数）。解释 LOOP 的归约行为。<strong>提示：</strong>Y(λx.x) → (λx.x)(Y(λx.x)) → Y(λx.x)——它归约回自己，永不停止，是"死循环"的最小程序。</p>
+<p><strong>4. 为什么 YF = F(YF) 里两边的 F 数量不一样，却仍然"恒等"？</strong><strong>提示：</strong>这个"恒等式"是 β 归约意义下的（左边可归约到右边），不是语法上的完全相同；Y 的妙处正是把"少一层 F"的项展开成"多一层 F"。</p>
+<p><strong>5. 类型 (A → B) → A → B 对应哪条逻辑规则？</strong><strong>提示：</strong>读作 (A ⟹ B) ⟹ A ⟹ B，即"从函数与参数推出结果"——这是蕴含的消去规则（modus ponens）。程序 λf.λx. f x 就是这条规则的证明。</p>
+<p><strong>6. 用正规顺序 vs 内层先归约，算 (λx.y)(ωω) 会有什么不同？</strong><strong>提示：</strong>正规顺序先归约最外层：λx.y 直接吞掉参数 ωω，因为 x 没出现在函数体里，直接得 y，一步完成；内层先归约则会在 ωω 上永远打转。这就是"存在范式的项，正规顺序保证能找到"的含义。</p>
+</section>
+
+<section><h3>前沿：程序语言设计中的不动点</h3><p>现代函数式语言（Rust、Haskell、OCaml）把"不动点"从角落里的 Y 变成了类型系统的日常机制：通过<strong>代数数据类型（ADT）</strong>和<strong>模式匹配</strong>，递归数据结构（链表、树）与递归函数被编码进类型本身，编译器静态检查"每种情况都被处理"。Haskell 的 fix :: (a → a) → a 就是 Y 的静态类型版本（允许非终止，所以类型系统要睁一只眼闭一只眼）。仍开放的核心问题：<strong>线性类型系统中不动点的完整理论</strong>——在线性逻辑（如 Rust 的 borrow checker，资源只能使用一次）的约束下，如何在不违反所有权的前提下表达递归？线性类型严格限制"一个资源用一次"，而递归天然要求函数被反复调用，两者的调和目前只有部分方案（如"不可逆的代数数据类型"与 typed Racket 的实验），尚无统一理论。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Boolos et al., Computability and Logic</strong></p>
+<p>&rarr; <strong>S. Aaronson, Quantum Computing Since Democritus</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/turing-machine.html">图灵机</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/turing-machine.html">📝 图灵机</a>：同一学科分类「逻辑与计算」。</p>
+<p>&rarr; <a href="/pages/godel.html">⚡ Gödel 不完备</a>：同一学科分类「逻辑与计算」。</p>
+<p>&rarr; <a href="/pages/proof-theory.html">📝 证明论</a>：逻辑与计算核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/y combinator.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

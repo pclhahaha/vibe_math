@@ -1,0 +1,232 @@
+<section>
+<h3>〇、直觉入门——为什么热水会变凉，而冷水从不自动变热</h3>
+<p>把一滴墨水滴进一杯水，墨水会慢慢散开、混匀，从来没人见过它自动聚回一滴。热水放在桌上只会变凉，从不自动变热。把这段录像倒过来放，你一眼就能看出"不对"。为什么？</p>
+<p>Boltzmann 的整个理论（本课分两半）就是回答这个"为什么"的：<strong>前半</strong>给出"平衡时分子怎么分配"的精确公式——<strong>Boltzmann 分布</strong>：处于能量 E 的某个微观状态的相对概率是 e<sup>−E/kT</sup>。为什么是指数？因为这背后是"数排法"：能量越高，热库能"腾出来"安排它的方法越少。<strong>后半</strong>给出"系统怎么一步步走到平衡"的运动方程——<strong>Boltzmann 方程</strong>，它描述亿万个分子整体如何从有序走向乱糟糟的平衡，以及为什么这个过程不可逆。</p>
+<p>这门课同时是两门学科的地基：统计力学（由配分函数算一切热学量）和气体动理学（由输运方程算输运系数）。先给一个带数字的预告，勾住你的好奇心——一个 0.1 eV 的激发能级，在室温（300 K，kT ≈ 0.0259 eV）下被占据的概率只有约 <strong>2%</strong>。为什么这么少？第四节你会亲手把这个 2% 从零算出来。</p>
+<div class="key-insight">核心思想：平衡不是"均匀"，而是"按能量指数衰减的占据率"。越高的能量态越难被占据，因为热库能"配"给它的微观排法太少。只想懂核心思想，看到〇到第六节就够；想看微观不可逆性的动力学证明（H 定理、Loschmidt 悖论），从第八节开始。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/entropy.html">熵与信息</a>、<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体问题：两个能级、4 个分子——把"乱"数出来</h3>
+<p>先忘掉温度，做一件人人都能动手的事：<strong>数排法</strong>。设想一个小盒子，里面有 <strong>4 个可区分的分子</strong>（真分子是天文数字，先用 4 个练手）。每个分子要么躺在能量 0 的基态，要么站在能量 ε 的激发态（ε 是一个数，比如 0.1 eV）。</p>
+<p>"只看有几个分子在激发态"，这叫<strong>宏观状态</strong>：n=0、1、2、3、4（总能量是 nε）。"具体到哪几个分子在激发态"，这叫<strong>微观状态</strong>。关键差别：<strong>同一个宏观状态，往往有不止一种微观实现</strong>——有多少种，就叫它的"多重度" W。</p>
+<p><strong>完整例题：把 4 个分子的全部宏观状态一个个数完。</strong>选"哪 n 个分子上激发态"，是组合问题：</p>
+<div class="formula display" data-tex="W(n)=\binom{4}{n}\quad\Rightarrow\quad\begin{array}{c|c|c|c}
+n\ (\text{激发数}) & \text{能量 } n\varepsilon & W=\binom{4}{n} & \ln W\\[2pt]
+0 & 0 & 1 & 0\\[2pt]
+1 & \varepsilon & 4 & 1.386\\[2pt]
+2 & 2\varepsilon & 6 & 1.792\\[2pt]
+3 & 3\varepsilon & 4 & 1.386\\[2pt]
+4 & 4\varepsilon & 1 & 0
+\end{array}"></div>
+<p>一步步核对："全在基态"只有 1 种排法；"1 个激发"是选哪 1 个上去，C(4,1)=4 种；"2 个激发"是选哪 2 个，C(4,2)=6 种；3、4 对称。总和 1+4+6+4+1 = 16 = 2⁴——正好是每个分子独立选"基态/激发态"的全部可能，校验通过。</p>
+<p>结论：如果 16 个微观状态机会均等，你几乎总会看到 n=2（"均匀"分布），<strong>不是因为有谁在推它，单纯因为那种排法最多</strong>。这就是 Boltzmann 计数法的第一课：<strong>哪种宏观分布最可能出现，取决于它有多少种微观实现方式</strong>。表里最右列 ln W 你已经很熟悉——它就是熵（见 <a href="/pages/entropy.html">熵与信息</a>）。</p>
+<div class="key-insight">数排法 = 统计力学的第一语言。均匀分布"赢"，只因为 C(4,2)=6 是最大的多重度。但注意：这个孤立系统里每个能级的占据是"扁平"的（一切等概率）——指数分布还没有出场。温度一出场，它就来了。</div>
+</section>
+
+<section>
+<h3>二、为什么 Boltzmann 分布是指数——温度、热库与"数排法"</h3>
+<p>上一节孤立盒子没有温度。现在把盒子放进一个巨大的<strong>热库</strong>（reservoir）——一个能量远大于它、同种分子构成的大系统。盒子与热库只交换能量，不交换粒子；两者合起来是孤立的，总能量固定为 E<sub>tot</sub>。这时你要问：盒子里的一个分子处于能量 E 的概率是多少？</p>
+<p><strong>答案的原则只有一个：数排法。</strong>给定盒子分子能量 E，热库就只能拥有 E<sub>tot</sub> − E 的能量；热库能排成多少种微观状态，这个"E"就有多重度。于是</p>
+<div class="formula display" data-tex="P(E)\ \propto\ W_{\mathrm{res}}(E_{\mathrm{tot}}-E)\;=\;\exp\!\Big[\tfrac{1}{k}\,S_{\mathrm{res}}(E_{\mathrm{tot}}-E)\Big]."></div>
+<p><strong>完整例题：一个 8 分子热库，亲手算出一个"指数律"。</strong>设测试分子能量 E ∈ {0, ε}，热库 8 个分子（两能级），总能量固定 4ε。测试分子在 0 上，热库就要装 4ε（4 个激发）：</p>
+<div class="formula display" data-tex="\begin{array}{c|c|c|c}
+\text{测试分子能量} & \text{热库能量} & \text{热库激发数 }m & W_{\mathrm{res}}=\binom{8}{m}\\[2pt]
+0 & 4\varepsilon & 4 & 70\\[2pt]
+\varepsilon & 3\varepsilon & 3 & 56
+\end{array}"></div>
+<p>于是 <strong>P(ε)/P(0) = 56/70 = 0.8</strong>。0.8 意味着：测试分子跳到激发态，就"偷"走热库一个量子；热库剩下 3 个量子的排法（56 种）比 4 个量子的排法（70 种）少，所以高能态被轻微惩罚。没有任何力在推——纯粹是<strong>计数</strong>。写成分数形式再靠近一步：</p>
+<div class="formula display" data-tex="\frac{P(\varepsilon)}{P(0)}=\frac{W_{\mathrm{res}}(4\varepsilon-\varepsilon)}{W_{\mathrm{res}}(4\varepsilon)}=\exp\!\Big[\frac{S_{\mathrm{res}}(4\varepsilon-\varepsilon)-S_{\mathrm{res}}(4\varepsilon)}{k}\Big]."></div>
+<p><strong>现在回答"为什么是指数"。</strong>热库极其巨大时，S<sub>res</sub>(E) 在 E<sub>tot</sub> 附近几乎是直线：多取走一份能量 E，熵就掉固定的一截。把这条直线的斜率定义为温度——<strong>1/T := dS/dE</strong>（或写成 β = 1/kT = dS/dE）——就有</p>
+<div class="formula display" data-tex="S_{\mathrm{res}}(E_{\mathrm{tot}}-E)\;\approx\;S_{\mathrm{res}}(E_{\mathrm{tot}})-\frac{E}{T}\;\;\Longrightarrow\;\;P(E)\propto e^{-E/kT}."></div>
+<p>结构拆开看：<strong>能量相加</strong>（E<sub>tot</sub> = E<sub>sys</sub> + E<sub>res</sub>，相加性）进入<strong>指数</strong>（熵的对数形式，相乘性），而"热库大 ⇒ 熵对能量线性"把它压成干净的 e<sup>−βE</sup>。这就是 Boltzmann 分布是指数的全部秘密——它不是假设，是"热库很大 + 能量相加"的必然结论。反过来记：如果热库很小，斜率会随 E 变，分布就不是纯指数（第十四节会回来看这个注记）。</p>
+<p><strong>完整例题（校验）：β ε = 1 时，4 个分子的激发数分布。</strong>无相互作用分子彼此独立，P(n) ∝ C(4,n)·e<sup>−n</sup>（e<sup>−n</sup> 就是 e<sup>−n·1</sup>）：</p>
+<div class="formula display" data-tex="\begin{array}{c|c|c|c}
+n & C(4,n)\,e^{-n} & P_n & nP_n\\[2pt]
+0 & 1.000 & 0.286 & 0\\[2pt]
+1 & 1.472 & 0.420 & 0.420\\[2pt]
+2 & 0.812 & 0.232 & 0.464\\[2pt]
+3 & 0.199 & 0.057 & 0.170\\[2pt]
+4 & 0.018 & 0.005 & 0.021
+\end{array}"></div>
+<p>分布总和 1.000；平均激发数 ⟨n⟩ = 1.075。每个分子的平均激发率 = 1.075/4 = <strong>0.269</strong>。而单分子公式给 e<sup>−1</sup>/(1+e<sup>−1</sup>) = 0.368/1.368 = <strong>0.269</strong>——两套算法咬合得天衣无缝。分子间无相互作用时，总能量是各分子能量之和，e<sup>−βE</sup> = Πe<sup>−βEᵢ</sup> 分解成乘积，所以每个分子独立地按同一个 e<sup>−βE</sup> 分配。这条"因子分解"性质就是下一节配分函数能相乘的原因。</p>
+<div class="key-insight">指数分布怎么来的？把盒子和热库一起数排法：能量相加 → 热库熵的对数进入指数；热库大 → 熵线性 → 纯指数 e^{−E/kT}。温度不是"外来概念"，它就是"热库熵随能量下降的斜率"。</div>
+</section>
+
+<section>
+<h3>三、配分函数——把"所有可能"加总起来的那个和</h3>
+<p>上一节给了相对概率 e<sup>−βE</sup>。概率必须加起来等于 1，所以除以归一化常数——<strong>这个归一化常数就是配分函数（partition function）</strong>，本课最重要的一个量：</p>
+<div class="formula display" data-tex="Z(\beta)=\sum_{i} e^{-\beta E_i},\qquad p_i=\frac{e^{-\beta E_i}}{Z},\qquad \beta=\frac{1}{kT}."></div>
+<p>求和跑遍系统所有微观状态 i。为什么叫"配分"（partition）？因为 Z 把"总概率 1"这份家产，按每个状态的权重 e<sup>−βE</sup> 分派出去——Z 越大，每个状态平均分得越少，说明高能态越多、系统越"散"（熵越高）。直觉上，Z 是"所有状态的相对权重之和"，是温度的换算表。</p>
+<p><strong>为什么 Z 能推出所有热力学量？先看平均能量。</strong>直接求导：</p>
+<div class="formula display" data-tex="-\frac{\partial\ln Z}{\partial\beta}=-\frac{1}{Z}\sum_i (-E_i)\,e^{-\beta E_i}=\sum_i E_i\,p_i=\langle E\rangle."></div>
+<p>这一条要背下来：<strong>平均能量 = 配分函数对数对 β 的导数（带负号）</strong>。它把"热力学"变成了"对一个和的求导"。</p>
+<p><strong>无相互作用分子的关键性质。</strong>若 N 个分子两两不作用，总能量 = 各分子能量之和，于是权重分解：e<sup>−βE</sup> = Πe<sup>−βEᵢ</sup>，求和跟着分解：</p>
+<div class="formula display" data-tex="Z_N=\Big(\sum_{i_1}e^{-\beta E_{i_1}}\Big)\cdots\Big(\sum_{i_N}e^{-\beta E_{i_N}}\Big)=Z_1^{\,N},\qquad \langle E\rangle_N=N\langle E\rangle_1."></div>
+<p>这是统计力学最常用的杠杆：<strong>会算一个分子的 Z，就会算一摩尔</strong>。下一节立刻用两只手把它用起来。</p>
+<div class="key-insight">配分函数 Z = 所有状态的 e^{−βE} 之和。有了 Z，平均能量 ⟨E⟩ = −∂lnZ/∂β，熵 S = k ln Z + ⟨E⟩/T，自由能 F = −kT ln Z——一个 Z 一把钥匙开所有门。先会算 Z，就赢了。</div>
+</section>
+
+<section>
+<h3>四、完整例题 1：两能级系统——配分函数与平均能量</h3>
+<p>把第二、三节的机器开起来。设每个分子有两个能级：基态 0、激发态 ε（如 ε = 0.1 eV），温度 T。记 x = βε = ε/kT。</p>
+<p><strong>第一步（单分子配分函数）。</strong></p>
+<div class="formula display" data-tex="Z_1=1+e^{-x},\qquad p_0=\frac{1}{1+e^{-x}},\qquad p_1=\frac{e^{-x}}{1+e^{-x}}."></div>
+<p><strong>第二步（平均能量，用 −∂lnZ/∂β）。</strong>lnZ<sub>1</sub> = ln(1+e<sup>−x</sup>)，对 β 求导（dx/dβ = ε）：</p>
+<div class="formula display" data-tex="\langle E\rangle_1=-\frac{\partial\ln Z_1}{\partial\beta}=\frac{\varepsilon\,e^{-x}}{1+e^{-x}}=\frac{\varepsilon}{1+e^{x}}."></div>
+<p><strong>第三步（代入数字，逐项算到底）。</strong>室温 T = 300 K：kT = 8.617×10⁻⁵ × 300 = 0.02585 eV，故 x = 0.1/0.02585 ≈ <strong>3.87</strong>。查指数表 e<sup>−3.87</sup> ≈ <strong>0.021</strong>。于是</p>
+<div class="formula display" data-tex="Z_1=1.021,\qquad p_1=\frac{0.021}{1.021}=0.0205,\qquad \langle E\rangle_1=0.1\times0.0205=0.00205\ \text{eV}."></div>
+<p>读出物理：<strong>激发态只被占据约 2%</strong>——室温的 kT 只有 0.0259 eV，而一个 0.1 eV 的激发要贵 3.87 个 kT，指数律把它压到 1/48。这就是"为什么电子激发在室温下稀少"的定量答案（也解释了为何多数材料室温下透明）。</p>
+<p><strong>第四步（N = 4 个分子）。</strong>Z<sub>4</sub> = Z<sub>1</sub>⁴ = 1.021⁴ ≈ <strong>1.087</strong>；⟨E⟩<sub>4</sub> = 4 × 0.00205 = <strong>0.0082 eV</strong>。与第二节 βε=1 的例子对照：那里每个分子平均激发率 0.269，这里只有 0.0205——能量贵 3.87 倍，占据率掉 13 倍，这就是指数的威力。</p>
+<p><strong>第五步（极限检验）。</strong>T → 0：x → ∞，e<sup>−x</sup> → 0，⟨E⟩ → 0（全部冻结在基态）。T → ∞：x → 0，⟨E⟩ → ε/2（两能级均等占据）。两个极限都符合直觉。</p>
+<p><strong>第六步（热容量——为什么比热不一定是常数）。</strong>C = d⟨E⟩/dT 对 N 个分子给出</p>
+<div class="formula display" data-tex="C=Nk\,\frac{x^2\,e^{x}}{(1+e^{x})^2},\qquad x=\frac{\varepsilon}{kT}."></div>
+<p>代入 x = 3.87：C ≈ 0.30 Nk。它并非恒定：在 x ≈ 2.4（即 T<sub>peak</sub> = ε/(2.4k) ≈ <strong>483 K</strong>，当 ε = 0.1 eV）处取峰 C ≈ 0.44 Nk，之后随温度升高跌向 0。这个"先升后降的鼓包"叫 <strong>Schottky 反常</strong>——它是"配分函数机制"第一次给出与"经典常数比热"（Dulong–Petit）相悖、且被实验验证的预言。</p>
+<div class="key-insight">两能级系统是本课的"hello world"：Z = 1+e^{−x} 一步算完，配分函数、占据率、平均能量、热容量全从它导出。室温下 0.1 eV 激发只占 2%——记住这个 2%，整门课就有了体感。</div>
+</section>
+
+<section>
+<h3>五、完整例题 2：简谐振子——几何级数求和，Planck 与能均分</h3>
+<p>第二个样板更接近真实世界：原子的振动、晶格的声子、黑体辐射的辐射场，全都是"一系列等距能级"。设单个谐振子能级为</p>
+<div class="formula display" data-tex="E_n=n\,\hbar\omega,\qquad n=0,1,2,3,\dots"></div>
+<p><strong>第一步（配分函数 = 几何级数）。</strong>记 y = βħω，等比数列公比 e<sup>−y</sup> &lt; 1：</p>
+<div class="formula display" data-tex="Z_1=\sum_{n=0}^{\infty}e^{-n y}=1+e^{-y}+e^{-2y}+\cdots=\frac{1}{1-e^{-y}}."></div>
+<p><strong>第二步（平均能量 = 对 −lnZ 求导）。</strong>lnZ = −ln(1−e<sup>−y</sup>)；用链式法则 d/dβ = ħω·d/dy：</p>
+<div class="formula display" data-tex="\langle E\rangle_1=-\frac{\partial\ln Z_1}{\partial\beta}=\hbar\omega\,\frac{e^{-y}}{1-e^{-y}}=\frac{\hbar\omega}{e^{y}-1}."></div>
+<p>这就是 <strong>Planck 公式</strong>——黑体辐射能量谱的核心因子，1900 年 Planck 正是靠它（加上态密度）一举解释了黑体辐射。你看，它只是"几何级数求和 + 求导"，不需要任何新物理。</p>
+<p><strong>第三步（代入数字）。</strong>取 ħω = 0.05 eV，T = 300 K（kT = 0.02585 eV）：y = 0.05/0.02585 ≈ <strong>1.934</strong>，e<sup>1.934</sup> ≈ 6.92，于是</p>
+<div class="formula display" data-tex="Z_1=\frac{1}{1-e^{-1.934}}=\frac{1}{1-0.1446}=1.169,\qquad \langle E\rangle_1=\frac{0.05}{6.92-1}=0.00845\ \text{eV}."></div>
+<p>它只有 kT = 0.0259 eV 的约 <strong>1/3</strong>——量子效应把能量"冻住"了，比经典预期（kT）低得多。</p>
+<p><strong>第四步（两个极限，读出物理）。</strong></p>
+<p>低温（y ≫ 1）：⟨E⟩ ≈ ħω e<sup>−y</sup> → 0，系统蜷缩在基态，振动"量子冻结"。高温（y ≪ 1）：e<sup>y</sup> − 1 ≈ y，故</p>
+<div class="formula display" data-tex="\langle E\rangle_1\approx \hbar\omega\,\frac{1}{y}=kT\qquad(\text{能均分定理})."></div>
+<p>高温极限回到经典能均分：每个二次型自由度分到 kT。数字检验：T = 1000 K 时 kT = 0.0862 eV，y = 0.05/0.0862 = 0.58，⟨E⟩ = 0.05/(1.786−1) = <strong>0.0636 eV</strong> ≈ 0.74 kT——离 100% 越来越近，但量子修正还在。能均分只在 T → ∞ 严格成立。</p>
+<div class="key-insight">谐振子例子的配方：几何级数求和出 Z，链式求导出 ⟨E⟩。同一个动作多做两遍，就能算晶格比热（Debye）和黑体辐射（Planck）——这就是"会算配分函数就赢了一半"。</div>
+</section>
+
+<section>
+<h3>六、从配分函数到熵与自由能——一把钥匙开所有门</h3>
+<p>⟨E⟩ = −∂lnZ/∂β 只是第一把锁。熵和自由能也埋在 Z 里。定义<strong>亥姆霍兹自由能</strong></p>
+<div class="formula display" data-tex="F=-kT\ln Z."></div>
+<p>为什么这个定义"对"？因为热力学第一定律 dF = −S dT − p dV 给出 S = −∂F/∂T。对 F = −kT lnZ 求导（用 ∂lnZ/∂β = −⟨E⟩、∂β/∂T = −1/(kT²)）：</p>
+<div class="formula display" data-tex="S=-\frac{\partial F}{\partial T}=k\ln Z+\frac{\langle E\rangle}{T}."></div>
+<p>它和我们熟知的 <strong>S = −kΣp<sub>i</sub>ln p<sub>i</sub></strong>（见 <a href="/pages/entropy.html">熵与信息</a>）是同一件事：把 p<sub>i</sub> = e<sup>−βE</sup>/Z 代进去，−Σp ln p = β⟨E⟩ + ln Z，乘 k 正是上式。</p>
+<p><strong>完整例题：两能级系统在 ε = kT（x=1）时的每分子熵。</strong>Z = 1+e<sup>−1</sup> = 1.368，lnZ = 0.313；⟨E⟩/kT = x·e<sup>−x</sup>/Z = 0.368/1.368 = 0.269。故 S = k(0.313 + 0.269) = <strong>0.582 k</strong>。直接核对分布 (0.731, 0.269)：−k[0.731ln0.731 + 0.269ln0.269] = −k(−0.229 − 0.353) = 0.582 k。✓ 两条路殊途同归。</p>
+<p>到此你就集齐了整门统计力学的核心链：<strong>能谱 → Z → (E, S, F) → 一切热学量</strong>。第五节讲的谐振子、晶格、黑体，全是这条链上的流水作业。</p>
+<div class="key-insight">F = −kT ln Z 是"温度下的自由能量"，S = k ln Z + ⟨E⟩/T 是"分布的信息量"。Z 一个量同时吐出 E、S、F——统计力学的全部推理都在这条链条上。</div>
+</section>
+
+<section>
+<h3>七、关键公式（一）：Boltzmann 分布与配分函数</h3>
+<div class="formula display" data-tex="p_i=\frac{e^{-\beta E_i}}{Z},\qquad Z(\beta)=\sum_i e^{-\beta E_i},\qquad \beta=\frac{1}{kT}"></div>
+<div class="formula display" data-tex="\langle E\rangle=-\frac{\partial\ln Z}{\partial\beta},\qquad F=-kT\ln Z,\qquad S=k\ln Z+\frac{\langle E\rangle}{T}"></div>
+<div class="formula display" data-tex="\text{两能级: }Z=1+e^{-x},\ \langle E\rangle=\frac{\varepsilon}{1+e^{x}};\qquad \text{谐振子: }Z=\frac{1}{1-e^{-\beta\hbar\omega}},\ \langle E\rangle=\frac{\hbar\omega}{e^{\beta\hbar\omega}-1}"></div>
+</section>
+
+<section>
+<h3>八、微观可逆如何产生宏观不可逆？——H 定理与 Loschmidt 悖论</h3>
+<p>牛顿方程在 t → −t 下完全对称。如果每个分子都遵守时间可逆的力学定律——为什么热水会变凉而不会自动变热？<strong>宏观不可逆性从哪来？</strong></p>
+<p>Boltzmann 1872 年的回答：<strong>H 定理</strong>。定义 H(t) = ∫ f log f dv（f 是速度分布函数）。从 Boltzmann 输运方程可严格证明 <strong>dH/dt ≤ 0</strong>——H 永不增加。平衡态时 H 最小，f 恰为 Maxwell 分布。又因为 S = −kH，H 递减正对应熵增加（永不减少）。注意：这里 H 的单调性不是"经验"，而是从输运方程推出的<strong>数学结论</strong>。</p>
+<div class="key-insight">Loschmidt（1876）当场反驳：如果所有分子速度瞬时反转，系统应沿原轨迹返回——H 应增加！Boltzmann 的回答是："继续走下去，不必回头。"（意思是：反转后的系统再次演化，H 照样往下跌。）这场辩论至今没有完全终结——它逼出了下一节的时间箭头之谜。</div>
+</section>
+
+<section>
+<h3>九、为什么 H 定理不违反时间反演？——分子混沌假设</h3>
+<p>Boltzmann 方程的推导隐含了一个至关重要的假设——<strong>分子混沌假设</strong>（Stosszahlansatz，德文原义"碰撞数假设"）：两个即将碰撞的粒子，其速度<strong>在碰撞前不相关</strong>。这个假设本身是<strong>时间不对称</strong>的——碰撞之后粒子速度确实相关了（它们刚交换过动量），但碰撞之前被假设为彼此独立。粗粒化（只跟踪单粒子分布 f，丢掉两体以上的关联）就把不可逆性引进了本来可逆的微观世界。</p>
+<p>换句话说：H 定理成立的真正原因是<strong>方程只在"朝前"的方向上正确</strong>。速度反转后的系统，其演化史不满足同一个（作了分子混沌假设的）方程。这不是矛盾，而是"方程适用范围"的说明。</p>
+<p>严格程度如何？Lanford（1975）在极短时间内、Grad 极限下，从 Liouville 方程（精确的 N 体方程）严格推导出了 Boltzmann 方程——这是统计力学中少数几条从微观到宏观的严格推导之一。但任意长时间、一般情形的严格推导至今仍然开放（见第十七节）。</p>
+<div class="key-insight">不可逆性从哪来？不是从牛顿方程来，而是从"假设碰撞前不相关"这个时间不对称的截断来。Loschmidt 的反转论证失效，正是因为反转后的轨迹不满足同一个截断方程。</div>
+</section>
+
+<section>
+<h3>十、Boltzmann 方程的数学挑战——150 年未解的偏微分方程</h3>
+<p>Boltzmann 方程长这样（v 是速度，Q 是碰撞项）：</p>
+<div class="formula display" data-tex="\frac{\partial f}{\partial t}+v\cdot\nabla_x f=Q(f,f),\qquad Q(f,f)=\int_{\mathbb{R}^3}\int_{S^2} B\,(f'f'_*-ff_*)\,d\omega\,dv_*."></div>
+<p>左边 = 自由输运（线性，好对付）；右边 = 碰撞积分，<strong>对 f 是二次非线性</strong>（两个粒子同时到场，概率 ∝ f·f），还带速度与散射角的五重积分。这个方程太难了：</p>
+<p><strong>全局光滑（强）解的适定性至今完全开放</strong>——物理学家努力了 150 年。已知进展：DiPerna–Lions（1989）证明了全局<strong>重整化弱解</strong>的存在性；Desvillettes–Villani（2005）在附加正则性假设下证明了弱解向平衡态（Maxwell 分布）的收敛——Villani 2010 年凭相关非线性稳定性工作获 Fields 奖。但"从任意初始数据出发、全局光滑强解的存在唯一性"仍然悬而未决。</p>
+<p>为什么物理问题要抠数学细节？因为 f 的正则性直接关系到"宏观不可逆性能否严格成立"——光滑解存在，H 定理才是逐点成立的定理；弱解只能给到积分意义的结论。</p>
+<div class="key-insight">Boltzmann 方程 = 二次非线性 + 高维积分 + 全局时间。物理直觉它必然可解，数学上光滑解适定性 150 年未解决。这是 Hilbert 第 6 问题（见第十七节）的核心案例。</div>
+</section>
+
+<section>
+<h3>十一、关键公式（二）：Boltzmann 输运方程与 H 定理</h3>
+<div class="formula display" data-tex="\frac{\partial f}{\partial t}+v\cdot\nabla_x f=Q(f,f)"></div>
+<div class="formula display" data-tex="H(t)=\int f\log f\,dv,\qquad \frac{dH}{dt}\le 0\quad(H\text{-定理}),\qquad S=-kH"></div>
+</section>
+
+<section>
+<h3>十二、试试看（带提示）</h3>
+<p><strong>1. 两能级系统，ε = kT（x=1）。</strong> 激发态占据率是多少？平均能量是多少（以 ε 为单位）？<br><strong>提示：</strong>p₁ = e<sup>−1</sup>/(1+e<sup>−1</sup>) = 0.269；⟨E⟩ = ε·0.269 = 0.269ε。与第五节 x=3.87 的例子对比，能量便宜 3.87 倍后占据率涨了 13 倍。</p>
+<p><strong>2. ε = 0.1 eV 的能级在 T = 600 K 时的激发几率？</strong><br><strong>提示：</strong>kT = 8.617×10⁻⁵ × 600 = 0.0517 eV，x = 1.934，p₁ = e<sup>−1.934</sup>/(1+e<sup>−1.934</sup>) = 0.1446/1.1446 ≈ <strong>0.126</strong>（12.6%）。温度翻倍，占据率从 2% 跳到 12.6%。</p>
+<p><strong>3. 为什么高温下谐振子平均能量 = kT？</strong><br><strong>提示：</strong>y = βħω 很小时 e<sup>y</sup> − 1 ≈ y，⟨E⟩ = ħω/(e<sup>y</sup>−1) ≈ ħω/y = kT。这就是能均分：每一个二次型自由度高温分到 kT。</p>
+<p><strong>4. 为什么 N 个无相互作用分子的配分函数是 Z₁ᴺ？</strong><br><strong>提示：</strong>总能量 = 各分子能量之和，e<sup>−βE</sup> = Πe<sup>−βEᵢ</sup> 是乘积，求和可逐分子分解：Σ…Σ Πᵢ e<sup>−βEᵢ</sup> = Πᵢ(Σ e<sup>−βEᵢ</sup>)。注意这要求分子<strong>可区分且无相互作用</strong>；全同粒子会有 1/N! 修正（Gibbs 因子）。</p>
+<p><strong>5. Boltzmann 方程碰撞项 Q(f,f) 为什么是二次的？</strong><br><strong>提示：</strong>一次碰撞同时涉及两个粒子的分布函数；单位时间碰撞率 ∝ 两粒子同时出现在某处的概率 ∝ f·f。这就是分子混沌假设的用法：把两粒子概率近似成单粒子概率的乘积。</p>
+<p><strong>6. Loschmidt 悖论怎么化解？</strong><br><strong>提示：</strong>H 定理要求分子混沌假设（碰撞前速度不相关）。速度反转后的轨迹在碰撞瞬间会建立相关性，不再满足同一假设，所以 H 定理对它不适用。H 只在"朝前"演化中单调。</p>
+</section>
+
+<section>
+<h3>十三、工作题（带解答）</h3>
+<p><strong>题 1（两能级数字题）。</strong>ε = 0.025 eV，T = 290 K（恰好 kT = 0.025 eV，x = 1）。求 Z₁、p₀、p₁、⟨E⟩₁。</p>
+<details><summary>显示解答</summary><p>x = βε = 1。Z₁ = 1 + e<sup>−1</sup> = 1.368。p₀ = 1/1.368 = 0.731，p₁ = e<sup>−1</sup>/1.368 = 0.269。⟨E⟩₁ = ε·p₁ = 0.025 × 0.269 = 0.0067 eV。核验（换一种形式）：⟨E⟩ = εe<sup>−x</sup>/(1+e<sup>−x</sup>) = 0.025 × 0.368/1.368 = 0.0067 ✓；⟨E⟩ = ε/(1+e<sup>x</sup>) = 0.025/(1+2.718) = 0.0067 ✓。三种形式一致。</p></details>
+<p><strong>题 2（谐振子数字题）。</strong>y = βħω = 2。求 Z₁ 与 ⟨E⟩₁（以 ħω 为单位）；若 ħω = 0.05 eV，⟨E⟩ 是多少？</p>
+<details><summary>显示解答</summary><p>Z₁ = 1/(1−e<sup>−2</sup>) = 1/(1−0.1353) = 1.157。⟨E⟩₁ = ħω/(e<sup>2</sup>−1) = ħω/(7.389−1) = 0.1565 ħω。代入 ħω = 0.05 eV：⟨E⟩ = 0.00783 eV ≈ 0.30 kT（此处 T 满足 kT = ħω/2 = 0.025 eV）。量子冻结明显。</p></details>
+<p><strong>题 3（由 Z 求熵）。</strong>两能级系统一般公式：证明 S = k ln Z + ⟨E⟩/T，并求 x = 1 时每分子熵。</p>
+<details><summary>显示解答</summary><p>S = −kΣp ln p。p₀ = 1/Z，p₁ = e<sup>−x</sup>/Z，ln p₀ = −ln Z，ln p₁ = −x − ln Z。故 S = k[(1/Z)ln Z + (e<sup>−x</sup>/Z)(x + ln Z)] = k ln Z + k x e<sup>−x</sup>/Z。又 ⟨E⟩/T = (εe<sup>−x</sup>/Z)/(kT) = x e<sup>−x</sup>/Z，故 S = k ln Z + ⟨E⟩/T ✓。x = 1：Z = 1.368，ln Z = 0.313，x e<sup>−x</sup>/Z = 0.269，S = 0.582 k。与第六节结果一致。</p></details>
+<p><strong>题 4（配分函数分解）。</strong>用两能级、N = 3 个无相互作用分子显式验证 Z₃ = Z₁³。</p>
+<details><summary>显示解答</summary><p>Z₃ = Σₙ C(3,n) e<sup>−nx</sup> = 1 + 3e<sup>−x</sup> + 3e<sup>−2x</sup> + e<sup>−3x</sup> = (1+e<sup>−x</sup>)³ = Z₁³。（二项式定理。）物理：三个分子的能量取 0,ε,2ε,3ε，多重度 1,3,3,1——计数与指数权重相乘，正是第二、三节的机制。</p></details>
+<p><strong>题 5（热容量峰）。</strong>两能级系统 C/Nk = x²e<sup>x</sup>/(1+e<sup>x</sup>)²。证明它在 x = 2.4 附近取峰，并求 ε = 0.1 eV 时的峰温。</p>
+<details><summary>显示解答</summary><p>把 C/Nk = x²e<sup>x</sup>/(1+e<sup>x</sup>)² 视为 x 的函数。代入数值：x=1 → e/(1+e)² = 2.718/13.82 = 0.197；x=2 → 4e²/(1+e²)² = 29.6/70.4 = 0.420；x=2.4 → x²e^x = 5.76×11.02 = 63.5，(1+e^2.4)² = 144.5，比值 0.439（峰）；x=4 → 16×54.6 = 874，55.6² = 3091，比值 0.283。峰在 x ≈ 2.4。精确峰条件：对 x 求导置零得 e<sup>x</sup>(x−2) = x+2，数值解 x ≈ 2.40。峰温 T<sub>peak</sub> = ε/(2.4k) = 0.1/(2.4×8.617×10⁻⁵) = 483 K。</p></details>
+</section>
+
+<section>
+<h3>十四、反例与注记：简并度、能均分失效、负温度、孤立 vs 热库</h3>
+<p><strong>① Boltzmann 分布是对"状态"说的，不是对"能量"说的——简并度！</strong>pᵢ ∝ e<sup>−βE</sup> 的求和跑遍<strong>微观状态</strong>；若某能量 E 有 g(E) 个状态（简并度），则"能量 E 被占据的总概率"是</p>
+<div class="formula display" data-tex="P(E)\propto g(E)\,e^{-\beta E}."></div>
+<p>反例：两个能级，低能级 g=1（E=0），高能级 g=100（E=ε）。若 βε = 2，则 P(高)/P(低) = 100·e<sup>−2</sup> = 13.5 &gt; 1——<strong>高能级反而更可能被占据</strong>。教训：永远先数状态，再谈能量。若简并度随能量增长过快（如 g(E) 比 e<sup>βE</sup> 涨得还快），Z 会发散，这种能谱不物理——这提醒我们配分函数收敛性本身是物理的约束。</p>
+<p><strong>② 能均分定理会在低温失效（量子冻结）。</strong>经典统计预言每个二次型自由度贡献 kT；量子统计在 kT ≲ ħω 时给出 ⟨E⟩ ≈ ħω e<sup>−βħω</sup> ≪ kT。数字：ħω = 0.05 eV、T = 300 K 时 ⟨E⟩ ≈ 0.00845 eV = 0.33 kT（第五节）。这正是低温下固体的比热低于 Dulong–Petit 值的原因——"经典常数比热"只是高温极限。</p>
+<p><strong>③ 负温度（粒子数反转）。</strong>能谱<strong>有上界</strong>的系统（如两能级、核自旋系统）可以出现 β &lt; 0：高能态反而多于低能态（"粒子数反转"，激光的工作机制）。此时"温度"是负的——但这只是定义 T = (∂S/∂E)⁻¹ 的必然结果，系统实际处于比任何正温都"更热"的状态。注意：无上界能谱（谐振子、自由粒子）永远不会有负温度。</p>
+<p><strong>④ 孤立（微正则）与热库（正则）的差别。</strong>第二节的两个推导视角：微正则固定总能量（W 计数），正则固定温度（e<sup>−βE</sup>）。两者只在 N → ∞ 时给出相同结果；有限 N 时，正则系综的能量有涨落 ΔE ~ ⟨E⟩/√N，且 P(E) 本身不是 δ 函数。这不是矛盾，而是"固定温度"与"固定能量"在有限系统上的真实区别。</p>
+<p><strong>⑤ Boltzmann 方程的适用范围。</strong>Q(f,f) 只描述两体瞬时碰撞，因此 H 定理严格成立限于稀薄气体。稠密液体、长程相互作用（等离子体、引力）需要 BBGKY 层级或 Fokker–Planck 等推广——"熵永不减少"在这些系统里的证明路径完全不同，甚至不再逐点成立。</p>
+</section>
+
+<section>
+<h3>十五、定理证明：最大熵推导 Boltzmann 分布（Lagrange 乘子法）</h3>
+<p><strong>陈述。</strong>在固定能量 ⟨E⟩ = ΣpᵢEᵢ 与归一化 Σpᵢ = 1 的约束下，使熵 S = −kΣpᵢln pᵢ 最大的分布是</p>
+<div class="formula display" data-tex="p_i=\frac{e^{-\beta E_i}}{Z},\qquad Z=\sum_i e^{-\beta E_i}."></div>
+<p><strong>证明。</strong></p>
+<p>① <strong>拉格朗日函数。</strong>约束最大化，引入两个乘子 λ、β：</p>
+<div class="formula display" data-tex="L=-\sum_i p_i\ln p_i-\lambda\Big(\sum_i p_i-1\Big)-\beta\Big(\sum_i p_i E_i-\langle E\rangle\Big)."></div>
+<p>② <strong>变分。</strong>对 pᵢ 求偏导并令其为零（1 是对 pᵢ 求导时 ln pᵢ 的导数项）：</p>
+<div class="formula display" data-tex="\frac{\partial L}{\partial p_i}=-\ln p_i-1-\lambda-\beta E_i=0\;\;\Longrightarrow\;\;p_i=e^{-1-\lambda}\,e^{-\beta E_i}."></div>
+<p>③ <strong>归一化。</strong>e<sup>−1−λ</sup> = 1/Z 由 Σpᵢ = 1 定出，即 pᵢ = e<sup>−βEᵢ</sup>/Z。<strong>为什么是指数？</strong>因为熵的导数 ∂(−Σp ln p)/∂pᵢ = −(ln pᵢ + 1) 含有对数——把它放进含约束条件 βEᵢ 的方程，解出来必然是指数。这是"熵最大 + 约束能量"两个条件联合逼出的形式，不是凑的。</p>
+<p>④ <strong>唯一性。</strong>S 是分布上的严格凹函数（信息论基本不等式，见 <a href="/pages/entropy.html">熵与信息</a> 的 Gibbs 不等式证明），故驻点唯一，确实是最小熵的反面——最大熵。即任何其他满足同样约束的分布 q ≠ p 都有 S(q) &lt; S(p)。</p>
+<p>⑤ <strong>识别 β。</strong>与第二节的热库论证对照：正则分布中 β 是能量约束的乘子，热库论证中 β = 1/kT = (1/k)dS<sub>res</sub>/dE。二者对同一个物理系统的描述完全一致，故 β = 1/kT。∎</p>
+<div class="key-insight">最大熵推导的骨架：熵的导数是对数 → 约束是线性的 → 解是指数。Boltzmann 分布是"在只知道平均能量时，对系统状态最不偏不倚（最大熵）的推断"——Jaynes 观点：统计力学是推理，不是玄学。</div>
+</section>
+
+<section>
+<h3>十六、推导：从 Liouville 到 Boltzmann——BBGKY 层级</h3>
+<p>从 N 粒子 Liouville 方程（精确、可逆）出发，对 N−1 个粒子的坐标积分，得到<strong>BBGKY 层级</strong>——约化密度函数满足的一族不闭合方程组：每一层的方程都依赖更高一层的函数（f₁ 依赖 f₂，f₂ 依赖 f₃，……）。要把它截断成闭合的单粒子方程，需要<strong>分子混沌假设</strong>（Stosszahlansatz，见第九节）：f₂(x₁,v₁,x₂,v₂) ≈ f₁(x₁,v₁)f₁(x₂,v₂)——两个碰撞粒子的速度在碰撞前不相关。这一截断正是宏观不可逆性的微观来源：它把无穷层可逆方程"砍"成一层不可逆方程。</p>
+</section>
+
+<section>
+<h3>十七、前沿：Lanford 定理与 Hilbert 第 6 问题</h3>
+<p>Lanford（1975）在<strong>Grad 极限</strong>（N → ∞，σ → 0，Nσ² = 常数，即低密度极限）下，在<strong>极短时间内</strong>严格从 Liouville 方程推导出了 Boltzmann 方程——统计力学中为数不多的从微观到宏观的严格推导之一。</p>
+<p>Hilbert（1900）第 6 问题（"物理学的公理化"）要求从微观动力学对<strong>任意长时间</strong>严格推导 Boltzmann 方程，至今仍然<strong>开放</strong>。最近进展：Gallagher–Saint-Raymond–Texier（2013）在 Grad 极限下对硬球与短程势模型严格推出了 Boltzmann 方程；相关方向仍是活跃研究前沿。</p>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Kardar, Statistical Physics of Particles</strong></p>
+<p>&rarr; <strong>K. Huang, Statistical Mechanics</strong></p>
+<p>&rarr; 输运方程方向的经典参考：<strong>C. Cercignani, The Boltzmann Equation and Its Applications</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/entropy.html">熵与信息</a>、<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/ising-model.html">🧲 Ising 模型</a>：同一学科分类「统计力学」——用配分函数的同一套机器算相变。</p>
+<p>&rarr; <a href="/pages/entropy.html">📉 熵与信息</a>：同一学科分类「统计力学」——S = −kΣp ln p 与最大熵原理。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">🌊 布朗运动</a>：同一学科分类「统计力学」——分子随机碰撞的宏观表现。</p>
+<p>&rarr; <a href="/pages/hydrogen-atom.html">⚛️ 氢原子</a>：能级 + Boltzmann 占据 = 光谱强度与激发态布居。</p>
+</section>

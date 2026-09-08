@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="粘多边形造曲面：χ 与可定向性定乾坤，覆盖由基本群指挥" />
+  <meta property="og:title" content="曲面拓扑：分类与覆盖 — Vibe Math" />
+  <meta property="og:description" content="粘多边形造曲面：χ 与可定向性定乾坤，覆盖由基本群指挥" />
+  <title>曲面拓扑：分类与覆盖 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🫓 曲面拓扑：分类与覆盖 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">粘多边形造曲面：χ 与可定向性定乾坤，覆盖由基本群指挥</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='surface-topology',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/fundamental-group.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🕳️ 基本群</a>
+  <a href="/pages/carnot-cycle.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔥 Carnot 循环 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把多边形粘起来：所有闭曲面只分两族</h3>
+<p>拿一张纸（多边形），把边按标签两两粘起来，能得到什么？正方形对边同向粘 = <strong>环面</strong>（甜甜圈）；把"相对边反向"粘 = <strong>克莱因瓶</strong>（自己穿过自己、不可定向）。用"剪开再粘"的手术，任意曲面都能写成这种<strong>多边形表示</strong>——而 20 世纪初的伟大发现是：</p>
+<div class="formula display" data-tex="\text{连通紧曲面（无边界）}\ =\ \begin{cases} \text{球面}\ \#\ \underbrace{T^2\#\cdots\#T^2}_{g}\quad(\text{可定向，亏格 }g)\\[2mm] \text{球面}\ \#\ \underbrace{\mathbb RP^2\#\cdots\#\mathbb RP^2}_{k}\quad(\text{不可定向}) \end{cases}"></div>
+<p>——<strong>闭曲面分类定理</strong>：所有曲面都是"球面贴上若干手柄（环面连通和）"或"贴上若干射影平面"，且由两个不变量完全决定：<strong>可定向性</strong>与<strong>欧拉示性数 χ</strong>。χ=2−2g（可定向）或 χ=2−k（不可定向）。同胚 ⟺ 可定向性相同且 χ 相同。就这一句话，2 维流形被彻底"征服"——相比之下 4 维流形不可分类（Markov 1958），3 维直到 Perelman 才靠几何化收官（→ <a href="/pages/poincare-conjecture.html">庞加莱猜想</a> 课）。</p>
+<p>曲面的另一半故事是<strong>覆盖空间</strong>：环面"展开"成平面（万有覆盖 ℝ²），球面自己覆盖自己，克莱因瓶被环面双重覆盖。覆盖的层数与形状由<strong>基本群</strong>（→ <a href="/pages/fundamental-group.html">基本群</a> 课）精确编码：连通覆盖 ↔ 基本群的子群——拓扑第一次被"翻译"成群论。</p>
+<div class="key-insight">洞察：曲面是"看得见摸得着"的流形实验室。分类定理教我们：<strong>不变量（χ + 可定向性）够了，别的不需要</strong>；覆盖理论教我们：<strong>基本群是覆盖空间的"宪法"</strong>。亏格 g≥2 的曲面还能装上双曲度量（→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 课）——同一批曲面，从组合、群论到几何三层读法，正是低维拓扑的魅力。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/fundamental-group.html">基本群</a>（覆盖理论的语言）、<a href="/pages/algebraic-topology-homology.html">同调论</a>（欧拉示性数的现代形式）、<a href="/pages/hyperbolic-geometry.html">双曲几何</a>（亏格≥2 曲面的度量，可选）。</p></div>
+
+<section>
+<h3>一、一个具体问题——从多边形手术到分类定理</h3>
+<p><strong>多边形表示（fundamental polygon）。</strong> 曲面可三角剖分（Rado 1925）并切成一个多边形，边配成对、标号 a/a 或 a/a⁻¹（同向/反向）。标准形：</p>
+<div class="formula display" data-tex="\text{可定向： } a_1b_1a_1^{-1}b_1^{-1}\cdots a_gb_ga_g^{-1}b_g^{-1};\qquad \text{不可定向： } a_1a_1a_2a_2\cdots a_ka_k"></div>
+<p>（环面 = aba⁻¹b⁻¹；克莱因瓶 = aabb 或 abab⁻¹；射影平面 = aa。）</p>
+<p><strong>分类手术。</strong> 任给曲面：三角剖分 → 剪成多边形 → 用"切割-粘合"（把同向边配对、消除相邻反向对、规范化）逐步化成上述标准形——每一步都不改变拓扑，最终落到唯一标准形。于是分类归结为<strong>判定两个不变量</strong>。</p>
+<p><strong>为什么 χ 是"不变量之王"？</strong> V−E+F 对三角剖分的选择不变（细分不改变 V−E+F），且对连通和的加法：χ(A#B)=χ(A)+χ(B)−2。球面 2、环面 0、双环面 −2……亏格 g 的可定向曲面 χ=2−2g；射影平面 1、克莱因瓶 0、k 个射影平面 χ=2−k。<strong>χ 把"贴了多少手柄/射影平面"变成一个整数</strong>。</p>
+<p><strong>对比维度。</strong> 2D 分类只需 χ+可定向性；3D 靠几何化（Perelman）才"分类"（以几何块为原子）；4D 及以上<strong>不可分类</strong>：四维流形的同胚判定可编码停机问题（Markov 1958）。维度是拓扑难度的电梯。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——χ 怎么算、为什么够用</h3>
+<p><strong>三角形剖分与 V−E+F。</strong> 把曲面切成三角形（像足球皮），χ=V−E+F。细分（把三角形再切小）不改变 V−E+F（每细分一步 ΔV=ΔE+ΔF? 数值检查：在边上加点或面内加点都保持 V−E+F 不变）——所以 χ 是拓扑不变量。∎</p>
+<p><strong>从多边形直接读 χ。</strong> 标准多边形有 2 个顶点（粘合后）或 1 个……例如环面正方形：4 个顶点粘成 1 个、4 条边粘成 2 条、面 1 个：χ=1−2+1=0 ✓；球面用 2 个三角形拼：V=3、E=3、F=2 → χ=2 ✓。画布会实时演示"粘合后的顶点/边计数"。</p>
+<p><strong>为什么 χ 加上可定向性就够？</strong> 分类手术证明了"每个曲面同胚于标准形"，而标准形由 (定向性, g 或 k) 参数化；同胚的曲面必有相同 χ 与可定向性（不变量）。两个方向一合，判定完成。注意：<strong>χ 相同但定向性不同的曲面不同胚</strong>（χ=0：环面（可定向）≠ 克莱因瓶（不可定向））——χ 必须与可定向性搭档。</p>
+</section>
+
+<section>
+<h3>三、例题 1——从 χ 反推亏格（一步步算完）</h3>
+<p><strong>题目。</strong> 给出曲面的 χ 与可定向性，判断它是什么（并核对连通和公式）。</p>
+<p><strong>第一步：公式表。</strong> 可定向：χ=2−2g（球 2、环 0、双环 −2、三环 −4…）；不可定向：χ=2−k（RP²=1、克莱因=0、RP²#RP²#RP²=−1…）。</p>
+<p><strong>第二步：示例判定。</strong> (a) χ=0、可定向 ⟹ 环面（g=1）；(b) χ=0、不可定向 ⟹ 克莱因瓶（k=2，也即 RP²#RP²）；(c) χ=−2、可定向 ⟹ 双环面（g=2）；(d) χ=1 ⟹ 只能是 RP²（不可定向）。∎</p>
+<p><strong>第三步：连通和核对。</strong> 双环面 = T²#T²：χ=0+0−2=−2 ✓。RP²#RP²#RP²：1+1+1−2·2=−1 ✓（=χ=2−3）。∎</p>
+<p><strong>第四步：为什么要背两个公式？</strong> χ 相同并不够：χ=0 有三个候选（环面可定向、克莱因/RP²#RP² 不可定向——后两者同胚），可定向性是"分号"。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——覆盖空间：克莱因瓶被环面双重覆盖（一步步算完）</h3>
+<p><strong>题目。</strong> 构造 T² → Klein 瓶的 2 重覆盖，并用 χ 公式核对。</p>
+<p><strong>第一步：多边形。</strong> 克莱因瓶 = 正方形 aabb（上边=下边 a 同向、左右 b 反向? 取标准 aabb：相对边 aa 同向粘成瓶颈）。环面 = 两倍大的正方形 abab⁻¹（或把两个克莱因多边形"拼"）。</p>
+<p><strong>第二步：双层展开。</strong> 取环面（a 方向长度加倍的两倍域）沿 b 方向叠两层：把下层与上层沿"瓶颈缝"交错粘合（每个克莱因多边形对应环面的半片，两层错开半周期），得到 2:1 映射——每个环面点下面有 2 个克莱因点。这就是 T² 对 Klein 瓶的<strong>定向双重覆盖</strong>。∎</p>
+<p><strong>第三步：χ 核对。</strong> χ(T²)=0、χ(Klein)=0：覆盖公式 χ(上)=deg·χ(下) = 2·0=0 ✓（零检验虽平凡，方向正确）。换个有信息量的：S¹ 的 n 重覆盖 z→zⁿ：χ(S¹)=0 还是平凡——取 2 点空间的 n 重覆盖（χ=2n 上、χ=2 下、比 n ✓）。∎</p>
+<p><strong>第四步：群论读法。</strong> π₁(Klein) 的某个指数 2 子群 = ℤ² = π₁(T²)：<strong>覆盖的层数 = 子群指数</strong>。基本群"指挥"覆盖：这是第五节 Galois 对应的样例。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>分类定理：</strong> 连通闭曲面同胚于 T²#…#T²（g≥0 个，可定向）或 RP²#…#RP²（k≥1 个，不可定向）；两个曲面同胚 ⟺ 可定向性同 + χ 同。</li>
+<li><strong>χ 的性质：</strong> 三角剖分不变、连通和加性 (χ(A#B)=χ(A)+χ(B)−2)、反向 (χ(−Σ)=χ(Σ))、覆盖关系 χ(覆盖)=deg·χ(底)。</li>
+<li><strong>多边形表示：</strong> 任何闭曲面有标准多边形 aba⁻¹b⁻¹…/aa…；切割-粘合手术实现分类。</li>
+<li><strong>覆盖空间理论：</strong> 提升性质（同伦提升）、覆盖传递性；在连通局部道路连通半局部单连通的底空间上：<strong>连通覆盖（同构类）↔ π₁(B) 的子群（共轭类）</strong>（Galois 对应）；万有覆盖单连通；正则覆盖 ↔ 正规子群。</li>
+<li><strong>Riemann–Hurwitz：</strong> 分支覆盖的 χ 公式（曲面映射 deg d、分支点修正）：χ(上)=d·χ(下)−Σ(e_p−1)——连接 <a href="/pages/riemann-surface.html">黎曼面</a> 课。</li>
+<li><strong>亏格 g≥2 曲面：</strong> 万有覆盖是双曲平面 ℍ²，基本群是双曲曲面群（→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 课）；g=1：万有覆盖 ℂ；g=0：S²。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\chi(\Sigma)=V-E+F;\qquad \chi_{\text{定向}}=2-2g;\qquad \chi_{\text{非定向}}=2-k"></div>
+<div class="formula display" data-tex="\chi(A\#B)=\chi(A)+\chi(B)-2;\qquad \chi(\tilde X)=d\cdot\chi(X)\ (\text{覆盖})"></div>
+<div class="formula display" data-tex="\pi_1(S^1)\cong\mathbb Z:\ \text{子群 }n\mathbb Z\leftrightarrow n\text{ 重覆盖};\qquad \pi_1(T^2)\cong\mathbb Z^2\hookrightarrow\pi_1(\text{Klein})\ \text{指数}2"></div>
+</section>
+
+<section>
+<h3>七、延伸——曲面之后的拓扑</h3>
+<ul>
+<li><strong>黎曼面 = 定向曲面 + 复结构。</strong> 亏格 g 的黎曼面有 6g−6 维模空间（g≥2）与双曲结构一一对应——曲面分类是黎曼面理论的底盘（→ <a href="/pages/riemann-surface.html">黎曼面</a>）。</li>
+<li><strong>几何化（3D）。</strong> 曲面分类没有"几何"，3D 却需要几何化：每块 3-流形被八种几何之一统治（Perelman；→ <a href="/pages/poincare-conjecture.html">庞加莱猜想</a> 课）——维度的"几何负担"随维数增长。</li>
+<li><strong>映射类群与 Teichmüller。</strong> 曲面的自同胚同伦类构成映射类群 Mod_g；其作用在 Teichmüller 空间上连接双曲几何、动力系统与表示论（→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 课）。</li>
+<li><strong>四维的疯狂。</strong> 4D 光滑结构可以"怪异"到不唯一（Donaldson/Seiberg–Witten，→ <a href="/pages/yang-mills-mass-gap.html">Yang–Mills</a> 课的拓扑应用）；同胚判定不可判定（Markov 1958）——2D 的分类是多么奢侈。</li>
+<li><strong>曲面群进入 3D。</strong> 曲面子群猜想（3-流形的基本群含双曲曲面群）由 Kahn–Markovic（2012）与 Agol（2013 虚拟 Haken）解决——曲面是理解 3-流形的透镜。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"曲面想当然"</h3>
+<p><strong>陷阱 1："亏格 = 直观的洞数，对克莱因瓶也适用"？</strong> "洞/手柄"直觉只服务可定向曲面（环面、多环面）；不可定向曲面（RP²、克莱因瓶）没有"洞"却有 χ=1/0。用可定向语言描述不可定向对象是常见错误。</p>
+<p><strong>陷阱 2："χ 相同 ⟹ 同胚"？</strong> 不是。χ=0 有三个（环面、克莱因、以及环面与其他）——必须加上可定向性；"χ + 可定向性"才构成完整不变量。χ 单独是"一半的判定"。</p>
+<p><strong>陷阱 3："基本群平凡 = 单连通 = 球面（对曲面成立所以处处成立）"？</strong> 分类定理使闭曲面 π₁=1 ⟹ 球面，但这对一般空间完全不成立（可缩 ≠ 单连通 ≠ 球面；同伦群高维还管别的事）。把曲面特例当普适直觉是危险的。</p>
+<p><strong>陷阱 4："覆盖 = 用多个副本叠起来，方向无所谓"？</strong> 覆盖的粘贴必须"局部同胚且一致"，且<strong>方向/子群结构</strong>由 π₁ 子群决定：克莱因瓶的环面覆盖存在，但"反过来的覆盖"（克莱因盖环面？）不存在（指数子群方向）。"叠副本"想当然会漏掉正则性等精细结构。</p>
+<p><strong>陷阱 5："2D 分类 ⟹ 高维也会被类似不变量分类"？</strong> 大错。4D 不可分类（Markov）、3D 需要几何化、光滑与拓扑范畴在高维分道扬镳。2D 分类定理的成功是低维的特殊礼物，不是维数递增的模板。</p>
+</section>
+
+<section>
+<h3>九、当前状态——曲面理论的现代前沿</h3>
+<ol>
+<li><strong>映射类群与动力学。</strong> Mod_g 在 Teichmüller 空间的作用（Thurston 分类：周期/约化/伪阿诺索夫）、Teichmüller 流的遍历性（→ <a href="/pages/ergodic-theory.html">遍历理论</a>）——曲面支撑着当代一个活跃的动力系统分支。</li>
+<li><strong>曲面在 3-流形。</strong> 曲面子群与虚拟 Haken（Agol 2013）、曲线图与 3-流形（Hempel）、Heegaard 分解——曲面是 3D 拓扑的解剖刀。</li>
+<li><strong>4D 中的曲面。</strong> 4-流形中的嵌入曲面（手术、辛曲面、表示论约束）是 4D 拓扑与 Yang–Mills/Seiberg–Witten 交汇处。</li>
+<li><strong>计算与组合。</strong> 曲面的胞腔分解、词问题、映射类群的算法（curve complex）——计算拓扑（→ <a href="/pages/numerical-methods.html">数值方法</a> 课的拓扑面）在曲面处最成熟。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Poincaré (1895)</strong>：<em>Analysis Situs</em>——基本群、同调与流形理论的奠基。</li>
+<li><strong>Rado (1925)</strong>：曲面的可三角剖分性（分类手术的前提）。</li>
+<li><strong>Kerékjártó (1923) 等</strong>：闭曲面分类定理的完整化（20 世纪初的综合工作）。</li>
+<li><strong>Seifert–Threlfall (1934)</strong>：<em>Lehrbuch der Topologie</em>——曲面与覆盖理论的经典教材化。</li>
+<li><strong>Markov (1958)</strong>：四维流形分类的不可判定性。</li>
+<li><strong>Thurston (1980s)</strong>：曲面自同胚的 Nielsen–Thurston 分类（映射类群）。</li>
+<li><strong>Kahn–Markovic (2012) / Agol (2013)</strong>：曲面子群与虚拟 Haken 猜想——曲面群在 3-流形的胜利。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——χ 与覆盖</h3>
+<p><strong>题 1（χ 判定）。</strong> 可定向 χ=−4 是什么曲面？<strong>提示：</strong>2−2g=−4 ⟹ g=3（三孔环面）。</p>
+<p><strong>题 2（连通和）。</strong> T²#RP² 的 χ 与定向性？<strong>提示：</strong>χ=0+1−2=−1；含 RP² ⟹ 不可定向（=RP²#RP²#RP² 的一个代表？χ=−1 不可定向唯一）。</p>
+<p><strong>题 3（覆盖度数）。</strong> 环面 T² 自覆盖 z↦(2z mod, z?)——给出 4 重自覆盖的度数核对：χ=0=4·0。<strong>提示：</strong>(x,y)↦(2x,2y) mod ℤ² 是 4 重覆盖（基本群指数 4 子群）。</p>
+<p><strong>题 4（为何克莱因瓶被环面覆盖）。</strong> 用多边形：把两个克莱因多边形 abab⁻¹ 的"a 边"粘在一起，展开成一个正方形——说明这给出 2:1 覆盖。<strong>提示：</strong>两层展开消除非定向的"翻边"，得到可定向的环面。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：三孔环面。∎</p>
+<p><strong>题 2</strong>：χ=−1、不可定向。∎</p>
+<p><strong>题 3</strong>：见提示（4 重）。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布画廊）。</strong> 在球/环面/双环/克莱因/RP² 之间切换：观察标准多边形的标签（a/a⁻¹ 反向、a/a 同向）与粘合后的顶点数、边数——χ 从标签直接读出。</p>
+<p><strong>试试看 2（覆盖度数）。</strong> 画布的圆覆盖 z↦zⁿ：把 n 从 1 拖到 6，观察圆上每点上方有 n 个"层"；n=1 是恒等、n 增大层数加密——对应 π₁(S¹)=ℤ 的子群 nℤ。</p>
+<p><strong>试试看 3（与双曲几何联动）。</strong> 亏格 2 曲面用八边形粘成：它的万有覆盖是双曲平面（庞加莱圆盘密铺，→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 课画布）。把两课连起来：同一曲面，组合（χ=−2）、群（π₁ 指数）、几何（ℍ²）三副面孔。</p>
+<p><strong>试试看 4（同调对表）。</strong> 在 <a href="/pages/algebraic-topology-homology.html">同调论</a> 课对照：χ = 交错贝蒂数之和 Σ(−1)^i bᵢ——分类定理里的 χ 与同调课里的 χ 是同一个数，两个入口。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>A. Hatcher, Algebraic Topology</strong>（第 1 章覆盖、第 2 章同调，标准）</p>
+<p>&rarr; <strong>W. Massey, A Basic Course in Algebraic Topology</strong>（曲面分类与覆盖的经典叙述）</p>
+<p>&rarr; <strong>J. Stillwell, Classical Topology and Combinatorial Group Theory</strong>（历史与直觉）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.17/18（拓扑/代数拓扑）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/fundamental-group.html">基本群</a>、<a href="/pages/algebraic-topology-homology.html">同调论</a>、<a href="/pages/hyperbolic-geometry.html">双曲几何</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fundamental-group.html">🕳️ 基本群</a>：覆盖空间由 π₁ 的子群编码（Galois 对应）。</p>
+<p>&rarr; <a href="/pages/hyperbolic-geometry.html">🥏 双曲几何</a>：亏格≥2 曲面 = ℍ²/曲面群，多边形粘合。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🌐 黎曼面</a>：定向曲面 + 复结构；Riemann–Hurwitz。</p>
+<p>&rarr; <a href="/pages/algebraic-topology-homology.html">🕳️ 同调论</a>：χ=Σ(−1)ⁱbᵢ 的同调面孔。</p>
+<p>&rarr; <a href="/pages/poincare-conjecture.html">🌌 庞加莱猜想</a>：3D 几何化 = 曲面分类的三维续篇。</p>
+<p>&rarr; <a href="/pages/knot-invariant.html">🪢 纽结不变量</a>：纽结补空间里的曲面（Seifert 曲面）。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/surface-topology.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

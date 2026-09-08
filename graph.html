@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vibe Math 课程知识图谱 — 122门课程的关联网络" />
+  <title>知识图谱 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0d1117;color:#c9d1d9;overflow:hidden;height:100vh}
+    ::selection{background:rgba(88,166,255,.35)}
+    .header{position:fixed;top:0;left:0;right:0;z-index:10;padding:14px 20px;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,rgba(13,17,23,.95),rgba(13,17,23,0));pointer-events:none}
+    .header a{color:#58a6ff;text-decoration:none;font-size:.9em;pointer-events:auto}
+    .header h1{font-size:1.2em;color:#58a6ff;font-weight:700}
+    .header .sub{color:#8b949e;font-size:.8em}
+    #p5wrap{width:100vw;height:100vh}
+    canvas{display:block}
+    .legend{position:fixed;right:16px;top:60px;z-index:10;background:#161b22;border:1px solid #21262d;border-radius:10px;padding:14px 16px;font-size:.75em;max-width:220px}
+    .legend h3{color:#8b949e;font-size:.75em;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+    .legend .row{display:flex;align-items:center;gap:7px;margin:3px 0;color:#8b949e}
+    .legend .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+    .legend .tip{margin-top:8px;color:#484f58;font-size:.7em;line-height:1.5}
+    .filters{position:fixed;left:16px;top:60px;z-index:10;display:flex;flex-direction:column;gap:4px;max-height:64vh;overflow-y:auto;padding-right:6px;scrollbar-width:thin}
+    .filters button{background:#161b22;color:#8b949e;border:1px solid #30363d;border-radius:16px;padding:4px 12px;font-size:.75em;cursor:pointer;transition:all .15s;text-align:left}
+    .filters button:hover{color:#c9d1d9}
+    .filters button.on{color:#58a6ff;border-color:#58a6ff;background:#1a2a3a}
+    @media(max-width:600px){.legend{display:none}}
+  </style>
+</head>
+<body>
+<div class="header">
+  <a href="/">← 首页</a>
+  <h1>🧠 课程知识图谱</h1>
+  <span class="sub" id="stats"></span>
+</div>
+
+<div class="filters">
+  <button data-tier="★">★ 基础</button>
+  <button data-tier="★★">★★ 核心</button>
+  <button data-tier="★★★">★★★ 前沿</button>
+  <button data-tier="all" class="on">全部</button>
+</div>
+
+<div class="legend">
+  <h3>图例</h3>
+  <div id="cat-legend"></div>
+  <div class="tip">蓝线=交叉引用 · 绿虚线=前置知识<br>拖动节点 · 悬停看关联 · 点击进入课程 · 滚轮缩放</div>
+</div>
+
+<div id="p5wrap"></div>
+
+<script type="module">
+import p5 from 'p5';
+
+let graph = null;
+let nodes = [], edges = [], prereqEdges = [], activeTier = 'all', activeCat = 'all';
+const inCat = (n) => activeCat === 'all' || n.category === activeCat;
+let hoverNode = null, dragNode = null, dragOffset = null;
+let scale = 1, panX = 0, panY = 0;
+
+const tierColors = { '★': '#7ee787', '★★': '#58a6ff', '★★★': '#f78166' };
+const categoryColors = {};
+let colorIdx = 0;
+const palette = ['#58a6ff', '#f78166', '#7ee787', '#ffd33d', '#f778ba', '#79c0ff', '#d2a8ff', '#7ee0ff', '#ffa657', '#a5d6ff', '#56d364', '#ff7b72'];
+
+fetch(import.meta.env.BASE_URL + 'graph.json').then(r => r.json()).then(g => {
+  graph = g;
+  g.categories.forEach(cat => { if (!(cat in categoryColors)) categoryColors[cat] = palette[colorIdx++ % palette.length]; });
+  document.getElementById('stats').textContent = `${g.stats.nodes} 门课程 · ${g.stats.edges} 条关联`;
+  buildLegend();
+  buildCatButtons();
+  initLayout();
+  new p5(sketch);
+});
+
+function buildCatButtons() {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'margin:6px 0 2px;color:#484f58;font-size:.7em'; wrap.textContent = '分类（点击筛选）';
+  document.querySelector('.filters').appendChild(wrap);
+  const cats = [...new Set(graph.nodes.map(n => n.category))].sort((a,b)=>a.localeCompare(b,'zh'));
+  const all = document.createElement('button');
+  all.textContent = '全部分类';
+  all.dataset.cat = 'all';
+  all.className = 'on';
+  all.addEventListener('click', () => setCat('all'));
+  document.querySelector('.filters').appendChild(all);
+  cats.forEach(cat => {
+    const b = document.createElement('button');
+    b.textContent = cat;
+    b.dataset.cat = cat;
+    b.style.fontSize = '.68em';
+    b.addEventListener('click', () => setCat(cat));
+    document.querySelector('.filters').appendChild(b);
+  });
+}
+function setCat(cat) {
+  activeCat = cat;
+  document.querySelectorAll('.filters [data-cat]').forEach(x => x.classList.toggle('on', x.dataset.cat === cat));
+}
+
+function buildLegend() {
+  const el = document.getElementById('cat-legend');
+  const shown = new Set();
+  for (const n of graph.nodes) {
+    if (shown.has(n.category)) continue;
+    shown.add(n.category);
+    const row = document.createElement('div');
+    row.className = 'row';
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = categoryColors[n.category];
+    row.appendChild(dot);
+    const label = document.createElement('span');
+    label.textContent = n.category;
+    row.appendChild(label);
+    el.appendChild(row);
+  }
+  const tierRow = document.createElement('div');
+  tierRow.className = 'row';
+  tierRow.style.marginTop = '8px';
+  ['★', '★★', '★★★'].forEach(t => {
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = tierColors[t];
+    tierRow.appendChild(dot);
+  });
+  const tip = document.createElement('span');
+  tip.textContent = '难度';
+  tierRow.appendChild(tip);
+  el.appendChild(tierRow);
+}
+
+function initLayout() {
+  nodes = graph.nodes;
+  edges = []; prereqEdges = [];
+  for (const e of graph.edges) {
+    const s = graph.nodes.find(n => n.id === e.source);
+    const t = graph.nodes.find(n => n.id === e.target);
+    if (s && t) edges.push({ a: s, b: t });
+  }
+  for (const e of (graph.prereq_edges || [])) {
+    const s = graph.nodes.find(n => n.id === e.source);
+    const t = graph.nodes.find(n => n.id === e.target);
+    if (s && t) prereqEdges.push({ a: s, b: t });
+  }
+  computeTreeLayout();
+}
+
+function computeTreeLayout() {
+  const W = window.innerWidth, H = window.innerHeight;
+  const idMap = {};
+  nodes.forEach(n => { idMap[n.id] = n; n.r = 15 + (n.tier === '★★★' ? 6 : n.tier === '★★' ? 3 : 0); });
+
+  // parents = prereqs (source->target: source is prereq)
+  const parents = {};  // nodeId -> [prereq nodeIds]
+  const children = {}; // nodeId -> [dependent nodeIds]
+  nodes.forEach(n => { parents[n.id] = []; children[n.id] = []; });
+  prereqEdges.forEach(e => {
+    if (parents[e.b.id].indexOf(e.a.id) === -1) parents[e.b.id].push(e.a.id);
+    if (children[e.a.id].indexOf(e.b.id) === -1) children[e.a.id].push(e.b.id);
+  });
+
+  // depth via longest path (topological, with cycle guard)
+  const depth = {};
+  const visit = (id, seen) => {
+    if (id in depth) return depth[id];
+    if (seen[id]) return 0; // cycle guard
+    seen[id] = true;
+    let d = 0;
+    for (const p of parents[id]) d = Math.max(d, 1 + visit(p, seen));
+    depth[id] = d;
+    return d;
+  };
+  nodes.forEach(n => visit(n.id, {}));
+
+  // group by depth
+  const levels = {};
+  nodes.forEach(n => { const d = depth[n.id]; if (!levels[d]) levels[d] = []; levels[d].push(n); });
+  const maxDepth = Math.max(...Object.keys(levels).map(Number));
+
+  // level vertical positions (top -> bottom)
+  const levelH = Math.min(150, (H - 120) / (maxDepth + 1));
+  const levelY = {};
+  Object.keys(levels).forEach(d => { levelY[d] = 70 + levelH * Number(d); });
+
+  // barycenter ordering: within each level, order by centroid of parents' x (top-down)
+  const ordered = {};
+  for (let d = 0; d <= maxDepth; d++) {
+    const list = levels[d] || [];
+    list.sort((a, b) => {
+      const ca = parentCentroid(a, ordered, depth);
+      const cb = parentCentroid(b, ordered, depth);
+      return ca - cb;
+    });
+    ordered[d] = list;
+  }
+
+  function parentCentroid(n, orderedMap, depthMap) {
+    const ps = parents[n.id];
+    if (!ps.length) return Number(n.id.length) * 0; // root: keep stable
+    let sum = 0;
+    for (const p of ps) {
+      const pNode = idMap[p];
+      if (pNode._x != null) sum += pNode._x;
+    }
+    return sum / ps.length;
+  }
+
+  // assign x per level, distribute around center
+  const levelW = 220;
+  Object.keys(ordered).forEach(d => {
+    const list = ordered[d];
+    const n = list.length;
+    list.forEach((node, i) => {
+      const span = Math.max(60, (n - 1) * 70);
+      const x = W / 2 - span / 2 + i * (n > 1 ? span / (n - 1) : 0);
+      node._x = x;
+      node.x = x;
+      node.y = levelY[d];
+      node.vx = 0; node.vy = 0;
+      node.homeX = x; node.homeY = levelY[d];
+    });
+  });
+}
+
+const sketch = (p) => {
+  p.setup = () => {
+    p.createCanvas(window.innerWidth, window.innerHeight).parent('p5wrap');
+    p.textFont('Arial');
+  };
+
+  p.draw = () => {
+    p.background('#0d1117');
+    p.push();
+    p.translate(panX, panY);
+    p.scale(scale);
+
+    const visible = new Set();
+    for (const n of nodes) if ((activeTier === 'all' || n.tier === activeTier) && inCat(n)) visible.add(n);
+
+    // forces — anchor to tree layout (home), light smoothing
+    for (const n of nodes) {
+      if (!visible.has(n)) continue;
+      // spring back toward tree position
+      n.vx += (n.homeX - n.x) * 0.08;
+      n.vy += (n.homeY - n.y) * 0.08;
+      // mild repulsion to avoid overlap
+      for (const m of nodes) {
+        if (m === n || !visible.has(m)) continue;
+        const dx = n.x - m.x, dy = n.y - m.y;
+        const d2 = dx * dx + dy * dy || 1;
+        if (d2 < 2500) {
+          const d = Math.sqrt(d2);
+          const f = (2500 - d2) * 0.0004;
+          n.vx += (dx / d) * f; n.vy += (dy / d) * f;
+        }
+      }
+      n.vx *= 0.7; n.vy *= 0.7;
+      const sp = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+      if (sp > 5) { n.vx *= 5 / sp; n.vy *= 5 / sp; }
+    }
+    for (const n of nodes) {
+      if (!visible.has(n)) continue;
+      if (n === dragNode) continue;
+      n.x += n.vx; n.y += n.vy;
+    }
+
+    // prereq edges (green dashed) — prerequisites point to this course
+    for (const e of prereqEdges) {
+      if (!visible.has(e.a) || !visible.has(e.b)) continue;
+      p.stroke(126, 231, 135, 60);
+      p.strokeWeight(0.8);
+      p.drawingContext.setLineDash([3, 4]);
+      p.line(e.a.x, e.a.y, e.b.x, e.b.y);
+      p.drawingContext.setLineDash([]);
+    }
+
+    // edges
+    for (const e of edges) {
+      if (!visible.has(e.a) || !visible.has(e.b)) continue;
+      if (hoverNode && (e.a === hoverNode || e.b === hoverNode)) {
+        p.stroke(255, 221, 61, 200); p.strokeWeight(1.5);
+      } else {
+        p.stroke(88, 166, 255, 35); p.strokeWeight(0.5);
+      }
+      p.line(e.a.x, e.a.y, e.b.x, e.b.y);
+    }
+
+    // nodes
+    for (const n of nodes) {
+      if (!visible.has(n)) continue;
+      const hover = n === hoverNode || n === dragNode;
+      if (hover) { p.fill('#ffd33d'); p.stroke('#ffd33d'); p.strokeWeight(2); }
+      else { p.fill(categoryColors[n.category]); p.noStroke(); }
+      p.circle(n.x, n.y, n.r * 2);
+      p.noFill();
+      p.stroke(tierColors[n.tier]);
+      p.strokeWeight(1.5);
+      p.circle(n.x, n.y, n.r * 2 + 4);
+      p.textAlign(p.CENTER, p.CENTER);
+      p.textSize(n.r * 0.9);
+      p.text(n.emoji, n.x, n.y + 1);
+      if (hover) {
+        p.fill('#c9d1d9');
+        p.textSize(11);
+        p.noStroke();
+        p.text(n.title, n.x, n.y + n.r + 12);
+      }
+    }
+
+    p.pop();
+
+    if (hoverNode) {
+      p.fill('#0d1117');
+      p.stroke('#30363d');
+      p.strokeWeight(1);
+      p.rect(20, p.height - 100, 280, 80, 8);
+      p.fill(hoverNode.tier === '★' ? '#7ee787' : hoverNode.tier === '★★' ? '#58a6ff' : '#f78166');
+      p.textSize(14);
+      p.textAlign(p.LEFT, p.TOP);
+      p.text(hoverNode.emoji + ' ' + hoverNode.title, 32, p.height - 90);
+      p.fill('#8b949e');
+      p.textSize(11);
+      const degree = edges.filter(e => e.a === hoverNode || e.b === hoverNode).length;
+      p.text(hoverNode.category + ' · ' + hoverNode.tier + ' · ' + degree + ' 关联', 32, p.height - 68);
+      const prereqs = prereqEdges.filter(e => e.b === hoverNode).map(e => e.a.title);
+      p.fill('#7ee787');
+      p.textSize(10);
+      p.text('前置: ' + (prereqs.length ? prereqs.join(' · ') : '无'), 32, p.height - 54);
+      p.fill('#484f58');
+      p.text('点击进入 →', 32, p.height - 40);
+    }
+  };
+
+  p.mousePressed = () => {
+    const wx = (p.mouseX - panX) / scale, wy = (p.mouseY - panY) / scale;
+    for (const n of nodes) {
+      if ((activeTier !== 'all' && n.tier !== activeTier) || !inCat(n)) continue;
+      if (p.dist(wx, wy, n.x, n.y) < n.r + 5) {
+        dragNode = n;
+        dragOffset = { dx: wx - n.x, dy: wy - n.y };
+        return;
+      }
+    }
+    dragNode = null;
+  };
+
+  p.mouseReleased = () => { dragNode = null; };
+
+  p.mouseDragged = () => {
+    const wx = (p.mouseX - panX) / scale, wy = (p.mouseY - panY) / scale;
+    if (dragNode) {
+      dragNode.x = wx - dragOffset.dx;
+      dragNode.y = wy - dragOffset.dy;
+      dragNode.vx = 0; dragNode.vy = 0;
+    }
+  };
+
+  p.mouseMoved = () => {
+    const wx = (p.mouseX - panX) / scale, wy = (p.mouseY - panY) / scale;
+    hoverNode = null;
+    for (const n of nodes) {
+      if ((activeTier !== 'all' && n.tier !== activeTier) || !inCat(n)) continue;
+      if (p.dist(wx, wy, n.x, n.y) < n.r + 5) { hoverNode = n; break; }
+    }
+  };
+
+  p.mouseClicked = () => {
+    if (hoverNode && !dragNode) {
+      window.location.href = import.meta.env.BASE_URL + 'pages/' + hoverNode.id + '.html';
+    }
+  };
+
+  p.mouseWheel = (e) => {
+    const factor = e.delta > 0 ? 0.9 : 1.1;
+    scale = Math.max(0.3, Math.min(3, scale * factor));
+    return false;
+  };
+};
+
+// tier filter buttons
+document.querySelectorAll('.filters button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    activeTier = b.dataset.tier;
+  });
+});
+</script>
+<script type="module" src="/src/shared/base-patch.js"></script>
+</body>
+</html>

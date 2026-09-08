@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="极限的博弈——我给你 ε，你给我 δ" />
+  <meta property="og:title" content="ε-δ 语言 — Vibe Math" />
+  <meta property="og:description" content="极限的博弈——我给你 ε，你给我 δ" />
+  <title>ε-δ 语言 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🔍 ε-δ 语言 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★</span></h2>
+    <p class="subtitle">极限的博弈——我给你 ε，你给我 δ</p>
+    <span class="cat-tag">Part 1: 基础</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='epsilon-delta',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/riemann-integral.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📊 黎曼积分</a>
+  <a href="/pages/complex-plane.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔄 复平面与全纯函数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——f(x)=2x+1 在 x→3 时的极限是不是 7？</h3>
+<p>先看一个具体的问题，别急着下结论，跟着算一遍：设 f(x)=2x+1。我们想知道当 x 越来越靠近 3 时，f(x) 会靠近几。</p>
+<p>从左边靠近：x=2.9 时 f(x)=2×2.9+1=<strong>6.8</strong>；x=2.99 时 f(x)=6.98；x=2.999 时 f(x)=6.998。从右边靠近：x=3.1 时 f(x)=7.2；x=3.01 时 f(x)=7.02；x=3.001 时 f(x)=7.002。</p>
+<p>肉眼一看，x 越靠近 3，f(x) 就越靠近 7。于是大家都猜：<strong>lim<sub>x→3</sub>(2x+1)=7</strong>。可是——"看起来像"算不算证明？万一在某个我们没看的地方，f(x) 突然跳开了呢？我们试过的 x 只有那么几个，而 x 可以在 3 的周围<strong>无限多</strong>个位置取值。</p>
+<p>所以这节课要解决的根本问题就是：<strong>如何用一句"不可反驳的逻辑"把"极限是 7"钉死</strong>？答案是一场精度挑战游戏。</p>
+<div class="key-insight">核心思想：极限存在 = 无论你提出多苛刻的精度要求（误差小于 ε），我都能划出一块 x 的范围（离 3 不超过 δ），保证这块范围里的每一个 x，f(x) 都满足你的精度。ε-δ 语言就是把这句话写成公式的"游戏规则"。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、"越来越接近"到底是什么意思？——为什么直觉不够</h3>
+<p>平时我们爱说："当 x 越来越接近 3 时，f(x) 越来越接近 7。"听起来很自然，但仔细一抠就站不住脚："越来越接近"是接近到多近？接近到 0.1？0.01？还是 0.000001？这句话没有给出任何可以检验的标准，它更像情绪而不是数学。</p>
+<p>更糟的是，"越来越接近"这种说法连一个错误结论都反驳不了。反例：f(x)=sin(1/x)。在 x=0 附近，这个函数在 −1 和 1 之间来回剧烈震荡，x 越靠近 0，震荡得越频繁——你说它"越来越接近某个数"，可它到底接近谁？直观在这里彻底失灵：<strong>没有一个数 L 能让"sin(1/x) 越来越接近 L"成立，可这句话表面看着"没啥毛病"。</strong></p>
+<p>于是数学需要一种<strong>不含"越来越""趋向""接近"这类模糊字眼</strong>的说法。它必须只讲"点与点的距离"，只讲"大小比较"，不依赖任何运动或时间。ε-δ 语言就是这样一个说法。</p>
+</section>
+
+<section>
+<h3>二、挑战游戏——你出 ε，我出 δ</h3>
+<p>把"极限是 7"变成一个可以检验的承诺。游戏规则如下，有攻守两方：</p>
+<p><strong>攻方（你）报精度。</strong> 你指定一个"误差上限"ε（希腊字母，读作 epsilon）：要求 f(x) 离 7 必须小于 ε，也就是 |f(x)−7| &lt; ε。ε 越小，要求越苛刻——ε=0.1 是"离 7 要在 0.1 以内"，ε=0.0001 是"离 7 要在万分之一以内"。</p>
+<p><strong>守方（我）还范围。</strong> 我报出一个"范围半径"δ（希腊字母，读作 delta）：只要你让 x 离 3 不超过 δ（且不等于 3），也就是 0 &lt; |x−3| &lt; δ，我保证你的精度要求达标。δ 越小，我要求的 x 越"贴"着 3。</p>
+<p>用我们熟悉的 f(x)=2x+1 试试看。注意 |(2x+1)−7| = |2x−6| = 2|x−3|——f(x) 与 7 的距离，恰好是 x 与 3 距离的 2 倍。</p>
+<p>&rarr; 你出 ε=0.1：我只需要保证 2|x−3| &lt; 0.1，即 |x−3| &lt; 0.05。所以我出 δ=0.05。<br>
+&rarr; 你出 ε=0.01：我要保证 2|x−3| &lt; 0.01，即 |x−3| &lt; 0.005。所以我出 δ=0.005。<br>
+&rarr; 你出 ε=0.0001：我出 δ=0.00005。</p>
+<p>看出规律了吗？<strong>无论你把 ε 出得多小，我都能接住</strong>——只要取 δ=ε/2。这就是"极限存在"的全部含义：不是"我们试过的几个 x 很接近"，而是<strong>任何精度要求，我都有对应的保证</strong>。</p>
+<p>还有一个关键顺序：<strong>ε 是你先出，δ 是我后应。</strong>所以 δ 可以、也必须看着 ε 来定。这一点我们到第五节还要深挖。</p>
+</section>
+
+<section>
+<h3>三、把游戏写成公式——极限的严格定义</h3>
+<p>把上面的攻守写成一句逻辑公式：</p>
+<div class="formula display" data-tex="\lim_{x\to a}f(x)=L\ \Longleftrightarrow\ \forall\varepsilon>0\ \exists\delta>0:\ 0&lt;|x-a|&lt;\delta\ \Rightarrow\ |f(x)-L|&lt;\varepsilon"></div>
+<p>逐字翻译成人话：<strong>对任意一个正数 ε（无论多小），都存在一个正数 δ，使得：只要 x 落在"离 a 不超过 δ"的去心范围内，就有 f(x) 落在"离 L 不超过 ε"的范围内。</strong></p>
+<ul>
+<li>符号 ∀ 读作"对任意"（for all）——这是攻方：你能挑任意苛刻的 ε。</li>
+<li>符号 ∃ 读作"存在"（there exists）——这是守方：我总能找到一个应付的 δ。</li>
+<li>0 &lt; |x−a| 表示"x≠a"：极限关心的是 a 附近的趋势，a 这一点本身取什么值、甚至有没有定义，都无关紧要（这正是"去心邻域"的含义）。</li>
+<li>箭头 ⇒ 表示"只要…就…"：这是承诺的核心——范围达标 <strong>必然</strong> 推出精度达标。</li>
+</ul>
+<p>注意，公式里没有一个"运动"的词：没有"趋近"、没有"越来越"、没有"过程"。<strong>它是一句对无穷多个点一次性作保的静态声明</strong>——凡是这句话覆盖范围内的点，f(x) 都同时满足精度。这正是它威力所在：可以被严格验证，也可以被严格否定。</p>
+<div class="key-insight">这不是"越来越近"——这是静态的逻辑关系。没有运动，没有"趋近"。只有一个承诺：我可以在任何精度要求下给你一个范围。这是Cauchy和Weierstrass在19世纪重建微积分逻辑基础的核心发明。</div>
+</section>
+
+<div class="mini-viz" data-demo="eps-delta"></div>
+
+<section>
+<h3>四、教科书例题：用 ε-δ 严格证明一个极限——三步推演</h3>
+<p>理解了定义，还要会<strong>用</strong>。证明"lim<sub>x→a</sub>f(x)=L"就是把定义当场兑现一遍：<strong>假设对方交给我一个任意的 ε&gt;0，我要真的拿出一个 δ，并验证它管用。</strong>这件事永远走同样的三步。</p>
+<div class="key-insight">
+<strong>三步推演法（证明 lim<sub>x→a</sub>f(x)=L 的通用模板）</strong><br>
+① <strong>取 δ</strong>：从目标 |f(x)−L|&lt;ε 反推。先把 |f(x)−L| 改写成"某个常数 × |x−a|"的形式；为了把其它因子压住，常常先限制 |x−a|&lt;1，得到常数 C，然后取 δ=min(1, ε/C)。<br>
+② <strong>放缩</strong>：假设 0&lt;|x−a|&lt;δ，用三角不等式和①里的粗界，把 |f(x)−L| 一路放大成"常数 × |x−a|"，再放大成"常数 × δ"。<br>
+③ <strong>收敛</strong>：由 δ≤ε/C，推出 |f(x)−L|&lt;ε。∎
+</div>
+
+<p><strong>例 1（线性函数，最标准的起点）：证明 lim<sub>x→3</sub>(2x+1)=7。</strong></p>
+<p><strong>证明。</strong> 任给 ε&gt;0。</p>
+<p>① <strong>取 δ。</strong> 先化简差：|(2x+1)−7| = |2x−6| = 2|x−3|。要让它小于 ε，只需 2|x−3|&lt;ε，即 |x−3|&lt;ε/2。所以取 <strong>δ=ε/2</strong>（这一步是"从目标倒着解出 δ"，不需要粗界，因为线性函数没有别的因子要压）。</p>
+<p>② <strong>放缩。</strong> 设 0&lt;|x−3|&lt;δ，则</p>
+<div class="formula display" data-tex="|(2x+1)-7|=2|x-3|&lt;2\delta"></div>
+<p>③ <strong>收敛。</strong> 因为 δ=ε/2，所以 2δ=ε，于是</p>
+<div class="formula display" data-tex="|(2x+1)-7|&lt;\varepsilon\qquad\forall x:\ 0&lt;|x-3|&lt;\delta"></div>
+<p>ε 是任意给的正数，我们为它配出了合格的 δ，故 lim<sub>x→3</sub>(2x+1)=7。∎</p>
+<p>对照第二节的数字体验：ε=0.1 时 δ=0.05，ε=0.0001 时 δ=0.00005——三步推演把"手感"变成了"证明"。</p>
+
+<p><strong>例 2（二次函数，展示"凑 δ"的技巧）：证明 lim<sub>x→2</sub>x²=4。</strong></p>
+<p>这里出现了新麻烦：|x²−4|=|x−2||x+2|，第二个因子 |x+2| 会随 x 变化，不能像例 1 那样直接写成常数倍。所以要分两步压住它——这就是著名的"<strong>先粗界，再细界</strong>"。</p>
+<p><strong>证明。</strong> 任给 ε&gt;0。</p>
+<p>① <strong>取 δ。</strong> 先限制 |x−2|&lt;1，则 1&lt;x&lt;3，于是 |x+2|&lt;5。此时</p>
+<div class="formula display" data-tex="|x^2-4|=|x-2||x+2|&lt;5|x-2|"></div>
+<p>要小于 ε，只需 |x−2|&lt;ε/5。为了让粗界和细界同时成立，取两者的较小者：<strong>δ=min(1, ε/5)</strong>。</p>
+<p>② <strong>放缩。</strong> 设 0&lt;|x−2|&lt;δ。因为 δ≤1，由粗界得 |x+2|&lt;5；又因为 |x−2|&lt;δ≤ε/5，所以</p>
+<div class="formula display" data-tex="|x^2-4|=|x-2|\cdot|x+2|&lt;\frac{\varepsilon}{5}\cdot 5=\varepsilon"></div>
+<p>③ <strong>收敛。</strong> 于是对一切满足 0&lt;|x−2|&lt;δ 的 x，都有 |x²−4|&lt;ε。∎</p>
+<p>留意 δ=min(1, ε/5) 的构造：<strong>1 负责"压住 |x+2|"，ε/5 负责"真正达标"</strong>，取较小者保证两件事同时成立。这是处理非线性函数的看家本领，后面所有多项式都能照此办理。</p>
+
+<p><strong>例 3（三次函数，展示"因式分解 + 整体放缩"的通用方法）：证明 lim<sub>x→1</sub>x³=1。</strong></p>
+<p><strong>证明。</strong> 任给 ε&gt;0。</p>
+<p>① <strong>取 δ。</strong> 关键一步是<strong>因式分解</strong>，把 (x³−1) 里的 (x−1) 因子拎出来：</p>
+<div class="formula display" data-tex="|x^3-1|=|x-1|\cdot|x^2+x+1|"></div>
+<p>先限制 |x−1|&lt;1，则 0&lt;x&lt;2，于是 x²+x+1&lt;4+2+1=7。故 |x³−1|&lt;7|x−1|。要小于 ε，只需 |x−1|&lt;ε/7。取 <strong>δ=min(1, ε/7)</strong>。</p>
+<p>② <strong>放缩。</strong> 设 0&lt;|x−1|&lt;δ。由粗界得 |x²+x+1|&lt;7，故</p>
+<div class="formula display" data-tex="|x^3-1|=|x-1|\cdot|x^2+x+1|&lt;\frac{\varepsilon}{7}\cdot 7=\varepsilon"></div>
+<p>③ <strong>收敛。</strong> 于是对一切满足 0&lt;|x−1|&lt;δ 的 x，都有 |x³−1|&lt;ε。∎</p>
+<p>三个例子拼出完整套路：<strong>例 1 是"差直接是常数倍"；例 2、例 3 是"因式分解出 (x−a)，再用粗界压住剩下的因子"</strong>。凡是多项式 f(x)，f(x)−f(a) 总能被 (x−a) 整除，所以上面的方法对一切多项式都通用。</p>
+</section>
+
+<section>
+<h3>五、三个"为什么"——δ 的依赖、量词的顺序、静态逻辑</h3>
+<p><strong>为什么 δ 允许（也必须）依赖 ε？</strong> 因为挑战的顺序是"你先报 ε，我再应 δ"。ε 越小，要求越苛刻，我需要把范围缩得越小才能保证达标——δ 天然是 ε 的函数 δ(ε)，比如例 1 里的 δ=ε/2。如果要求"δ 不依赖 ε"，意思就变成"同一个固定的范围对任何精度都有效"，那是比极限强得多的"一致"条件（对应"一致连续"），一般函数根本做不到。</p>
+<p><strong>为什么"∀ε ∃δ"的顺序不能换？</strong> 顺序就是博弈的攻守次序，一换含义全变。∃δ ∀ε 的意思是"存在一个 δ，对随便什么 ε 都管用"——先定范围、再挑精度。用例 1 检验：假设真有这样一个固定的 δ&gt;0，那么在 (3−δ, 3+δ) 内 f(x)=2x+1 的取值范围宽达 4δ。这时只要挑战者出 ε&lt;2δ（例如 ε=δ），范围内就必有某个 x 使 |f(x)−7| 超过 ε——<strong>挑战者必胜</strong>。所以"∃δ ∀ε"永远是一个假命题，而"∀ε ∃δ"恰好是极限真正的含义。<strong>量词的位置记录了谁先出招、谁掌握话语权：先的是挑战者 ε，后的是守方 δ。</strong></p>
+<p><strong>为什么说这是把"运动直觉"换成了"静态逻辑"？</strong> 旧的直觉说"当 x 趋向 a 时，f(x) 趋向 L"——里面藏着过程、时间、运动。但 ε-δ 定义里没有任何过程：它一次性检查"以 a 为圆心、δ 为半径的这一圈 x，它们的函数值是不是全都落进以 L 为圆心、ε 为半径的那一圈里"。这是对<strong>无穷多个点同时作的一个静止断言</strong>。它的三个好处是：①可以被机械地验证；②可以被精确地否定（只要找到一个 ε 让我配不出 δ，比如 sin(1/x) 在 0 处）；③完全不依赖"趋近"这种无法形式化的词。</p>
+</section>
+
+<section>
+<h3>六、连续 vs 一致连续——δ 能否独立于 x？</h3>
+<p>f在x₀处<strong>连续</strong>（continuous，函数值不跳变、图像不断开；用 ε-δ 说：在每一个点都能接下"精度挑战"）：δ可以<strong>依赖于x₀</strong>。f在[a,b]上<strong>一致连续</strong>（uniformly continuous，更强的条件：同一个δ对所有x同时有效，不用为每个点分别挑范围）：<strong>同一个δ对所有x同时有效</strong>。f(x)=1/x在(0,1)连续但不一致连续——接近0处函数变化太快，同一个δ罩不住所有x。</p>
+<p><strong>Heine-Cantor定理</strong>（海涅—康托尔定理：闭区间上的连续函数自动一致连续）：紧致集上的连续函数自动一致连续。闭区间[a,b]是<strong>紧致</strong>的（compact，"有界且闭"，并且任何"用一串开区间盖住它"的做法都有有限个就能盖完）→闭区间上的连续函数一致连续。开区间(a,b)不紧致→连续函数不一定一致连续。这是紧致性在分析中最直接的应用。</p>
+</section>
+
+<section>
+<h3>七、为什么需要这么"繁琐"的定义？</h3>
+<p>18世纪的微积分依赖"<strong>无穷小量</strong>"（infinitesimal，"比任何正数都小但不为零"的幽灵数）。Berkeley主教讽刺它为"逝去的量的幽灵"。直到19世纪，Cauchy和Weierstrass才用ε-δ语言消除了所有模糊性，将分析建立在<strong>实数和逻辑</strong>之上。</p>
+<p>ε-δ定义不是"技术细节"——它是分析学从<strong>直觉</strong>到<strong>严谨</strong>的分水岭。连续函数的性质、中值定理、一致收敛——每一条分析定理都建立在这个定义之上。</p>
+</section>
+
+<section>
+<h3>八、关键公式</h3>
+<div class="formula display" data-tex="\lim_{x\to a}f(x)=L\iff\forall\varepsilon>0\ \exists\delta>0:\ 0&lt;|x-a|&lt;\delta\implies|f(x)-L|&lt;\varepsilon"></div>
+<div class="formula display" data-tex="\text{一致连续}\iff\forall\varepsilon>0\ \exists\delta>0\ \forall x,y:\ |x-y|&lt;\delta\implies|f(x)-f(y)|&lt;\varepsilon"></div>
+<div class="formula display" data-tex="\text{例1}: \delta=\frac{\varepsilon}{2}\quad \text{例2}: \delta=\min\left(1,\frac{\varepsilon}{5}\right)\quad \text{例3}: \delta=\min\left(1,\frac{\varepsilon}{7}\right)"></div>
+</section>
+
+<section>
+<h3>九、试试看（每题附提示）</h3>
+<p>1. 用三步推演严格证明 lim<sub>x→2</sub>(3x+1)=7，并写出给定 ε=0.1 时 δ 的数值。</p>
+<p><em>提示：完全照例 1。先化简 |(3x+1)−7|=3|x−2|，取 δ=ε/3，再验证。ε=0.1 时 δ=0.1/3≈0.0333。</em></p>
+<p>2. 证明 lim<sub>x→3</sub>x²=9（先限制 |x−3|&lt;1）。</p>
+<p><em>提示：照例 2。|x²−9|=|x−3||x+3|；限制 |x−3|&lt;1 得 |x+3|&lt;7，于是 δ=min(1, ε/7)。验证时用"粗界管住 |x+3|，细界管住 |x−3|"。</em></p>
+<p>3. 用 ε-δ 语言解释为什么 f(x)=x² 在 R 上连续、但（在整个 R 上）不一致连续。</p>
+<p><em>提示：连续——在每个点 a 处 |x²−a²|=|x−a||x+a|，限制 |x−a|&lt;1 得 |x+a|&lt;2|a|+1，取 δ=min(1, ε/(2|a|+1))，注意 δ 依赖 a。不一致连续——无论 δ 多小，取足够大的 a 和 x=a+δ/2，|x²−a²|=δ(a+δ/4) 都能超过任意固定的 ε，所以找不到对所有 x 通用的 δ。</em></p>
+<p>4. 为什么闭区间上的连续函数自动一致连续（Heine-Cantor）？用紧致性（有限子覆盖）论证。</p>
+<p><em>提示：反设存在某个 ε 配不出统一的 δ，则每个点 x 附近的 δ(x) 逐点各不相同；用这些"δ(x)/2 半径的开区间"覆盖闭区间，紧致性保证有限个就能盖完，取这些 δ(x)/2 的最小值即为统一的 δ，导出矛盾。</em></p>
+</section>
+
+<section><h3>前沿：构造性分析与Bishop桥</h3><p>经典分析用epsilon-delta和选择公理。Bishop(1967)发展了构造性分析——不用排中律和选择公理重新证明所有基本定理。仍开放:构造性框架下哪些经典定理仍然成立？Intermediate Value Theorem不成立——但有近似版本。</p></section>
+
+<section>
+<h3>附：极限的唯一性、局部有界性、保序性</h3>
+<p><strong>定理 1（唯一性）</strong>：若 lim<sub>x→a</sub>f(x)=L 且 lim<sub>x→a</sub>f(x)=M，则 L=M。</p>
+<p><strong>证明。</strong>对任意 ε>0，取 δ₁ 使 0&lt;|x−a|&lt;δ₁ ⟹ |f−L|&lt;ε/2，取 δ₂ 使 0&lt;|x−a|&lt;δ₂ ⟹ |f−M|&lt;ε/2。令 δ=min(δ₁,δ₂)，在去心邻域 (a−δ,a)∪(a,a+δ) 内取一点 x（非空，因 δ>0），则 |L−M|≤|L−f(x)|+|f(x)−M|&lt;ε。ε 任意 ⟹ L=M。∎</p>
+<p><strong>定理 2（局部有界性）</strong>：若 lim<sub>x→a</sub>f(x)=L，则存在 δ>0 与常数 M 使 0&lt;|x−a|&lt;δ 时 |f(x)|≤M。</p>
+<p><strong>证明。</strong>取 ε=1，得 δ 使 |x−a|&lt;δ ⟹ |f−L|&lt;1。则 |f(x)|≤|f(x)−L|+|L|&lt;1+|L|=:M。∎</p>
+<p><strong>定理 3（保序性/保号性）</strong>：若 lim<sub>x→a</sub>f(x)=L&gt;M，则存在 δ>0 使 0&lt;|x−a|&lt;δ 时 f(x)&gt;M。取 M=L/2 即得"极限为正 ⟹ 函数局部保持正号"。</p>
+<p><strong>证明。</strong>取 ε=(L−M)/2&gt;0，得 δ 使 |f−L|&lt;(L−M)/2 ⟹ f(x)&gt;L−(L−M)/2=(L+M)/2&gt;M。∎</p>
+<p>这三条是分析中"极限继承局部性质"的最小工具箱，也是证明连续函数性质与微分中值定理的基础。注意它们的证明都用到了第五节学的"取 δ"技巧：唯一性用 ε/2 分给两个极限，局部有界性用 ε=1 抓一个粗界，保序性把 ε 取成到目标的一半——都是先定 δ 再放缩再收敛。</p>
+</section>
+
+<section>
+<h3>附：四则运算极限法则的 ε-δ 证明</h3>
+<p><strong>定理。</strong>若 lim f=L、lim g=M，则 lim(f+g)=L+M、lim(fg)=LM，且当 M≠0 时 lim(f/g)=L/M。</p>
+<p><strong>和。</strong>对 ε&gt;0 取 δ₁、δ₂ 使 |f−L|&lt;ε/2、|g−M|&lt;ε/2，δ=min(δ₁,δ₂)，则 |(f+g)−(L+M)|≤|f−L|+|g−M|&lt;ε。∎</p>
+<p><strong>积。</strong>先把 g、f 局部有界化：取 δ₁ 使 |g−M|&lt;1 ⟹ |g|&lt;|M|+1=:C；取 δ₂ 使 |f−L|&lt;1 ⟹ |f|&lt;|L|+1=:D。分解：</p>
+<div class="formula display" data-tex="|fg-LM|=|f(g-M)+M(f-L)|\le |f||g-M|+|M||f-L|"></div>
+<p>给定 ε，再取 δ₃、δ₄ 使 |g−M|&lt;ε/(2D)、|f−L|&lt;ε/(2(|M|+1))，令 δ=min(δ₁,…,δ₄)，则 |fg−LM|&lt;D·ε/(2D)+|M|·ε/(2(|M|+1))&lt;ε。∎</p>
+<p><strong>商。</strong>先证 lim(1/g)=1/M：取 δ₁ 使 |g−M|&lt;|M|/2 ⟹ |g|&gt;|M|/2，于是</p>
+<div class="formula display" data-tex="\left|\frac1g-\frac1M\right|=\frac{|g-M|}{|g||M|}\le\frac{2|g-M|}{M^2}"></div>
+<p>给定 ε 取 δ 使 |g−M|&lt;εM²/2，得 |1/g−1/M|&lt;ε。再由积法则 f/g=f·(1/g) 复合即得。∎</p>
+<p>技巧总结：和的估计靠三角不等式直接加；积与商靠"局部有界化 + 加零分解"把交叉项压制住。这里的每一步，本质上仍是"取 δ → 放缩 → 收敛"三步法的组装。</p>
+</section>
+
+<section>
+<h3>附：标准反例</h3>
+<p><strong>反例 1（全局无界但某点有极限）</strong>：f(x)=1/x 在定义域 (0,∞) 上无界，但 lim<sub>x→2</sub>f=1/2 存在。这说明局部有界性是极限能保证的上限：界只存在于极限点的去心邻域内；而在 x→0 处该函数无极限（无界发散）。</p>
+<p><strong>反例 2（左右极限不等）</strong>：f(x)=|x|/x（x≠0，x&gt;0 时 =1，x&lt;0 时 =−1）。</p>
+<div class="formula display" data-tex="\lim_{x\to0^+}\frac{|x|}{x}=1,\quad \lim_{x\to0^-}\frac{|x|}{x}=-1\ \Longrightarrow\ \lim_{x\to0}\frac{|x|}{x}\ \text{不存在}"></div>
+<p>即使函数在 0 附近有界，左右极限不相等仍然排除极限存在——这是判定极限存在性的最常用否定判据。用第五节的话说：挑战者只需挑一个 ε 小于左右极限之差的一半，守方无论出多小的 δ 都会失败。</p>
+<p><strong>反例 3（有界但振荡无极限）</strong>：f(x)=sin(1/x) 在 0 附近有界（∈[−1,1]），但 lim<sub>x→0</sub> 不存在——它不趋近任何单点。这显示"有界"绝不等于"有极限"。这也正是第一节用来摧毁"越来越接近"直觉的同一把锤子。</p>
+</section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：用 ε-δ 定义严格证明 lim<sub>x→3</sub> x²=9，给出 δ 关于 ε 的显式选择（先限制 |x−3|&lt;1）。</p>
+<p><strong>题 2</strong>：判断下列极限是否存在并说明理由：(a) lim<sub>x→0</sub> sin(1/x)；(b) lim<sub>x→2</sub> (x²−4)/(x−2)；(c) lim<sub>x→0</sub> |x|/x。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：先设 |x−3|&lt;1 ⟹ 2&lt;x&lt;4 ⟹ |x+3|&lt;7。于是 |x²−9|=|x−3||x+3|&lt;7|x−3|。给定 ε&gt;0，取 δ=min(1, ε/7)，则 |x−3|&lt;δ ⟹ |x²−9|&lt;7δ≤ε。∎ 关键套路：先用一个粗界（≤1）把 |x+3| 压住，再做线性估计——多项式极限的标准方法（同第四节例 2、例 3）。</p>
+<p><strong>题 2</strong>：(a) 不存在。取 xₙ=1/(nπ)（sin=0）与 yₙ=1/(π/2+2nπ)（sin=1），两个趋于 0 的序列给出不同极限，故极限不存在（海涅原则）。(b) 存在：对 x≠2，(x²−4)/(x−2)=x+2，lim=4。(c) 不存在：x→0⁺ 时为 1，x→0⁻ 时为 −1，左右极限不等。</p>
+</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Spivak, Calculus</strong></p>
+<p>&rarr; <strong>W. Rudin, Principles of Mathematical Analysis</strong></p>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/derivative.html">📈 导数与切线</a>：同一学科分类「微积分」。</p>
+<p>&rarr; <a href="/pages/gradient.html">🧭 梯度与方向导数</a>：同一学科分类「微积分」。</p>
+<p>&rarr; <a href="/pages/riemann-integral.html">📊 黎曼积分</a>：同一学科分类「微积分」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/epsilon-delta.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

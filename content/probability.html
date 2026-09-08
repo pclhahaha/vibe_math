@@ -1,0 +1,280 @@
+<section>
+<h3>〇、直觉入门——概率论是"把不确定讲清楚"的数学</h3>
+<p>抛一枚硬币，正面朝上的机会是一半；掷一颗骰子，掷出 6 点的机会是六分之一；明天下雨"大概七成"。结果本身不确定，但你可以说出一个数——这个数就是概率。概率论把这句"大致有多可能"变成精确的数学，让"不确定"也有严谨的规则。</p>
+<p>它为什么存在？因为在真实世界里几乎没有事情是百分之百确定的。保险要定价（今年有千分之一的人出险，保费怎么算？）、天气预报要量化（这个台风 48 小时内登陆的概率是 0.7）、AI 要推理（机器视觉判定"猫"的信心是 0.93）、连手机信号的误码率都要被精确控制。科学家和工程师需要一套工具来量化和处理不确定性——这套工具就是概率论。</p>
+<div class="key-insight">人生充满不确定，但概率论能让"不确定"变得可算、可预测。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/measure-theory.html">测度论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、概率是什么？——抛硬币的直觉，"可能性的大小"怎么量化（0 到 1）</h3>
+<p>先做个小实验：随手抛一枚硬币，它落下时是正面还是反面？在它落地前，你<strong>不知道</strong>结果——这叫"结果不确定"。但你心里其实有个数：正面和反面"大概各有一半机会"。这句"一半机会"就是概率（probability）的雏形：一个用来描述"某件事有多可能发生"的数。</p>
+<p>为了把"多可能"变成精确的数，人们约定：<strong>概率用 0 到 1 之间的一个数来表示</strong>。0 表示"绝对不会发生"，1 表示"一定发生"，中间的数表示"有时候发生"——越接近 1，越容易发生。比如"明天下雨"的概率是 0.7，就是说 100 次类似的天气里，大约有 70 次会下雨。</p>
+<p>来读几个具体的数：</p>
+<ul>
+<li>抛一枚公平硬币，正面和反面机会均等，所以正面的概率就是 0.5（也就是"一半"，写成百分数是 50%）。</li>
+<li>掷一颗公平骰子，六个面机会均等，所以"掷出 6 点"的概率是 1/6 ≈ 0.1667。</li>
+<li>从一副 52 张的扑克牌中抽一张，"抽到红桃 A"只有 1 张，概率是 1/52 ≈ 0.0192。</li>
+<li>"明天太阳照常升起"几乎必然，概率约等于 1。</li>
+</ul>
+<p><strong>这个从 0 到 1 的"标尺"，就是整个概率论的起点。</strong>越接近 1 越可能，越接近 0 越不可能。</p>
+<div class="key-insight">概率 = 用一个 0 到 1 之间的数，量化"事情有多可能发生"。0 是不可能，1 是必然，越接近 1 越可能。</div>
+</section>
+<section>
+<h3>〇·二、怎么算概率？——基本事件、样本空间、事件，用骰子/扑克例子</h3>
+<p>光知道概率是 0 到 1 之间的数还不够，我们还得知道怎么<strong>算</strong>它。这里先记住三个词，每个都先用大白话解释，后面整门课都会用到它们。</p>
+<p><strong>第一个词：样本空间（sample space），记作 Ω。</strong>它就是把一次实验"所有可能的结果"都装进一个大集合。比如抛一枚骰子，可能的结果只有 1、2、3、4、5、6 这六种，所以样本空间就是 {1,2,3,4,5,6}——六个元素，每个代表一个结果。抛两次硬币，样本空间是 {正正, 正反, 反正, 反反}，四个元素。</p>
+<p><strong>第二个词：基本事件（elementary event）。</strong>样本空间里的每一个单独结果，就是一个基本事件。抛骰子得到"5"，就是一个基本事件；抛硬币得到"正面"，也是一个基本事件。它是"最小的一块"，没法再拆了。</p>
+<p><strong>第三个词：事件（event）。</strong>事件就是"基本事件拼成的集合"——也就是样本空间的子集，表示"我关心的那种结果"。比如"掷出偶数"是一个事件，它其实是 {2,4,6} 这三个基本事件合在一起；"抽到红心"是一个事件；"抽到 J、Q、K"也是一个事件。</p>
+<p>有了这三个词，最常见的算法就出来了：如果所有基本事件"机会均等"（比如骰子每个面都一样重），那么</p>
+<div class="formula display" data-tex="P(\text{事件})=\frac{\text{该事件包含的基本事件数}}{\text{所有基本事件数}}"></div>
+<p>来用骰子试试：掷一次骰子，"掷出偶数"包含 2、4、6 共 3 个基本事件，总数是 6，所以概率 = 3/6 = 0.5。"掷出 5"只有 1 个基本事件，概率 = 1/6 ≈ 0.167。</p>
+<p>再换扑克牌：一副牌 52 张，每种花色 13 张。抽一张，"抽到红心"有 13 种有利结果，概率 = 13/52 = 0.25。"抽到 A"有 4 张，概率 = 4/52 ≈ 0.077。</p>
+<div class="key-insight">样本空间 = 所有结果的清单；基本事件 = 清单里单独的一项；事件 = 你想关心的若干项拼成的集合。机会均等时：概率 = 有利的基本事件数 ÷ 总数。</div>
+</section>
+
+<section>
+<h3>〇·三、条件概率与贝叶斯公式——拿到新信息，怎么更新你的判断？</h3>
+<p>生活里我们常常"先知道一件事，再去估计另一件事"。比如"如果检测结果是阳性，那么这个人真的患病的概率是多少"。这类问题用<strong>条件概率</strong>回答。</p>
+<p><strong>条件概率的定义。</strong>已知事件 B 发生的前提下，事件 A 发生的概率记作 P(A|B)，定义为</p>
+<div class="formula display" data-tex="P(A\mid B)=\frac{P(A\cap B)}{P(B)},\qquad P(B)\neq 0."></div>
+<p>直觉：把世界缩小到"B 已经发生"这一块，再问其中 A 占多大比例。它就是"在 B 这片海域里，A 这座岛的相对大小"。</p>
+
+<p><strong>完整例题 1（疾病检测——为什么"阳性"不等于"患病"）。</strong>某病在人群中的患病率是 1%（即 1000 人里约 10 人患病）。某检测方法：对患病者，测出阳性的概率是 99%（真阳性率）；对健康者，测出阳性的概率是 5%（假阳性率，即健康者误报为阳性）。问：随机一人检测为阳性，他真正患病的概率是多少？</p>
+<p><strong>第一步（用具体人数算）。</strong>假设有 10000 人：</p>
+<ul>
+<li>患病者：10000 × 0.01 = <strong>100 人</strong>；其中测出阳性：100 × 0.99 = <strong>99 人</strong>。</li>
+<li>健康者：10000 − 100 = <strong>9900 人</strong>；其中被误报为阳性：9900 × 0.05 = <strong>495 人</strong>。</li>
+<li>测出阳性的总人数：99 + 495 = <strong>594 人</strong>。</li>
+</ul>
+<p><strong>第二步（做除法）。</strong>在 594 个阳性者里，真正患病的是 99 人：</p>
+<div class="formula display" data-tex="P(\text{患病}\mid\text{阳性})=\frac{99}{594}\approx 0.167\approx 16.7\%"></div>
+<p><strong>第三步（检查直觉）。</strong>看，检测说"阳性"，真正患病的却只有约 1/6！原因不是检测差，而是患病率太低了：健康者基数 9900 太大，即使 5% 的误报率也产生 495 个"假阳性"，把 99 个"真阳性"淹没了。<strong>这就是贝叶斯要教的第一课：判断要同时看"证据的强度"和"先验的比例"。</strong></p>
+
+<p>把上面的除法写成公式，就是<strong>贝叶斯公式（Bayes' theorem）</strong>：</p>
+<div class="formula display" data-tex="P(A\mid B)=\frac{P(B\mid A)P(A)}{P(B)},\qquad P(B)=P(B\mid A)P(A)+P(B\mid A^c)P(A^c)."></div>
+<p>代入本例：P(A)=0.01（患病率），P(B|A)=0.99（真阳性率），P(B|A^c)=0.05（假阳性率）：</p>
+<div class="formula display" data-tex="P(A\mid B)=\frac{0.99\times 0.01}{0.99\times 0.01+0.05\times 0.99}=\frac{0.0099}{0.0594}\approx 0.167."></div>
+<p>分子是"患病且阳性"，分母是"阳性的所有来源"（患病阳性 + 健康误报）。两边一除，就是"在阳性者中患病的比例"。</p>
+
+<p><strong>完整例题 2（贝叶斯——两个盒子的经典问题）。</strong>盒子 A 里有 2 个红球、3 个蓝球（共 5 个）；盒子 B 里有 4 个红球、2 个蓝球（共 6 个）。先随机选一个盒子（A、B 等可能），再从中抽出一个球，结果是红色。问：这个红球来自盒子 A 的概率是多少？</p>
+<p><strong>第一步（列已知）。</strong>P(A) = 1/2，P(B) = 1/2；P(红|A) = 2/5 = 0.4，P(红|B) = 4/6 = 2/3 ≈ 0.6667。</p>
+<p><strong>第二步（求总概率 P(红)）。</strong>抽到红球有两条路：选 A 且红，或选 B 且红：</p>
+<div class="formula display" data-tex="P(\text{红})=\frac12\cdot\frac25+\frac12\cdot\frac23=\frac15+\frac13=\frac{8}{15}\approx 0.5333."></div>
+<p><strong>第三步（用贝叶斯）。</strong></p>
+<div class="formula display" data-tex="P(A\mid\text{红})=\frac{P(\text{红}\mid A)P(A)}{P(\text{红})}=\frac{\frac12\cdot\frac25}{\frac{8}{15}}=\frac{1/5}{8/15}=\frac38=0.375."></div>
+<p><strong>第四步（检查直觉）。</strong>虽然盒子 A 的"红球比例"0.4 比盒子 B 的 0.667 低，但两个盒子先验各半，所以后验 P(A|红) = 0.375 介于二者之间、偏向盒子 B——合理：红球更像 B 里抽出来的。</p>
+
+<p><strong>一个重要的特殊情形：独立。</strong>如果"知道 B 之后，对 A 的概率毫无影响"，即 P(A|B) = P(A)，那么由条件概率公式得 P(A∩B) = P(A)P(B)。此时称 A、B 相互独立。例如抛两次硬币，第二次正面的概率不因第一次结果而改变：P(正∩正) = 1/2 × 1/2 = 1/4，而独立定义要求 P(A)P(B) = 0.5 × 0.5 = 0.25，两者相等——所以两次抛掷独立。独立性是整个概率论的脊柱，后面 §四、§五、§六 全要仰仗它。</p>
+<div class="key-insight">条件概率 P(A|B) = 在 B 已知的世界里 A 的比例。贝叶斯公式把"先验判断"和"证据强度"合成"后验判断"——这是统计推断与机器学习最核心的动作。</div>
+</section>
+
+<section>
+<h3>〇·四、期望——"平均能赢多少"的精确答案</h3>
+<p>一个随机实验的"平均结果"叫<strong>期望</strong>（expectation），记作 E[X]。直觉：如果这个实验重复做很多很多次，把每次的结果加起来除以次数，你会接近的那个数就是期望。大数定律（见 〇·五）会证明这句话。</p>
+<p>离散情形的定义：若 X 取 x₁, x₂, …, xₙ 各以概率 p₁, p₂, …, pₙ，则</p>
+<div class="formula display" data-tex="\mathbb{E}[X]=x_1p_1+x_2p_2+\cdots+x_np_n=\sum_i x_i\,p_i."></div>
+<p>它是"每个取值 × 它的概率"加起来——也就是"按概率加权的平均"。</p>
+
+<p><strong>完整例题 3（掷骰子游戏——手算期望）。</strong>掷一颗公平骰子，掷出 k 点就赢 k 元。玩一次平均赢多少？</p>
+<p><strong>第一步（列分布）。</strong>X 取值 1,2,3,4,5,6，每个概率 1/6。</p>
+<p><strong>第二步（加权求和）。</strong></p>
+<div class="formula display" data-tex="\mathbb{E}[X]=1\cdot\frac16+2\cdot\frac16+3\cdot\frac16+4\cdot\frac16+5\cdot\frac16+6\cdot\frac16=\frac{1+2+3+4+5+6}{6}=\frac{21}{6}=3.5."></div>
+<p><strong>第三步（解读）。</strong>平均赢 3.5 元——注意这不是任何一次可能的结果（没有骰面是 3.5），它是"长期平均"。如果每玩一次收 4 元门票，长期每玩一次你平均亏 0.5 元；若门票收 3 元，庄家平均亏 0.5 元。</p>
+
+<p><strong>完整例题 4（彩票——期望与公平定价）。</strong>某彩票每张 1 元：中头奖概率 1/10000，奖金 5000 元；中二奖概率 1/1000，奖金 100 元；其余不中奖。每张彩票的平均收益（期望）是多少？</p>
+<p><strong>第一步（列分布）。</strong>P(X=5000) = 1/10000，P(X=100) = 1/1000，P(X=0) = 1 − 1/10000 − 1/1000 = 0.9989。</p>
+<p><strong>第二步（加权求和）。</strong></p>
+<div class="formula display" data-tex="\mathbb{E}[X]=5000\times\frac{1}{10000}+100\times\frac{1}{1000}+0\times 0.9989=0.5+0.1=0.6\ \text{元}."></div>
+<p><strong>第三步（解读）。</strong>平均每张"返还"0.6 元，而售价 1 元——长期看每卖一张票，发行方平均赚 0.4 元。这就是彩票的"期望收益为负"：买彩票的人多，中奖是少数。保险刚好相反：保险公司收的保费 = 赔付期望 + 运营成本，所以"保险公司稳赚、买保险者求的是转移风险"。</p>
+<div class="key-insight">期望 = 按概率加权的平均 = "重复很多次后的平均结果"。E[X] 是线性运算：E[aX+b] = aE[X]+b，后面还会用它。</div>
+</section>
+
+<section>
+<h3>〇·五、两个重要直觉——大数定律和中心极限定理</h3>
+<p>这一节我们不推公式，只讲两个最重要的"直觉"，它们会贯穿整门课（后面的章节会给出严格证明）。</p>
+<p><strong>直觉一：大数定律（law of large numbers）——抛多了，比例就趋于理论值。</strong>抛一枚公平硬币，正面概率是 0.5。但如果你只抛 10 次，可能正面 8 次、反面 2 次，比例 0.8，离 0.5 差得远——这很正常，别慌。可是当你抛 100 次、1000 次、一万次，正面的比例就会越来越接近 0.5：抛 100 次可能 55 正（0.55），抛 10000 次可能 4992 正（0.4992）。这就是大数定律：<strong>实验次数越多，平均结果越稳定地靠近"理论上该有的值"（也就是上节的期望）</strong>。它是保险、统计、赌博模型全都依赖的根基——单个结果不可预测，但"大量"之后就变得规律。上节彩票的例子正是靠它兑现：发行一百万张，总收入几乎必然接近 60 万元。</p>
+<p><strong>直觉二：中心极限定理（central limit theorem）——很多独立的小随机加在一起，会"长得像"正态分布。</strong>什么叫"很多独立的小随机加在一起"？比如你一个人一天赚多少钱不确定，但成千上万人的总收入；你测一次体温有误差，但测很多次取平均；抛 100 次硬币，正面的总数。中心极限定理说：当把很多个"互相不影响"（独立）的随机量加起来，不管每个量本身长得多么奇怪，它们的总和（或者平均）都会趋向一个特定的、像钟形曲线的分布——正态分布（normal distribution，也叫高斯分布）。例如抛 100 次硬币，正面数 S 的分布就非常接近均值 50、标准差 5 的正态分布——P(40 ≤ S ≤ 60) ≈ 95.4%，这可以用正态曲线快速估算（后面 §六 和 工作题 2 会算给你看）。</p>
+<p>这两个直觉合起来讲了一个故事：<strong>单个事件可以毫无规律，但"大量"会让世界显现出稳定的统计规律，而且规律都指向同一个"钟形"。</strong></p>
+<div class="key-insight">大数定律：抛得够多，结果比例就接近理论值。中心极限定理：很多独立随机量加在一起，总和趋近正态分布（钟形曲线）。这两个直觉是理解后面所有章节的地图。</div>
+<p><strong>如果你想理解核心思想，看到这里就够了。</strong>后面的章节会用更严格的语言把这些直觉变成数学，并展开它们背后的测度论、极限定理与不等式工具。</p>
+</section>
+
+<section>
+<h3>一、为什么概率要公理化？——从"抛硬币"到"所有子集都能算"的失败</h3>
+<p>前面所有计算都建立在"基本事件机会均等"或"事件个数有限"之上。但这个世界很快就不配合了：</p>
+<ul>
+<li><strong>可数无穷：</strong>掷硬币直到出现正面为止，需要掷的次数可以是 1、2、3、… 任意大——样本空间 {1,2,3,…} 有无穷多个基本事件，"有利事件数 ÷ 总数"直接失效。</li>
+<li><strong>连续无穷：</strong>在 [0,1] 区间随机取一个点，"取到有理数"的概率是 0 但"可能发生"——古典计数法给不了这样的数。</li>
+<li><strong>不可测集合：</strong>测度论里我们见过 Vitali 集：用选择公理可以从每个等价类里挑代表元拼出一个集合 V，使得任何"合理的长度"都赋不上去。如果概率要定义在"所有子集"上，Vitali 集这样的集合就会制造矛盾（Banach–Tarski 悖论：单位球能拆成 5 块再拼成两个球）。</li>
+</ul>
+<p>所以"概率应该对每个子集都有定义"的朴素愿望<strong>必须放弃</strong>。出路是：只对"足够规整"的一族集合（σ-代数）定义概率，并规定概率必须满足几条不能违背的规则。Kolmogorov 在 1933 年给出了这三条公理，把概率论"降维"成了测度论的特例——这让概率论获得了与微积分同等的严谨地位。</p>
+<p><strong>为什么是这三条？</strong>每条都有无可辩驳的动机：</p>
+<ul>
+<li><strong>非负性 P(A) ≥ 0：</strong>概率是"份额"，份额不能是负数。</li>
+<li><strong>规范性 P(Ω) = 1：</strong>全集代表"必然发生"，把总份额归一化成 100%。</li>
+<li><strong>σ-可加性：</strong>对两两不相交的事件 A₁, A₂, …, P(∪Aᵢ) = ΣP(Aᵢ)。"互不重叠的两块合起来，概率相加"——这是计数、测度的基本直觉，也是整个积分理论的地基。之所以要"可数"（σ）而不是只要求有限个，是为了让极限与期望（积分）能够顺畅地进行。</li>
+</ul>
+<div class="key-insight">公理化的动机：古典定义在无穷与不可测集面前失效。Kolmogorov 把概率定义为满足 非负性、规范性、σ-可加性 三条公理的测度——"概率 = 总质量为 1 的测度"。</div>
+</section>
+
+<section>
+<h3>二、测度论基础：概率空间</h3>
+<p>现在把上一节的公理化落到记号上。<strong>概率空间</strong>是一个三元组 (Ω, F, P)：</p>
+<ul>
+<li><strong>Ω（样本空间）：</strong>一切可能结果的集合。抛两次硬币：Ω = {正正, 正反, 反正, 反反}；掷骰子：Ω = {1,2,3,4,5,6}；随机取 [0,1] 的点：Ω = [0,1]。</li>
+<li><strong>F（σ-代数，可测事件族）：</strong>我们允许谈概率的那些事件。它必须对可数并、可数交、补集封闭。为什么要 σ-代数而不直接要"所有子集"？——正是上一节说的：Vitali 集不可测，我们只能对"规整"的集合赋值。F 越大，代表我们"能分辨"的事件越多。</li>
+<li><strong>P（概率测度）：</strong>映射 F → [0,1]，满足 P(Ω)=1 且 σ-可加。它就是"给每个可测事件分配份额"的规则。</li>
+</ul>
+<div class="formula display" data-tex="P:\ \mathcal{F}\to[0,1],\qquad P(\Omega)=1,\qquad P\Big(\bigcup_{i}A_i\Big)=\sum_i P(A_i)\quad(A_i\in\mathcal{F},\ A_i\cap A_j=\emptyset)."></div>
+<p><strong>随机变量 X 是"把结果翻译成数字"。</strong>严格地说，随机变量是可测函数 X: (Ω,F) → (ℝ, B(ℝ))，即对一切 Borel 集 B，原像 X⁻¹(B) ∈ F。例子：X = "抛两次硬币的正面次数"，则 X(正正)=2、X(正反)=1、X(反正)=1、X(反反)=0。于是"P(X = 1)"就有意义：</p>
+<div class="formula display" data-tex="P(X=1)=P(\{\text{正反},\text{反正}\})=\frac{2}{4}=0.5."></div>
+<p>可测性正是"随机变量"一词的全部数学内容——它让"概率"可以被回拉：P(X ∈ B) = P(X⁻¹(B))。<strong>分布</strong>是 ℝ 上的概率测度 P∘X⁻¹，由分布函数 F_X(x)=P(X≤x) 唯一决定。例如掷骰子的 F_X 在 x=3 处取值 P(X≤3)=3/6=1/2。</p>
+<div class="key-insight">可测函数 = 信息通道：F 描述"知道多少"。σ-代数越大，可测函数越丰富。子 σ-代数 G ⊂ F 编码"更粗的信息"——这正是条件期望的舞台。</div>
+</section>
+
+<section>
+<h3>三、期望与矩：Lᵖ 空间</h3>
+<p>期望就是 Lebesgue 积分：</p>
+<div class="formula display" data-tex="\mathbb{E}[X]=\int X\,dP=\int_{\mathbb{R}} x\,dF_X(x)."></div>
+<p>直觉：把"按概率加权的平均"推广到连续情形——不再是 Σ xᵢpᵢ，而是对 x 用分布函数做 Stieltjes–Lebesgue 积分。矩 E[Xᵏ]、中心矩 E[(X−μ)ᵏ] 都由分布决定；方差 Var(X) = E[(X−μ)²] = E[X²] − (E[X])² 度量"离均值有多散"。</p>
+<p><strong>完整例题 5（掷骰子：手算期望与方差，检验定义）。</strong>设 X 为掷一颗公平骰子的点数。</p>
+<p><strong>第一步（期望）。</strong>由 〇·四 已算 E[X] = 3.5。</p>
+<p><strong>第二步（二阶矩）。</strong></p>
+<div class="formula display" data-tex="\mathbb{E}[X^2]=\frac{1^2+2^2+3^2+4^2+5^2+6^2}{6}=\frac{91}{6}\approx 15.17."></div>
+<p><strong>第三步（方差）。</strong></p>
+<div class="formula display" data-tex="\mathrm{Var}(X)=\mathbb{E}[X^2]-(\mathbb{E}[X])^2=\frac{91}{6}-\frac{49}{4}=\frac{182-147}{12}=\frac{35}{12}\approx 2.92,\qquad \sigma=\sqrt{2.92}\approx 1.71."></div>
+<p>它量化了"点数有多散"：平均 3.5，典型偏差约 1.71 个点。</p>
+<p>对 p ≥ 1，Lᵖ 空间 = {E[|X|ᵖ] < ∞} 是 Banach 空间（p=2 时是 Hilbert 空间），配以 Young/Hölder 不等式 Minkowski 不等式构成完整结构。</p>
+<p>三大不等式是概率分析的引擎：<strong>Markov</strong> P(X≥a) ≤ E[X]/a；<strong>Chebyshev</strong> P(|X−μ|≥a) ≤ Var(X)/a²（= Markov 作用于 (X−μ)²）；<strong>Jensen</strong> 对凸函数 f：E[f(X)] ≥ f(E[X])——由"期望是积分的保序性 + 凸函数是切线的包络"给出。</p>
+<div class="formula display" data-tex="\mathrm{Var}(X)=\mathbb{E}[(X-\mu)^2],\qquad \|X\|_{L^p}=(\mathbb{E}|X|^p)^{1/p}"></div>
+<div class="formula display" data-tex="P(X\ge a)\le\frac{\mathbb{E}[X]}{a},\qquad P(|X-\mu|\ge a)\le\frac{\mathrm{Var}(X)}{a^2}"></div>
+</section>
+
+<section>
+<h3>四、独立性：Kolmogorov 0-1 律</h3>
+<p>事件族 {F_i} 独立 ⇔ 对任意有限选取的 A_i ∈ F_i，P(∩A_i) = ∏P(A_i)。独立 σ-代数的构造：给定独立随机变量族 {X_i}，取 F_i = σ(X_i)，则 {F_i} 独立。回到 〇·三 的直觉：独立 = "知道其中一个，对另一个的判断毫无影响"。抛两次硬币：P(正∩正) = 1/4 = P(正)P(正)，故独立。</p>
+<p>独立性的核心定理是 <strong>Kolmogorov 0-1 律</strong>：设 {X_i} 独立，尾 σ-代数 T = ∩_n σ(X_n, X_{n+1}, …)，则 T 中每个事件的概率要么 0 要么 1。因此"ΣX_i 收敛"这类只依赖无穷尾巴的事件以概率 1 决定。</p>
+<p><strong>相互独立 ⟹ 两两独立，反之不成立。</strong>反例：X, Y 独立 Bernoulli，Z = X⊕Y (mod 2)。则 X,Y,Z 两两独立，但 σ(X,Y,Z) 不独立——因为 Z 完全由 X,Y 决定。这是初学者最重要的警示。</p>
+<div class="formula display" data-tex="A\in\mathcal{T}=\bigcap_n\sigma(X_n,X_{n+1},\ldots)\implies P(A)\in\{0,1\}"></div>
+</section>
+
+<section>
+<h3>五、大数定律：Borel-Cantelli</h3>
+<p>设 {X_i} i.i.d.，E[X₁]=μ，则<strong>弱 LLN</strong>（Chebyshev 证明）：对任意 ε>0，P(|S_n/n − μ| ≥ ε) → 0，即 S_n/n 依概率收敛到 μ。<strong>强 LLN</strong>（Kolmogorov 证明）：S_n/n → μ a.s.。强版本要求更多（E|X₁|<∞ 的有限性 + 鞅收敛或 Egorov），但给出更本质的结论。</p>
+<p>这就是 〇·五 直觉一 的严格化身：抛 n 次硬币，S_n/n = 正面比例，随着 n → ∞ 以概率 1 逼近 0.5。弱 LLN 说的是"比例偏离 0.5 的概率趋于 0"，强 LLN 说的是"比例本身几乎必然收敛到 0.5"——后者更强、更本质。</p>
+<p>证明强 LLN 的关键引理是 <strong>Borel-Cantelli</strong>：(i) 若 ΣP(A_n) < ∞，则 P(limsup A_n)=0——事件只出现有限次；(ii) 若 {A_n} 独立且 ΣP(A_n)=∞，则 P(limsup A_n)=1——出现无穷次。用 Borel-Cantelli + 截断 + Kronecker 引理即可完成强 LLN 证明。</p>
+<div class="formula display" data-tex="\frac{S_n}{n}\xrightarrow{P}\mu,\qquad \frac{S_n}{n}\xrightarrow{a.s.}\mu"></div>
+<div class="formula display" data-tex="\sum_n P(A_n)&lt;\infty\implies P(\limsup A_n)=0\quad(\text{BC1})"></div>
+</section>
+
+<section>
+<h3>六、中心极限定理：特征函数方法</h3>
+<p><strong>Lindeberg-Lévy CLT</strong>：{X_i} i.i.d.，E[X₁]=μ，Var(X₁)=σ²<∞，则标准化和 (S_n − nμ)/(σ√n) 依分布收敛到 N(0,1)。</p>
+<div class="formula display" data-tex="\frac{S_n-n\mu}{\sigma\sqrt{n}}\xrightarrow{d}\mathcal{N}(0,1)"></div>
+<p><strong>证明用特征函数。</strong>特征函数是概率测度的 Fourier 变换：φ(t)=E[e^{itX}]=1+itμ−t²σ²/2+o(t²)。对标准化和，</p>
+<div class="formula display" data-tex="\varphi_{Z_n}(t)=\left[\varphi\left(\frac{t}{\sigma\sqrt{n}}\right)\right]^n e^{-it\sqrt{n}\mu/\sigma}\to e^{-t^2/2}"></div>
+<p>由 Lévy 连续性定理 + Lévy 反转公式得分布收敛。为什么特征函数是"正确的工具"？因为"独立和的分布"在特征函数下变成"乘积"，而 e^{itx} 的指数结构把 1/n 缩放 + n 次相乘 变成 exp(−t²/2)——一切"形状"都被指数函数的极限吸收，只留下均值与方差。</p>
+<p><strong>Berry-Esseen 界</strong>把收敛速度量化：若 E|X₁|³<∞，则 |F_{Z_n}(x) − Φ(x)| ≤ C ρ/σ³√n，其中 ρ=E|X₁−μ|³，C≈0.47。这回答了"CLT 到底有多准"。</p>
+<div class="formula display" data-tex="\Big|F_{Z_n}(x)-\Phi(x)\Big|\le\frac{C\rho}{\sigma^3\sqrt{n}}\quad(\text{Berry-Esseen})"></div>
+<p><strong>为什么正态分布无处不在？</strong>因为正态是无穷可分分布的稳定吸引子：特征函数 exp(−t²/2) 对一切 t 满足半群性质 φ(t/√n)ⁿ=φ(t)——它同时是最短熵、最大熵（固定一、二阶矩）、以及在矩替换下的固定点。中心极限 + 大偏差意味着大量小独立扰动的总和"忘掉"了每个分量的具体形状，只记住均值与方差。</p>
+</section>
+
+<section>
+<h3>七、关键公式块</h3>
+<div class="formula display" data-tex="\mathbb{E}[X]=\int X\,dP,\quad P(|X-\mu|\ge a)\le\frac{\mathrm{Var}(X)}{a^2}\quad(\text{Chebyshev})"></div>
+<div class="formula display" data-tex="\frac{S_n-n\mu}{\sigma\sqrt{n}}\xrightarrow{d}\mathcal{N}(0,1)\quad(\text{CLT})"></div>
+<div class="formula display" data-tex="\sum_n P(A_n)&lt;\infty\Rightarrow P(\limsup A_n)=0,\qquad \sum_n P(A_n)=\infty\Rightarrow P(\limsup A_n)=1"></div>
+<div class="formula display" data-tex="\varphi_{Z_n}(t)=\left[\varphi\left(\frac{t}{\sigma\sqrt{n}}\right)\right]^n e^{-it\sqrt{n}\mu/\sigma}\to e^{-t^2/2}"></div>
+</section>
+
+<section>
+<h3>八、试试看（带提示）</h3>
+<p><strong>1. 生日问题。</strong>房间里有 n 个人，至少有两人生日相同的概率，在 n=23 时就已超过 50%。请验证：先算"没有两人生日相同"的概率，n=23 时它约等于 e^{-253/730} ≈ 0.49。<strong>提示：</strong>第一个人生日任意（365/365），第二个人要避开它（364/365），第三个人避开前两个（363/365）……把这些乘起来：P(无重复) = ∏_{k=1}^{n-1}(1 − k/365)，再用近似 1−x ≈ e^{-x} 估算 n(n−1)/730。</p>
+<p><strong>2. 蒙提霍尔问题。</strong>三扇门，两扇后面是羊、一扇后面是车。你选一扇后，主持人（知道车在哪）必定打开一扇有羊的门，然后问你要不要换。换门赢车的概率是 2/3。<strong>提示：</strong>枚举三种情形：你一开始选中的是车/羊A/羊B（各 1/3）。或直接用贝叶斯：P(车在你选的这扇 | 主持人开了羊门) = ?</p>
+<p><strong>3. 用 CLT 估算。</strong>抛 100 次硬币，用正态近似求 P(40 ≤ S ≤ 60)。<strong>提示：</strong>S ~ Binomial(100, 1/2)，μ=50、σ=5，标准化 (S−50)/5，再用 68–95–99.7 法则：±2σ 区间含约 95% 概率。答案约 0.954。</p>
+<p><strong>4. 马尔可夫界。</strong>已知 E[X] = 100（X ≥ 0），不用任何其他信息，能保证 P(X ≥ 1000) ≤ 多少？<strong>提示：</strong>直接套 Markov 不等式 P(X ≥ a) ≤ E[X]/a，取 a=1000。得到 ≤ 0.1。</p>
+<p><strong>5. 方差的可加性。</strong>X、Y 独立，Var(X)=3，Var(Y)=4。求 Var(X+Y)。<strong>提示：</strong>独立性使交叉项消失：Var(X+Y) = Var(X)+Var(Y)。答案是 7。</p>
+</section>
+
+<section>
+<h3>九、关键论文</h3>
+<p><strong>Kolmogorov (1933, "Grundbegriffe der Wahrscheinlichkeitsrechnung")</strong>——现代概率论的《几何原本》：把概率公理化（非负性、规范、σ-加性），定义随机变量、期望，证明强 LLN 与 CLT 的严格版本。</p>
+<p><strong>Doob (1953, "Stochastic Processes")</strong>——鞅论的奠基著作，证明可选停止定理与鞅收敛定理，把马尔可夫过程和鞅纳入统一框架。</p>
+<p><strong>Lévy (1937, "Théorie de l'addition des variables aléatoires")</strong>——特征函数、Lévy 过程、稳定分布；Lévy 连续性定理是 CLT 证明的基石。</p>
+</section>
+
+<section>
+<h3>十、前沿</h3>
+<p><strong>随机矩阵理论</strong>：Wigner 半圆律、Marchenko-Pastur 律、Tracy-Widom 分布——大随机矩阵特征值谱的普适性定律，连接自由概率与数论。</p>
+<p><strong>自由概率论</strong>：Voiculescu (1985) 的非交换概率论，自由独立性取代经典独立，R-变换取代特征函数；被用于随机矩阵与算子代数的交叉研究。</p>
+<p><strong>鞅论与金融数学</strong>：Girsanov 变换、风险中性测度、Black-Scholes-Merton 定价——鞅表示定理是资产定价理论的核心工具。</p>
+</section>
+
+<section>
+<h3>十一、工作题</h3>
+<p><strong>工作题 1：用 Chebyshev 证明弱大数定律。</strong>设 {Xᵢ} i.i.d.，E[X₁]=μ，Var(X₁)=σ²&lt;∞，S_n = X₁+…+Xₙ。用 Chebyshev 不等式证明对任意 ε&gt;0 有 P(|S_n/n − μ| ≥ ε) → 0。</p>
+<details><summary>显示解答</summary>
+<p>先算样本均值的期望与方差（独立性使方差线性叠加）：</p>
+<div class="formula display" data-tex="\mathbb{E}\left[\frac{S_n}{n}\right]=\frac{n\mu}{n}=\mu,\qquad \mathrm{Var}\left(\frac{S_n}{n}\right)=\frac{1}{n^2}\sum_{i=1}^n\sigma^2=\frac{\sigma^2}{n}"></div>
+<p>对随机变量 S_n/n 应用 Chebyshev 不等式 P(|X−E[X]| ≥ a) ≤ Var(X)/a²，取 a=ε：</p>
+<div class="formula display" data-tex="P\left(\left|\frac{S_n}{n}-\mu\right|\ge\varepsilon\right)\le\frac{\mathrm{Var}(S_n/n)}{\varepsilon^2}=\frac{\sigma^2}{n\varepsilon^2}\xrightarrow{n\to\infty}0"></div>
+<p>故 S_n/n 依概率收敛到 μ——这就是弱大数定律。证明的关键是独立性和有限方差保证 Var(S_n/n)=σ²/n 收缩到 0，Chebyshev 再把概率界与方差直接挂钩。</p>
+</details>
+
+<p><strong>工作题 2：抛硬币的 CLT 应用。</strong>公平硬币抛 n=100 次，设 S 为正面数，S ~ Binomial(100, 1/2)。用中心极限定理近似求 P(40 ≤ S ≤ 60)，并给出你使用的标准化形式。</p>
+<details><summary>显示解答</summary>
+<p>μ = np = 50，σ² = np(1−p) = 25，σ = 5。由 Lindeberg–Lévy CLT，标准化变量 (S−50)/5 渐近服从 N(0,1)：</p>
+<div class="formula display" data-tex="P(40\le S\le 60)=P\left(\frac{40-50}{5}\le\frac{S-50}{5}\le\frac{60-50}{5}\right)\approx\Phi(2)-\Phi(-2)"></div>
+<p>查正态分布表（可用 68–95–99.7 法则的记忆值 Φ(2)≈0.9772）：</p>
+<div class="formula display" data-tex="P(40\le S\le 60)\approx 0.9772-0.0228=0.9544\approx 95.4\%"></div>
+<p>与 68–95–99.7 法则一致（±2σ 区间含约 95% 概率）。若用连续性修正（±0.5）会得到更精确的近似。注意 CLT 给出的是近似而非常数——它说明大量独立伯努利扰动的总和"忘掉"了单次抛掷的形状，只记住 μ=50 与 σ=5。</p>
+</details>
+
+<p><strong>工作题 3：证明 Markov 不等式。</strong>设 X ≥ 0 为几乎必然非负的随机变量，E[X]&lt;∞。证明对任意 a&gt;0 有 P(X ≥ a) ≤ E[X]/a。</p>
+<details><summary>显示解答</summary>
+<p>在事件 {X ≥ a} 上 X/a ≥ 1，故 X ≥ a·1_{X≥a}。取期望（积分保序性）：</p>
+<div class="formula display" data-tex="\mathbb{E}[X]\ge a\,\mathbb{E}[1_{\{X\ge a\}}]=a\,P(X\ge a)"></div>
+<p>除以 a&gt;0 即得 P(X ≥ a) ≤ E[X]/a。这是用一阶矩控制"重尾概率"的万能工具。特别地，取 X=(Y−μ)² 代入即得 Chebyshev 不等式：P(|Y−μ|≥a) = P((Y−μ)²≥a²) ≤ E[(Y−μ)²]/a² = Var(Y)/a²。证明只用到了期望的保序性与示性函数——Markov 是一切尾部不等式的种子。</p>
+</details>
+
+<p><strong>工作题 4：计算期望与方差。</strong>设 X 在 [a,b] 上均匀分布，即密度 f(x)=1/(b−a)。求 E[X] 与 Var(X)。</p>
+<details><summary>显示解答</summary>
+<p>期望为 Lebesgue 积分 E[X] = ∫x f(x) dx：</p>
+<div class="formula display" data-tex="\mathbb{E}[X]=\int_a^b x\cdot\frac{1}{b-a}\,dx=\frac{1}{b-a}\cdot\frac{b^2-a^2}{2}=\frac{a+b}{2}"></div>
+<p>为求方差先算二阶矩 E[X²] = ∫x²/(b−a) dx = (b³−a³)/(3(b−a)) = (a²+ab+b²)/3。利用 Var(X) = E[X²] − (E[X])²：</p>
+<div class="formula display" data-tex="\mathrm{Var}(X)=\frac{a^2+ab+b^2}{3}-\left(\frac{a+b}{2}\right)^2=\frac{(b-a)^2}{12}"></div>
+<p>故均匀分布 U[a,b] 的均值是区间中点，方差随区间长度平方增长。例如 U[0,1]：E[X]=1/2，Var(X)=1/12——后者常用于蒙特卡洛积分的方差估计。</p>
+</details>
+
+<p><strong>工作题 5：条件概率——疾病检测（对应 〇·三 例题 1）。</strong>患病率 1%，检测对患病者阳性率 99%、对健康者阳性率 5%。某人检测为阳性，求他真正患病的概率；若他再复查一次仍阳性（两次检测独立），概率变成多少？</p>
+<details><summary>显示解答</summary>
+<p>第一次：P(患病|阳性) = 0.99×0.01 / (0.99×0.01 + 0.05×0.99) ≈ 0.167。第二次：把第一次的后验 0.167 当作新的"先验"，再用同样公式 P = (0.99×0.167)/(0.99×0.167 + 0.05×0.833) ≈ 0.1653/0.2069 ≈ 0.799。两次阳性几乎坐实了患病——贝叶斯公式可以"滚动更新"，这正是序贯推断的原理。</p>
+</details>
+
+<p><strong>工作题 6：贝叶斯——两个盒子（对应 〇·三 例题 2）。</strong>盒子 A：2 红 3 蓝；盒子 B：4 红 2 蓝。随机选盒后抽一球为红，求来自 A 的概率；若抽出的球放回并再抽一次，第二次仍为红，求两次都来自 A 的概率（两次抽样独立）。</p>
+<details><summary>显示解答</summary>
+<p>P(A|红) = (1/2)(2/5)/(8/15) = 3/8 = 0.375。两次独立抽样同为红的条件概率 P(红红|A) = (2/5)² = 4/25，P(红红|B) = (2/3)² = 4/9。总概率 P(红红) = (1/2)(4/25) + (1/2)(4/9) = 2/25 + 2/9 = 68/225。于是 P(A|红红) = (1/2)(4/25)/(68/225) = (2/25)×(225/68) = 18/68 = 9/34 ≈ 0.265。证据更"支持"盒子 B（红球比例高），故后验进一步偏向 B。</p>
+</details>
+
+<p><strong>工作题 7：期望——保险定价（对应 〇·四 例题 4）。</strong>某保单：出险概率 p=0.01，一旦出险赔付 10000 元。求"纯保费"（使保险公司期望利润为 0 的保费）；若还要覆盖 20% 的运营成本，保费应定多少？</p>
+<details><summary>显示解答</summary>
+<p>赔付额 X 满足 P(X=10000)=0.01、P(X=0)=0.99，故 E[X] = 10000×0.01 + 0 = 100 元——纯保费 100 元。设实收保费 c，则利润期望 E[c−X] = c − 100；要利润为 0 取 c=100；覆盖 20% 运营成本即 E[X] = 0.8c，得 c = 100/0.8 = 125 元。这展示了大数定律与期望在金融定价中的角色：个体出险不可预测，但大量保单让平均赔付稳定在 E[X]。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>R. Durrett, Probability: Theory and Examples</strong></p>
+<p>&rarr; <strong>W. Feller, An Introduction to Probability Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/measure-theory.html">测度论</a>。</p>
+</section>
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：概率论的数学根基——同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">🌊 布朗运动</a>：CLT 的动力学版本——同一学科分类「随机过程」。</p>
+<p>&rarr; <a href="/pages/kalman-filter.html">🛰️ Kalman 滤波</a>：条件期望与高斯分布的工程应用——同一学科分类「随机过程」。</p>
+<p>&rarr; <a href="/pages/combinatorics.html">🧮 组合数学</a>：计数、生成函数与概率的组合侧——同一学科分类「离散数学」。</p>
+</section>

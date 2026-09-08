@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="从本科生到博士的数学物理学习路径" />
+  <title>学习路径 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0d1117;color:#c9d1d9}
+    ::selection{background:rgba(88,166,255,.35)}
+    .top{padding:32px 24px 16px;max-width:1100px;margin:0 auto}
+    .top a{color:#58a6ff;text-decoration:none}
+    .top h1{color:#58a6ff;font-size:1.8em;margin:8px 0 4px}
+    .top p{color:#8b949e;font-size:.95em;line-height:1.6}
+    .path{max-width:1100px;margin:0 auto;padding:0 24px 40px}
+    .path-header{display:flex;align-items:center;gap:10px;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid #21262d}
+    .path-header h2{font-size:1.15em;color:#c9d1d9}
+    .path-header .tag{font-size:.75em;padding:2px 10px;border-radius:4px;background:#1a2a3a;color:#58a6ff}
+    .stage{margin-bottom:8px}
+    .stage-label{font-size:.8em;color:#8b949e;margin:10px 0 4px;text-transform:uppercase;letter-spacing:1px}
+    .stage-label .why{text-transform:none;color:#484f58;font-size:.85em;margin-left:8px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .node{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:8px 12px;text-decoration:none;color:#c9d1d9;font-size:.85em;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+    .node:hover{border-color:#58a6ff;background:#1a2332;transform:translateY(-1px)}
+    .node .e{font-size:1em}
+    .node.core{border-color:#2a3a4a}
+    .node.adv{border-color:#3a2a2a}
+    .node .tier{font-size:.7em;opacity:.7}
+    .arrow{color:#484f58;align-self:center;font-size:.8em}
+    .note{background:#161b22;border-left:3px solid #f78166;padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.85em;color:#a4acb8;line-height:1.7}
+    footer{text-align:center;padding:32px;color:#484f58;font-size:.8em}
+  </style>
+</head>
+<body>
+<div class="top">
+  <a href="/">← 返回首页</a>
+  <h1>🧭 学习路径</h1>
+  <p>从本科基础到博士研究，Vibe Math 的 122 门课程按三条主线组织。每门课的 <a href="/index.html" style="color:#58a6ff">关联课程</a> 提供横向跳跃。建议按顺序推进——数学与物理互为前提。</p>
+</div>
+
+<div class="path">
+  <div class="note">
+    <strong>建议节奏</strong>：路径 A（数学）和路径 B（物理）应交叉进行——物理给数学提供动机，数学给物理提供语言。
+    完成基础阶段后，可任选核心分支深入；读完前沿阶段即可读懂原始论文。
+    每门课的<a href="/quals.html" style="color:#58a6ff">资格考试问题</a>可检验掌握程度。
+  </div>
+
+  <!-- 路径 A：数学 -->
+  <div class="path-header"><h2>📐 路径 A：数学</h2><span class="tag">本科 → 博士</span></div>
+
+  <div class="stage">
+    <div class="stage-label">第一阶段 · 数学基础 <span class="why">(逻辑 + 集合 + 实数 + 极限)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/set-theory.html"><span class="e">📐</span>集合论</a><span class="arrow">→</span>
+      <a class="node" href="/pages/epsilon-delta.html"><span class="e">🔍</span>ε-δ语言</a><span class="arrow">→</span>
+      <a class="node" href="/pages/real-analysis.html"><span class="e">📐</span>实分析</a><span class="arrow">→</span>
+      <a class="node" href="/pages/measure-theory.html"><span class="e">📏</span>测度论</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第二阶段 · 线性代数 <span class="why">(线性世界的基本语言)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/linear-transform.html"><span class="e">📐</span>线性变换</a><span class="arrow">→</span>
+      <a class="node" href="/pages/eigenvectors.html"><span class="e">🎯</span>特征向量</a><span class="arrow">→</span>
+      <a class="node" href="/pages/determinant.html"><span class="e">📏</span>行列式</a><span class="arrow">→</span>
+      <a class="node" href="/pages/svd.html"><span class="e">🔀</span>SVD</a><span class="arrow">→</span>
+      <a class="node" href="/pages/spectral-theorem.html"><span class="e">🌈</span>谱定理</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第三阶段 · 微积分与分析 <span class="why">(变化的语言)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/derivative.html"><span class="e">📈</span>导数</a><span class="arrow">→</span>
+      <a class="node" href="/pages/gradient.html"><span class="e">🧭</span>梯度</a><span class="arrow">→</span>
+      <a class="node" href="/pages/riemann-integral.html"><span class="e">📊</span>黎曼积分</a><span class="arrow">→</span>
+      <a class="node" href="/pages/variational-calculus.html"><span class="e">📐</span>变分法</a>
+    </div>
+    <div class="row" style="margin-top:6px">
+      <a class="node" href="/pages/functional-analysis.html"><span class="e">📊</span>泛函分析</a><span class="arrow">→</span>
+      <a class="node" href="/pages/complex-plane.html"><span class="e">🔄</span>复分析</a><span class="arrow">→</span>
+      <a class="node" href="/pages/contour-integral.html"><span class="e">⭕</span>围道积分</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第四阶段 · 代数 <span class="why">(结构的世界)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/abstract-algebra.html"><span class="e">🧮</span>抽象代数</a><span class="arrow">→</span>
+      <a class="node" href="/pages/group-action.html"><span class="e">🔺</span>群作用</a><span class="arrow">→</span>
+      <a class="node" href="/pages/galois-theory.html"><span class="e">🔗</span>伽罗瓦理论</a><span class="arrow">→</span>
+      <a class="node" href="/pages/commutative-algebra.html"><span class="e">💍</span>交换代数</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第五阶段 · 拓扑与几何 <span class="why">(空间的形状)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/fundamental-group.html"><span class="e">🕳️</span>基本群</a><span class="arrow">→</span>
+      <a class="node" href="/pages/algebraic-topology-homology.html"><span class="e">🕳️</span>同调论</a><span class="arrow">→</span>
+      <a class="node" href="/pages/geodesic.html"><span class="e">🌐</span>测地线</a><span class="arrow">→</span>
+      <a class="node" href="/pages/curvature.html"><span class="e">📐</span>曲率</a><span class="arrow">→</span>
+      <a class="node" href="/pages/fiber-bundle.html"><span class="e">🧵</span>纤维丛</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第六阶段 · 现代数学 <span class="why">(博士前沿)</span></div>
+    <div class="row">
+      <a class="node adv" href="/pages/category-theory-adjoint.html"><span class="e">🔀</span>伴随函子</a>
+      <a class="node adv" href="/pages/algebraic-geometry.html"><span class="e">🔷</span>代数几何</a>
+      <a class="node adv" href="/pages/algebraic-K-theory.html"><span class="e">🔧</span>代数K理论</a>
+      <a class="node adv" href="/pages/symplectic-geometry.html"><span class="e">🌊</span>辛几何</a>
+      <a class="node adv" href="/pages/noncommutative-geometry.html"><span class="e">🌌</span>非交换几何</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">补充分支 · 2025 新增 <span class="why">(对齐《普林斯顿数学指南》Part III–IV：概念与分支补全)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/graph-theory.html"><span class="e">🕸️</span>图论与网络</a><span class="arrow">→</span>
+      <a class="node" href="/pages/pde.html"><span class="e">🌡️</span>PDE：热与波</a><span class="arrow">→</span>
+      <a class="node" href="/pages/fourier-transform.html"><span class="e">🎚️</span>傅里叶变换</a><span class="arrow">→</span>
+      <a class="node" href="/pages/clt.html"><span class="e">🎰</span>大数定律与 CLT</a>
+    </div>
+    <div class="row">
+      <a class="node adv" href="/pages/representation-theory.html"><span class="e">🎭</span>群表示论</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/elliptic-curves.html"><span class="e">🗝️</span>椭圆曲线与 Wiles</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/p-vs-np.html"><span class="e">⏳</span>P vs NP</a>
+    </div>
+    <div class="row">
+      <a class="node" href="/pages/differential-forms.html"><span class="e">🌀</span>微分形式</a><span class="arrow">→</span>
+      <a class="node" href="/pages/hyperbolic-geometry.html"><span class="e">🥏</span>双曲几何</a><span class="arrow">→</span>
+      <a class="node" href="/pages/high-dim-geometry.html"><span class="e">📦</span>高维几何与测度集中</a><span class="arrow">→</span>
+      <a class="node" href="/pages/cryptography.html"><span class="e">🔐</span>密码学 RSA</a>
+    </div>
+    <div class="row">
+      <a class="node adv" href="/pages/ergodic-theory.html"><span class="e">♻️</span>遍历理论</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/model-theory.html"><span class="e">🧬</span>模型论</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/additive-combinatorics.html"><span class="e">➕</span>加性组合学</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/laplace-eigenvalue.html"><span class="e">🥁</span>拉普拉斯与鼓的形状</a>
+    </div>
+    <div class="row">
+      <a class="node" href="/pages/diophantine-approximation.html"><span class="e">🐚</span>丢番图逼近与连分数</a><span class="arrow">→</span>
+      <a class="node" href="/pages/bifurcation.html"><span class="e">🌋</span>分岔与 Logistic</a><span class="arrow">→</span>
+      <a class="node" href="/pages/percolation.html"><span class="e">🪝</span>渗流与相变</a><span class="arrow">→</span>
+      <a class="node" href="/pages/convex-optimization.html"><span class="e">⚖️</span>凸优化</a>
+    </div>
+    <div class="row">
+      <a class="node adv" href="/pages/complex-dynamics.html"><span class="e">🪸</span>复动力系统 Julia/MB</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/yang-mills-mass-gap.html"><span class="e">⚗️</span>Yang–Mills 与质量缺口</a><span class="arrow">→</span>
+      <a class="node" href="/pages/martingales.html"><span class="e">♟️</span>鞅与随机游走</a>
+    </div>
+    <div class="row">
+      <a class="node adv" href="/pages/algebraic-number-theory.html"><span class="e">🏰</span>代数数论</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/lattice-crypto.html"><span class="e">🧊</span>格与后量子密码</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/random-matrix.html"><span class="e">🎱</span>随机矩阵半圆律</a>
+    </div>
+    <div class="row">
+      <a class="node adv" href="/pages/surface-topology.html"><span class="e">🫓</span>曲面分类与覆盖</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/lie-group-representations.html"><span class="e">🎻</span>紧李群表示 Peter–Weyl</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/forcing-ch.html"><span class="e">🌩️</span>力迫与 CH</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/spectral-sequences.html"><span class="e">🛰️</span>谱序列</a>
+    </div>
+    <div class="row">
+      <a class="node adv" href="/pages/p-adic-numbers.html"><span class="e">🥟</span>p-adic 数</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/schemes.html"><span class="e">🌾</span>概形语言</a><span class="arrow">→</span>
+      <a class="node adv" href="/pages/geometric-measure-theory.html"><span class="e">✂️</span>几何测度论</a>
+    </div>
+  </div>
+
+  <!-- 路径 B：物理 -->
+  <div class="path-header"><h2>⚛️ 路径 B：物理</h2><span class="tag">本科 → 博士</span></div>
+
+  <div class="stage">
+    <div class="stage-label">第一阶段 · 经典物理 <span class="why">(决定论的巅峰)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/classical-mechanics.html"><span class="e">🎢</span>经典力学</a><span class="arrow">→</span>
+      <a class="node" href="/pages/electromagnetism.html"><span class="e">⚡</span>电磁学</a><span class="arrow">→</span>
+      <a class="node" href="/pages/optics.html"><span class="e">💡</span>光学</a><span class="arrow">→</span>
+      <a class="node" href="/pages/thermodynamics.html"><span class="e">🔥</span>热力学</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第二阶段 · 统计与概率 <span class="why">(多体的世界)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/probability.html"><span class="e">🎲</span>概率论</a><span class="arrow">→</span>
+      <a class="node" href="/pages/entropy.html"><span class="e">📉</span>熵与信息</a><span class="arrow">→</span>
+      <a class="node" href="/pages/ising-model.html"><span class="e">🧲</span>Ising模型</a><span class="arrow">→</span>
+      <a class="node" href="/pages/boltzmann.html"><span class="e">💥</span>Boltzmann方程</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第三阶段 · 量子力学 <span class="why">(概率幅的世界)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/bloch-sphere.html"><span class="e">🔮</span>Bloch球</a><span class="arrow">→</span>
+      <a class="node" href="/pages/uncertainty.html"><span class="e">🎲</span>不确定性</a><span class="arrow">→</span>
+      <a class="node" href="/pages/harmonic-oscillator.html"><span class="e">🪩</span>谐振子</a><span class="arrow">→</span>
+      <a class="node" href="/pages/hydrogen-atom.html"><span class="e">⚛️</span>氢原子</a><span class="arrow">→</span>
+      <a class="node" href="/pages/entanglement.html"><span class="e">🪢</span>纠缠</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第四阶段 · 相对论 <span class="why">(时空弯曲)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/light-cone.html"><span class="e">💫</span>光锥</a><span class="arrow">→</span>
+      <a class="node" href="/pages/lorentz-transform.html"><span class="e">🚀</span>Lorentz变换</a><span class="arrow">→</span>
+      <a class="node" href="/pages/gravitational-lens.html"><span class="e">🔭</span>引力透镜</a><span class="arrow">→</span>
+      <a class="node" href="/pages/geodesic.html"><span class="e">🌐</span>测地线</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第五阶段 · 量子场论 <span class="why">(粒子的场)</span></div>
+    <div class="row">
+      <a class="node" href="/pages/feynman-diagram.html"><span class="e">✴️</span>费曼图</a><span class="arrow">→</span>
+      <a class="node" href="/pages/higgs-mechanism.html"><span class="e">💎</span>Higgs机制</a><span class="arrow">→</span>
+      <a class="node" href="/pages/standard-model.html"><span class="e">🧩</span>标准模型</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-label">第六阶段 · 现代物理 <span class="why">(博士前沿)</span></div>
+    <div class="row">
+      <a class="node adv" href="/pages/band-structure.html"><span class="e">📶</span>能带结构</a>
+      <a class="node adv" href="/pages/cmb.html"><span class="e">🌌</span>宇宙微波背景</a>
+      <a class="node adv" href="/pages/nuclear-physics.html"><span class="e">⚛️</span>核物理</a>
+      <a class="node adv" href="/pages/qubit-gates.html"><span class="e">🚪</span>量子门</a>
+    </div>
+  </div>
+
+  <!-- 路径 C：问题与前沿 -->
+  <div class="path-header"><h2>🏆 路径 C：著名问题</h2><span class="tag">研究型读者</span></div>
+  <div class="stage">
+    <div class="row">
+      <a class="node" href="/pages/goldbach.html"><span class="e">👬</span>哥德巴赫</a>
+      <a class="node" href="/pages/twin-prime.html"><span class="e">👯</span>孪生素数</a>
+      <a class="node" href="/pages/zeta.html"><span class="e">〰️</span>黎曼ζ</a>
+      <a class="node" href="/pages/poincare-conjecture.html"><span class="e">🔮</span>庞加莱猜想</a>
+      <a class="node" href="/pages/hilbert-problems.html"><span class="e">📋</span>Hilbert问题</a>
+      <a class="node adv" href="/pages/millennium-problems.html"><span class="e">🏆</span>千禧年问题</a>
+    </div>
+  </div>
+</div>
+
+<footer><p>Vibe Math · 90 courses · 学习路径</p></footer>
+<script type="module" src="/src/shared/base-patch.js"></script>
+</body>
+</html>

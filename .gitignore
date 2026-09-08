@@ -1,0 +1,14 @@
+node_modules/
+dist/
+book/
+*.pyc
+__pycache__/
+.DS_Store
+*.log
+
+# large binary documents (PDF/e-book) — never commit to source repo
+*.pdf
+*.epub
+*.mobi
+*.djvu
+*.zip

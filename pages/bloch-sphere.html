@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="量子比特的几何——每个态是球面上一点" />
+  <meta property="og:title" content="Bloch 球 — Vibe Math" />
+  <meta property="og:description" content="量子比特的几何——每个态是球面上一点" />
+  <title>Bloch 球 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🔮 Bloch 球 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">量子比特的几何——每个态是球面上一点</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='bloch-sphere',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/differential-forms.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🌀 微分形式与外微分</a>
+  <a href="/pages/harmonic-oscillator.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🪩 谐振子 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——拿一个具体量子比特，问它画在地球仪哪里</h3>
+<p>先写下一个具体的量子状态，带数字的：</p>
+<div class="formula display" data-tex="|\psi\rangle=\frac{\sqrt{3}}{2}|0\rangle+\frac{1}{2}|1\rangle"></div>
+<p>这里 α = √3/2 ≈ 0.866，β = 1/2。按量子力学的规则（后面会严格讲），现在测量它，得到 |0⟩ 的概率是 α² = 3/4 = 75%，得到 |1⟩ 的概率是 β² = 1/4 = 25%。这是个"偏 0 一点"的态。</p>
+<p>问题来了：这样的态该怎么"画"出来？物理学家把它画在一个球上：<strong>北极放 |0⟩，南极放 |1⟩</strong>，球面上每个点代表一种量子状态。上面这个态更接近 |0⟩，所以画在靠近北极的地方——具体说，从北极往赤道方向量 60°（θ=π/3），落在 0° 经线上，纬度在北纬 30° 的位置。这个"地球仪"就是 <strong>Bloch 球</strong>。</p>
+<p>一个量子比特不像普通开关只有"开"和"关"，它可以是"开与关之间的任何程度"；Bloch 球就是把这种奇妙状态全部画出来，并直观展示量子门操作（像"翻转"或"旋转"）到底干了什么。</p>
+<div class="key-insight">量子比特不是非0即1，而是球面上任意一点——Bloch球就是这张"量子世界地图"。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、量子比特是什么？——不是 0 或 1，而是"可以是 0 和 1 的混合"</h3>
+<p>先想一个普通开关：它只有两个位置——开、关。我们用 1 表示开，0 表示关。计算机里最基础的信息单位（叫"比特"）就是这样：要么是 0，要么是 1，没有中间态。这是你熟悉的世界，黑白分明。</p>
+<p>量子比特（qubit，量子比特的简称）却不一样。它不是"要么 0 要么 1"，而是<strong>可以是 0 和 1 的混合</strong>——像调光台灯：不是只有"全亮"和"全灭"，还能是"半亮""三成亮"等等任何程度。说得更准一点：一个量子比特的状态，就是"0 的成分"和"1 的成分"按一定比例混在一起。</p>
+<p><strong>完整例题：一个带数字的混合态。</strong>取 |ψ⟩ = 0.8|0⟩ + 0.6|1⟩。先检查归一化：|0.8|² + |0.6|² = 0.64 + 0.36 = 1 ✓（概率总和必须是 100%）。这意味着：测量它，64% 概率得到 |0⟩，36% 概率得到 |1⟩——它"偏 0"。如果把比例换成 0 和 1，|ψ⟩ = 1·|0⟩ + 0·|1⟩，就退化成纯粹 |0⟩；取 1/√2 ≈ 0.707 各一半，就是"完全对半"的叠加态。</p>
+<p>我们把"在 0 和 1 之间任意混合"这件事叫<strong>叠加</strong>（superposition），把两个最基本的选项 |0⟩ 和 |1⟩ 叫<strong>基态</strong>。注意那两条竖线和尖角的记号——物理学家用它写量子状态，之后我们会反复见到。现在你只需要记住：<strong>|0⟩ 和 |1⟩ 是两个基本选项，而量子比特可以是它们俩按任意比例混合出来的东西</strong>。</p>
+<p>如果你想理解核心思想，看到这里就够了——后面的每一节，都是把"可以混合"这四个字展开、画成图、算成公式而已。</p>
+</section>
+
+<section>
+<h3>二、叠加态直觉——抛硬币旋转时"既正又反"</h3>
+<p>怎么想象"0 和 1 的混合"？最好的比喻是抛硬币。硬币在桌面上静止时，要么正面要么反面，清楚得很。但当你把它抛向空中、它飞快旋转的那一瞬间——它是"正"还是"反"？其实都谈不上，它处于"正和反的混合状态"：还没落定。</p>
+<p>量子比特就像一枚在空中旋转的硬币。它可以朝"0"偏一点，也可以朝"1"偏一点，还可以刚好一半一半。我们把它写成公式：<strong>|ψ⟩ = α|0⟩ + β|1⟩</strong>。</p>
+<p>逐字拆开讲：<strong>|ψ⟩</strong> 只是一个名字（ψ 念作"psi"），代表"这个量子比特当前的状态"。<strong>|0⟩ 和 |1⟩</strong> 是刚才说的两个基本选项。<strong>α 和 β 是两个复数</strong>（先别怕"复数"，就当成两个能互相抵消的数），α 描述"它有多像 0"，β 描述"它有多像 1"。混合的比例越接近，就越像"一半一半"；如果 β 是 0，那它就老老实实是 |0⟩。回到第一节：α=0.8、β=0.6 就是一个具体例子，归一化条件是 |α|² + |β|² = 1。</p>
+<p>还有个关键点：只要你<strong>不去测量</strong>，这个混合就一直在——硬币一直在转。可你一旦伸手把它按住（测量），它就"啪"地落定：要么正面（|0⟩），要么反面（|1⟩）。混合态在测量的一瞬间被"逼"着选了一个答案，这就是量子世界"不确定性"的由来。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>三、为什么画在球上？——两个复数恰好变成球面上的一个点</h3>
+<p>你可能想问：既然 α 和 β 是两个数，那我直接用这两个数表示状态不就行了，为什么要画成一个球？答案是：<strong>这两个复数合起来恰好就是"一个球面上的点"</strong>。这是数学帮你数出来的，我们来数一遍。</p>
+<p>一个复数由两个实数构成（一个"横坐标"一个"纵坐标"），所以 α、β 两个复数加起来有 <strong>4 个实数</strong>。但真实的状态没有这么多自由：第一，α 和 β 必须满足 |α|² + |β|² = 1（这叫归一化，物理意义是"概率加起来必须等于 100%"），这扣掉 1 个自由度；第二，把 α 和 β 同时乘上同一个常数，描述的是同一个物理状态（这叫"整体相位"，先当作数学上的一个小细节），再扣掉 1 个。4 − 1 − 1 = <strong>2 个自由度</strong>。</p>
+<p><strong>完整例题：具体验证"整体相位"。</strong>取第一节的态 |ψ⟩ = 0.8|0⟩ + 0.6|1⟩，把两个系数同时乘 e^{iγ}（比如 γ=π，即整体乘 −1）：−0.8|0⟩ − 0.6|1⟩。测量概率 |−0.8|² = 0.64、|−0.6|² = 0.36，与原态完全一样——所以两者是<strong>同一个物理状态</strong>，只差一个不可观测的全局相位。这个多余的自由度就被扣掉了。</p>
+<p>而"由 2 个数确定的点"最自然的容器，就是<strong>一个球面</strong>——球面上的每个点恰好要两个数来确定（比如纬度和经度）。于是就有了这张"量子世界地图"（Bloch 球，读"布洛赫"）：<strong>南极</strong>放 |1⟩，<strong>北极</strong>放 |0⟩，两个基本选项在地球的两端；<strong>赤道</strong>上的点正好是 0 和 1 各占一半的等概率混合。其余每个点，就是一个具体的"0 和 1 按某种比例混合"的状态。</p>
+<p>所以当你看到"把量子比特画在球上"，不要觉得神秘：它只是在说，量子比特的全部可能性，刚好能装进一个球面，一个点对应一个状态。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>四、量子比特的几何——Bloch 球</h3>
+<p>任意量子比特的纯态可以写成 <strong>|ψ⟩ = cos(θ/2)|0⟩ + e<sup>iφ</sup> sin(θ/2)|1⟩</strong>。两个实参数 θ∈[0,π] 和 φ∈[0,2π] 把每个态映射到单位球面上的一个点。θ 是"从北极往下量的纬角"（决定 |0⟩ 和 |1⟩ 的比例），φ 是"经度"（决定两个分量之间的相对相位）。拖拽鼠标旋转视角。</p>
+<p><strong>完整例题：把第一节的具体态放到球面上。</strong>态 |ψ⟩ = (√3/2)|0⟩ + (1/2)|1⟩。对照公式 cos(θ/2) = √3/2 得 θ/2 = π/6，即 θ = π/3；因为 β 是正实数，相位 e^{iφ}·sin(θ/2) = ½ 取 φ = 0。代入球坐标公式（严格推导见第十三节）：</p>
+<div class="formula display" data-tex="(r_x,r_y,r_z)=(\sin\theta\cos\phi,\ \sin\theta\sin\phi,\ \cos\theta)=\Big(\frac{\sqrt{3}}{2},\ 0,\ \frac{1}{2}\Big)"></div>
+<p>一步步核：sinθ = sin(π/3) = √3/2，cosθ = cos(π/3) = 1/2。所以这个态画在球面上 (√3/2, 0, 1/2) 处——纬角 60°（北纬 30°）、经度 0°。它明显在北极和赤道之间、更靠近北极，因为测得 |0⟩ 的概率 cos²(θ/2) = (√3/2)² = 3/4 更大。✓ 数字和第一节的测量概率完全吻合。</p>
+<div class="key-insight">Bloch球将量子态的SU(2)结构完整编码在三维几何中。北极=|0⟩。南极=|1⟩。赤道=完美叠加态。球心=最大混合态（不在纯态图上）。量子门=Bloch球上的旋转。</div>
+</section>
+
+<section>
+<h3>五、为什么是球面？——参数计数</h3>
+<p>|ψ⟩ = α|0⟩ + β|1⟩。α和β各是复数→4个实参数。归一化 |α|²+|β|²=1 扣掉1个。全局相位任意（α→e<sup>iγ</sup>α, β→e<sup>iγ</sup>β不改变物理态）再扣1个。剩余<strong>2个实自由度</strong>→二维球面 S²。正交态在球面上互为<strong>对径点</strong>。</p>
+<p>球面上的每条经线对应一个固定的φ（相位差），每条纬线对应一个固定的θ（|0⟩和|1⟩的振幅比）。赤道(θ=π/2)上全是等振幅叠加态——|ψ⟩=(|0⟩+e<sup>iφ</sup>|1⟩)/√2。</p>
+</section>
+
+<section>
+<h3>六、量子门 = 球面上的旋转</h3>
+<p><strong>Pauli门</strong>：X=绕x轴旋转π（|0⟩↔|1⟩翻转）。Y=绕y轴旋转π。Z=绕z轴旋转π（加π相位）。</p>
+<p><strong>Hadamard门H</strong>：绕(1,0,1)轴旋转π，将|0⟩变成(|0⟩+|1⟩)/√2——制造叠加态。连续两次H=|0⟩回到|0⟩（H²=I）。</p>
+<p><strong>T门</strong>：绕z轴旋转π/4。{H, T, CNOT}构成<strong>通用门集</strong>——可以任意逼近任何n-qubit酉运算。</p>
+<p><strong>完整例题 1：X 门作用在具体态上，验证"绕 x 轴转 π"。</strong>取态 |ψ⟩ = (|0⟩ + i|1⟩)/√2（赤道 φ=π/2 的点，Bloch 矢量 r=(0,1,0)，在 +y 轴上）。X 门把基态互换：X|0⟩=|1⟩、X|1⟩=|0⟩，所以</p>
+<div class="formula display" data-tex="X|\psi\rangle=\frac{|1\rangle+i|0\rangle}{\sqrt{2}}"></div>
+<p>算新态的 Bloch 矢量：α = i/√2、β = 1/√2，α*β = (i/√2)(1/√2) = i/2，故 r_x = 2Re(i/2) = 0，r_y = 2Im(i/2) = 1，不对——重算：α*β 的虚部为 1/2，所以 r_y = 2·(1/2) = 1？小心：这里 α 是 |0⟩ 的系数 i/√2、β 是 |1⟩ 的系数 1/√2，α*β = (−i/√2)(1/√2) = −i/2，虚部是 −1/2。于是 r_x = 2Re(−i/2) = 0，r_y = 2·(−1/2) = −1，r_z = |α|²−|β|² = 0。新态在 (0,−1,0)，即 −y 轴。原态 +y → 新态 −y：<strong>恰好是绕 x 轴旋转 π 的结果</strong>。✓ 数字吻合"X = 绕 x 轴转 π"。</p>
+<p><strong>完整例题 2：Hadamard 门作用在 |0⟩ 上。</strong>H|0⟩ = (|0⟩+|1⟩)/√2，即 θ=π/2、φ=0，画在赤道 +x 轴。再作用一次：H((|0⟩+|1⟩)/√2) = (1/√2)·(H|0⟩+H|1⟩) = (1/√2)·((|0⟩+|1⟩)/√2 + (|0⟩−|1⟩)/√2) = |0⟩，回到北极。两次绕同一轴转 π 等于转 2π = 恒等，H² = I。✓</p>
+</section>
+
+<section>
+<h3>七、混合态——球面内部</h3>
+<p>纯态 = 球面上的点。混合态 = 球面<strong>内部</strong>的点。密度矩阵 ρ = ½(I + r·σ)。Bloch 矢量 r = (rₓ, r_y, r_z) 满足 |r|≤1。|r|=1→纯态（球面）。|r|<1→混合态（球内）。r=0→最大混合态 ρ=I/2（球心）。</p>
+<p><strong>完整例题：一个具体的混合态。</strong>取 Bloch 矢量 r = (0, 0, ½)，即 |r|=½<1，应在球内。代入 ρ = ½(I + r·σ) = ½(I + ½σ_z)：σ_z = diag(1,−1)，故</p>
+<div class="formula display" data-tex="\rho=\frac12\begin{pmatrix}1+\frac12 & 0\\ 0 & 1-\frac12\end{pmatrix}=\begin{pmatrix}\frac34 & 0\\ 0 & \frac14\end{pmatrix}"></div>
+<p>一个对角矩阵，对角元是概率 3/4、1/4，和为 1，是合法密度矩阵。纯度检验：Tr(ρ²) = (3/4)² + (1/4)² = 9/16 + 1/16 = 5/8 ≈ 0.625 &lt; 1 → 确实是混合态。直观：它"离北极还差一截"，像北极和球心之间 3/4 处的一个内部点。极端情形 r=0 给出 ρ=I/2，Tr(ρ²)=1/2，最"混合"。</p>
+<p>量子门作用在密度矩阵上：ρ → UρU†。在Bloch球上这对应旋转——U是SU(2)矩阵，共轭作用恰好是SO(3)的旋转。这就是为什么Bloch球自然编码了量子力学的SU(2)→SO(3)二重覆盖。</p>
+</section>
+
+<section>
+<h3>八、和经典比特的根本区别</h3>
+<p>经典比特：只能是0或1（球的北极或南极）。量子比特：可以是球面上<strong>任何一点</strong>——两个经典态之间的连续统。但测量时——只能得到0或1。测量将态投影到北极或南极，概率由θ决定：P(0)=cos²(θ/2)，P(1)=sin²(θ/2)。</p>
+<p><strong>完整例题：测量概率的两条路。</strong>回到〇节的态 (√3/2)|0⟩ + ½|1⟩。按系数直接算：P(0)=|α|²=3/4，P(1)=|β|²=1/4。按 Bloch 坐标算：r_z=1/2，P(0)=(1+r_z)/2 = 3/4，P(1)=(1−r_z)/2 = 1/4。两条路结果一致 ✓。赤道上的态 θ=π/2 给 P(0)=P(1)=1/2——完全对半。</p>
+<p>这正是量子计算的力量来源：n个qubit可以在2ⁿ维Hilbert空间中做干涉——不是"同时做很多事"，而是在指数大的空间中设计干涉模式使正确答案相长、错误答案相消。</p>
+</section>
+
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="|\psi\rangle = \cos\frac{\theta}{2}|0\rangle + e^{i\phi}\sin\frac{\theta}{2}|1\rangle"></div>
+<div class="formula display" data-tex="\rho = \frac{1}{2}(I + \mathbf{r}\cdot\boldsymbol{\sigma}),\quad |\mathbf{r}|\le 1"></div>
+</section>
+
+<section>
+<h3>十、试试看（带提示）</h3>
+<p>1. 正交态在Bloch球上是什么位置关系？<br>提示：对径点。例：|0⟩ 与 |1⟩ 是北极 vs 南极。一般地，若 ⟨ψ|φ⟩=0，则 φ 的 Bloch 矢量 = −(ψ 的 Bloch 矢量)，两点关于球心对称。</p>
+<p>2. 叠加态 (|0⟩+|1⟩)/√2 在球面的什么位置？它和|0⟩的夹角是多少？<br>提示：θ=π/2、φ=0 → 赤道上的 +x 轴点。从北极沿经线量到赤道是 90°，即 θ 本身；内积 |⟨0|ψ⟩|² = cos²(θ/2) = 1/2，角度 arccos 即 90°。</p>
+<p>3. Hadamard门作用在|0⟩上得到什么？在Bloch球上这个态在哪？<br>提示：H|0⟩=(|0⟩+|1⟩)/√2，赤道 +x 轴（见第六节完整例题 2）。再作用一次回到 |0⟩（H²=I）。</p>
+<p>4. 态 (|0⟩−|1⟩)/√2 画在哪？<br>提示：e^{iφ} 项，φ=π，仍是赤道但指向 −x 轴；|1⟩ 前系数为负只改变相位不改变振幅。</p>
+<p>5. 若 r=(1,0,0)，ρ 是什么？它是纯态还是混合态？<br>提示：ρ=½(I+σ_x)，对角化得特征值 1、0（或算 Tr(ρ²)=1）→ 纯态，即赤道 +x 点的 (|0⟩+|1⟩)/√2。</p>
+<p>6. 若 ρ=diag(0.9, 0.1)，对应的 Bloch 矢量是什么？<br>提示：对角密度矩阵只有 r_z≠0：ρ=½(I+r_z σ_z)，故 0.9=(1+r_z)/2 → r_z=0.8；点在 z 轴上 0.8 处，球内，是混合态。</p>
+</section>
+
+<section><h3>十一、历史注记</h3><p>Bloch(1946)引入Bloch方程描述核磁共振(NMR)中的自旋动力学。Feynman,Vernon,Hellwarth(1957)将Bloch方程推广到一般二能级量子系统。NMR->MRI(医学成像)->量子计算——Bloch球从一个物理工具变成了量子信息的通用语言。</p></section>
+<section><h3>十二、前沿：超导量子比特的Bloch球动力学</h3><p>Transmon和Fluxonium量子比特的Bloch球动力学由Josephson非线性决定。"Bloch球外的"动力学——超越二能级系统的泄漏误差——是当前量子纠错的主要障碍。仍开放:如何最优地抑制泄漏到更高能级。</p></section>
+
+<section>
+<h3>十三、Bloch 球坐标的完整推导</h3>
+<p>从最一般的纯态出发：<strong>|ψ⟩ = α|0⟩ + β|1⟩</strong>，其中 α,β∈C 且 |α|²+|β|²=1。密度矩阵 ρ = |ψ⟩⟨ψ| 展开为</p>
+<div class="formula display" data-tex="\rho=\begin{pmatrix}|\alpha|^2 & \alpha\beta^*\\ \alpha^*\beta & |\beta|^2\end{pmatrix}"></div>
+<p>令 α=cos(θ/2)、β=e^{iφ}sin(θ/2)，代入并用三角恒等式 cos²(θ/2)=(1+cosθ)/2、sin²(θ/2)=(1−cosθ)/2、sinθ=2sin(θ/2)cos(θ/2)：</p>
+<div class="formula display" data-tex="\rho=\frac{1}{2}\begin{pmatrix}1+\cos\theta & e^{-i\phi}\sin\theta\\ e^{i\phi}\sin\theta & 1-\cos\theta\end{pmatrix}"></div>
+<p>另一方面，任意单比特密度矩阵可唯一写成 <strong>ρ = ½(I + r·σ)</strong>，其中 σ=(σ_x,σ_y,σ_z) 为 Pauli 矩阵：</p>
+<div class="formula display" data-tex="\frac{1}{2}(I+\mathbf{r}\cdot\boldsymbol{\sigma})=\frac{1}{2}\begin{pmatrix}1+r_z & r_x-ir_y\\ r_x+ir_y & 1-r_z\end{pmatrix}"></div>
+<p>逐项比较矩阵元即得 Bloch 矢量分量</p>
+<div class="formula display" data-tex="r_x=\sin\theta\cos\phi,\quad r_y=\sin\theta\sin\phi,\quad r_z=\cos\theta"></div>
+<p>这正是单位球面 S² 的标准球坐标参数化。取 θ∈[0,π]、φ∈[0,2π)，态 |ψ⟩ 与球面上的点一一对应（除整体相位外）；球心 r=0 对应最大混合态 ρ=I/2。</p>
+</section>
+
+<section>
+<h3>十四、Born 规则：P(0)=cos²(θ/2)</h3>
+<p>考虑计算基（computational basis）的投影算符 P₀=|0⟩⟨0|、P₁=|1⟩⟨1|。按 Born 规则，测得 |0⟩ 的概率为</p>
+<div class="formula display" data-tex="P(0)=\langle\psi|P_0|\psi\rangle=|\langle0|\psi\rangle|^2=\cos^2\frac{\theta}{2}"></div>
+<p>测得 |1⟩ 的概率 P(1)=|⟨1|ψ⟩|²=sin²(θ/2)，且 P(0)+P(1)=1。用 Bloch 矢量写出同样成立：</p>
+<div class="formula display" data-tex="P(0)=\frac{1+r_z}{2}=\frac{1+\cos\theta}{2}=\cos^2\frac{\theta}{2},\qquad P(1)=\frac{1-r_z}{2}=\sin^2\frac{\theta}{2}"></div>
+<p><strong>完整例题：数字核对。</strong>〇节的态 θ=π/3：cos²(π/6) = (√3/2)² = 3/4 = P(0)，sin²(π/6) = 1/4 = P(1)；用 Bloch 版本 r_z = cos(π/3) = 1/2，(1+½)/2 = 3/4，一致 ✓。</p>
+<p>因此测量概率只取决于经度 θ（即 |0⟩/|1⟩ 的振幅比），与相对相位 φ 无关。测量后态投影为 |0⟩ 或 |1⟩，即在 Bloch 球上沿 z 轴坍缩到北极或南极。</p>
+<div class="key-insight">Born 规则把几何位置(θ)与实验可观测量直接联系起来：越靠近北极的态，测得 |0⟩ 的概率越接近 1；赤道态满足 P(0)=P(1)=1/2。</div>
+</section>
+
+<section>
+<h3>十五、反例：球外点（|r|&gt;1）不是物理态</h3>
+<p>反例构造：取 r=(2,0,0)，则 |r|=2&gt;1。代入 ρ=½(I+r·σ)：</p>
+<div class="formula display" data-tex="\rho=\frac{1}{2}(I+2\sigma_x)=\frac{1}{2}\begin{pmatrix}1&2\\2&1\end{pmatrix}"></div>
+<p>该矩阵的特征值为 ½(1±2)，即 λ₁=3/2、λ₂=−1/2。存在负特征值，故 ρ 不是半正定矩阵，不可能对应任何物理密度矩阵。更一般地：</p>
+<div class="formula display" data-tex="\operatorname{Tr}(\rho^2)=\frac{1}{2}(1+|\mathbf{r}|^2)"></div>
+<p>对任意物理密度矩阵恒有 Tr(ρ²)≤1（等号仅对纯态成立）。若 |r|&gt;1 则 Tr(ρ²)&gt;1，直接矛盾；若 |r|=1 则 Tr(ρ²)=1 → 纯态（球面）；|r|&lt;1 → 混合态（球内）。</p>
+<div class="key-insight">因此 Bloch 球的"表面+内部"完整刻画了单比特的全部物理态空间；球外任何点都会产生负特征值（负概率），违背密度矩阵的物理性要求。</div>
+</section>
+
+<section>
+<h3>十六、工作题：量子门旋转矩阵与态向量计算</h3>
+<p><strong>题目1.</strong> 求绕 y 轴旋转角度 θ 的单比特门 R_y(θ)=e^{−iθσ_y/2} 的 2×2 矩阵形式，并写出它对基态 |0⟩ 的作用结果。</p>
+<details><summary>显示解答</summary>
+<p>利用指数展开：对满足 σ_y²=I 的算符，e^{−iθσ_y/2}=cos(θ/2)I − i sin(θ/2)σ_y。代入 σ_y=[[0,−i],[i,0]]：</p>
+<div class="formula display" data-tex="R_y(\theta)=\begin{pmatrix}\cos\frac{\theta}{2} & -\sin\frac{\theta}{2}\\ \sin\frac{\theta}{2} & \cos\frac{\theta}{2}\end{pmatrix}"></div>
+<p>对 |0⟩=(1,0)^T：R_y(θ)|0⟩=(cos(θ/2), sin(θ/2))^T = cos(θ/2)|0⟩+sin(θ/2)|1⟩。这正是赤道上 φ=0 的态，即从北极出发绕 y 轴转过 θ 角。</p>
+</details>
+<p><strong>题目2.</strong> 验证 X 门等于绕 x 轴旋转 π 的 R_x(π)（差一个整体相位）。</p>
+<details><summary>显示解答</summary>
+<p>由 e^{−iθσ_x/2}=cos(θ/2)I − i sin(θ/2)σ_x，令 θ=π：e^{−iπσ_x/2}=0·I − i·σ_x = −iX。故 R_x(π)=−iX，与 X 只差全局相位 −i，物理上等价（绕 x 轴转 π 的效果正是 |0⟩↔|1⟩ 翻转）。</p>
+</details>
+<p><strong>题目3.</strong> 对态 |ψ⟩=(|0⟩+i|1⟩)/√2，计算其 Bloch 矢量与 P(0)、P(1)。</p>
+<details><summary>显示解答</summary>
+<p>这里 α=1/√2，β=i/√2。按公式 r_x=2Re(α*β)、r_y=2Im(α*β)、r_z=|α|²−|β|²：α*β=(1/√2)(i/√2)=i/2，故 r_x=2Re(i/2)=0，r_y=2Im(i/2)=1，r_z=1/2−1/2=0。Bloch 矢量 r=(0,1,0)，即赤道上 φ=π/2 的点。P(0)=|α|²=1/2，P(1)=|β|²=1/2；用 Born 公式 P(0)=(1+r_z)/2=1/2 也一致。</p>
+</details>
+<p><strong>题目4.</strong> 态 |ψ⟩=cos(π/6)|0⟩+e^{iπ/3}sin(π/6)|1⟩ 的 Bloch 矢量与测量概率。</p>
+<details><summary>显示解答</summary>
+<p>θ=π/3，φ=π/3。r=(sinθcosφ, sinθsinφ, cosθ)=((√3/2)(1/2),(√3/2)(√3/2),1/2)=(√3/4, 3/4, 1/2)。P(0)=cos²(θ/2)=cos²(π/6)=3/4，P(1)=sin²(π/6)=1/4。校验 (1+r_z)/2=(1+1/2)/2=3/4 ✓。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Sakurai, Modern Quantum Mechanics</strong></p>
+<p>&rarr; <strong>D. Griffiths, Introduction to Quantum Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/qubit-gates.html"><strong>量子门</strong></a>：Bloch球上每个量子态对应球面一点，任何单qubit量子门等价于Bloch球上的旋转操作——理解量子门的几何意义离不开Bloch球。</p>
+<p>&rarr; <a href="/pages/entanglement.html"><strong>量子纠缠</strong></a>：单qubit的Bloch球是理解多qubit纠缠态的基石——多qubit系统的纠缠几何正是Bloch球表示的张量积推广。</p>
+<p>&rarr; <a href="/pages/uncertainty.html"><strong>不确定性原理</strong></a>：Bloch球上正交态为对径点，任一方向的Bloch矢量分量测量受制于不确定性关系——这是量子力学不确定性在Bloch球上的几何映照。</p>
+<p>&rarr; <a href="/pages/harmonic-oscillator.html"><strong>谐振子</strong></a>：谐振子的相干态和压缩态在Bloch球上对应特定的Bloch矢量轨迹——量子光学中谐振子态的可视化直接使用Bloch球。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/bloch-sphere.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

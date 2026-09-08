@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Fermat原理到量子光学——光的四百年" />
+  <meta property="og:title" content="光学 — Vibe Math" />
+  <meta property="og:description" content="Fermat原理到量子光学——光的四百年" />
+  <title>光学 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>💡 光学 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Fermat原理到量子光学——光的四百年</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='optics',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/universal-algebra.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🧱 泛代数</a>
+  <a href="/pages/nuclear-physics.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⚛️ 核物理 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——干涉与衍射的三个具体数字</h3>
+<p>光学最深处的两个现象——干涉和衍射——先用三个能亲手验算的数字开场：</p>
+<div class="formula display" data-tex="\text{双缝}:\ d=0.25\,\mathrm{mm},\ \lambda=546\,\mathrm{nm},\ L=1.2\,\mathrm{m}\;\Longrightarrow\;\Delta y=\frac{\lambda L}{d}\approx2.6\,\mathrm{mm}"></div>
+<div class="formula display" data-tex="\text{单缝}:\ a=0.10\,\mathrm{mm},\ \lambda=632.8\,\mathrm{nm},\ L=2.00\,\mathrm{m}\;\Longrightarrow\;y_1\approx12.7\,\mathrm{mm}"></div>
+<div class="formula display" data-tex="\text{光栅}:\ 600\ \text{线/mm},\ \lambda=632.8\,\mathrm{nm}\;\Longrightarrow\;\theta_1=\arcsin(\lambda/d)\approx22.3^\circ"></div>
+<p>第一个：波长为 546 nm（绿）的光通过缝距 0.25 mm 的双缝、在 1.2 m 外的屏上，亮纹间距是 2.6 mm——一条条看得见、量得出的条纹。第二个：宽度只有 0.10 mm 的单缝，把 632.8 nm 的激光在 2 m 外拉开成 12.7 mm 的第一暗环。第三个：每毫米刻 600 条线的光栅，把红光以 22.3° 的方向"拐"到一边。三个例子用同一个公式家族 λ = (几何)×(角度) 描述。</p>
+<p>为什么这些数字值得算？因为它们演示了光学最深刻的一件事：<strong>光不只走直线（几何光学），它还会"弯曲"和"叠加"（波动光学）</strong>。两个缝、一条缝、一千条缝，表面上是不同实验，实际上是同一个波动原理的三个尺码。理解 λ 与缝的尺寸谁大谁小，就理解了光学从"光线"到"波"的整套升级。</p>
+<div class="key-insight">核心思想：光在两点间走"用时最少"的路（Fermat 原理）——一条规则解释反射、折射、成像；而一旦尺度与波长可比（双缝、单缝、光栅），光的"波性"接管一切，条纹间距、衍射角都能精确计算。只想懂核心思想，看到〇到七节就够。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/electromagnetism.html">电磁学与 Maxwell 方程组</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、光波的两个数字——波长与频率</h3>
+<p>谈干涉衍射前，先给光波装上两把尺子。<strong>波长 λ</strong>：相邻两个波峰的距离；<strong>频率 f</strong>：每秒振动的次数。两者由光速相连：c = fλ，c ≈ 3.0×10⁸ m/s。</p>
+<p>可见光只占极窄的一段：波长约 380–760 nm（1 nm = 10⁻⁹ m）。用数字感受：红光的 λ ≈ 700 nm，蓝光 λ ≈ 450 nm。换算成频率：红光 f = c/λ = 3×10⁸/7×10⁻⁷ ≈ 4.3×10¹⁴ Hz，蓝光 ≈ 6.7×10¹⁴ Hz——每秒振动几百万亿次。激光（如 He-Ne，λ = 632.8 nm）和 LED 的"颜色"就是由这个波长决定的。</p>
+<p>为什么这两把尺子重要？因为"波动现象是否可见"取决于一个无量纲的比值：<strong>特征尺寸 ÷ 波长</strong>。镜子、透镜的尺寸（厘米级）比波长（微米级）大一万倍，光表现为直线；双缝的缝距（0.25 mm）只比波长大四百倍，条纹已经清晰可见；当缝缩到与波长同量级（100 nm 纳米孔），光是"绕"过去的——衍射主宰一切。这个比值是整门课的分界标尺。</p>
+<div class="key-insight">光波的两把尺子：λ ≈ 380–760 nm（可见）、f ≈ 4–7×10¹⁴ Hz。一切"波动现象看不看得见"都取决于"尺寸/波长"这个比值——它就是几何光学与波动光学的分界线。</div>
+</section>
+
+<section>
+<h3>一、光学的四百年——从 Fermat 到量子</h3>
+<p>光学史是一部"模型的接力"，每一站都留下一个今天仍在用的公式。</p>
+<p><strong>几何光学（17 世纪）。</strong>Fermat 原理：光在两点间实际走过的路径使光程取极值，</p>
+<div class="formula display" data-tex="\int n\,ds=0\quad(\text{极值})"></div>
+<p>Snell 定律 n₁ sinθ₁ = n₂ sinθ₂ 是它的直接推论（第三节把这条路走完）。这一站看"光线"，适合解释成像、反射、折射。</p>
+<p><strong>波动光学（19 世纪）。</strong>Young 双缝干涉（1801）证明光是波；Fresnel 衍射把波动图像定量化；Maxwell（1865）把光统一为电磁波——c = 1/√(μ₀ε₀)，光从此从"光线"升级为"波"。这一站解释条纹、衍射、偏振。</p>
+<p><strong>量子光学（20 世纪至今）。</strong>光子是电磁场的量子化粒子，统计性质（Poisson 还是 sub-Poisson）成了新的观测量。这一站连接了干涉实验与量子纠缠。</p>
+<div class="key-insight">Fermat 原理 ⇔ 最小作用量原理；衍射 ⇔ 路径积分。这个光学-力学类比是 Feynman 路径积分量子化的灵感来源——狄拉克在 1930 年代就注意到这个深刻的联系：光走的每条"路径"在量子力学里就是一条几率幅。</div></section>
+
+<section>
+<h3>二、教科书例题 1——双缝干涉：条纹间距 y = λL/d 的完整推导</h3>
+<p><strong>问题：</strong>两缝相距 d = 0.25 mm，用 λ = 546 nm 的绿光照明，屏在 L = 1.2 m 外。求亮纹间距，并解释"为什么间距与缝距成反比"。</p>
+<p><strong>第 1 步：条纹从哪来。</strong>两缝 S₁、S₂ 发出的光到达屏上同一点 P 走的路程差为</p>
+<div class="formula display" data-tex="\Delta l=d\sin\theta\approx d\frac{y}{L}\qquad(\text{远场/近轴近似 }\theta\ll1)"></div>
+<p>路程差每差一个波长 λ，两列光"相位相同"（干涉相长）出亮纹；差半波长则相位相反（干涉相消）出暗纹。</p>
+<p><strong>第 2 步：亮纹条件与间距。</strong>第 m 级亮纹满足 d sinθ = mλ，故相邻两级亮纹的角度差满足 d(sinθ_{m+1} − sinθ_m) = λ。在小角度下 sinθ ≈ y/L：</p>
+<div class="formula display" data-tex="d\cdot\frac{\Delta y}{L}=\lambda\;\Longrightarrow\;\Delta y=\frac{\lambda L}{d}"></div>
+<p><strong>第 3 步：代入数字。</strong></p>
+<div class="formula display" data-tex="\Delta y=\frac{546\times10^{-9}\times1.2}{0.25\times10^{-3}}=\frac{6.55\times10^{-7}}{2.5\times10^{-4}}\approx2.6\times10^{-3}\,\mathrm{m}=2.6\,\mathrm{mm}"></div>
+<p>屏上是一条条间隔 2.6 mm 的绿纹——人眼正好能分辨，这就是教科书双缝实验的标准答案。</p>
+<p><strong>第 4 步：为什么成反比。</strong>Δy = λL/d：缝距 d 越大，条纹越密（波峰被"区分"得更开）；缝距接近 λ 时，Δy 大到条纹铺满全屏。把 d 缩到与 λ 同量级，条纹间距超过屏幕尺寸，看起来就像"一条光带"——这正是单缝衍射的入口。∎</p>
+<div class="key-insight">双缝的口诀：Δy = λL/d。条纹间距由"波长 × 屏距 ÷ 缝距"决定——缝越细条纹越开，这就是从"几何光线"走向"波动图案"的第一块跳板。</div>
+</section>
+
+<section>
+<h3>三、证明：Fermat 原理 → Snell 定律的变分推导</h3>
+<p>几何光学的最深层原理不是折射定律本身，而是其背后的变分原理。Fermat 原理断言：光在两点之间实际走过的路径，使光程（光学路径长度）取极值。在折射率连续分布的介质中，光程泛函为</p>
+<div class="formula display" data-tex="S[\mathbf r(\xi)] = \int_{A}^{B} n(\mathbf r)\,ds = \int_{\xi_A}^{\xi_B} n(\mathbf r(\xi))\,\sqrt{\mathbf r'(\xi)\cdot\mathbf r'(\xi)}\,d\xi"></div>
+<p>其中 <strong>r(ξ)</strong> 是路径的参数化，ξ 为任意单调参数。Fermat 原理要求 δS = 0。令被积函数为 Lagrange 函数 L = n(r)√(r'·r')，Euler–Lagrange 方程给出</p>
+<div class="formula display" data-tex="\frac{d}{d\xi}\frac{\partial L}{\partial \mathbf r'} - \frac{\partial L}{\partial \mathbf r} = 0"></div>
+<p>若取弧长 s 为参数，则 √(r'·r') = 1，L = n(r)，且 r″ ⊥ r′。代入并化简得到光线方程（eikonal 方程的一条等价形式）：</p>
+<div class="formula display" data-tex="\frac{d}{ds}\Big(n(\mathbf r)\frac{d\mathbf r}{ds}\Big) = \nabla n(\mathbf r)"></div>
+<p>现在把问题限定在两种均匀介质 n₁、n₂ 的分界面上（界面法向 n̂）。总光程为 S = n₁l₁ + n₂l₂，其中 l₁ = √(h₁² + x²)，l₂ = √(h₂² + (d − x)²)。极小条件 dS/dx = 0 给出</p>
+<div class="formula display" data-tex="\frac{dS}{dx} = n_1\frac{x}{\sqrt{h_1^2+x^2}} - n_2\frac{d-x}{\sqrt{h_2^2+(d-x)^2}} = 0"></div>
+<p>注意到 x/√(h₁²+x²) = sinθ₁ 而 (d−x)/√(h₂²+(d−x)²) = sinθ₂，立即得到 Snell 定律：</p>
+<div class="formula display" data-tex="n_1\sin\theta_1 = n_2\sin\theta_2"></div>
+<p>深刻之处在于：折射定律不过是「<em>光滑路径取光程极值</em>」这一单个公理在界面处<strong>不可微</strong>（折射率跳变）时的分片结果。这正是 Hamilton 力学中作用量原理在光学中的翻版——力学 δ∫(T−V)dt = 0 与光学 δ∫n ds = 0 之间的同构性是 Schrödinger 方程 1926 年「物质波」思想的前奏。</p>
+</section>
+
+<section>
+<h3>四、教科书例题 2——薄膜与增透膜：为什么厚度是 λ/4n</h3>
+<p><strong>问题：</strong>相机镜头要镀一层增透膜（MgF₂，n = 1.38），对 550 nm 的可见光中心波长减反射。求最小膜厚，并解释"半波损失"的作用。</p>
+<p><strong>第 1 步：两束反射光。</strong>光在膜的上表面（空气→MgF₂）和下表面（MgF₂→玻璃）各反射一次。两次反射的反射光在膜内走的额外路程是 2nt（来回穿过膜厚 t，膜内波长 λ/n）。</p>
+<p><strong>第 2 步：半波损失（关键）。</strong>光从折射率小的介质射向大的介质（空气 1.0 → 膜 1.38，膜 1.38 → 玻璃 ≈1.5）时，反射光都要"翻半个相位"（相当于多走 λ/2）。<strong>两次反射都翻相位，翻的相位抵消</strong>，所以真正决定干涉的是路程差 2nt。</p>
+<p><strong>第 3 步：增透条件。</strong>要让两束反射光互相抵消（减反射），需路程差等于半个波长：</p>
+<div class="formula display" data-tex="2nt=\frac{\lambda}{2}\;\Longrightarrow\;t=\frac{\lambda}{4n}=\frac{550\,\mathrm{nm}}{4\times1.38}\approx99.6\,\mathrm{nm}\approx100\,\mathrm{nm}"></div>
+<p>膜厚约 100 nm——只有头发丝的千分之一。这就是"λ/4 膜"的来历：<strong>1/4 波长（膜内）的厚度让两束反射光恰好反相，彼此抵消</strong>。</p>
+<p><strong>第 4 步：验证与推广。</strong>对垂直入射，剩余反射率从约 4%（裸玻璃面）降到约 1%。蓝光（450 nm）和红光（700 nm）的"最优厚度"不同，所以镜头看反射光常带一点紫红色——那是增透膜只对中心波长最优的副产物。若算"增反膜"（如激光反射镜），条件换成 2nt = λ/2·(整数)，膜的"光谱筛子"身份就完整了。∎</p>
+<div class="key-insight">薄膜干涉的两句口诀：先查"半波损失"（光密界面上反射翻相位），再套 2nt = mλ 或 (m+½)λ。增透膜取 λ/4n ≈ 100 nm，因为 ¼ 波长厚度让两束反射光相消——一个数字，解释镜头的蓝紫色。</div>
+</section>
+
+<section>
+<h3>五、证明：从 Maxwell 方程推导波动方程与光速</h3>
+<p>光学是电磁学的特例。真空中的 Maxwell 方程组（SI 制，无源）为</p>
+<div class="formula display" data-tex="\nabla\cdot\mathbf E = 0,\qquad \nabla\cdot\mathbf B = 0,\qquad \nabla\times\mathbf E = -\frac{\partial\mathbf B}{\partial t},\qquad \nabla\times\mathbf B = \mu_0\varepsilon_0\frac{\partial\mathbf E}{\partial t}"></div>
+<p>对 Faraday 定律两边取旋度，并利用矢量恒等式 ∇×(∇×E) = ∇(∇·E) − ∇²E 与 ∇·E = 0，再把 Ampère–Maxwell 定律代入，得到</p>
+<div class="formula display" data-tex="\nabla\times(\nabla\times\mathbf E) = -\frac{\partial}{\partial t}(\nabla\times\mathbf B) = -\mu_0\varepsilon_0\frac{\partial^2\mathbf E}{\partial t^2}"></div>
+<div class="formula display" data-tex="\nabla^2\mathbf E - \mu_0\varepsilon_0\frac{\partial^2\mathbf E}{\partial t^2} = 0"></div>
+<p>这正是三维波动方程，波速为</p>
+<div class="formula display" data-tex="c = \frac{1}{\sqrt{\mu_0\varepsilon_0}}"></div>
+<p>代入数值 μ₀ = 4π×10⁻⁷ H/m、ε₀ ≈ 8.854×10⁻¹² F/m，得 c ≈ 2.998×10⁸ m/s——与实测光速一致到当时实验精度。这是 Maxwell 1865 年「光是电磁波」的伟大预言。</p>
+<p><strong>平面波解。</strong>尝试单色平面波解 E = E₀ e^{i(k·r − ωt)}。代入波动方程：</p>
+<div class="formula display" data-tex="(-k^2 + \mu_0\varepsilon_0\,\omega^2)\,\mathbf E_0 = 0 \;\Longrightarrow\; \omega = \frac{k}{\sqrt{\mu_0\varepsilon_0}} = kc"></div>
+<p>即色散关系 ω = ck——真空对光无色散，相速等于群速。进一步由 ∇·E = 0 得 k·E₀ = 0（横波条件），由 Maxwell 方程可得 B₀ = (k×E₀)/ω，因此 E、B、k 两两垂直，且 |B₀| = |E₀|/c。这样我们不仅推出了波动方程，还从方程组本身恢复了平面电磁波的全部极化结构与横波性——无需额外假设。</p>
+</section>
+
+<section>
+<h3>六、证明：Huygens–Fresnel 原理与 Fraunhofer 衍射积分</h3>
+<p>波动光学把「光的传播」重新表述为面元的次波相干叠加。Huygens–Fresnel 原理的定量形式是：孔径面上每一点 r′ 的波场 U(r′) 发射球面次波，观察点 r 处的场是这些次波的叠加：</p>
+<div class="formula display" data-tex="U(\mathbf r) = \frac{1}{i\lambda}\iint_{\text{aperture}} U(\mathbf r')\,\frac{e^{ik|\mathbf r-\mathbf r'|}}{|\mathbf r-\mathbf r'|}\,\cos\chi\; d^2r'"></div>
+<p>其中 χ 是倾斜因子。严格地说这来自 Kirchhoff 标量衍射理论——把 Helmholtz 方程 (∇²+k²)U = 0 与 Green 定理结合：</p>
+<div class="formula display" data-tex="U(\mathbf r) = \frac{1}{4\pi}\oint\Big[U\frac{\partial G}{\partial n'} - G\frac{\partial U}{\partial n'}\Big]\,d^2r',\qquad G = \frac{e^{ik|\mathbf r-\mathbf r'|}}{|\mathbf r-\mathbf r'|}-\frac{e^{ik|\mathbf r-\mathbf r''|}}{|\mathbf r-\mathbf r''|}\ \text{(镜像Green函数)}"></div>
+<p><strong>Fraunhofer 远场近似。</strong>若观察距离远大于孔径尺寸与波长，即 ka²/2R ≪ 1（a 为孔径线度，R 为距离），则对相位只保留一阶项 |r−r′| ≃ R − r̂·r′，分母取 |r−r′| ≃ R。于是得到 Fraunhofer 衍射积分——场恰好是孔径透过函数的二维 Fourier 变换：</p>
+<div class="formula display" data-tex="U(\mathbf r) = \frac{e^{ikR}}{i\lambda R}\,e^{-i\frac{k}{2R}|\mathbf r|^2}\iint_{\text{aperture}} U(\mathbf r')\,e^{-i k\,\hat{\mathbf r}\cdot\mathbf r'}\,d^2r' \;\propto\; \mathcal{F}\{U_{\text{aperture}}\}\Big(\frac{\mathbf u}{\lambda}\Big)"></div>
+<p>式中 u = r̂。衍射图案因此是孔径形状的 Fourier 谱：单缝给出 sinc 主瓣，圆孔给出 Airy 盘 I(θ) ∝ [2J₁(ka sinθ)/(ka sinθ)]²。这个「衍射 = Fourier 变换」的对应正是夫琅禾费光学和 Fourier 光学（透镜后焦面 = 频谱面）的数学根基。</p>
+</section>
+
+<section>
+<h3>七、反例：几何光学的失效极限</h3>
+<p>几何光学是 λ → 0 的短波极限，其适用边界即光的波性显现之处，处处是它失效的反例。</p>
+<p><strong>衍射极限。</strong>圆孔（物镜）的角分辨极限由第一暗环位置给出，Abbe 判据为</p>
+<div class="formula display" data-tex="\Delta r = \frac{0.61\,\lambda}{n\sin\alpha} = \frac{0.61\,\lambda}{\mathrm{NA}}"></div>
+<p>当特征尺寸 ℓ ≲ λ 时，光线模型给出荒谬的结论：如聚焦光斑不可能无限小（实际最小直径 ~ λ），「阴影」区域实际上被次波衍射照亮，波穿过障碍物「弯曲」——这些均无法用直线传播的光线解释。这是几何光学失效的标准反例。</p>
+<p><strong>亚波长结构与近场光学。</strong>对金属表面等离子体、纳米天线等 ℓ ≪ λ 的结构，光场的倏逝波（eikonal 方程无实解）携带亚波长信息，须用严格 Maxwell 求解。此极限下几何光学给出的「焦深」「光程」概念全部失去意义。</p>
+<p><strong>全内反射的临界角。</strong>在几何光学自身内部，Snell 定律也内含一个「解不存在」的奇点。当光从密介质 n₁ > n₂ 射向界面时，由 sinθ₂ = (n₁/n₂)sinθ₁ 知折射角可能无实解，临界角为</p>
+<div class="formula display" data-tex="\theta_c = \arcsin\Big(\frac{n_2}{n_1}\Big)"></div>
+<p>当 θ₁ > θ_c 时不存在折射光线，全部能量反射。定量看，Fresnel 反射系数 R 在 θ₁ > θ_c 时恒为 1，但场并非完全为零——介质中形成沿界面传播、垂直方向指数衰减的倏逝波，其透射深度 δ ~ λ/[2π√(sin²θ₁ − (n₂/n₁)²)]。这正是光纤导光、衰减全反射(ATR)光谱、近场扫描显微镜(NSOM)的物理基础，也是几何光学「全反射 = 绝对」这一朴素图像被波动修正的反例。</p>
+</section>
+
+<section>
+<h3>八、量子光学（1900s–现在）</h3>
+<p>干涉实验把光当成波用到了极致，但光子是量子化的——它的<strong>统计性质</strong>成了新一代观测量，也是连接光学与量子信息的桥梁。</p>
+<p><strong>三种光子统计。</strong>光场的"涨落大小"可以精确分类：理想激光（相干态）的光子数服从 <strong>Poisson 分布</strong>（涨落最小、经典极限）；热光（如白炽灯）服从 <strong>super-Poisson</strong>（涨落更大，玻色子聚堆）；而压缩态、单光子态等非经典光服从 <strong>sub-Poisson</strong>（涨落小于 Poisson——量子特征，经典光不可能）。测出 sub-Poisson 涨落，就等于证明了光场处于非经典态。</p>
+<p><strong>数字上的用处：LIGO。</strong>引力波探测要求干涉仪的灵敏度突破"散粒噪声"极限（每个光子到达的 Poisson 涨落）。LIGO 在干涉仪里注入<strong>压缩光</strong>，把其中一个正交分量的涨落压下去，从而在低频段压低量子噪声——这是 sub-Poisson 光第一次真正进入精密测量。</p>
+<p><strong>2023 年诺贝尔奖。</strong>L'Huillier、Agostini、Krausz 因<strong>阿秒物理</strong>获奖：用强激光的电场在气体里拉出、回收电子（高次谐波产生 HHG），合成几百阿秒（1 as = 10⁻¹⁸ s）的光脉冲，把电子运动的快照拍到"阿秒"尺度——光本身成了测量物质最快的秒表。</p>
+<div class="key-insight">量子光学把"光子数怎么涨落"变成测量对象：Poisson（激光）、super-Poisson（热光）、sub-Poisson（压缩/单光子）。LIGO 用压缩光压量子噪声，阿秒脉冲用光拍电子运动——量子光学是"光的最精细语言"。</div>
+</section>
+
+<section>
+<h3>九、非线性光学——从倍频到阿秒脉冲</h3>
+<p>弱光下介质极化与电场成正比（线性），但强光（激光）下极化变成 E 的幂级数：</p>
+<div class="formula display" data-tex="P=\varepsilon_0\left(\chi^{(1)}E+\chi^{(2)}E^2+\chi^{(3)}E^3+\cdots\right)"></div>
+<p>非线性项 χ⁽²⁾E²、χ⁽³⁾E³ 带来一系列"光改变光"的新效应：</p>
+<ul>
+<li><strong>二次谐波（倍频）。</strong>χ⁽²⁾ 项把频率 ω 的场"平方"出 2ω 成分——红外激光（1064 nm）穿过倍频晶体变绿光（532 nm）。这是激光笔里最常见的颜色转换。</li>
+<li><strong>自发参量下转换（SPDC）。</strong>一个泵浦光子被 χ⁽²⁾ 拆成两个光子（信号光+闲置光），它们<strong>纠缠</strong>（能量、动量守恒绑在一起）——SPDC 是量子光学实验的标准纠缠源，也是量子密钥分发的基础。</li>
+<li><strong>高次谐波产生（HHG）。</strong>χ⁽³⁾ 及以上项的极端形式：强激光把惰性气体原子里的电子拉出来、加速、再撞回去，每次碰撞发出一个高次谐波光子，几十上百个谐波合成<strong>阿秒脉冲</strong>。2023 年诺贝尔物理学奖（L'Huillier, Agostini, Krausz）正是这一项。</li>
+</ul>
+<p>为什么这些效应以前"看不见"？因为 E 的平方项只在电场接近原子内电场（约 5×10¹¹ V/m）时才有可观测大小，而普通光远达不到——只有激光能把电场集中到这么强。<strong>非线性光学是激光时代的专属学科。</strong></p>
+<div class="key-insight">非线性光学 = 极化对 E 的多项式展开的产物：倍频（ω→2ω）、SPDC（纠缠源）、HHG（阿秒脉冲）。它们都要求强到接近原子内电场的激光——激光发明之前，这门课不存在。</div>
+</section>
+
+<section>
+<h3>十、超分辨率显微术——突破 Abbe 极限</h3>
+<p>第七节的反例里，Abbe 判据 Δr = 0.61λ/NA 给光学显微设了约 200 nm 的"分辨率天花板"（用 λ=550 nm、NA≈1.4 算：0.61×550/1.4 ≈ 240 nm）。细胞里的许多结构比这更小，于是整个 20 世纪的生物显微都被这层"雾"挡着。</p>
+<p>2014 年诺贝尔化学奖的三种方法，用不同方式绕开这层雾，把分辨率从 200 nm 推到 20 nm：</p>
+<ul>
+<li><strong>STED（受激发射损耗）。</strong>一束激发光 + 一束环形"耗尽"光：环形光把周围的荧光分子全部熄灭，只留中心一个衍射极限以下的发光点，再逐点扫描。分辨率由耗尽光的强度决定，可到几十纳米。</li>
+<li><strong>PALM / STORM（单分子定位）。</strong>让荧光分子"稀疏地"随机点亮，每次只拍下几个分子——每个分子在图像里是一个可精确到纳米级的亮点（拟合它的 Airy 中心），重复上千次，把所有分子的位置拼成超分辨图像。</li>
+<li><strong>STORM 的变体（SMLM 家族）。</strong>原理统一：<strong>单分子定位 = 用"时间换空间"</strong>——牺牲一次成像的速度，换来远超衍射极限的定位精度。</li>
+</ul>
+<p>数字对比：普通显微镜看 200 nm 的突触小泡是一团糊，STED 能数出小泡的个数与位置。突破的不是光学定律，而是"所有分子同时亮着"这个隐含假设——把同时性换成时序性，雾就散了。</p>
+<div class="key-insight">超分辨的核心思想：Abbe 极限限制的是"同时点亮"的成像，不是单分子的定位。STED 用光束修剪发光区、PALM/STORM 用单分子时序点亮——两条路都绕开衍射极限，把分辨率从 ~200 nm 推到 ~20 nm。</div>
+</section>
+
+<section>
+<h3>十一、光子晶体——光的"半导体"</h3>
+<p>第七节说"亚波长结构让几何光学失效"，光子晶体正是把这个"失效"变成工具：给光制造一个"禁带"。</p>
+<p>做法：在介质里周期性地挖孔（介电常数周期变化），尺度与波长相当。光在周期结构里传播时会发生 Bragg 散射，某些频率（以及某些传播方向）的波被完全禁止——这就是<strong>光子带隙</strong>（photonic band gap）：像半导体里的电子能隙一样，有一整段频率的光"不存在"。</p>
+<p>Yablonovitch（1987）提出这一思想，第二年就在微波波段实验验证（"Yablonovite"）。今天的光子晶体光纤、光子晶体激光器已经实用化：光子晶体光纤用周期微结构把光关在空芯里，能承受比普通光纤高得多的功率；光子晶体激光器用带隙反射光，做出更小更稳的激光腔。</p>
+<p>为什么这条路线重要？因为它把"电子能带论"整套数学（Bloch 定理、带隙、缺陷态）搬到光子上——光子的"能带工程"从此成为可能。电子在晶格里有能带，光子在介电晶格里有光子带隙，同一套 Bloch 定理统治两者。<strong>光子带隙 = 电子能隙的光学类比。</strong></p>
+<div class="key-insight">光子晶体 = 光的"半导体"：周期介电结构形成光子带隙，特定频率的光不能传播。Bloch 定理在光子学中的再现——电子能带论的全部数学武器，原封不动搬给光子。</div>
+</section>
+
+<section>
+<h3>十二、教科书例题 3——衍射光栅：600 线/mm 把红光拐向哪</h3>
+<p><strong>问题：</strong>一块光栅每毫米刻 600 条线，用 λ = 632.8 nm 的 He-Ne 激光垂直照射。求第一级亮纹的衍射角，并判断红、蓝光能否被分开。</p>
+<p><strong>第 1 步：光栅方程。</strong>相邻缝的光程差是 d sinθ，主极大（相长）条件：</p>
+<div class="formula display" data-tex="d\sin\theta=m\lambda,\qquad m=0,\pm1,\pm2,\dots"></div>
+<p><strong>第 2 步：算缝距。</strong>600 线/mm ⇒ d = 1/600 mm = 1.667×10⁻³ mm = 1667 nm。</p>
+<p><strong>第 3 步：代入求角。</strong>对 m = 1：</p>
+<div class="formula display" data-tex="\sin\theta_1=\frac{\lambda}{d}=\frac{632.8}{1667}=0.3796\;\Longrightarrow\;\theta_1=\arcsin(0.3796)\approx22.3^\circ"></div>
+<p>红光第一级亮纹出现在 22.3° 处。零级（m=0）对所有波长都在 0°，一级以后按波长分散——这就是光栅的"光谱仪"功能。</p>
+<p><strong>第 4 步：分辨能力。</strong>若换蓝光（λ = 450 nm）：sinθ₁ = 450/1667 = 0.27，θ₁ ≈ 15.7°。红光 22.3°、蓝光 15.7°——两者被拉开 6.6°。相比双缝（例题 1）只有寥寥几条宽纹，光栅用"成千上万条缝"让主极大又亮又窄，角色散 δθ/δλ 正比于 m/d，因此是天文光谱学的主力工具。<strong>同一个公式 λ = d sinθ，从双缝（m 小、亮纹少）升级到光栅（m 大、谱线细），就是"干涉仪→光谱仪"的跨越。</strong>∎</p>
+<div class="key-insight">光栅方程 d sinθ = mλ：缝距 d 决定"每条线的角度"，级数 m 决定"分得多开"。600 线/mm 的光栅把红光分到 22.3°、蓝光分到 15.7°——一段公式，把白光拆成彩虹。</div>
+</section>
+
+<section>
+<h3>十三、关键公式</h3>
+<div class="formula display" data-tex="\text{Fermat:}\ \delta\int n\,ds=0;\qquad \text{Snell:}\ n_1\sin\theta_1=n_2\sin\theta_2;\qquad \theta_c=\arcsin(n_2/n_1)"></div>
+<div class="formula display" data-tex="\text{双缝/光栅:}\ d\sin\theta=m\lambda;\qquad \text{单缝极小:}\ a\sin\theta=m\lambda;\qquad \Delta y=\frac{\lambda L}{d}"></div>
+<div class="formula display" data-tex="\text{薄膜:}\ 2nt=m\lambda\ \text{或}\ (m+\tfrac12)\lambda;\qquad \text{增透膜:}\ t=\frac{\lambda}{4n};\qquad \text{Abbe:}\ \Delta r=\frac{0.61\lambda}{\mathrm{NA}}"></div>
+<div class="formula display" data-tex="\nabla^2\mathbf E-\mu_0\varepsilon_0\partial_t^2\mathbf E=0,\quad c=\frac{1}{\sqrt{\mu_0\varepsilon_0}}\approx3\times10^8\,\mathrm{m/s};\qquad P=\varepsilon_0(\chi^{(1)}E+\chi^{(2)}E^2+\chi^{(3)}E^3+\cdots)"></div>
+</section>
+
+<section>
+<h3>十四、试试看（每题附提示）</h3>
+<p><strong>1. 双缝间距减半，条纹间距怎么变？</strong></p>
+<p><em>提示：Δy = λL/d ∝ 1/d。d 减半则 Δy 加倍。这不只是算术——它意味着"测量条纹间距"就能反推缝距，双缝因此是一把"波长尺子"。</em></p>
+<p><strong>2. 用水做增透膜（n = 1.33）对 550 nm 减反射，膜厚多少？</strong></p>
+<p><em>提示：t = λ/(4n) = 550/(4×1.33) ≈ 103 nm。膜厚几乎与 MgF₂ 相同——因为两者的 n 接近。注意必须满足"膜折射率介于两侧介质之间"才有减反效果（半波损失条件）。</em></p>
+<p><strong>3. 红光（700 nm）与蓝光（450 nm）哪个更易被"绕过"障碍物？</strong></p>
+<p><em>提示：衍射显著的条件是"障碍物尺寸 ~ λ"。同一障碍物，红光的 λ 更大，更接近障碍物尺寸，衍射更明显——这也是为什么"红眼"、远红光信号灯穿透雾的能力与散射/衍射尺度有关。</em></p>
+<p><strong>4. 用 Abbe 判据算油浸物镜的分辨率。</strong>NA = 1.4，λ = 550 nm。</p>
+<p><em>提示：Δr = 0.61×550/1.4 ≈ 240 nm。这就是"光学显微镜极限约 200 nm"的来源。把 Δr 换成 STED 的 20 nm，需要耗尽光强高到把受激辐射压过自发辐射——分辨率由光强"借用"。</em></p>
+<p><strong>5. 光纤的全反射临界角。</strong>光纤芯 n₁ = 1.50、包层 n₂ = 1.46，求全反射临界角。</p>
+<p><em>提示：θ_c = arcsin(n₂/n₁) = arcsin(0.973) ≈ 76.7°。只要光在芯里的入射角超过 76.7°，就全反射一路传下去——光纤"关住光"靠的就是这个"解不存在"的奇点。</em></p>
+<p><strong>6. 为什么 Fraunhofer 衍射 = Fourier 变换？</strong></p>
+<p><em>提示：远场近似的相位因子 e^{−ik r̂·r′} 恰好是"透过函数 × 平面波 e^{−ik·r′}"的积分——这正是 Fourier 变换的定义式（k = (2π/λ)r̂ 扮演"频率"）。透镜后焦面放的就是这个频谱，所以"傅里叶光学"可以直接用透镜做光学计算器。</em></p>
+</section>
+
+<section>
+<h3>十五、工作题</h3>
+<p><strong>题 1（折射角计算）。</strong>光从空气(n₁ = 1.00)以 θ₁ = 60° 入射到玻璃(n₂ = 1.50)，求折射角；若光反向从玻璃入射空气，求全内反射临界角。</p>
+<details>
+<summary>显示解答</summary>
+<p>由 Snell 定律：sinθ₂ = (n₁/n₂)sinθ₁ = (1/1.5)sin 60° = 0.5774，故 θ₂ = arcsin(0.5774) ≈ 35.3°。临界角 θ_c = arcsin(n₂/n₁) = arcsin(1/1.5) = arcsin(0.6667) ≈ 41.8°。当入射角超过 41.8° 时发生全反射。</p>
+</details>
+<p><strong>题 2（单缝衍射极小位置）。</strong>宽 a = 0.10 mm 的单缝，用波长 λ = 632.8 nm 的 He–Ne 激光照明，屏距缝 L = 2.00 m。求第一级暗纹距中心的距离。</p>
+<details>
+<summary>显示解答</summary>
+<p>单缝衍射暗纹条件：a sinθ = mλ。第一级极小 m = 1：sinθ = λ/a = 632.8×10⁻⁹/1.0×10⁻⁴ = 6.328×10⁻³。因 θ 很小，y₁ ≈ L tanθ ≈ Lλ/a = 2.00×6.328×10⁻³ ≈ 1.27×10⁻² m = 12.7 mm。屏上第一级暗纹位于中心两侧 12.7 mm 处。</p>
+</details>
+<p><strong>题 3（推导薄透镜公式）。</strong>利用 Fermat 原理：平行于轴的光线经薄透镜后汇聚于焦点 F，推导薄透镜方程 1/u + 1/v = 1/f（u, v, f 分别为物距、像距、焦距）。</p>
+<details>
+<summary>显示解答</summary>
+<p>对轴上一物点 O 与像点 I，Fermat 原理要求任两条光线的光程相等。取一条沿轴的路径：光程 S₀ = n(u + v)。取一条经过透镜上距轴高度 h 的点的路径：几何光程 √(u²+h²) + √(v²+h²) ≈ u + h²/2u + v + h²/2v（近轴近似 h ≪ u,v）。透镜在高度 h 处引入的相位（光程）改变取 Δ(h) = −h²/(2f)，使平行光聚焦——这是透镜的定义。令两条光路光程相等：</p>
+<div class="formula display" data-tex="u + v = u + \frac{h^2}{2u} + v + \frac{h^2}{2v} - \frac{h^2}{2f} \;\Longrightarrow\; \frac{1}{u} + \frac{1}{v} = \frac{1}{f}"></div>
+<p>若取 u → ∞（平行光），即得 v = f，与焦点定义一致。薄透镜方程得证。</p>
+</details>
+<p><strong>题 4（双缝 + 白光）。</strong>双缝 d = 0.50 mm、屏距 L = 2.0 m，用白光照明。中央亮纹为什么是白色的？它两侧第一道彩色是什么颜色、离中心多远（取 λ = 450 nm 与 650 nm）？</p>
+<details>
+<summary>显示解答</summary>
+<p>中央亮纹（m=0）对所有波长都满足 d sinθ = 0（路程差为零），各色光叠加即白色。第一级亮纹按波长散开：y(λ) = λL/d。蓝光：450×10⁻⁹×2.0/5.0×10⁻⁴ = 1.8 mm；红光：650×10⁻⁹×2.0/5.0×10⁻⁴ = 2.6 mm。所以紧贴中央白纹两侧的第一道彩色条纹是"内蓝外红"的彩虹，蓝端在 1.8 mm、红端在 2.6 mm 处。这正是"白光双缝图案"中每级亮纹都是迷你彩虹的原因。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Born &amp; E. Wolf</strong>, <em>Principles of Optics</em>——几何光学、干涉、衍射与相干性的经典权威教材。</p>
+<p>&rarr; <strong>E. Hecht</strong>, <em>Optics</em>——覆盖几何光学、干涉、衍射、偏振与量子光学入门的主流教材。</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/electromagnetism.html">电磁学与 Maxwell 方程组</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/nuclear-physics.html">⚛️ 核物理</a>：同一学科分类「物理」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/optics.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<section>
+<h3>〇、直觉入门——只看一座山的海拔，就能画出整座山的轮廓</h3>
+<p>登山时你只要记住几个关键点：山顶、谷底、山口（两座山之间最低的垭口）。数学家发现，光凭这些"关键高度点"的个数和种类，就能推算出整座山的拓扑形状——有几个洞、像不像甜甜圈。</p>
+<p>它把"很难直接看的形状"翻译成"数数山峰山谷"这种简单任务，是理解空间形状的省力捷径。</p>
+<div class="key-insight">一句话：函数的"山峰山谷"藏着整个空间的形状信息，数清它们就看清了空间。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/fundamental-group.html">基本群</a>、<a href="/pages/real-analysis.html">实分析</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——只知道山有多高，怎么反推山是球形还是甜甜圈形？</h3>
+<p>给你一座山，你只被允许读一个函数：高度 f(p)（每个点的海拔）。问：山体是球面还是环面？</p>
+<p><strong>一个具体案例。</strong> 假设这座"山"的等高线长这样——一个山谷、一个山顶、外加两个"马鞍"（山口）。把它们的位置和"种类"记下来：极小值 1 个、鞍点 2 个、极大值 1 个。现在算一个神奇的数：</p>
+<div class="formula display" data-tex="\#\{\text{极值}\}-\#\{\text{鞍点}\}+\#\{\text{极大}\}=1-2+1=0"></div>
+<p>这个数恰好等于环面的 <strong>Euler 示性数 χ(T²)=0</strong>！而球面 S² 呢？它只有 1 个极小（最南点）和 1 个极大（最北点），得 1 − 0 + 1 = 2 = χ(S²)。</p>
+<p><strong>惊人的结论。</strong> 光凭"峰谷鞍的个数"就能算出整个空间的拓扑不变量。这就是 Morse 理论的核心体验：<strong>一个函数的所有临界点，携带着塑造空间所需的全部拓扑信息</strong>。</p>
+<p><strong>为什么这件事值得一整门课？</strong> 因为反过来极有用：想构造一个复杂空间？先挑一个函数、布置好它的临界点，空间就被"装配"出来了（handle 分解）。想证明某个空间是球面？找到一个函数、数清只有两个临界点即可（Reeb 定理）。Morse 理论把拓扑学变成"设计与验收地形图"的工程。</p>
+</section>
+
+<section>
+<h3>二、临界点、非退化性与指标——为什么偏偏要"非退化"？</h3>
+<p>设 M 是光滑 n 维流形，f: M → ℝ 光滑。<strong>p 是临界点</strong>若 df(p)=0（局部图上 ∂f/∂xᵢ(p)=0 对一切 i）。临界点的 <strong>Hessian</strong> 是二阶偏导矩阵 Hess f(p) = (∂²f/∂xᵢ∂xⱼ(p))，换坐标时按"合同变换"变号，故它的特征值符号与坐标选取无关。</p>
+<p><strong>定义（Morse 函数与指标）。</strong> f 是 <strong>Morse 函数</strong>，若每个临界点都<strong>非退化</strong>，即 Hess f(p) 可逆（所有特征值非零）。临界点 p 的<strong>指标</strong> λ(p) = Hess f(p) 的负特征值个数——它刻画临界点是"往几个方向下坡"。</p>
+<p><strong>为什么"非退化"是关键分水岭？</strong> 退化临界点（Hessian 奇异）是"山顶平如高原"或"山谷连着鞍"的极端情形，那里的局部形状无法用二次型描述，Morse 的全部技术（局部标准形、handle 粘贴、流线计数）全部失灵。而一旦非退化，临界点就<strong>孤立</strong>（有限多个，M 紧时）且局部形如二次型——几何性质一目了然。</p>
+<p><strong>指标的物理直觉。</strong> λ=0 = 极小值点（稳定态，处处上坡）；λ=1 = 鞍点（过渡态，一个下坡方向）；λ=n = 极大值点（处处下坡）。物理里一个势能函数，它的稳定点、过渡态与排斥点正是按指标分类的。</p>
+</section>
+
+<section>
+<h3>三、Sard 定理——为什么"大多数"函数都是 Morse 函数</h3>
+<p>光滑映射f:M→N的临界值集在N中是零测集。这意味着：<strong>正则值"几乎处处"存在</strong>→正则值的原像是光滑子流形。Morse函数的"存在性"几乎不需要证明——大多数函数是Morse函数。</p>
+<p><strong>为什么 Morse 函数的存在性"几乎不需要证明"？</strong> 思路是扰动：给定任意光滑 f，往它上面"几乎随便"加一个小的线性项 f + ε·⟨v,·⟩（或对 f 做小的泛扰动），Sard 定理保证新函数在 ε 的开稠密集合里都是 Morse 的。非退化临界点构成开条件——你几乎无法避免碰到它们。于是"找一个 Morse 函数"从不是研究障碍，障碍只在"找一个对称性好、临界点又少的"。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="f=f(p)-x_1^2-\cdots-x_\lambda^2+x_{\lambda+1}^2+\cdots+x_n^2\quad(\text{Morse 引理})"></div>
+<div class="formula display" data-tex="c_k\ge b_k,\qquad \sum_i(-1)^i c_i=\chi(M)"></div>
+<div class="formula display" data-tex="\sum_{i=0}^k(-1)^{k-i}c_i\ge \sum_{i=0}^k(-1)^{k-i}b_i\quad(0\le k\le n)"></div>
+</section>
+
+<section>
+<h3>五、例题 1——球面的高度函数：临界点与指标（一步步算完）</h3>
+<p><strong>题目。</strong> 取 M = S² ⊂ ℝ³，f(x,y,z) = z（高度）。找出全部临界点，求其指标，并算出 χ(S²)。</p>
+<p><strong>第一步：几何定位临界点。</strong> f 沿球面方向求导为零，等价于水平面 z=常数 与 S² 的切平面重合——只有水平切平面处才可能。球面上水平切平面恰好出现在最高点与最低点：<strong>北极 N=(0,0,1)、南极 S=(0,0,−1)</strong>。</p>
+<p><strong>第二步：北极处算 Hessian。</strong> 在北半球取局部坐标 (u,v)，球面是图 z = √(1−u²−v²)。于是 f(u,v) = √(1−u²−v²) = 1 − (u²+v²)/2 + (高阶项)。Hessian 在 (0,0) 处是 diag(−1,−1)，两个负特征值 ⟹ <strong>指标 λ=2</strong>（极大值）。</p>
+<p><strong>第三步：南极处算 Hessian。</strong> 南半球局部 z = −√(1−u²−v²) = −1 + (u²+v²)/2 + …，Hessian 为 diag(+1,+1) ⟹ <strong>指标 λ=0</strong>（极小值）。</p>
+<p><strong>第四步：统计与验证。</strong> c₀=1、c₁=0、c₂=1。</p>
+<div class="formula display" data-tex="\chi(S^2)=c_0-c_1+c_2=1-0+1=2"></div>
+<p>与已知 χ(S²)=2 完全一致；Morse 不等式 c₀=1≥b₀=1、c₂=1≥b₂=1 也逐条成立。∎</p>
+<p><strong>顺带收获（Reeb 定理的方向）。</strong> S² 上存在恰有 2 个临界点的 Morse 函数（高度函数）。Reeb 定理说：紧光滑流形上若存在恰 2 个临界点的 Morse 函数，则该流形同胚于 Sⁿ——这里 n=2，正好吻合。球面是"最简单的流形"这个印象，现在有了精确表述。</p>
+</section>
+
+<section>
+<h3>六、Morse 引理——函数的局部标准形</h3>
+<p>Morse函数f: M→ℝ定义为所有临界点非退化(即Hess_f在临界点非奇异)。Morse引理: 在指标λ的临界点附近存在局部坐标使得f = f(p)−x₁²−…−x_λ² + x_{λ+1}²+…+x_n²。指标λ=Hess_f的负特征值个数——这描述了临界点是"鞍点"的维度。这对物理: λ=0=极小值点(稳定态),λ=1=鞍点(过渡态),λ=n=极大值点。局部标准形使Morse函数成为描述拓扑变化的通用工具。</p>
+<p><strong>为什么叫"引理"却几乎是整个理论的心脏？</strong> 它保证了每个非退化临界点邻域里 f 精确地"长成"一个对角二次型——没有高阶项、没有交叉项。这意味着：<strong>换个坐标，一切临界点都长得一模一样，只差"负号的个数"</strong>。所有全局理论（handle 粘贴、流线计数、指标定理）都建立在"临界点局部是标准二次型"这个单一事实上。其证明用配方法 + 隐函数定理归纳（Morse 消元），把光滑坐标一点点"掰直"。</p>
+</section>
+
+<section>
+<h3>七、Morse 不等式——临界点作为拓扑的下界</h3>
+<p>用Morse函数f定义c_λ = 指标λ的临界点数,b_λ = 第λ个Betti数(λ维"洞"的个数)。弱Morse不等式: c_λ ≥ b_λ (每个非退化临界点至少贡献一个有理同调类)。强Morse不等式: Σ_{i=0}^k (−1)^{k−i}c_i ≥ Σ_{i=0}^k (−1)^{k−i}b_i 对所有k成立,当k=n时等号成立→Σ(−1)^i c_i = χ(M) (Euler示性数)。这意味着极小值的个数≥连通分支数,鞍点数≥1维洞数等——给出了用光滑函数计数拓扑特征的完整下界理论。</p>
+<p><strong>这些不等式从哪里来？</strong> 关键观察：随着高度 t 从 −∞ 升到 +∞，水平集 M^t = {f ≤ t} 只在经过临界值时改变拓扑；每越过一个指标 λ 的临界点，M^t 就"添一根 λ-handle"，同调只在 λ 维可能增长——因此指标 λ 的临界点总数不可能少于第 λ 个 Betti 数。强不等式是弱不等式的"交错和"版本，k=n 时恰好给出 Euler 示性数的等式。这个证明同时揭示了"为什么临界点管着拓扑"的机制：<strong>拓扑的每次变化都发生在临界时刻</strong>。</p>
+</section>
+
+<section>
+<h3>八、例题 2——环面的高度函数：四个临界点与 χ=0（一步步算完）</h3>
+<p><strong>题目。</strong> 取平放的环面（孔轴沿水平方向，像一只侧躺的车轮），参数化 x=(R+r cos u)cos v、y=r sin u、z=(R+r cos u) sin v（0&lt;r&lt;R）。取高度函数 f=z。求全部临界点、指标、χ(T²)。</p>
+<p><strong>第一步：求偏导。</strong></p>
+<div class="formula display" data-tex="\partial_u f=-r\sin u\sin v,\qquad \partial_v f=(R+r\cos u)\cos v"></div>
+<p><strong>第二步：解临界方程组。</strong> 要求两个偏导同时为零。因 R+r cos u ≥ R−r > 0，第二个方程 ⟹ cos v=0 ⟹ v=π/2 或 3π/2。代入第一个方程：sin u·sin v=0；sin v=±1 非零 ⟹ sin u=0 ⟹ u=0 或 π。<strong>四个临界点：</strong></p>
+<table style="width:100%;border-collapse:collapse;font-size:.9em;margin:12px 0;">
+<tr style="background:#f3f3f3;"><th style="border:1px solid #ddd;padding:6px 8px;">点</th><th style="border:1px solid #ddd;padding:6px 8px;">(u,v)</th><th style="border:1px solid #ddd;padding:6px 8px;">高度 z</th><th style="border:1px solid #ddd;padding:6px 8px;">Hessian</th><th style="border:1px solid #ddd;padding:6px 8px;">指标</th></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">P₁</td><td style="border:1px solid #ddd;padding:6px 8px;">(0, π/2)</td><td style="border:1px solid #ddd;padding:6px 8px;">R+r（最高）</td><td style="border:1px solid #ddd;padding:6px 8px;">diag(−r, −(R+r))</td><td style="border:1px solid #ddd;padding:6px 8px;">2</td></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">P₂</td><td style="border:1px solid #ddd;padding:6px 8px;">(π, π/2)</td><td style="border:1px solid #ddd;padding:6px 8px;">R−r</td><td style="border:1px solid #ddd;padding:6px 8px;">diag(+r, −(R−r))</td><td style="border:1px solid #ddd;padding:6px 8px;">1</td></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">P₃</td><td style="border:1px solid #ddd;padding:6px 8px;">(0, 3π/2)</td><td style="border:1px solid #ddd;padding:6px 8px;">−(R+r)（最低）</td><td style="border:1px solid #ddd;padding:6px 8px;">diag(+r, +(R+r))</td><td style="border:1px solid #ddd;padding:6px 8px;">0</td></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">P₄</td><td style="border:1px solid #ddd;padding:6px 8px;">(π, 3π/2)</td><td style="border:1px solid #ddd;padding:6px 8px;">−(R−r)</td><td style="border:1px solid #ddd;padding:6px 8px;">diag(−r, +(R−r))</td><td style="border:1px solid #ddd;padding:6px 8px;">1</td></tr>
+</table>
+<p><strong>第三步：算二阶导核对指标。</strong> ∂²ᵤ f = −r cos u sin v，∂²ᵥ f = −(R+r cos u) sin v，混合项为零。逐个代入（如 P₂：cos u=−1, sin v=1 ⟹ ∂²ᵤ f = +r &gt;0、∂²ᵥ f = −(R−r) &lt;0，一正一负 ⟹ 指标 1）。<strong>c₀=1, c₁=2, c₂=1</strong>。</p>
+<p><strong>第四步：算 χ 并验证不等式。</strong></p>
+<div class="formula display" data-tex="\chi(T^2)=1-2+1=0,\qquad b(T^2)=(1,2,1)"></div>
+<p>弱不等式：c₀=1≥b₀=1、c₁=2≥b₁=2、c₂=1≥b₂=1 ✓；强不等式 k=1：c₁−c₀=1 ≥ b₁−b₀=1 ✓；k=2 时等号成立：χ 两边都是 0 ✓。∎</p>
+<p><strong>几何解读。</strong> 四个临界点对应环面拓扑的"建造顺序"：P₃ 起步（0-handle，装一个点）、经过两个鞍点各装一根"桥"（1-handle，两次在洞处把环接上）、P₁ 收口（2-handle）。鞍点恰好 2 个 = b₁=2，因为环面的一维洞正是被鞍点"制造"出来的。</p>
+</section>
+
+<section>
+<h3>九、Handle 体分解——把拓扑变成组合</h3>
+<p>每个指标λ的临界点对应附着λ-handle=D^λ×D^{n−λ}的操作。M沿着增加的临界值逐次构建: 初始水平集为空集,每当经过临界点就附加一个handle。这一handle分解与光滑切空间中的CW复形结构等价——<strong>将拓扑学转化为组合学</strong>。Reeb定理(此为典例应用): 若M具有Morse函数且恰有2个临界点,则M与S^n同胚。这证明了球面是"最简单的流形"。</p>
+<p><strong>为什么 handle 分解就是"组合学"？</strong> 一个 λ-handle D^λ×D^{n−λ} 只有两个数据：λ（维数）和"粘在哪里、怎么粘"。于是整个流形的同胚类型被浓缩成一张"handle 清单"——就像 Lego 说明书。例题 2 里 T² 的说明书是：一个 0-handle、两个 1-handle、一个 2-handle，且两个 1-handle 分别套在 0-handle 上形成两个环。这张清单不仅证明 T² 同胚类型，还直接给出其 CW 结构，进而算出同调——拓扑学的"组合化"在此达到顶点。</p>
+</section>
+
+<section>
+<h3>十、例题 3——S¹ 的高度函数与 Morse 同调：流线的符号相消（一步步算完）</h3>
+<p><strong>题目。</strong> 取 M=S¹ ⊂ ℝ²（单位圆），f(θ) = cos θ（高度 = x 坐标）。配标准度量，求临界点、指标，并写出 Morse 复形、算其同调。</p>
+<p><strong>第一步：临界点。</strong> f'(θ) = −sin θ=0 ⟹ θ=0 与 θ=π。f(0)=1（极大值，指标 1），f(π)=−1（极小值，指标 0）。c₀=1、c₁=1，χ = 1−1 = 0 = χ(S¹) ✓。</p>
+<p><strong>第二步：梯度流线。</strong> 取标准 Riemann 度量，f 的梯度沿圆指向 +x 方向。从极大值 (1,0) 出发、沿梯度反向（即 −x 方向）下坡到极小值 (−1,0) 的流线有<strong>恰好两条</strong>：绕上半圆一条、绕下半圆一条。</p>
+<p><strong>第三步：写 Morse 复形。</strong> 链群：C₀ = ℤ⟨极小值 p⟩，C₁ = ℤ⟨极大值 q⟩。边界算子 ∂₁: C₁→C₀ 由"从指标 1 到指标 0 的流线带符号计数"给出：两条流线，取定向后一条记 +1、一条记 −1（它们在模空间的端点上诱导相反定向），故</p>
+<div class="formula display" data-tex="\partial_1(q)=+1\cdot p+(-1)\cdot p=0"></div>
+<p><strong>第四步：算同调。</strong> H₀^{Morse} = C₀/im ∂₁ = ℤ/0 = ℤ；H₁^{Morse} = ker ∂₁ = ℤ。故</p>
+<div class="formula display" data-tex="H_*^{\mathrm{Morse}}(S^1)=(\mathbb Z,\mathbb Z)=H_*(S^1)"></div>
+<p>∎</p>
+<p><strong>为什么"符号相消"如此重要？</strong> 如果偷懒按"流线条数"数，会得到 ∂₁(q) = 2p，Morse 同调变成 H₀ = ℤ/2——错误！正确做法必须给每条流线一个定向号，让"绕上边"与"绕下边"抵消。符号相消是 Morse 同调成立的技术要害，也是它与单纯同调在代数上真正同构（而不是"模 2 同构"）的原因。</p>
+</section>
+
+<section>
+<h3>十一、Morse 同调——用梯度流定义同调</h3>
+<p>取Morse函数f和Riemann度量->梯度流线连接临界点。Morse同调的链复形:临界点是指标为生成元,边界算子是梯度流线的计数。Morse同调同构于奇异同调——但用到了微分方程(梯度流)而非单纯的拓扑构造。这是Floer同调的有限维原型。</p>
+<p><strong>为什么梯度流能重新发明同调？</strong> 例题 3 展示了完整流程：临界点作链群基底、梯度流线作边界算子、取同调。关键定理（Floer-Milnor）说，对合适的度量与 f（满足 Morse-Smale 横截条件），Morse 同调与奇异同调<strong>典范同构</strong>。它的意义不在"又一个同调"，而在于<strong>路径</strong>：同调不再是抽象的代数商，而是由微分方程（梯度流的解）具体生成的——把"洞"翻译成了"连接临界点的下坡路径"。这个翻译是通往无限维（Floer 同调）的必经之桥。</p>
+</section>
+
+<section>
+<h3>十二、Floer 同调——无限维 Morse 理论</h3>
+<p>Floer(1988)用Chern-Simons泛函的梯度流定义3-流形不变量。这催生了拓扑量子场论领域。Floer在1991年去世,年仅35岁。</p>
+<p><strong>无限维为什么还能用 Morse 理论？</strong> 关键困境：我们想对"无穷维流形"（比如所有联络的空间）做 Morse 理论，但那里的函数（Chern-Simons 泛函）有无限多个临界点、指标也是无限的，经典理论整个崩掉。Floer 的洞见：对特定拓扑（3-流形上的 SU(2)-联络模空间），梯度流（瞬子方程）自动有界、配边性成立，仍能定义复形与边界算子。由此得到的 Instanton Floer 同调给出 3-流形的全新不变量，催生拓扑量子场论。这是"把同调建立在微分方程上"在无限维的成功示范。</p>
+</section>
+
+<section>
+<h3>十三、Cerf 理论——Morse 函数的同伦</h3>
+<p>Cerf(1970)研究了Morse函数空间中的1-参数族。在两个Morse函数之间的同伦中,临界点可以成对产生/消灭(handle slide)。Cerf理论是证明高维Poincare猜想(Smale)和4维(s-cobordism定理)的核心工具。</p>
+<p><strong>为什么要在 Morse 函数之间"走一步看一步"？</strong> 单看一个 Morse 函数只是快照；想知道"两个 Morse 函数能不能连续过渡"，就要研究 Morse 函数空间里的 1-参数族。Cerf 的理论说：走过一般的同伦时，临界点成对地"产生"与"消灭"（一个 0 指标 + 一个 1 指标同时出现，或反向消失），除此之外拓扑不变。这正是 handle 消去（Smale 高维 Poincaré 猜想的核心技巧）背后的机制：<strong>多出来的临界点可以通过 Cerf 同伦成对消掉，直到只剩必要的最小个数</strong>。</p>
+</section>
+
+<section><h3>前沿：Floer同调与Atiyah-Floer猜想</h3>
+<p>Atiyah(1988)猜想:3-流形的Instanton Floer同调=Lagrangian Floer同调(辛视角)。这连接了规范场论和辛拓扑。仍开放:一般情形的完整证明——在特定情形下已有部分结果。</p>
+<p><strong>为什么这个"等式"会诱人？</strong> 同一个 3-流形，规范理论从"联络的瞬子"造出一个不变量（Instanton Floer），辛几何从"配置空间的拉格朗日子流形交"造出另一个（Lagrangian Floer）。Atiyah 猜测它们其实是同一个东西的两种算法。若成立，规范场论与辛拓扑之间就有了直接翻译机——两个看似遥远的世界被同一座桥连通。至今只在特定情形（如部分配边情形）被验证，一般情形仍是深水区。</p></section>
+
+<section><h3>应用与里程碑——Poincaré猜想到Bott周期性</h3>
+<p>Smale(1961)用Morse理论+handle消去(Whitney技巧)证明≥5维的<strong>一般Poincaré猜想</strong>——Morse理论是高维拓扑的首选工具。Bott(1959)将Morse理论应用于<strong>回路空间</strong>(无穷维): 对称空间上的测地线作为Morse函数→周期2的Bott周期性定理→K-理论的核心定理。Witten(1982)在"Supersymmetry and Morse Theory"中将Morse理论推广为: 对Morse函数f,de Rham复形→Morse复形通过Witten变形实现同伦等价——本质上是将de Rham微分d+h⁻¹df∧的超对称量子力学解释。</p>
+<div class="key-insight">Bott用Morse理论在路径空间上证明了<strong>Bott周期性</strong>——K理论的核心定理。Floer同调：无限维Morse理论→辛拓扑和3-流形不变量的革命。</div>
+</section>
+<section><h3>关键文献</h3>
+<p>Morse(1925,"Relations Between the Critical Points of a Real Function of n Independent Variables"——奠基论文)。Morse(1934,"The Calculus of Variations in the Large"——系统专著)。Smale(1961, ≥5维广义Poincaré猜想的证明——1966年Fields奖)。Milnor(1963,"Morse Theory"——经典教科书,至今广泛使用)。Bott(1959, 周期定理——用Morse理论在回路空间上证明)。Witten(1982,"Supersymmetry and Morse Theory"——物理与拓扑的深度融合)。</p>
+</section>
+
+<section>
+<h3>工作题——临界点的具体计算与不等式应用</h3>
+<p><strong>题 1（具体函数的临界点）。</strong> 对 f(x,y) = x³ − 3x + y² 于 ℝ²，找出全部临界点、求其指标，并说明各自是极大/极小/鞍点。<strong>提示：</strong>∂ₓf=3x²−3、∂ᵧf=2y；临界点 (1,0) 与 (−1,0)；Hessian = diag(6x, 2)。</p>
+<p><strong>题 2（临界点个数的下界）。</strong> 证明：任何紧环面 T² 上的 Morse 函数都至少有 4 个临界点。<strong>提示：</strong>弱 Morse 不等式 c₀≥b₀=1、c₁≥b₁=2、c₂≥b₂=1，相加即得。</p>
+<p><strong>题 3（ℝP² 的 Euler 数）。</strong> ℝP² 存在恰有 3 个临界点（指标 0、1、2 各一个）的 Morse 函数。据此算 χ(ℝP²)。<strong>提示：</strong>χ = c₀−c₁+c₂ = 1−1+1 = 1。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1：</strong> 临界方程组 3x²−3=0、2y=0 ⟹ (1,0)、(−1,0)。Hessian = diag(6x,2)。在 (1,0)：diag(6,2) 两个正特征值 ⟹ 指标 0（极小值）；在 (−1,0)：diag(−6,2) 一负一正 ⟹ 指标 1（鞍点）。∎</p>
+<p><strong>题 2：</strong> b(T²)=(b₀,b₁,b₂)=(1,2,1)。弱不等式逐条给 c₀≥1、c₁≥2、c₂≥1，相加 c₀+c₁+c₂ ≥ 1+2+1 = 4，故任何 Morse 函数至少有 4 个临界点；例题 2 的高度函数恰好达到 4，所以下界是最优的。∎</p>
+<p><strong>题 3：</strong> 三个临界点指标为 0、1、2，故 c₀=1,c₁=1,c₂=1。χ(ℝP²) = c₀−c₁+c₂ = 1−1+1 = 1。这与已知的 χ(ℝP²)=1（或由 b(ℝP²)=(1,0,0) 得 1−0+0=1）一致——注意 H₁(ℝP²)=ℤ/2 是扭，不算入 Betti 数，也不影响 Euler 数。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（两个二次型）。</strong> 对 f(x,y)=x²−y² 与 f(x,y)=−x²−y²，指出临界点、指标与局部形状。<strong>提示：</strong>Hessian 分别为 diag(1,−1)（指标 1，鞍面）与 diag(−1,−1)（指标 2，倒碗）。</p>
+<p><strong>试试看 2（S³ 的最少临界点）。</strong> 证明 S³ 上任何 Morse 函数至少有 2 个临界点，并说明"恰有 2 个"时意味着什么。<strong>提示：</strong>b(S³)=(1,0,0,1)，c₀≥1、c₃≥1；恰 2 个时由 Reeb 定理 S³ ≅ S³（平凡验证）。</p>
+<p><strong>试试看 3（退化临界点长什么样）。</strong> 直立的环面（孔轴竖直），高度函数为何不是 Morse？<strong>提示：</strong>参数化 x=(R+r cos u)cos v、y=(R+r cos u)sin v、z=r sin u；临界条件 cos u=0 给出 u=π/2 与 u=−π/2 两条<strong>整圆</strong>的临界集（不是孤立点），Hessian 在圆周上奇异。</p>
+<p><strong>试试看 4（Morse 复形在 S² 上）。</strong> 用例题 3 的方法写出 S² 高度函数的 Morse 复形并验证 H_*^{Morse}(S²)=(ℤ,0,ℤ)。<strong>提示：</strong>两个临界点 p（指标 0）与 q（指标 2），指标差 2 故没有梯度流线连接它们，∂=0；同调直接读出。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Milnor, Morse Theory</strong></p>
+<p>&rarr; <strong>L. Nicolaescu, An Invitation to Morse Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/fundamental-group.html">基本群</a>、<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/y combinator.html">λ Y Combinator</a>：同一难度层次。</p>
+</section>

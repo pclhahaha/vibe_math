@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="研究生数学物理资格考试问题集" />
+  <title>资格考试问题集 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0d1117;color:#c9d1d9}
+    ::selection{background:rgba(88,166,255,.35)}
+    .wrap{max-width:1000px;margin:0 auto;padding:28px 24px 60px}
+    .top a{color:#58a6ff;text-decoration:none;font-size:.9em}
+    .top h1{color:#58a6ff;font-size:1.7em;margin:10px 0 6px}
+    .top p{color:#8b949e;font-size:.92em;line-height:1.7}
+    .note{background:#161b22;border-left:3px solid #f78166;padding:14px 18px;border-radius:0 10px 10px 0;margin:16px 0;font-size:.88em;color:#a4acb8;line-height:1.7}
+    .area{margin:26px 0 10px;padding-bottom:8px;border-bottom:1px solid #21262d}
+    .area h2{font-size:1.15em;color:#58a6ff}
+    .area .tag{font-size:.72em;padding:2px 10px;border-radius:4px;background:#1a2a3a;color:#8b949e;margin-left:8px}
+    .prob{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:16px 20px;margin:12px 0}
+    .prob .q{color:#c9d1d9;line-height:1.8;font-size:.9em}
+    .prob .q b{color:#f78166}
+    .prob .diff{font-size:.7em;color:#484f58;margin-left:6px}
+    details{margin-top:12px}
+    summary{cursor:pointer;color:#58a6ff;font-size:.85em;user-select:none}
+    summary:hover{text-decoration:underline}
+    details p{color:#a4acb8;font-size:.88em;line-height:1.8;padding:10px 14px;background:#0d1117;border:1px solid #21262d;border-radius:8px;margin-top:6px;white-space:pre-wrap}
+    details .f{color:#7ee787}
+    footer{text-align:center;padding:32px;color:#484f58;font-size:.8em}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a href="/">← 返回首页</a>
+    <h1>🏛 研究生资格考试问题集</h1>
+    <p>对标北美数学系博士生资格考试（Qualifying Exam）的水准。每道题附完整解答——先独立思考，再展开答案。难度标记：◆=资格考试基础题，◆◆=综合题，◆◆◆=研究入口题。</p>
+  </div>
+
+  <div class="note"><strong>使用建议</strong>：资格考试通常限时 3 小时。建议每科选 5-8 题，限时 45 分钟/题。做不出的题先标记，对照解答学习后重做一遍——这是最有效的博士数学训练方式。</div>
+
+  <!-- 实分析 -->
+  <div class="area"><h2>实分析 <span class="tag">Real Analysis</span></h2></div>
+  <div class="prob"><div class="q"><b>题 1</b>（◆）：证明 Lebesgue 单调收敛定理。<span class="diff">MCT</span><span style="color:#484f58">·</span> <a href="/pages/measure-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📏 测度论</a></div>
+  <details><summary>显示解答</summary><p>设 0 ≤ f₁ ≤ f₂ ≤ ... 逐点收敛到 f，令 f = lim f_n。先对每个 n 取简单函数逼近 f_n，利用简单函数的 MCT（上确界的积分性质）得到 ∫f_n → sup ∫f_n。再由 ∫f_n ≤ ∫f（单调性）且对任意简单函数 s ≤ f，s ∧ f_n ↑ s，∫s = lim ∫(s∧f_n) ≤ lim∫f_n，取 sup 得 ∫f ≤ lim∫f_n。反向不等式显然。∎</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 2</b>（◆）：构造一个黎曼不可积但勒贝格可积的函数。<span class="diff">Riemann vs Lebesgue</span><span style="color:#484f58">·</span> <a href="/pages/measure-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📏 测度论</a></div>
+  <details><summary>显示解答</summary><p>Dirichlet 函数 f(x)=1 若 x 有理，0 若 x 无理（在 [0,1] 上）。任何区间分割的 Darboux 上和 = 1（每个小区间含有理数），下和 = 0（每个小区间含无理数），故黎曼积分不存在。但 f = 1_ℚ∩[0,1] 是可测简单函数，∫f = 0（ℚ 可数，测度 0）。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 3</b>（◆◆）：证明 Fatou 引理并给出严格不等式成立的例子。<span class="diff">Fatou</span><span style="color:#484f58">·</span> <a href="/pages/measure-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📏 测度论</a></div>
+  <details><summary>显示解答</summary><p>对非负可测 f_n，∫(liminf f_n) ≤ liminf ∫f_n。证明：g_n = inf_{k≥n} f_k ↑ liminf f_n，用 MCT：∫liminf = lim ∫g_n ≤ liminf ∫f_n（因 g_n ≤ f_n）。严格例：取 X=[0,1]，f_{2k}=1_{[0,1/2]}，f_{2k+1}=1_{[1/2,1]}。则 liminf f_n=0（每点无穷多次取 0），但 ∫f_n=1/2 恒，liminf ∫f_n=1/2 &gt; 0。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 4</b>（◆◆）：证明 Vitali 覆盖引理并解释在 Hardy-Littlewood 极大函数定理中的作用。<span class="diff">Covering</span><span style="color:#484f58">·</span> <a href="/pages/measure-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📏 测度论</a></div>
+  <details><summary>显示解答</summary><p>Vitali 覆盖引理：设 {B_j} 是有限族球，则存在不交子族 {B_k} 使 ∪B_j ⊂ ∪3B_k（半径放大 3 倍的球）。贪心：选最大球，删去与其相交的球，重复。每个被删球 ⊂ 所选球的 3 倍。应用：极大函数 Mf(x) 的次水平集 {Mf &gt; t} 被 {3B} 覆盖，故 |{Mf&gt;t}| ≤ (3^n/t)∫|f|——即弱 (1,1) 不等式，进而极大函数的 L^p 有界性。</p></details></div>
+
+  <!-- 泛函分析 -->
+  <div class="area"><h2>泛函分析 <span class="tag">Functional Analysis</span></h2></div>
+  <div class="prob"><div class="q"><b>题 5</b>（◆◆）：陈述并证明 Hahn-Banach 定理的几何形式。<span class="diff">Separation</span><span style="color:#484f58">·</span> <a href="/pages/functional-analysis.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📊 泛函分析</a></div>
+  <details><summary>显示解答</summary><p>几何形式：设 A, B 是局部凸空间中两个不交的凸集，其中一个紧、另一个闭，则存在连续线性泛函 f 和实数 α 使 sup f(A) &lt; α &lt; inf f(B)（严格分离）。证明框架：从解析形式（延拓有界线性泛函）经 Minkowski 泛函 p(x)=inf{λ&gt;0: x∈λ·A} 和 Minkowski 分离定理（先用一点与开凸集分离，再用平移和仿射变换得到两个凸集的分离）。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 6</b>（◆）：证明开映射定理。<span class="diff">Open mapping</span><span style="color:#484f58">·</span> <a href="/pages/functional-analysis.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📊 泛函分析</a></div>
+  <details><summary>显示解答</summary><p>设 T: X→Y 是 Banach 空间之间的满连续线性算子。由 Baire 范畴定理，∪_n nT(B_X) = Y，某 nT(B_X) 有内点 ⟹ T(B_X) 含以 r 为中心的开球。平移得 T(B_X) 含原点某邻域 V。对任意 y∈V/2，T 的满射性 + 完备性可把 y 写成 T(x) 且 ‖x‖≤2（级数求和），即 T 把开球映到开球 ⟹ T 是开映射。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 7</b>（◆）：证明一致有界原理（Banach-Steinhaus）。<span class="diff">Uniform boundedness</span><span style="color:#484f58">·</span> <a href="/pages/functional-analysis.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📊 泛函分析</a></div>
+  <details><summary>显示解答</summary><p>设 {T_α} ⊂ B(X,Y)（Banach 到赋范空间）逐点有界：sup_α ‖T_α x‖ &lt; ∞ 对每个 x。定义闭集 F_n = {x: sup_α‖T_αx‖ ≤ n} = ∩_α T_α^{-1}(n·闭球)。由逐点有界，∪_n F_n = X。Baire 范畴定理：某 F_n 有内点，含平移的开球 B(x₀,δ)。则 ‖T_α‖ 一致有界（用范数不等式三角分解）。</p></details></div>
+
+  <!-- 抽象代数 -->
+  <div class="area"><h2>抽象代数 <span class="tag">Abstract Algebra</span></h2></div>
+  <div class="prob"><div class="q"><b>题 8</b>（◆）：证明有限群的 Lagrange 定理并给出逆命题的反例。<span class="diff">Lagrange</span><span style="color:#484f58">·</span> <a href="/pages/abstract-algebra.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🧮 抽象代数</a></div>
+  <details><summary>显示解答</summary><p>设 H ≤ G，|G|&lt;∞。左陪集 gH 两两不交（若 g₁H∩g₂H≠∅ 则 g₁H=g₂H），且每个陪集大小 = |H|（映射 h↦gh 双射）。故 |G| = [G:H]·|H|，即 |H| 整除 |G|。逆命题反例：交错群 A₄ 有 12 阶，但无 6 阶子群（否则指数 2 的正规子群，矛盾 A₄ 无阶 6 的正规子群）。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 9</b>（◆◆）：证明 S₅ 不是可解群，从而一般五次方程无根式解。<span class="diff">Solvability</span><span style="color:#484f58">·</span> <a href="/pages/galois-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🔗 伽罗瓦理论</a></div>
+  <details><summary>显示解答</summary><p>S₅ 的导序列：S₅ ⊃ A₅ ⊃ A₅（A₅ 是导子群，因 A₅ 简单）。A₅ 非阿贝尔，故导序列稳定在 A₅，永不达到 {e}。故 S₅ 不可解。一般五次方程（不变量为对称多项式）的伽罗瓦群是 S₅，由伽罗瓦理论，方程根式可解 ⟺ 伽罗瓦群可解。因此一般五次无根式解（Abel-Ruffini）。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 10</b>（◆）：证明 Zorn 引理（陈述并说明与选择公理的关系）。<span class="diff">Zorn</span><span style="color:#484f58">·</span> <a href="/pages/set-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📐 集合论</a></div>
+  <details><summary>显示解答</summary><p>Zorn 引理：若偏序集 P 的每条链都有上界，则 P 有极大元。证明依赖于选择公理：假设无极大元，则可用选择函数沿每链构造严格递增长链，其长度超过 |P|（Hartogs 数）——矛盾。关系：Zorn 引理 ⟺ 选择公理 ⟺ 良序定理（在 ZF 中互相等价）。应用：Hahn-Banach、极大理想存在、基的存在。</p></details></div>
+
+  <!-- 拓扑 -->
+  <div class="area"><h2>代数拓扑 <span class="tag">Algebraic Topology</span></h2></div>
+  <div class="prob"><div class="q"><b>题 11</b>（◆）：证明 π₁(S¹,*) ≅ ℤ。<span class="diff">Fundamental group</span><span style="color:#484f58">·</span> <a href="/pages/fundamental-group.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🕳️ 基本群</a></div>
+  <details><summary>显示解答</summary><p>用万有覆盖 p: ℝ → S¹, t ↦ e^{2πit}。给定以基点为起点的回路 γ，路径提升性质给出唯一提升 γ̃（γ̃(0)=0）。映射 γ ↦ γ̃(1) ∈ ℤ 良定义（同伦回路提升终点相同）且为群同构。逆映射：n ↦ [t ↦ e^{2πint}]。提升的唯一性来自 ℝ 的单连通性。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 12</b>（◆◆）：用 Mayer-Vietoris 序列计算环面 T² 的同调群。<span class="diff">Homology of torus</span><span style="color:#484f58">·</span> <a href="/pages/algebraic-topology-homology.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🕳️ 同调论</a></div>
+  <details><summary>显示解答</summary><p>T² 分解为两个开圆盘 D₁, D₂ 交于开环带 S¹×(0,1)。Mayer-Vietoris：H₂(D₁)⊕H₂(D₂) → H₂(T²) → H₁(S¹×(0,1)) → H₁(D₁)⊕H₁(D₂) → H₁(T²) → H₀(交) → H₀(D₁)⊕H₀(D₂) → H₀(T²) → 0。代入已知：H₂(T²)≅ℤ，H₁(T²)≅ℤ²，H₀(T²)≅ℤ。边界映射 H₂(T²)→H₁(交)≅ℤ 是同构（交是生成元 1-圈）。</p></details></div>
+
+  <!-- 微分几何 -->
+  <div class="area"><h2>微分几何 <span class="tag">Differential Geometry</span></h2></div>
+  <div class="prob"><div class="q"><b>题 13</b>（◆）：证明 Gauss-Bonnet 定理在球面上的验证。<span class="diff">Gauss-Bonnet</span><span style="color:#484f58">·</span> <a href="/pages/curvature.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 📐 曲率</a></div>
+  <details><summary>显示解答</summary><p>对单位球面 S²（曲率 K=1），取测地三角形（三个角 α,β,γ 在赤道上，顶点在北极），则 ∫K dA = 面积 = 角盈 = α+β+γ−π（球面角盈公式）。Gauss-Bonnet：∫K dA = 2πχ(S²) = 4π。对测地三角形 ∫_三角形 K dA = 角盈，求和覆盖整个球面得 4π ✓。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 14</b>（◆）：证明测地线方程（Christoffel 符号形式）。<span class="diff">Geodesic equation</span><span style="color:#484f58">·</span> <a href="/pages/geodesic.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🌐 测地线</a></div>
+  <details><summary>显示解答</summary><p>测地线 = 能量泛函 E[γ]=½∫g(γ̇,γ̇)dt 的临界点。变分 δE=0 得 Euler-Lagrange：d/dt(∂L/∂ẋ^μ) − ∂L/∂x^μ = 0，其中 L=½g_{μν}ẋ^μẋ^ν。展开得 ẍ^μ + Γ^μ_{αβ}ẋ^αẋ^β = 0，其中 Christoffel 符号 Γ^μ_{αβ} = ½g^{μσ}(∂_αg_{βσ}+∂_βg_{ασ}−∂_σg_{αβ})。这是测地线的标准方程，也是广义相对论中自由落体的运动方程。</p></details></div>
+
+  <!-- 复分析 -->
+  <div class="area"><h2>复分析 <span class="tag">Complex Analysis</span></h2></div>
+  <div class="prob"><div class="q"><b>题 15</b>（◆）：证明 f(z)=z̄ 处处不可导。<span class="diff">CR equations</span><span style="color:#484f58">·</span> <a href="/pages/complex-plane.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🔄 复平面与全纯函数</a></div>
+  <details><summary>显示解答</summary><p>f(z)=z̄=x−iy。CR 方程：∂u/∂x=1，∂v/∂y=−1，1≠−1，CR 方程处处不满足 ⟹ f 无处全纯。更直接：差商 (f(z+h)−f(z))/h = (z̄+h̄−z̄)/h = h̄/h。沿 h=实数 趋于 1，沿 h=纯虚数 趋于 −1，极限不存在（不唯一）。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 16</b>（◆◆）：用留数定理计算 ∫₀^∞ dx/(1+x⁴)。<span class="diff">Residue</span><span style="color:#484f58">·</span> <a href="/pages/contour-integral.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ ⭕ 围道积分与留数</a></div>
+  <details><summary>显示解答</summary><p>∫_{-∞}^∞ dx/(1+x⁴) = 2πi·Σ(上半平面留数)。极点：x₀ = e^{iπ/4}, e^{3iπ/4}（上半平面；另两个在下半平面）。留数公式：Res 1/(1+x⁴) 在 x₀ = 1/(4x₀³)。Res(e^{iπ/4}) = 1/(4e^{3iπ/4}) = e^{-3iπ/4}/4 = (−√2/2 − i√2/2)/4。Res(e^{3iπ/4}) = 1/(4e^{9iπ/4}) = e^{-9iπ/4}/4 = e^{-iπ/4}/4 = (√2/2 − i√2/2)/4。两留数之和 = −i√2/4（实部相消）。故 ∫_{-∞}^∞ = 2πi·(−i√2/4) = π√2/2。由被积函数偶性，∫₀^∞ = π√2/4。</p></details></div>
+
+  <!-- 概率 -->
+  <div class="area"><h2>概率论 <span class="tag">Probability</span></h2></div>
+  <div class="prob"><div class="q"><b>题 17</b>（◆）：证明 Markov 不等式和 Chebyshev 不等式。<span class="diff">Inequalities</span><span style="color:#484f58">·</span> <a href="/pages/probability.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🎲 概率论基础</a></div>
+  <details><summary>显示解答</summary><p>Markov：对 X≥0，a&gt;0，E[X] ≥ a·P(X≥a)（因 X ≥ a·1_{X≥a}，取期望）。Chebyshev：P(|X−μ|≥ε) = P((X−μ)²≥ε²) ≤ E[(X−μ)²]/ε² = Var(X)/ε²（用 Markov 于 (X−μ)²）。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 18</b>（◆◆）：用特征函数证明中心极限定理。<span class="diff">CLT</span><span style="color:#484f58">·</span> <a href="/pages/clt.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🎰 大数定律与中心极限定理</a></div>
+  <details><summary>显示解答</summary><p>设 X₁,...,X_n i.i.d.，E[X]=0，Var=1。S_n/√n 的特征函数：φ(t) = [φ_X(t/√n)]^n。展 φ_X(u) = 1 − u²/2 + o(u²)。则 log φ(t) = n·log(1 − t²/(2n) + o(1/n)) → −t²/2。故 φ(t) → e^{-t²/2} = 标准正态特征函数。由 Lévy 连续性定理，S_n/√n → N(0,1)。</p></details></div>
+
+  <!-- 物理 -->
+  <div class="area"><h2>量子力学 <span class="tag">Quantum Mechanics</span></h2></div>
+  <div class="prob"><div class="q"><b>题 19</b>（◆）：推导谐振子的能级 E_n=ħω(n+½)。<span class="diff">Oscillator</span><span style="color:#484f58">·</span> <a href="/pages/harmonic-oscillator.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🪩 谐振子</a></div>
+  <details><summary>显示解答</summary><p>定义 a = √(mω/2ħ)(x + ip/(mω))，a† 共轭。验证 [a,a†]=1，H=ħω(a†a+½)。N=a†a 有非负整数谱（N|n⟩=n|n⟩，n∈ℤ≥₀，因 a|n⟩ 是 N 的特征向量特征值 n−1，非负性截断于 n=0）。故 E_n = ħω(n+½)。基态 a|0⟩=0 解得 ψ₀ ∝ e^{-mωx²/2ħ}。</p></details></div>
+
+  <div class="prob"><div class="q"><b>题 20</b>（◆）：推导氢原子能级 E_n=−13.6/n² eV。<span class="diff">Hydrogen</span><span style="color:#484f58">·</span> <a href="/pages/hydrogen-atom.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ ⚛️ 氢原子轨道</a></div>
+  <details><summary>显示解答</summary><p>径向方程在有效势 V_eff = −e²/(4πε₀r) + l(l+1)ħ²/(2mr²) 下求解。对角量子数 n=1,2,...，能级 E_n = −(me⁴)/(2(4πε₀)²ħ²n²) = −13.6/n² eV。推导要点：将束缚态条件 + 拉盖尔多项式收敛（截断）得 n 为整数，代入里德伯常数 R_∞ = me⁴/(2(4πε₀)²ħ²) = 13.6 eV。简并度 n²（含磁量子数 ±l,...,+l）。</p></details></div>
+
+  <!-- 群表示论与紧李群（2025 新增） -->
+  <div class="area"><h2>群表示论与紧李群 <span class="tag">Rep Theory / Lie Groups</span></h2></div>
+  <div class="prob"><div class="q"><b>题 21</b>（◆◆）：分解 V_{1/2} ⊗ V_{1/2}（SU(2)），识别单重态与三重态。<span class="diff">Clebsch-Gordan</span><span style="color:#484f58">·</span> <a href="/pages/lie-group-representations.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🎻 紧李群表示与 Peter–Weyl</a></div>
+  <details><summary>显示解答</summary><p>V_j 是 2j+1 维。dim(V_{1/2}⊗V_{1/2}) = 2·2 = 4。最高权 1 出现一次（V_1，三重态）；剩下 1 维为 V_0（单重态）：½⊗½ = 0⊕1，维数 4 = 1+3 ✓。基：三重态对称 {|↑↑⟩, (|↑↓⟩+|↓↑⟩)/√2, |↓↓⟩}（自旋 1）；单重态反对称 (|↑↓⟩−|↓↑⟩)/√2（自旋 0）。</p></details></div>
+  <div class="prob"><div class="q"><b>题 22</b>（◆）：证明 S¹ 的不可约酉表示是一维的 χ_k(e^{iθ})=e^{ikθ}，并验证正交性。<span class="diff">Peter–Weyl / Fourier</span><span style="color:#484f58">·</span> <a href="/pages/lie-group-representations.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🎻 紧李群表示与 Peter–Weyl</a></div>
+  <details><summary>显示解答</summary><p>S¹ 交换，紧群 ⟹ 不可约酉表示完全可约且交换群的不可约表示一维（所有 ρ(g) 互相交换 ⟹ Schur 引理给数乘）。连续同态 S¹→ℂ*：ρ(e^{iθ})=e^{icθ}，单位模 ⟹ c∈ℝ，单值性 e^{2πic}=1 ⟹ c∈ℤ=k。正交性：⟨χ_k,χ_l⟩=½π∫₀^{2π}? 用 1/(2π)∫_0^{2π}e^{i(k−l)θ}dθ=δ_{kl}。L²(S¹) 以 {e^{ikθ}} 为正交基即 Peter–Weyl（=傅里叶级数）。</p></details></div>
+
+  <!-- 代数数论与 p-adic（2025 新增） -->
+  <div class="area"><h2>代数数论与 p-adic <span class="tag">Number Theory</span></h2></div>
+  <div class="prob"><div class="q"><b>题 23</b>（◆）：在 ℤ[√−5] 中展示 6 的两种不可约分解并用范数证明因子不可约。<span class="diff">Non-UFD</span><span style="color:#484f58">·</span> <a href="/pages/algebraic-number-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🏰 代数数论：数域与理想类</a></div>
+  <details><summary>显示解答</summary><p>6 = 2·3 = (1+√−5)(1−√−5)。范数 N(a+b√−5)=a²+5b² 乘性。若 2=αβ（非单位）则 N(α)N(β)=4；N=2 需 a²+5b²=2 无整数解 ⟹ 无真因子 ⟹ 2 不可约；3 同理（N=3 无解）；N(1±√−5)=6 且 6 的分拆 2·3 均不可实现（N=2、3 无解）⟹ 也不可约。四个不可约给出两种本质不同分解 ⟹ 非 UFD；理想 (2,1+√−5) 非主 ⟹ 类数 2。</p></details></div>
+  <div class="prob"><div class="q"><b>题 24</b>（◆）：用 Hensel 引理判定 x² = −1 在 ℚ₅ 与 ℚ₃ 是否可解。<span class="diff">Hensel lift</span><span style="color:#484f58">·</span> <a href="/pages/p-adic-numbers.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🥟 p-adic 数与局部域</a></div>
+  <details><summary>显示解答</summary><p>f(x)=x²+1。ℚ₅：x²≡−1≡4 (mod 5) 有根 x₀=±2；f′(x₀)=2x₀≢0 (mod 5)（2·2=4≠0），简单根 ⟹ Hensel ⟹ 唯一提升到 ℤ₅：ℚ₅ 有 √−1。ℚ₃：需 x²≡−1≡2 (mod 3)，而 2 非 mod 3 平方剩余，无 mod p 根 ⟹ Hensel 前提失败，ℚ₃ 无 √−1。整体：ℚ 无 √−1（−1 非平方）——局部条件严格区分 ℚ₅ 与 ℚ₃。</p></details></div>
+
+  <!-- 图论/概率/随机矩阵（2025 新增） -->
+  <div class="area"><h2>图论与概率深化 <span class="tag">Graph / Martingales / RMT</span></h2></div>
+  <div class="prob"><div class="q"><b>题 25</b>（◆）：证明连通图有欧拉回路 ⟺ 每个顶点度数为偶。<span class="diff">Euler</span><span style="color:#484f58">·</span> <a href="/pages/graph-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🕸️ 图论与网络</a></div>
+  <details><summary>显示解答</summary><p>(⟹) 回路每进入一个顶点一次必离开一次，故每点度 = 2×(经过次数)（起点在闭环中亦如此）为偶。(⟸) 从任意点沿未用边走，因每次进入一个点都有边可出（偶度 + 已用边成对），必回到起点得回路；若未覆盖全部边，连通性保证存在与回路共享顶点的未用边，从该点再走回路并嫁接进原回路，扩张；有限步后含全部边。这是 Hierholzer 的构造性证明。∎</p></details></div>
+  <div class="prob"><div class="q"><b>题 26</b>（◆◆）：公平随机游走从 i 元到 {0,N}：用停时定理求破产概率。<span class="diff">Gambler's ruin</span><span style="color:#484f58">·</span> <a href="/pages/martingales.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ ♟️ 鞅与随机游走</a></div>
+  <details><summary>显示解答</summary><p>S_n 对称随机游走是鞅；τ=首次到 {0,N}（Eτ&lt;∞，可用 τ∧T 截断再取极限）。停时定理：E[S_τ]=S₀=i。S_τ=0·P(破产)+N·P(到 N)，且 P(破产)+P(到 N)=1 ⟹ N·P(到 N)=i ⟹ P(破产)=1−i/N=(N−i)/N。N→∞ 时 →1：一维常返的"以小博大必死"。</p></details></div>
+  <div class="prob"><div class="q"><b>题 27</b>（◆◆）：用积分证明半圆律密度的二阶矩 m₂=1，并说明它与 Catalan C₁ 的关系。<span class="diff">Wigner / Catalan</span><span style="color:#484f58">·</span> <a href="/pages/random-matrix.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🎱 随机矩阵与半圆律</a></div>
+  <details><summary>显示解答</summary><p>m₂=∫_{−2}^{2}x²·(1/2π)√(4−x²)dx。换元 x=2sinθ：dx=2cosθ dθ，√(4−x²)=2cosθ：m₂=(16/2π)∫_{−π/2}^{π/2}sin²θcos²θ dθ。sin²cos²=sin²2θ/4，∫sin²2θ=π/2 ⟹ 积分为 π/8：m₂=(16/2π)(π/8)=1。半圆矩 m_{2k}=Catalan C_k（C₁=1）：Wigner 矩阵 E[(1/N)Tr M²]→1 与之一致。</p></details></div>
+
+  <!-- 代数拓扑与几何（2025 新增） -->
+  <div class="area"><h2>代数拓扑与曲面 <span class="tag">Spectral Seq / Surfaces / Hyperbolic</span></h2></div>
+  <div class="prob"><div class="q"><b>题 28</b>（◆◆◆）：用 Leray–Serre 谱序列证明 H*(S³;ℤ) ≅ H*(S⁰)。<span class="diff">Hopf fibration</span><span style="color:#484f58">·</span> <a href="/pages/spectral-sequences.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🛰️ 谱序列与同伦论</a></div>
+  <details><summary>显示解答</summary><p>Hopf S¹→S³→S²：E₂^{p,q}=H^p(S²;H^q(S¹))，非零格点 (0,0),(0,1),(2,0),(2,1) 各一 ℤ。可能差分只有 d₂:(0,1)→(2,0)（其余越出第一象限）。若 d₂=0，则 H¹(S³)、H²(S³) 各含 ℤ，矛盾（S³ 是 3-流形，H¹=H²=0）。故 d₂ 同构，E₃=E_∞ 只剩 (0,0)、(2,1)：H⁰=ℤ、H³=ℤ。即 H*(S³)=ℤ 于 0、3 度、其余 0。transgression d₂ 编码 Hopf 非平凡性。</p></details></div>
+  <div class="prob"><div class="q"><b>题 29</b>（◆）：计算环面与双环面的欧拉示性数并用分类定理判定曲面。<span class="diff">χ classification</span><span style="color:#484f58">·</span> <a href="/pages/surface-topology.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🫓 曲面拓扑：分类与覆盖</a></div>
+  <details><summary>显示解答</summary><p>环面用正方形对边粘：4 角粘成 1 个顶点、4 边粘成 2 条、1 个面：χ=1−2+1=0 ✓（=2−2g，g=1）。双环面 χ=0+0−2=−2（连通和加性 χ(A#B)=χ(A)+χ(B)−2）⟹ 2−2g=−2 ⟹ g=2。判定：χ=0 且可定向 = 环面；χ=−2 可定向 = 双环面；χ=0 不可定向 = 克莱因瓶。</p></details></div>
+  <div class="prob"><div class="q"><b>题 30</b>（◆）：用高斯–博内证明双曲三角形面积 = π − (内角和)。<span class="diff">Gauss–Bonnet</span><span style="color:#484f58">·</span> <a href="/pages/hyperbolic-geometry.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🥏 双曲几何与庞加莱圆盘</a></div>
+  <details><summary>显示解答</summary><p>单位负曲率 (K=−1) 的双曲三角形：Gauss–Bonnet ∫K dA + Σ(外角) = 2π；外角 = π − 内角，得 −面积 + Σ(π−内角) = 2π ⟹ 面积 = Σ(π−内角) − 2π = 3π − 2π − Σ内角 = π − (A+B+C)。理想三角形（顶点在边界）内角和 0 ⟹ 面积 = π（上确界）。</p></details></div>
+
+  <!-- 动力系统与复动力（2025 新增） -->
+  <div class="area"><h2>动力系统 <span class="tag">Dynamics</span></h2></div>
+  <div class="prob"><div class="q"><b>题 31</b>（◆◆）：证明 r=4 的 Logistic 映射共轭于倍角映射，从而混沌。<span class="diff">Conjugacy</span><span style="color:#484f58">·</span> <a href="/pages/bifurcation.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🌋 分岔与 Logistic 映射</a></div>
+  <details><summary>显示解答</summary><p>令 x=sin²θ：4x(1−x)=4sin²θcos²θ=(sin2θ)²=sin²(2θ)。若 θ_{n+1}=2θ_n (mod 2π) 则 x_{n+1}=4x_n(1−x_n)。故 (x_n) 的动力学由 θ 的倍角映射 (扩张 2 倍) 完全决定：倍角映射周期点稠密、对初值敏感（误差每步 ×2）、拓扑传递 ⟹ r=4 Logistic 混沌；Lyapunov 指数 λ=ln 2。</p></details></div>
+  <div class="prob"><div class="q"><b>题 32</b>（◆◆）：证明无理旋转 R_α 在 Lebesgue 测度下遍历。<span class="diff">Ergodic via Fourier</span><span style="color:#484f58">·</span> <a href="/pages/ergodic-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ ♻️ 遍历理论</a></div>
+  <details><summary>显示解答</summary><p>Koopman 算子 Uf=f∘R_α 在 L²(S¹)。遍历 ⟺ U 的不动点只有常数。f 的傅里叶展开 Σc_m e^{2πimx}；Uf=Σc_m e^{2πimα}e^{2πimx}=f ⟹ c_m(e^{2πimα}−1)=0 对一切 m。α 无理 ⟹ e^{2πimα}≠1（m≠0）⟹ c_m=0（m≠0）⟹ f 常数。注意 R_α 遍历但不混合（保距）；画布与内容里与倍角映射对比。</p></details></div>
+
+  <!-- 逻辑/基础与分形维数（2025 新增） -->
+  <div class="area"><h2>基础与几何测度 <span class="tag">Foundations / GMT</span></h2></div>
+  <div class="prob"><div class="q"><b>题 33</b>（◆）：用紧致性证明存在非标准自然数模型。<span class="diff">Compactness</span><span style="color:#484f58">·</span> <a href="/pages/model-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🧬 模型论</a></div>
+  <details><summary>显示解答</summary><p>语言加新常数 c，理论 T = Th(ℕ) ∪ {c&gt;n : n∈ℕ}。任一有限子集 T₀ 只含有限条 c&gt;n，令其最大下标为 m，把 c 解释为 m+1 即满足 T₀。由紧致性 T 有模型 N*：它满足全部标准算术真句且 c 大于一切标准自然数——"非标准整数"。这说明"标准"非一阶可定义。</p></details></div>
+  <div class="prob"><div class="q"><b>题 34</b>（◆◆）：计算康托尔三分集的 Hausdorff 维数。<span class="diff">Covering + Frostman</span><span style="color:#484f58">·</span> <a href="/pages/geometric-measure-theory.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ ✂️ 几何测度论与 Hausdorff 维数</a></div>
+  <details><summary>显示解答</summary><p>第 k 层用 2^k 段长 3^{−k} 覆盖：H^s(C) ≤ lim (2^k)(3^{−k})^s = lim (2/3^s)^k。s&gt;ln2/ln3 时 2/3^s&lt;1 ⟹ H^s=0 ⟹ dim ≤ ln2/ln3。下界：C 上均匀测度 μ（第 k 层每段质量 2^{−k}）：对 r≈3^{−k}，μ(B(x,r)) ≤ 2·2^{−k} = C(3^{−k})^{ln2/ln3} = C r^s（s=ln2/ln3）⟹ Frostman ⟹ dim ≥ s。故 dim_H C = ln2/ln3 ≈ 0.631。</p></details></div>
+  <div class="prob"><div class="q"><b>题 35</b>（◆◆）：陈述 CH 的独立性定理（Gödel 与 Cohen 两方向）。<span class="diff">Forcing / L</span><span style="color:#484f58">·</span> <a href="/pages/forcing-ch.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🌩️ 集合论 II：力迫与连续统假设</a></div>
+  <details><summary>显示解答</summary><p>Gödel（1938）：可构造宇宙 L 满足 ZFC+GCH ⟹ Con(ZFC) ⇒ Con(ZFC+CH)——CH 不可能被证伪。Cohen（1963）：力迫给可数传递模型 M 添加 ℵ₂^M 个 Cohen 实数，ccc 保持基数，得 M[G] ⊨ ZFC+¬CH（2^ℵ₀≥ℵ₂）⟹ Con(ZFC) ⇒ Con(ZFC+¬CH)——CH 不可能被证明。合起来：CH 独立于 ZFC（若 ZFC 一致）。注意这是相对一致性，非"哪个宇宙为真"的裁决。</p></details></div>
+</div>
+<footer><p>Vibe Math · 资格考试问题集 · 参考答案请先独立完成再对照</p></footer>
+<script type="module" src="/src/shared/base-patch.js"></script>
+</body>
+</html>

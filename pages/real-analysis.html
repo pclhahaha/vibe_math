@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="从实数构造到测度论与勒贝格积分" />
+  <meta property="og:title" content="实分析 — Vibe Math" />
+  <meta property="og:description" content="从实数构造到测度论与勒贝格积分" />
+  <title>实分析 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📐 实分析 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★</span></h2>
+    <p class="subtitle">从实数构造到测度论与勒贝格积分</p>
+    <span class="cat-tag">Part 1: 基础</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='real-analysis',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/boltzmann.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 💥 Boltzmann方程</a>
+  <a href="/pages/measure-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📏 测度论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——π 的"精确值"到底存不存在？数轴上每个点都有十进制展开吗？</h3>
+<p>π 的十进制展开是 3.14159265358979…，小数点后永远写不完。你手上大概只有一个几十位的小数，可数学书里却理直气壮地说"π 存在"、还说"π 是数轴上的一个点"。凭什么？一个永远写不完的小数，能算一个"精确的数"吗？</p>
+<p>换个更具体的问法。<strong>数轴上随便一个点，都对应一个十进制展开吗？</strong>看起来是，但反过来的问题才要命：<strong>随便一个十进制展开，都对应数轴上的一个点吗？</strong>比如这一串：</p>
+<div class="formula display" data-tex="0.9,\ 0.99,\ 0.999,\ 0.9999,\ 0.99999,\ldots"></div>
+<p>它显然"越来越接近 1"。那么 0.999…（无限个 9）到底等不等于 1？很多人用"1/3 = 0.333…，两边乘 3"来回答，但这充其量是"看起来合理"——我们还没定义"无限个 9"到底是什么。</p>
+<p>再看这一串：</p>
+<div class="formula display" data-tex="1,\ 1.4,\ 1.41,\ 1.414,\ 1.4142,\ 1.41421,\ldots"></div>
+<p>它是 √2 的逐位十进制展开。每一项都是分数（有理数），可我们马上就要证明：<strong>没有任何分数，平方等于 2</strong>。这一串数越走越挤、不断逼近某个"点"，可这个点不在有理数里。在只有有理数的数轴上，这串数<strong>没有落点</strong>。</p>
+<p>更惊人的是，Cantor（康托尔）在 19 世纪用<strong>对角线法</strong>证明了：就算你想把小数一个个列出来，总能用"把对角线上的数字改掉"造出一个不在名单里的新小数。用具体数字感受一下：假如某人声称下面就是全部实数——</p>
+<p>0.<strong>4</strong>120606…<br>
+0.1<strong>3</strong>74209…<br>
+0.18<strong>2</strong>33940…<br>
+0.176<strong>0</strong>0992…<br>
+……</p>
+<p>那么我们拿第 1 行第 1 位的 4 改成 5；第 2 行第 2 位的 3 改成 0；第 3 行第 3 位的 2 改成 7；第 4 行第 4 位的 0 改成 1……得到的新小数 0.5071… 与名单里每一个数都至少有一位不同，所以<strong>它根本不在名单上</strong>。也就是说：小数的集合比分数大得多，大得排不成一行。</p>
+<p>这些"直觉会骗人"的时刻，正是分析必须严格的理由。类似的经典警告还有：有人造出<strong>处处连续却处处不可微</strong>的函数；无穷级数换一个排列顺序，结果可以不同。所以在无穷世界里，我们只信<strong>能用精确语言一步步证明</strong>的结论（ε-δ、完备性，见 <a href="/pages/epsilon-delta.html">ε-δ 语言课</a>）。</p>
+<p>这节课要做的事，就是把"这种不断逼近的数列真的有一个落点"从口号变成数学。这个落点不存在时的"洞"，以及把洞填上后得到的性质，就是<strong>实数完备性</strong>（completeness）——它是整个实分析的根基。</p>
+<div class="key-insight">核心思想：完备性 = "该有的极限一个都不缺"。有理数数轴上有洞（√2 那里就有一个）；实数的全部威力，在于把这些洞补上了：只要一串数自己挤得足够近（柯西序列），或者一路单调且有界，它就一定收敛到某个真实存在的数。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、有理数的漏洞——先亲手证明 √2 不是分数</h3>
+<p>先做一件能亲手算到底的事：证明 √2 不是分数。这要追溯到欧几里得时代，但证明今天依然无懈可击。</p>
+<p><strong>定理 1。不存在整数 p、q（q≠0），使 (p/q)² = 2。</strong></p>
+<p><strong>证明。</strong> 反设存在，并把 p/q 约到最简，即 p、q 互质。两边乘 q²，得 p² = 2q²。于是 p² 是偶数。平方后仍是偶数的数，它自己必为偶数（奇数的平方 (2k+1)² = 4k²+4k+1 是奇数），所以 p = 2k 对某个整数 k。代入：4k² = 2q²，即 2k² = q²，于是 q² 也是偶数，q 也是偶数。这与"p、q 互质"矛盾。故假设不成立，√2 不是分数。∎</p>
+<p>别急着翻页——把这个证明再读一遍。它用到的只有"偶数、奇数、互质"，没有任何高级工具，但结论却判了"分数"死刑：<strong>分数在 √2 这个位置上，有一个洞。</strong></p>
+<p>光说"√2 不是分数"还不够，我们还想知道 √2 "差不多是几"。动手算：1²=1&lt;2，2²=4&gt;2，所以 1&lt;√2&lt;2；1.4²=1.96&lt;2，1.5²=2.25&gt;2，所以 1.4&lt;√2&lt;1.5；1.41²=1.9881&lt;2，1.42²=2.0164&gt;2，所以 1.41&lt;√2&lt;1.42；逐位逼下去，得到 1.41421…。每一步都能用竖式计算，但每一步都"还差一点"。</p>
+<div class="key-insight">这个"逐位逼近"的过程，正是微积分里"极限"的原型：数列 1, 1.4, 1.41, 1.414, … 每一个数都是有理数，它们越来越接近某个东西，但那个东西不在有理数里。在只有分数的世界里，它没有落点——这就是完备性要解决的第一件事。</div>
+</section>
+
+<section>
+<h3>二、从十进制出发——"逼近的数列"定义了数</h3>
+<p>上一节的数列不是凭空冒出来的，它有统一写法：aₙ 是把 √2 的十进制展开截到第 n 位，也就是</p>
+<div class="formula display" data-tex="a_n=\frac{\lfloor 10^{n}\sqrt2\rfloor}{10^{n}}\qquad(n=0,1,2,\ldots):\quad 1,\ 1.4,\ 1.41,\ 1.414,\ 1.4142,\ldots"></div>
+<p>观察它，把能用手验证的写下来：</p>
+<ul>
+<li><strong>逐项递增</strong>：a₀&lt;a₁&lt;a₂&lt;…，因为多取一位只会让截断值变大（1.41 &gt; 1.4）。严格地说：⌊10ⁿ√2⌋ ≥ 10·⌊10ⁿ⁻¹√2⌋，两边除以 10ⁿ 即 aₙ ≥ aₙ₋₁。</li>
+<li><strong>有上界</strong>：每一项都 &lt; 2（1.5, 1.42, 1.415, … 全小于 2）。事实上 2 就是一个上界。</li>
+<li><strong>相邻项差距在缩小</strong>：|a_{n+1}−aₙ| 等于 0.4, 0.01, 0.001, …，总小于 10⁻ⁿ。</li>
+</ul>
+<p>一个"单调递增且有上界"的数列，无论怎么看都"应该收敛"。可是——<strong>在有理数里，它偏偏不收敛</strong>：极限若是某个分数 r，则 r² 必须等于 2（把 |aₙ−r| 压到任意小，r² 就要任意接近 aₙ² → 2），而定理 1 说没有这样的分数。结论：</p>
+<div class="key-insight"><strong>单调 + 有界，在 Q 里不保证收敛。</strong>同一个数列拿到实数里，极限就是 √2。这逼我们做一个选择：要么干脆"宣称"每个这样的数列都有落点（这正是实数），要么把"该有落点"当成一条公理写下来。本课走第二条路。</div>
+<p>再看另一个能算到底的例子，它从小学就见过、但没人说清楚：</p>
+<div class="formula display" data-tex="b_n=0.9,\ 0.99,\ 0.999,\ 0.9999,\ldots \qquad b_n=1-\frac{1}{10^{n}}"></div>
+<p>bₙ 单调递增（0.9&lt;0.99&lt;…），被 1 罩住（每一项都 &lt;1）。在实数里它收敛到 1，也就是说 0.999… = 1。这个结论不是"算出来凑巧"，而是第四节（单调收敛定理）的直接结果。现在先记着：<strong>两种不同写法的十进制展开，可以表示同一个实数</strong>——0.999… 和 1.000… 是同一个点。这意味着"实数"绝不能跟"十进制展开"画等号；十进制只是帮我们想象数轴的工具。</p>
+<p>到这一步，我们已经有了两个"逼近数列"的实例，它们的共同特征是：内部越靠后越挤、且被一个界罩住。下一节把它们的落点写成严格的数学对象。</p>
+</section>
+
+<section>
+<h3>三、上确界——把"最小的上界"钉死</h3>
+<p>第二节的直觉是"数列被一个界罩住"。可"被罩住"还不够——1 罩住 aₙ，2 也罩住 aₙ，1.5 也罩住。哪个界才是"对的那个"？答案是<strong>最小的那个界</strong>：所有上界当中最小者，叫<strong>上确界</strong>（supremum，记为 sup A）。</p>
+<p>先摆正式定义。</p>
+<p><strong>定义（上界 / 上确界）。</strong> 设 A ⊆ ℝ 非空。若存在 M 使对一切 a∈A 都有 a ≤ M，称 M 是 A 的一个<strong>上界</strong>，称 A <strong>有上界</strong>。若 s 同时满足：</p>
+<p>① s 是 A 的一个上界；② 任何比 s 小的数 M&lt;s 都不是上界（即存在 a∈A 使 a&gt;M），</p>
+<p>则称 s 是 A 的<strong>上确界</strong>，记 s = sup A。直觉：sup A 是"A 的最高点"——即使这个最高点不在 A 里面（集合没有最大值），上确界也把它钉住。</p>
+<p>定义里的②啰嗦，但很有用，它等价于下面这个顺手的判定条件：</p>
+<div class="formula display" data-tex="s=\sup A\ \iff\ \left\{\begin{array}{l}(1)\ \forall a\in A:\ a\le s\\ (2)\ \forall\varepsilon&gt;0\ \exists a\in A:\ s-\varepsilon&lt;a\le s\end{array}\right."></div>
+<p>条件(2)说的是：<strong>再小的 ε，都能在 A 里找到元素挤进 (s−ε, s] 这一格</strong>——A 里的数"贴着" s 贴到任意近。这就是"上确界的 ε-刻画"，后面所有证明都用它。</p>
+<p><strong>例 1（ε-刻画的手把手使用）。求 A = {1 − 1/n : n ∈ ℕ} 的上确界。</strong></p>
+<p>A 是 0, 1/2, 2/3, 3/4, 4/5, … 这个集合。直觉上最高点是 1，但 1 不在 A 里（1−1/n&lt;1 对一切 n 成立）。验证 sup A = 1：</p>
+<p>① <strong>1 是上界：</strong>对每个 n，1−1/n &lt; 1。✓</p>
+<p>② <strong>更小的数不是上界：</strong>任取 ε&gt;0，要找 n 使 1−1/n &gt; 1−ε，即 1/n &lt; ε。取 n &gt; 1/ε（阿基米德性质：整数可以任意大），则 1−1/n ∈ A 且大于 1−ε。这说明任何小于 1 的 1−ε 都不是上界。✓</p>
+<p>由 ε-刻画，sup A = 1。∎ 注意 1 不是最大值：A 里没有一个元素等于 1。<strong>上确界可以不属于集合</strong>——这正是第二节数列极限"落点"的一般形式。</p>
+<p><strong>例 2（区间与最大值的对照）。</strong> sup(0,1) = 1，且 1 不在区间里；但 sup[0,1] = 1 = max[0,1]。若有最大值，最大值就是上确界；没有最大值时，上确界是"集合打不着的上界"。</p>
+<p>现在把话说满，这就是完备性的正式版本：</p>
+<div class="key-insight"><strong>上确界公理（实数完备性，Dedekind 形式）。</strong>设 A ⊆ ℝ 非空且有上界，则 A 必有上确界。<strong>这是实数与有理数最根本的分界线：</strong>真正让 {aₙ} 在 Q 中失败的是集合 B = {a ∈ ℚ : a² &lt; 2}（所有平方小于 2 的有理数）：它非空、有上界（2 就是），但上确界是 √2——不是有理数。√2 就是那个"洞"；上确界公理正是声明：这样的洞在实数里不存在。</div>
+<p>说明一点：在把实数<strong>构造</strong>出来的路线里（Dedekind 分割或柯西序列，见第六节），上确界公理是一条<strong>定理</strong>；在把实数当作已知有序域的路线里，它是<strong>公理</strong>。两条路最终殊途同归——这也正是第六节要严格证明的内容。</p>
+</section>
+
+<section>
+<h3>四、单调收敛定理——完备性的第一个推论</h3>
+<p>有了上确界公理，第二节那个悬而未决的"单调 + 有界 ⇒ 收敛"就成真了。这是全课最常用的一条定理。</p>
+<p><strong>定理 2（单调收敛定理，MCT）。</strong>设 (aₙ) 单调递增且有上界，则 (aₙ) 收敛，且极限 = sup{aₙ : n ∈ ℕ}。</p>
+<p><strong>证明。</strong></p>
+<p>① 由上确界公理，集合 {aₙ} 非空有上界，故 s = sup{aₙ} 存在。</p>
+<p>② <strong>极限 ≤ s：</strong>因为 s 是上界，aₙ ≤ s 对一切 n 成立。</p>
+<p>③ <strong>极限 ≥ s，即任意逼近 s：</strong>任给 ε&gt;0。因为 s−ε &lt; s 不是上界（s 是最小的上界），所以存在某个 N 使 a_N &gt; s−ε。由于序列递增，对所有 n ≥ N：</p>
+<div class="formula display" data-tex="s-\varepsilon &lt; a_N \le a_n \le s\ \Longrightarrow\ |a_n-s|&lt;\varepsilon"></div>
+<p>④ 于是对任意 ε&gt;0 都存在 N 使 n≥N 时 |aₙ−s|&lt;ε，即 aₙ → s。∎</p>
+<p>把证明拆开看，<strong>核心只有一句</strong>：s−ε 不是上界，所以序列迟早会超过 s−ε；一旦超过，就再也回不来（因为单调递增）。于是 s−ε 以上、s 以下这段窄缝，成为序列永远的归宿。</p>
+<p><strong>为什么"单调收敛"离不开"上确界"？</strong> 证明的③用到"任何比 s 小的数都不是上界"——这恰是上确界的定义。没有上确界公理，{aₙ} 就可能没有 s 可言：第二节的 √2 数列就是受害者，它在 Q 里单调有界，却因为 sup 不存在（√2∉ℚ）而不收敛。<strong>"单调有界收敛"是否成立，等价于"每个非空有上界的集合都有 sup"</strong>——这正是第六节等价链条里 ①⇔② 这一环。</p>
+<p><strong>例 3（MCT 的完整使用，含 0.999… = 1 的严格证明）。</strong></p>
+<p>bₙ = 0.9, 0.99, 0.999, …, 即 bₙ = 1 − 10⁻ⁿ。</p>
+<p>① <strong>单调递增：</strong>b_{n+1} = bₙ + 9·10⁻⁽ⁿ⁺¹⁾ &gt; bₙ。✓</p>
+<p>② <strong>有上界：</strong>bₙ &lt; 1 对一切 n。✓</p>
+<p>③ 由 MCT，bₙ → sup{bₙ}。用 ε-刻画求这个 sup：1 是上界；对任意 ε&gt;0 取 n 使 10⁻ⁿ&lt;ε，则 bₙ = 1−10⁻ⁿ &gt; 1−ε，所以 1−ε 不是上界。故 sup = 1。</p>
+<p>④ 于是 bₙ → 1，<strong>即 0.999… = 1</strong>。∎ 这就是"无限个 9"的严格定义：它不是一个过程，而是数列 (1−10⁻ⁿ) 的极限。</p>
+<p><strong>例 4（MCT 的完整使用：递推定义的数列）。</strong>设 a₁ = √2，a_{n+1} = √(2+aₙ)。证明 (aₙ) 收敛并求极限。</p>
+<p><strong>证明。</strong></p>
+<p>① <strong>先用归纳法证 0 &lt; aₙ &lt; 2：</strong>a₁ = √2 &lt; 2 成立；若 aₙ &lt; 2，则 a_{n+1} = √(2+aₙ) &lt; √4 = 2。✓</p>
+<p>② <strong>再证单调递增：</strong></p>
+<div class="formula display" data-tex="a_{n+1}&gt;a_n\ \iff\ \sqrt{2+a_n}&gt;a_n\ \iff\ 2+a_n&gt;a_n^2\ \iff\ (2-a_n)(1+a_n)&gt;0"></div>
+<p>最后一步由①的 aₙ&lt;2 与 1+aₙ&gt;0 成立。✓</p>
+<p>③ 由 MCT，(aₙ) 收敛，设极限为 L。因平方根函数连续，对递推式两边取极限：</p>
+<div class="formula display" data-tex="L=\lim a_{n+1}=\lim\sqrt{2+a_n}=\sqrt{2+L}\ \Longrightarrow\ L^2-L-2=0\ \Longrightarrow\ L=2\ (\text{负根 }-1\text{ 舍弃，因 }a_n&gt;0)"></div>
+<p>④ 于是 aₙ → 2。∎</p>
+<p>注意例 4 的套路：<strong>MCT 只负责"收敛存在"，至于收敛到哪，交给"对递推式两边取极限"</strong>。这是分析里判断递推数列收敛的看家方法。</p>
+</section>
+
+<section>
+<h3>五、柯西序列——不看极限在哪，也能判定收敛</h3>
+<p>MCT 好用，但前提是序列"单调"。现实里很多序列既不单调、也没法一眼看穿极限（比如求根、级数的部分和）。Cauchy（柯西）给出一个更好的判据：<strong>不看极限在哪，只看序列自己内部是不是越挤越紧。</strong></p>
+<p><strong>定义（柯西序列）。</strong>数列 (aₙ) 叫柯西序列，如果</p>
+<div class="formula display" data-tex="\forall\varepsilon&gt;0\ \exists N:\ m,n\ge N\ \Longrightarrow\ |a_m-a_n|&lt;\varepsilon"></div>
+<p>人话：<strong>随便给多小的 ε，从某个位置 N 起，任意两项之间的差距都小于 ε。</strong>注意这里完全没提极限——它只说"序列内部凝聚"。</p>
+<p>柯西序列有两个立刻可用的性质，各自证明都不长。</p>
+<p><strong>性质 1（收敛 ⇒ 柯西）。</strong>若 aₙ → L，则 (aₙ) 是柯西序列。</p>
+<p><strong>证明。</strong> 给 ε&gt;0，由收敛取 N 使 n≥N 时 |aₙ−L|&lt;ε/2。则对 m,n≥N：</p>
+<div class="formula display" data-tex="|a_m-a_n|\le |a_m-L|+|L-a_n|&lt;\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon"></div>
+<p>∎ 这就是"三角不等式 + 两半"：把 aₘ、aₙ 之间的大差距，经由公共极限 L 拆成两小段。</p>
+<p><strong>性质 2（柯西 ⇒ 有界）。</strong>柯西序列必有界。</p>
+<p><strong>证明。</strong> 取 ε=1，得 N 使 m,n≥N 时 |aₙ−a_N|&lt;1，于是尾项落在 (a_N−1, a_N+1)。前面有限个 a₁,…,a_{N−1} 取最大绝对值 M₀。则整个序列被 max(|a₁|,…,|a_{N−1}|, |a_N|+1) 罩住。∎</p>
+<p>性质 1 说"收敛 ⇒ 柯西"永远成立；<strong>真正的问题永远是反方向：柯西 ⇒ 收敛吗？</strong>答案在 Q 里是否定的（√2 的逐位展开就是柯西却不收敛），在 R 里是肯定的——这就是完备性的柯西形式。为了体会判定，先做两个能算到底的例子。</p>
+<p><strong>例 5（用柯西判据判定收敛：aₙ = 1/n）。</strong></p>
+<p>给 ε&gt;0，取 N &gt; 2/ε（阿基米德性质）。对 m,n ≥ N（设 m≥n）：</p>
+<div class="formula display" data-tex="\left|\frac{1}{m}-\frac{1}{n}\right|\le\frac{1}{m}+\frac{1}{n}\le\frac{2}{n}\le\frac{2}{N}&lt;\varepsilon"></div>
+<p>所以 (1/n) 是柯西序列，由完备性收敛（事实上收敛到 0）。∎</p>
+<p><strong>例 6（用柯西判据判定发散：调和部分和）。</strong>sₙ = 1 + 1/2 + 1/3 + … + 1/n。检验 s₂ₙ − sₙ：</p>
+<div class="formula display" data-tex="s_{2n}-s_n=\frac{1}{n+1}+\frac{1}{n+2}+\cdots+\frac{1}{2n}\ \ge\ n\cdot\frac{1}{2n}=\frac{1}{2}"></div>
+<p>（n 项，每一项都 ≥ 1/(2n)。）于是取 ε=1/2，对任何 N 都能找到 n=N、m=2N 使 |sₘ−sₙ| ≥ 1/2——柯西定义被否定。<strong>(sₙ) 不是柯西序列，故发散</strong>（尽管通项 1/n → 0）。∎</p>
+<p>例 6 有双重意义：第一，它展示了"否定柯西"的标准手法——挑一对特定的 m=2n 算出差距的固定下界；第二，它说明<strong>"通项趋于 0"远不足以判断级数收敛</strong>，这正是级数理论需要更强判据（比较、比值、积分判别）的原因。</p>
+<div class="key-insight"><strong>柯西收敛准则（完备性的柯西形式）。</strong>在 R 中：序列收敛 ⟺ 序列是柯西序列。"收敛 ⇒ 柯西"刚才已证；"柯西 ⇒ 收敛"正是完备性——它的证明在下一节完成，并且会把三个版本（上确界、单调收敛、柯西）串成一条等价链。</div>
+</section>
+
+<section>
+<h3>六、等价链条的完整推演——上确界 ⇔ 单调收敛 ⇔ 柯西收敛</h3>
+<p>现在做本课最重要的一件事：把三个看似不同的说法证明成<strong>同一条事实</strong>。它们刻画的是同一个东西——"实数没有洞"。</p>
+<p><strong>定理 3（完备性三等价）。</strong>设 ℝ 是阿基米德有序域（实数域正是如此），下列三命题等价：</p>
+<p>① 每个非空有上界的集合都有上确界（上确界公理）；<br>
+② 每个单调有界序列都收敛（单调收敛定理）；<br>
+③ 每个柯西序列都收敛（柯西收敛准则）。</p>
+<p>证明分三步：①⇒②、②⇒③、③⇒①。</p>
+<p><strong>证明 ①⇒②（前面已证）。</strong>这就是定理 2，关键在"s−ε 不是上界，所以序列迟早超过 s−ε"。不再重复。</p>
+<p><strong>证明 ②⇒③。</strong> 从 ② 推 ③，走一条经典路线：先说明任何序列都能挖出单调子列，再由 ② 让它收敛，最后用柯西条件把整列拉回。</p>
+<p><strong>引理（单调子列引理）。</strong>任何实数列都含有单调子列。</p>
+<p><strong>证明。</strong> 称 aₙ 是"尖峰"，若它不小于后面所有项：aₙ ≥ a_k 对一切 k≥n 成立。若尖峰有无穷多个，取出这些尖峰即得递减子列。若尖峰只有有限个，从最后一个尖峰之后开始：对任意起点 n₁，它不是尖峰，故存在 n₂&gt;n₁ 使 a_{n₂} &gt; a_{n₁}；又 n₂ 不是尖峰，又存在 n₃&gt;n₂ 使 a_{n₃}&gt;a_{n₂}；如此往复得到严格递增子列。∎</p>
+<p><strong>引理（Bolzano–Weierstrass 定理）。</strong>有界实数列有收敛子列。</p>
+<p><strong>证明。</strong> 由单调子列引理挖出单调子列 (a_{n_k})；它被原数列的界罩住，单调且有界，由 ② 收敛。∎</p>
+<p><strong>③ 的证明。</strong>设 (aₙ) 是柯西序列。由性质 2（第五节），它有界；由 Bolzano–Weierstrass，有收敛子列 a_{n_k} → L。现在把整列拉回：给 ε&gt;0。柯西条件给 N₁ 使 m,n≥N₁ 时 |aₘ−aₙ|&lt;ε/2；子列收敛给足够大的 k 使 n_k≥N₁ 且 |a_{n_k}−L|&lt;ε/2。于是对一切 n≥N₁：</p>
+<div class="formula display" data-tex="|a_n-L|\le |a_n-a_{n_k}|+|a_{n_k}-L|&lt;\frac{\varepsilon}{2}+\frac{\varepsilon}{2}=\varepsilon"></div>
+<p>故 aₙ → L。∎ <strong>思想：柯西序列 = "自己内部凝聚"；子列收敛 = "已经有人停在 L"；两者一拼，整列都被 L 吸过去。</strong></p>
+<p><strong>证明 ③⇒①。</strong> 反过来：假设每个柯西序列都收敛，要推出任意非空有上界的 A 有上确界。做法是<strong>二分法</strong>——不断把"元素点"和"上界"之间的缝隙砍半，直到缝隙缩成一点，这一点就是 sup。</p>
+<p>设 A 非空，u 是它的一个上界，取 a₁ ∈ A。构造两列：</p>
+<p>① 初始：a₁∈A，b₁=u（一个上界），有 a₁ ≤ b₁。</p>
+<p>② 若已得 aₙ∈A 与上界 bₙ：取中点 m = (aₙ+bₙ)/2。若 m 是上界，令 a_{n+1}=aₙ、b_{n+1}=m；否则 m 不是上界，则存在 c∈A 使 c&gt;m，令 a_{n+1}=c、b_{n+1}=bₙ。</p>
+<p>归纳得：(aₙ) 单调递增（第二步在两种情形下都有 a_{n+1} ≥ aₙ），(bₙ) 单调递减，aₙ∈A、bₙ 是上界，且</p>
+<div class="formula display" data-tex="b_n-a_n=\frac{b_1-a_1}{2^{n-1}}\ \to\ 0\qquad(\text{阿基米德性质：几何级数可压到任意小})"></div>
+<p>③ 由缝隙趋于 0，两列都是柯西序列：对 m&gt;n，aₘ−aₙ ≤ bₙ−aₙ（因 aₘ ≤ bₘ ≤ bₙ），而 bₙ−aₙ 可任意小。由假设 ③，(aₙ)、(bₙ) 分别收敛；又 bₙ−aₙ→0，故极限相同，记为 L。</p>
+<p>④ <strong>证 L 是上界。</strong> 反设存在 c∈A 使 c&gt;L。由于每个 bₙ 都是上界，bₙ ≥ c，故 L = lim bₙ ≥ c &gt; L，矛盾。故对一切 c∈A，c ≤ L。</p>
+<p>⑤ <strong>证 L 是最小的上界。</strong> 反设 M&lt;L 也是上界。由于每个 aₙ ≤ M（M 是上界且 aₙ∈A），取极限得 L = lim aₙ ≤ M &lt; L，矛盾。故没有比 L 更小的上界。</p>
+<p>⑥ 于是 L = sup A。∎</p>
+<p><strong>这个证明最漂亮的一步是②：</strong>"中点是不是上界？"把问题一分为二——是，就把上界往下拉；不是，就把元素往上顶。每走一步，元素与上界的缝隙砍半，最后两端在同一个点会师。这正是<strong>二分法在分析里扮演的角色：不用知道 L 在哪，也知道 L 存在。</strong></p>
+<p><strong>三等价之后：为什么说这是"同一件事的三张面孔"？</strong> ①关心"集合"，②关心"单调序列"，③关心"一般序列"，看起来大不相同，但上面的证明把它们串成闭环 ①⇒②⇒③⇒①。<strong>教材选哪一条当公理，只是品味问题</strong>：Dedekind 从"切割"构造实数，取 ①；多数初等教材直接给 ①；强调计算的分析教材用 ③（柯西序列构造实数，让极限与"近似逼近"天然一致）。无论选哪条，得到的都是同一个实数域。</p>
+<p><strong>关于"阿基米德性质"的一个诚实注记。</strong> ③⇒① 的方向在②处用了"几何级数可压到任意小"（等价于阿基米德性质：任意实数都能被某个整数超过）。若去掉阿基米德性质，可以造出含"无穷小"的有序域，在那里③成立但①不成立。所以准确的说法是：<strong>在阿基米德有序域中，①②③互相等价</strong>；实数域正是阿基米德的（由①即可推出：对任意 x&gt;0 存在整数 n 使 nx&gt;1，见第十一节练习 5）。</p>
+</section>
+
+<section>
+<h3>七、紧致性——为什么闭区间这么"好"？</h3>
+<p>闭区间 [a,b] 上的连续函数：①有界。②取到最大最小值（Weierstrass 极值定理）。③一致连续（Heine–Cantor 定理）。④Riemann 可积。而开区间 (a,b) 上的连续函数——以上全不成立。区别在哪？<strong>紧致性</strong>（compactness）：一种"有界且闭、能把自己的每一点都罩住"的性质，直观上就是"不会偷偷溜走"。</p>
+<p>紧致 = 任何<strong>开覆盖</strong>（open cover，一串开区间像被子一样把集合整个盖住）有<strong>有限子覆盖</strong>（finite subcover，其中有限的几块就能盖完，不许借无穷多块）。在 Rⁿ 中这等价于有界+闭；但在一般度量空间中"有界闭"≠紧致——Heine–Borel 定理只在 Rⁿ 中成立。这正是为什么一般拓扑学中紧致性要单独定义，也为什么"有限性"如此珍贵：<strong>无穷多块被子可能藏得极深，有限几块则处处可控</strong>。</p>
+<p>上确界公理与紧致性也有隐秘联系：第六节的 Bolzano–Weierstrass 断言有界序列有收敛子列，这正是紧致性的"序列版"——一个序列在紧集里走不出去，就必有一个极限点可停靠。闭区间之所以"好"，本质是完备性把它每一寸都填实了。</p>
+</section>
+
+<section>
+<h3>八、一致收敛——函数序列的"好的"收敛</h3>
+<p><strong>先看一个会"撕裂"的例子。</strong> 考察函数列 fₙ(x) = xⁿ，定义在 [0,1] 上。每个 fₙ 都是一条连续曲线（从 (0,0) 爬到 (1,1)），n 越大曲线越"塌"向 x 轴。问：这一列函数"收敛到"什么？</p>
+<p>&rarr; 对 <strong>x&lt;1</strong> 的每一点：xⁿ → 0（比如 x=0.9，0.9¹⁰≈0.35，0.9¹⁰⁰≈0.00003）。<br>
+&rarr; 对 <strong>x=1</strong>：1ⁿ=1，永远是 1。</p>
+<p>所以逐点极限是 f(x)=0（x&lt;1）、f(1)=1——一个在 x=1 处"跳了一下"的<strong>不连续</strong>函数。</p>
+<div class="key-insight">这就是逐点收敛的"魔鬼"：<strong>每个点各自收敛，但收敛快慢完全不同</strong>。曲线在 x=0.99 处早已贴近 0，x=1 处却永远赖在 1 上不掉下来。连续的函数列，极限却可能不连续。</div>
+<p><strong>逐点收敛</strong>（pointwise）：对每个固定的 x，fₙ(x) 收敛。误差允许"每一点各用各的 N"。<strong>一致收敛</strong>（uniform）：更强的要求——<strong>同一个 N 对所有 x 同时有效</strong>。直观上：给极限函数画一条宽 ε 的"管道"，一致收敛 = 从某个 N 起，<strong>整条曲线</strong>都钻进管道，没有一个点露在外面。</p>
+<p><strong>为什么一致收敛"好"？</strong></p>
+<p>&rarr; 一致收敛的连续函数列，极限<strong>连续</strong>（xⁿ 反例正是因为"不一致收敛"才撕裂）。<br>
+&rarr; 一致收敛可以<strong>逐项积分</strong>：∫lim fₙ = lim∫fₙ。<br>
+&rarr; 但一致收敛<strong>不能</strong>逐项求导（需要更强的条件，如导数列也一致收敛）。</p>
+<p><strong>快速判断一致收敛？Weierstrass M-判别法：</strong>若 |fₙ(x)| ≤ Mₙ 且 ΣMₙ 收敛，则 Σfₙ 一致收敛。它把"函数级数"问题化归为"数项级数"问题，是证明傅里叶级数、幂级数一致收敛的主力工具。</p>
+<div class="mini-viz" data-demo="uniform-vs-pointwise"></div>
+</section>
+
+<section>
+<h3>九、勒贝格积分——为什么需要它？</h3>
+<p><strong>Riemann 积分</strong>（竖切定义域、用矩形和取极限求面积，见 <a href="/pages/riemann-integral.html">黎曼积分课</a>）：竖切定义域，极限与积分不能随便交换。<strong>Lebesgue 积分</strong>（横切函数值、以"集合的测度"替代"区间长度"）：横切值域。<strong>控制收敛定理</strong>（DCT）：若 |fₙ| ≤ g（g 可积）且 fₙ → f 逐点，则 ∫fₙ → ∫f。</p>
+<p>这是物理学和概率论中<strong>不可或缺</strong>的工具——极限与积分的交换在应用中天天发生。注意它的成立前提（被可积函数 g 罩住）与一致收敛的条件（同一条 ε 管道）都指向同一类直觉：<strong>不让函数在某个地方"爆掉"</strong>，交换才安全。</p>
+</section>
+
+<section>
+<h3>十、关键公式</h3>
+<div class="formula display" data-tex="\text{上确界的 }\varepsilon\text{-刻画}:\quad s=\sup A\iff \forall a\in A\ a\le s,\ \text{且 }\forall\varepsilon&gt;0\ \exists a\in A:\ s-\varepsilon&lt;a"></div>
+<div class="formula display" data-tex="\text{上确界公理}:\quad A\ \text{非空有上界}\ \Longrightarrow\ \exists\,\sup A\in\mathbb{R}"></div>
+<div class="formula display" data-tex="\text{单调收敛定理}:\quad a_n\uparrow\text{ 有上界}\ \Longrightarrow\ \lim a_n=\sup\{a_n\}"></div>
+<div class="formula display" data-tex="\text{柯西序列}:\quad \forall\varepsilon&gt;0\ \exists N:\ m,n\ge N\Rightarrow |a_m-a_n|&lt;\varepsilon"></div>
+<div class="formula display" data-tex="\text{完备性三等价}:\quad \text{上确界公理}\ \iff\ \text{单调有界收敛}\ \iff\ \text{柯西收敛}"></div>
+<div class="formula display" data-tex="\text{紧致}+\text{连续}\ \Longrightarrow\ \text{一致连续且取到最大最小值};\qquad \text{M-判别法}:\ |f_n|\le M_n,\ \sum M_n&lt;\infty\Rightarrow\sum f_n\ \text{一致收敛}"></div>
+<div class="formula display" data-tex="\int\lim f_n=\lim\int f_n\quad(\text{DCT}:\ |f_n|\le g,\ g\in L^1)"></div>
+</section>
+
+<section>
+<h3>十一、试试看（每题附提示）</h3>
+<p>1. 用 ε-刻画证明 sup{2 − 1/n² : n ∈ ℕ} = 2，并说明 2 是不是最大值。</p>
+<p><em>提示：照例 1。先证 2 是上界；对 ε&gt;0 取 n&gt;1/√ε，则 2−1/n² &gt; 2−ε，故 2−ε 不是上界。又 2−1/n²&lt;2，所以 2 不在集合里，不是最大值。</em></p>
+<p>2. 设 a₁=2，a_{n+1}=(aₙ+2/aₙ)/2（牛顿法求 √2）。用单调收敛定理证明收敛并求极限。</p>
+<p><em>提示：先用均值不等式 aₙ+2/aₙ ≥ 2√2 证 aₙ ≥ √2（n≥2）；再由 a_{n+1}−aₙ = (2−aₙ²)/(2aₙ) ≤ 0 证递减；有下界故收敛。极限 L 满足 L=(L+2/L)/2，解得 L²=2，即 L=√2。</em></p>
+<p>3. 判断下列序列是否为柯西序列并说明理由：(a) 1/n；(b) (−1)ⁿ；(c) 1+(−1)ⁿ/n。</p>
+<p><em>提示：(a) 是，照例 5。(b) 不是：相邻项之差恒为 2，取 ε=1，对任意 N 取 n=N、m=N+1 就超出 ε。(c) 是：它收敛到 1（扰动项趋于 0），而收敛 ⇒ 柯西（性质 1）。</em></p>
+<p>4. 用柯西判据（或单调收敛定理）证明 Σ_{k=1}^∞ 1/k² 收敛（不要求算出和）。</p>
+<p><em>提示：部分和 sₙ 单调递增，且 sₙ ≤ 1 + Σ_{k=2}^n 1/(k(k−1)) = 1 + (1−1/n) &lt; 2 有界，由 MCT 收敛。或直接估 |sₘ−sₙ| ≤ Σ_{k=n+1}^m 1/(k−1)k = 1/n − 1/m → 0。</em></p>
+<p>5. 证明：上确界公理蕴含阿基米德性质——对任意 x&gt;0 存在整数 n 使 nx&gt;1。</p>
+<p><em>提示：反设对一切 n 都有 nx ≤ 1，则集合 A={nx : n∈ℕ} 有上界 1，故有 sup，记 s=sup A。则 s−x 不是上界，存在 n 使 nx&gt;s−x，即 (n+1)x&gt;s，与 s 是上界矛盾。</em></p>
+<p>6. 0.999… = 1 的证明（例 3）依赖哪一步？如果只在有理数里做，同样的论证在哪里卡住？</p>
+<p><em>提示：例 3 的③用了"sup 存在"（上确界公理）和"10⁻ⁿ 可任意小"（阿基米德/几何级数）。在 Q 里 sup 存在性可能失败——正如 B={a∈ℚ: a²&lt;2} 没有有理上确界。</em></p>
+</section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：为什么"单调有界序列收敛"在 Q 中不成立？给一个反例。</p>
+<details><summary>显示解答</summary><p>
+√2 的逐位展开 aₙ=1, 1.4, 1.41, …：单调递增（多取一位只会更大）、有上界（都小于 2）、每一项都是有理数，但它不收敛于任何有理数：若收敛于 r∈ℚ，则 r²=2（取极限），与 √2∉ℚ 矛盾。缺的正是上确界公理（sup 应为 √2∉ℚ）。
+</p></details>
+<p><strong>题 2</strong>：f(x)=1/x 在 (0,1) 上连续但不一致连续——用 ε-δ 语言解释。</p>
+<details><summary>显示解答</summary><p>
+连续：在每点 c 处 |1/x−1/c|=|x−c|/(cx)。把 c 固定，当 |x−c|&lt;c/2 时 cx&gt;c²/2，故 |1/x−1/c|≤(2/c²)|x−c|，取 δ=min(c/2, εc²/2) 即可——δ 依赖 c。不一致连续：反设统一 δ 存在，取 ε=1。取 y=x=δ/2（或更靠近 0 的点，比如 x=δ²、y=δ），则 |x−y|&lt;δ 但 |1/x−1/y|=|y−x|/(xy) 可超过任意数（令 x→0 即可）。同一个 δ 罩不住所有点。
+</p></details>
+<p><strong>题 3</strong>：fₙ(x)=xⁿ 在 [0,1] 上逐点收敛但不一致收敛。为什么？极限函数连续吗？</p>
+<details><summary>显示解答</summary><p>
+逐点收敛：对 x&lt;1，xⁿ→0；对 x=1，1ⁿ=1。极限 f 在 x=1 处等于 1、别处为 0，故 f 在 1 处不连续。不一致收敛：若一致收敛到 f，则 f 应连续（一致收敛的连续函数列极限连续），矛盾；也可直接算 sup_{x∈[0,1]}|xⁿ−0|=1（在 x=1 处取到），永远不趋于 0，达不到"从某 N 起整条曲线都落进 ε 管道"。
+</p></details>
+<p><strong>题 4</strong>：各给一个"有上确界但没有最大值"和"既有上确界又有最大值"的例子，并说明差别。</p>
+<details><summary>显示解答</summary><p>
+没有最大值：{1−1/n}（sup=1∉集合）。既有：{0,1/2,2/3,…,0.99} 这种闭区间 [0,1]（max=1=sup）。差别：最大值属于集合；上确界是"集合能逼近到任意近的最小上界"，可以不属于集合。当且仅当最大值存在时二者相等。
+</p></details>
+<p><strong>题 5</strong>：用第六节二分法证明 sup{a ∈ ℚ : a²&lt;2} 在 R 中存在。</p>
+<details><summary>显示解答</summary><p>
+取 a₁=1∈B、b₁=2（上界）。二分：中点 m=(aₙ+bₙ)/2，若 m²≥2 则 b_{n+1}=m、a_{n+1}=aₙ，否则 a_{n+1}=m、b_{n+1}=bₙ。得 aₙ↑、bₙ↓、bₙ−aₙ=2⁻ⁿ→0，故两列柯西、收敛到同一 L。由 bₙ²≥2、aₙ²&lt;2 取极限得 L²=2，故 L=√2 存在且为 sup。
+</p></details>
+</section>
+
+<section><h3>附：反例——Weierstrass 函数：处处连续但处处不可微</h3>
+<div class="formula display" data-tex="f(x)=\sum_{n=0}^{\infty}a^{n}\cos(b^{n}\pi x),\qquad 0&lt;a&lt;1,\ b\text{ 为奇整数},\ ab&gt;1+\frac{3\pi}{2}"></div>
+<p>这个函数<strong>处处连续但处处不可微</strong>。它粉碎了"连续函数几乎处处可微"的直观——在分析严格化之前，没有人怀疑这一点。Weierstrass（1872）的构造是分析史上最令人震惊的反例之一，也是本课〇节"直觉会骗人"最深刻的注脚：完备性让我们相信极限存在，却保证不了它"好看"。</p></section>
+
+<section><h3>附：从 Riemann 到 Lebesgue——积分论的一个半世纪</h3><p>Riemann（1854）定义了他版本的积分。Dirichlet 函数（有理数=1、无理数=0）暴露了 Riemann 积分的极限——不可积。Lebesgue（1902）用测度论重新定义了积分——横切值域。这个推广使得 L² 空间完备，为量子力学和泛函分析奠定了基础。注意：<strong>"完备"在这里再次出现</strong>——L² 完备（Riesz–Fischer 定理）是泛函分析展开的舞台，而它正建立在本课第六节的等价链条之上。</p></section>
+
+<section><h3>前沿：几何测度论与 Plateau 问题</h3><p>Reifenberg（1960）用测度论证明了高维 Plateau 问题——极小曲面的存在性。仍开放：极小曲面的奇点结构——在维数 ≥ 8 时出现真正奇点（不是坐标选择问题）。这是几何测度论最难的未解问题之一。</p></section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>W. Rudin, Real and Complex Analysis</strong></p>
+<p>&rarr; <strong>G. Folland, Real Analysis</strong></p>
+<p>初学推荐先读 Abbott, <em>Understanding Analysis</em>（与本节"上确界 → 单调收敛 → 柯西收敛"的等价链条处理一致），再进阶 Rudin, <em>Principles of Mathematical Analysis</em> 前七章。</p>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/epsilon-delta.html">ε-δ 语言</a>、<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/functional-analysis.html">📊 泛函分析</a>：同一学科分类「分析」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/real-analysis.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

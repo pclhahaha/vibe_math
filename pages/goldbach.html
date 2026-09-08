@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="每个偶数=两个素数之和？——从Euler到陈景润到Helfgott" />
+  <meta property="og:title" content="哥德巴赫猜想 — Vibe Math" />
+  <meta property="og:description" content="每个偶数=两个素数之和？——从Euler到陈景润到Helfgott" />
+  <title>哥德巴赫猜想 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>👬 哥德巴赫猜想 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">每个偶数=两个素数之和？——从Euler到陈景润到Helfgott</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='goldbach',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/electromagnetism.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⚡ 电磁学与 Maxwell 方程组</a>
+  <a href="/pages/soul-conjecture.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">👻 灵魂猜想 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、具体动机——先把"偶数 = 素数 + 素数"写出来看看</h3>
+<p>拿一张纸，把几个偶数拆成两个素数相加：</p>
+<div class="formula display" data-tex="4=2+2,\quad 6=3+3,\quad 8=3+5,\quad 10=3+7=5+5,\quad 12=5+7"></div>
+<p>继续往下，多试几个：</p>
+<div class="formula display" data-tex="98=19+79=31+67=37+61,\qquad 100=3+97=11+89=17+83=29+71=41+59=47+53"></div>
+<p>每一行都成立，而且往往不止一种写法。1742 年，德国数学家 <strong>Goldbach</strong> 在给 <strong>Euler</strong> 的信里问：<strong>是不是每一个大于 2 的偶数都能写成两个素数之和？</strong>Euler 回信说他"完全确信"这是对的，却给不出证明。</p>
+<p>将近 285 年后的今天，这个小学生都能听懂的命题仍然悬而未决——它已经被验证到 4×10<sup>18</sup> 的每一个偶数，却没有任何人能证明"永远如此"。它问的不是"有没有反例"，而是"为什么必须如此"。本课就从这个具体的数字问题出发，一步步看清它为什么难、难在哪。</p>
+<div class="key-insight">每个大于 2 的偶数 = 两个素数之和：人人看得懂，验证到 4×10<sup>18</sup> 全对，至今无人证明。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/sieve.html">素数筛</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、具体动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、两个素数之和——陈述（直觉 → 严格）</h3>
+<p>现代的标准陈述（去掉 Goldbach 原始版本里那个不成立的"1"）：</p>
+<div class="formula display" data-tex="\text{哥德巴赫猜想：对每个偶数 }n\ge4,\ \exists\ \text{素数 }p,q\text{ 使得 }n=p+q"></div>
+<p><strong>直觉先来。</strong>素数是"拆不动的数"：2,3,5,7,11,13,… 只能用 1 和自身整除。偶数 n 是"能被 2 整除的数"。问题问的是：给一个偶数 n，能否在 0 到 n 之间找到一对素数，恰好隔着 n 对称（p 在左，q=n−p 在右）？</p>
+<p><strong>严格化第一步：</strong>为什么排除 n=2？因为唯一的分解只能是 2=1+1 或 2=2+0，而 1 不是素数、0 也不是——所以猜想从 n≥4 开始（等价于原来的"大于 2"）。<strong>严格化第二步：</strong>允许 p=q（如 6=3+3），这不会让问题更容易，只是少数一种对称重复。</p>
+<p><strong>一个立刻可见的事实：</strong>一旦我们接受素数定理 π(x)~x/log x，平均来看 0 到 n 之间有约 n/log n 个素数，而"随机选两个数恰巧都是素数且和为 n"的概率按 Hardy–Littlewood 的启发式计算会给出正的比例——所以"随机模型"强烈暗示猜想为真。可那只是<strong>启发</strong>（heuristic），不是证明：随机模型不能排除某处藏着"反例结构"。这就是全课的张力所在。</p>
+<div class="key-insight">哥德巴赫猜想是数论中"陈述最简单的未解问题"——小学三年级就能理解。但它的证明需要的数学深度可能超越了人类当前的工具。</div>
+</section>
+
+<section>
+<h3>二、为什么这么难——加法的表面与乘法的内核</h3>
+<p>要理解这问题为什么卡住 285 年，先看它把两类信息搅在了一起。</p>
+<p><strong>素数是用乘法定义的：</strong>"p 只能被 1 和 p 整除"，这是一个关于<em>分解 p=a×b</em> 的陈述。算术基本定理说每个数都是素数的<strong>乘积</strong>。素数概念完全属于乘法世界。</p>
+<p><strong>哥德巴赫猜想却是一个加法陈述：</strong>n = p + q 用到的是"加"。它要求我们在乘法的原子之间找加法的关系——而数学里最深的鸿沟之一，就是<strong>加法与乘法之间没有直接的翻译规则</strong>。素数定理能精确告诉我们"大约有多少素数"，却一个字也说不出"哪两个素数相加等于 n"。</p>
+<p>用记号"1+1"来感受尺度：</p>
+<ul>
+  <li><strong>"1"</strong> 表示"1 个素数"本身；</li>
+  <li><strong>"2"</strong> 表示"至多 2 个素数之积"（如 49=7×7、15=3×5）。</li>
+</ul>
+<p>于是"每个大偶数 = 素数 + 素数"就是"<strong>1+1</strong>"；而下面要讲的陈景润定理"每个大偶数 = 素数 + 至多两个素数之积"是"<strong>1+2</strong>"。从 1+2 到 1+1 只差一个素数，但这"一步"已经走了 60 年。</p>
+</section>
+
+<section>
+<h3>三、攻击路线之一：圆法（Circle Method）</h3>
+<p><strong>思路：</strong>把"n=p+q 有多少种写法"这个离散计数问题，变成<strong>一个积分</strong>。定义指数和</p>
+<div class="formula display" data-tex="S(\alpha)=\sum_{p\le n}e^{2\pi i p\alpha},\qquad e(x)=e^{2\pi i x}"></div>
+<p>则"n=p+q 的写法数"恰好是</p>
+<div class="formula display" data-tex="r(n)=\int_0^1 S(\alpha)^2\,e^{-2\pi i n\alpha}\,d\alpha"></div>
+<p>（第五节例 3 会一步步验证这个恒等式。）为什么有用？因为积分里那个"走遍单位圆"的 α 可以分成两段：</p>
+<ul>
+  <li><strong>大弧（major arcs）：</strong>α 接近"分母很小的有理数" p/q 的部分——这里 S(α) 的行为可以用解析数论精确控制，给出主项；</li>
+  <li><strong>小弧（minor arcs）：</strong>其余部分——需要估计这里的积分贡献"小到可以忽略"。</li>
+</ul>
+<p>这一套就是 Hardy–Littlewood 1923 年创立的<strong>圆法</strong>。1937 年 Vinogradov 用它证明了<strong>弱哥德巴赫</strong>：每个足够大的奇数都能写成三个素数之和。2013 年 Helfgott 用圆法 + 计算机辅助，把"足够大"降到了"大于 5 的奇数"——弱哥德巴赫<strong>彻底解决</strong>。</p>
+<p><strong>为什么强版（两个素数）比弱版（三个素数）难？</strong>两个加数比三个加数"少一个自由度"：三个数 p₁+p₂+p₃=n，中间那个 p₂ 可以自由变化来吸收误差；两个数 p+q=n 没有这样的缓冲，圆法的误差项直接落在主项的尺度上，把结果卡死了。这是本课反复出现的主题：<strong>项越少，误差越致命</strong>。</p>
+</section>
+
+<section>
+<h3>四、攻击路线之二：筛法——陈景润定理"1+2"（1966）</h3>
+<p><strong>思路：</strong>不数"和等于 n 的素数对"，改从 2,3,4,…,n−2 这串数里<strong>筛</strong>：把与 n 相加仍是素数的候选留下。令 P₂ 表示"至多两个素数之积"的数。陈景润 1966 年用 <strong>Selberg 筛法 + 深刻的组合论证</strong>证明了：</p>
+<div class="formula display" data-tex="\text{陈景润(1966)}: 2N = p + P_2\quad\text{(1+2)}"></div>
+<p><strong>直觉：</strong>筛法像一个"层层剥皮"的过程——先用小素数把明显不合格的数剥掉（比如 n−k 被 3 整除的 k 直接扔掉），再用加权函数让"恰好剩一个素因子"的数占优。陈景润的关键创新是在 Selberg 权上叠加"二重筛"：同时控制"k 是素数"和"n−k 的素因子个数 ≤2"，并用深刻的组合计数把误差压到可接受。</p>
+<p>这篇文章发表于文革期间——陈景润在 6 平方米的小屋里用笔算完成了最繁重的部分。它给出了人类距离"1+1"最近的一步：<strong>60 年来，没有人能把"1+2"改进到"1+1"</strong>。目前普遍认为，从 1+2 到 1+1 需要<strong>全新的、超越圆法和筛法的技术</strong>——因为筛法有一个内在的"奇偶性问题"：它很难区分"一个数恰好是一个素数"与"一个数是两个素数的乘积"。</p>
+</section>
+
+<section>
+<h3>五、完整例题——三个例子一步步算完</h3>
+<p>教科书风格：每个例子展开到每一步，最后用已知值核对。</p>
+
+<p><strong>例 1：手算 100 的全部哥德巴赫分解，数出 r(100)。</strong></p>
+<p>第一步，列出所有奇数素数 p &lt; 50（避免重复计数，只需 p ≤ n/2）：3,5,7,11,13,17,19,23,29,31,37,41,43,47。</p>
+<p>第二步，逐个检验 q = 100 − p 是不是素数：</p>
+<div class="formula display" data-tex="\begin{array}{c|ccccccccccccccc}
+p&3&5&7&11&13&17&19&23&29&31&37&41&43&47\\
+q=100-p&97&95&93&89&87&83&81&77&71&69&63&59&57&53\\
+\text{素数?}&\checkmark&\times&\times&\checkmark&\times&\checkmark&\times&\times&\checkmark&\times&\times&\checkmark&\times&\checkmark
+\end{array}"></div>
+<p>第三步，收集合格的 (p,q)：</p>
+<div class="formula display" data-tex="100=3+97=11+89=17+83=29+71=41+59=47+53\quad\Rightarrow\quad r(100)=6"></div>
+<p>核对：6 个不同分解，无遗漏（所有小于 50 的奇数素数都查过了）。✓</p>
+
+<p><strong>例 2：手算 200 的分解，再和 Hardy–Littlewood 的预测公式对比。</strong></p>
+<p>第一步，同样取 p ≤ 100，检验 q=200−p：得到合格对</p>
+<div class="formula display" data-tex="(3,197),(7,193),(19,181),(37,163),(43,157),(61,139),(73,127),(97,103)\ \Rightarrow\ r(200)=8"></div>
+<p>（逐一检验：如 p=67 得 133=7×19 不合格；p=79 得 121=11² 不合格；p=89 得 111=3×37 不合格。）</p>
+<p>第二步，看 Hardy–Littlewood 的<strong>奇异级数预测</strong>（n 越大越准）：</p>
+<div class="formula display" data-tex="r(2N)\;\sim\;2C_2\prod_{p\mid N,\ p&gt;2}\frac{p-1}{p-2}\cdot\frac{2N}{(\log 2N)^2},\qquad C_2=\prod_{p&gt;2}\left(1-\frac1{(p-1)^2}\right)\approx 0.66016"></div>
+<p>对 n=200（即 N=100）：200=2³×5²，奇数素因子只有 5，因子 (5−1)/(5−2)=4/3。</p>
+<p>第三步，代入：</p>
+<div class="formula display" data-tex="2\times0.66016\times\frac43\times\frac{200}{(\log 200)^2}=\frac{1.32033\times1.3333\times200}{(5.298)^2}\approx 12.5"></div>
+<p>预测 12.5，实际 8。差值不小——但这是<strong>渐近公式</strong>，误差随 n 增长而缩小（这正是它被当作"猜想为真的证据"、而非证明的原因）。注意重点：<strong>验证到 4×10¹⁸ 全对 + 渐近公式吻合，都只是支持性证据</strong>，离证明还很远。✓</p>
+
+<p><strong>例 3：验证圆法恒等式，并看清"1+2"里 P₂ 的长相。</strong></p>
+<p>第一部分：取 n=4，素数只有 2,3，故 S(α)=e(2α)+e(3α)。</p>
+<div class="formula display" data-tex="S(\alpha)^2=e(2\alpha)^2+2e(2\alpha)e(3\alpha)+e(3\alpha)^2=e(4\alpha)+2e(5\alpha)+e(6\alpha)"></div>
+<p>逐项积分（∫₀¹e(kα)dα = 1 当 k=0，否则为 0）：</p>
+<div class="formula display" data-tex="r(4)=\int_0^1 S(\alpha)^2\,e(-4\alpha)\,d\alpha=1+0+0=1\qquad\checkmark\ (4=2+2)"></div>
+<p>恒等式对 4 成立，方法对任意 n 同样成立——圆法就把"哥德巴赫"还原成一个积分问题。</p>
+<p>第二部分：看清 P₂。取 68：68=31+37 是 1+1，但换个写法 68=19+49=19+7×7，这里的 49 是"至多两个素数之积"（P₂）。陈景润定理保证的是<strong>后者形式永远存在</strong>：每个大偶数 = 素数 + 一个素因子个数 ≤2 的数。正因为 P₂ 比素数多了一层"乘积自由"，筛法才够得着它；而"1"这一层正是 60 年来过不去的地方。✓</p>
+</section>
+
+<section>
+<h3>六、当前状态</h3>
+<p>&bull; <strong>强哥德巴赫</strong>（偶数 = 两素数，即 1+1）：<strong>未解决</strong>。圆法在"1+2"之后困了 60 年。</p>
+<p>&bull; <strong>弱哥德巴赫</strong>（奇数 = 三素数）：<strong>Helfgott 2013 年完全解决</strong>（对所有大于 5 的奇数）。</p>
+<p>&bull; 相邻的孪生素数方向：Zhang（2013）证明差距 ≤ 7×10⁷ 的素数对无穷多，现已压缩到 246。</p>
+<p>&bull; 哥德巴赫与 GRH：若广义黎曼假设（GRH）成立，哥德巴赫对足够大的偶数成立——但 GRH 本身就是更深的未解问题。</p>
+</section>
+
+<section>
+<h3>七、前沿——困住我们的工具瓶颈</h3>
+<p>为什么 1966 年之后停滞？因为两条经典路线都撞上了墙。</p>
+<p><strong>圆法的墙：</strong>两个加数时，小弧上的误差项与主项同阶，积分被"噪声"淹没。弱哥德巴赫（三个加数）里 p₂ 的自由度让误差可被平均吸收；强版没有这个缓冲。</p>
+<p><strong>筛法的墙：</strong>筛法对"恰好一个素因子"极不敏感——它天然区分不了素数与"两个素数之积"。这个<strong>奇偶性问题</strong>（parity problem）是筛法的硬天花板，陈景润已经撞到了它的最边缘。</p>
+<p>当前的共识：突破需要新的世界观——要么来自 Elliott–Halberstam 猜想式的解析推广（它若成立可直接压缩孪生素数间隙），要么来自某种尚未被发明的"加性-乘性混合"技术。Zhang、Maynard 的工作证明这类问题的答案藏在"权函数的选择"里，但把权选到恰好能看清"1+1"，还无人做到。</p>
+</section>
+
+<section>
+<h3>八、试试看（带提示）</h3>
+<p>1. 手算 128 的全部哥德巴赫分解并数出 r(128)。<br>提示：只需检查 p ≤ 64 的奇数素数；逐个检验 128−p 是否为素数（注意 128−p 是奇数，只可能被奇数整除；用试除到 √(128−p) 即可）。</p>
+<p>2. 解释为什么 r(n) 里 p,q 的"对称写法"只算一次，并由此说明检查 p ≤ n/2 足够。<br>提示：若 (p,q) 是解，则 (q,p) 是同一个无序对；约定 p ≤ q 后就无重复。</p>
+<p>3. 用圆法恒等式手动算出 r(10)，与真实分解 10=3+7=5+5 核对。<br>提示：S(α)=e(2α)+e(3α)+e(5α)+e(7α)，把 S² 展开，只保留 e(10α) 项的系数；注意 5+5 贡献 1 个系数。</p>
+<p>4. 想一想：为什么"弱哥德巴赫的三个素数"比"强哥德巴赫的两个素数"更好处理？<br>提示：误差项里多一个自由变量可以让它在平均意义下自我抵消；两个变量没有这种回旋余地。</p>
+<p>5.（进阶）把 4×10¹⁸ 写成 2 的幂次，感受它离"无穷"有多远。<br>提示：4×10¹⁸ ≈ 2⁶²；人类计算机已经扫过的范围，在数学的"无穷"面前仍是零。</p>
+</section>
+
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="\text{哥德巴赫猜想}: n=p+q,\quad n\ge4\ \text{偶数},\ p,q\ \text{素数}"></div>
+<div class="formula display" data-tex="\text{弱哥德巴赫}: n=p_1+p_2+p_3\quad(\text{奇数 }n&gt;5,\ \text{Helfgott 2013 已解})"></div>
+<div class="formula display" data-tex="\text{陈景润(1966)}: 2N=p+P_2\quad\text{(1+2)}"></div>
+<div class="formula display" data-tex="r(n)=\int_0^1\left(\sum_{p\le n}e(p\alpha)\right)^2 e(-n\alpha)\,d\alpha\quad(\text{圆法恒等式})"></div>
+<div class="formula display" data-tex="r(2N)\sim 2C_2\prod_{p\mid N,p&gt;2}\frac{p-1}{p-2}\cdot\frac{2N}{(\log 2N)^2},\qquad C_2\approx 0.66016"></div>
+</section>
+
+<section>
+<h3>证明：圆法的傅里叶恒等式（完整版）</h3>
+<p>设 r(n) = #{(p,q) : p,q 素数, p+q=n}，其中素数可重复。我们要证</p>
+<div class="formula display" data-tex="r(n)=\int_0^1 S(\alpha)^2 e(-n\alpha)\,d\alpha,\qquad S(\alpha)=\sum_{p\le n}e(p\alpha)"></div>
+<p><strong>第一步：</strong>把 S(α)² 展开为双重和：</p>
+<div class="formula display" data-tex="S(\alpha)^2=\sum_{p\le n}\sum_{q\le n}e((p+q)\alpha)"></div>
+<p><strong>第二步：</strong>代入积分并交换求和与积分（双重和有限，交换合法）：</p>
+<div class="formula display" data-tex="\int_0^1 S(\alpha)^2e(-n\alpha)\,d\alpha=\sum_{p,q}\int_0^1 e((p+q-n)\alpha)\,d\alpha"></div>
+<p><strong>第三步：</strong>对任意整数 k，</p>
+<div class="formula display" data-tex="\int_0^1 e(k\alpha)\,d\alpha=\begin{cases}1,&k=0\\[2pt]0,&k\ne0\end{cases}"></div>
+<p><strong>第四步：</strong>所以只有 p+q−n=0 即 p+q=n 的项贡献 1，其余贡献 0：</p>
+<div class="formula display" data-tex="\int_0^1 S(\alpha)^2e(-n\alpha)\,d\alpha=\#\{(p,q):p+q=n\}=r(n)\qquad\blacksquare"></div>
+<p>这就是圆法的全部起点：<strong>计数问题 = 一个积分</strong>。余下的（大弧主项、小弧误差）都是估计这个积分的功夫。</p>
+</section>
+
+<section>
+<h3>证明："1+2"的严格含义与筛法思路</h3>
+<p>陈景润定理的完整证明有几十页，这里给出它的逻辑骨架与每一步的含义。</p>
+<p><strong>定理（Chen, 1966）：</strong>存在绝对常数 N₀，使得对一切偶数 2N ≥ N₀，存在素数 p 与整数 a,b（a,b 可为 1）使 2N = p + ab，其中 a,b 为素数。</p>
+<p><strong>证明思路：</strong></p>
+<p><strong>第一步：加权筛的框架。</strong>选一组非负权 w(d)（Selberg 型），对每个候选 k ≤ 2N 记"k 是素数"的指示函数为 1<sub>P</sub>(k)。陈景润的关键对象是</p>
+<div class="formula display" data-tex="W=\sum_{\substack{p\le 2N\\ p\ \text{素数}}}\Big(1-\sum_{\substack{d\mid 2N-p\\ d\le D}} w(d)\Big)"></div>
+<p>直觉：括号里第二项"惩罚"那些 n−p 有太多小素因子的情形。D 是筛的深度（取 D≈N^{1/8}）。</p>
+<p><strong>第二步：主项与误差的估计。</strong>用 Selberg 筛 + Bombieri–Vinogradov 定理（素数的算术级数均匀性）证明主项 ~ (某正常数)×N/log²N，误差 O(N/log³N) 可被主项吸收。</p>
+<p><strong>第三步：奇偶性技巧。</strong>把"ab 至多两个素因子"写成"Ω(ab)≤2"，其中 Ω 是带重数的素因子总数。陈景润用一个深刻的组合恒等式把"Ω 小"与"权函数和大"联系起来——这是全文最精妙处，它恰好越过奇偶性问题、但不至于到"Ω=1"（那正是 1+1，过不去）。</p>
+<p><strong>第四步：合并。</strong>主项严格为正，故存在 p 使 2N−p 的素因子个数 ≤2，即 2N = p + P₂。∎</p>
+<p>这条证明的技术终点恰好是筛法的极限：奇偶性问题允许我们控制 Ω≤2，却禁止我们单独控制 Ω=1。这就是"1+2 到 1+1 的这一步"如此困难的严格原因。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Hardy & E. Wright, An Introduction to the Theory of Numbers</strong></p>
+<p>&rarr; <strong>K. Ireland & M. Rosen, A Classical Introduction to Modern Number Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/sieve.html">素数筛</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/twin-prime.html">👯 孪生素数猜想</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/sieve.html">🔢 素数筛</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/zeta.html">〰️ 黎曼 ζ 函数</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎵 模形式</a>：同一学科分类「数论」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/goldbach.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="无穷范畴——当箭头之间也有箭头" />
+  <meta property="og:title" content="高阶范畴论 — Vibe Math" />
+  <meta property="og:description" content="无穷范畴——当箭头之间也有箭头" />
+  <title>高阶范畴论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⬆️ 高阶范畴论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">无穷范畴——当箭头之间也有箭头</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='higher-category-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/elliptic-curves.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🗝️ 椭圆曲线与 Wiles 之路</a>
+  <a href="/pages/geometric-group-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📐 几何群论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——当"路线之间还有路线"时，需要一张新地图</h3>
+<p>普通的地图只有两种东西：地点和路线。高阶范畴论发现，生活里还有更细的一层：两座城市之间有路线，而同样的路线还可以有不同的走法、不同的换乘方案——"路线之间也有路线"。</p>
+<p>它专门处理这种一层套一层的结构：地点连着路线，路线连着走法，走法之间还能再连……一直连下去。数学家要问的是：当这种"箭头套箭头"没有尽头时，还能不能有一套说得清、用得顺的语言？</p>
+<div class="key-insight">高阶范畴论是研究"箭头套箭头"层层叠加的新语言，很多现代数学问题都靠它来重新表述。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/category-theory-adjoint.html">伴随函子</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体问题先行——当"路线之间还有路线"</h3>
+<p>先看三个具体情形，它们都指向同一个麻烦：</p>
+<ul>
+  <li><strong>情形 A（拓扑学）</strong>：两个映射 f, g: X → Y 之间的"同伦"本身就是一条连续变形的路径；两个同伦之间还有同伦。整个拓扑学就在"路径与路径的路径"里打转——但用什么记号和规则把它们层层组织起来？</li>
+  <li><strong>情形 B（范畴论）</strong>：两个函子 F, G: 𝒞 → 𝒟 之间的自然变换 α: F ⇒ G，本身是一个"2-箭头"。两个自然变换之间还能再换……但自然变换的复合有两条路（竖复合、横复合），它们该怎么协调？</li>
+  <li><strong>情形 C（类型论）</strong>：等式证明 h: f(x) = g(x) 是 2-态射，证明的证明是 3-态射——直觉主义等式就是一层套一层。</li>
+</ul>
+<p>这三者共享一句口号：<strong>相等要被打散成"可复合的可逆过程"</strong>。普通范畴论把"两个东西一样"当成一个布尔问题（是/否）；高阶范畴论把它当成一个可以继续追问的结构（怎么一样、这个"怎么"又怎么一样……）。本课就是给这套语言一个严谨地基。</p>
+</section>
+
+<section>
+<h3>二、动机：从普通范畴到高阶结构</h3>
+<p>标准范畴 = 对象 + 1-态射（箭头）。但许多数学结构在"相等变成等价"时更自然：</p>
+<ul>
+  <li><strong>范畴、函子、自然变换</strong>形成 2-范畴 Cat：对象是范畴，1-态射是函子，2-态射是自然变换 α: F ⇒ G。函子的复合在对象层面严格结合，但自然变换有两种复合——竖复合与横复合，它们满足"中四元交换律"（见例题 1）。</li>
+  <li><strong>拓扑空间、路径、同伦</strong>形成 ∞-范畴：对象是点，1-态射是路径，2-态射是路径的同伦（同伦之间的同伦构成 3-态射，以此类推）。路径复合不结合——只是同伦等价。这引导 Grothendieck 的<strong>同伦假设</strong>：∞-广群 = 拓扑空间（的同伦型）。</li>
+  <li><strong>类型、程序、证明</strong>在 Martin-Löf 型理论中：类型为对象，函数为态射，等式证明 h: f(x) = g(x) 为 2-态射。</li>
+</ul>
+</section>
+
+<section>
+<h3>三、逐步铺垫——从 1-范畴到 2-范畴：Cat 与它的两层复合</h3>
+<p>先只推高一层。一个 2-范畴有三个料：<strong>对象</strong>、<strong>1-态射</strong> f: a → b、<strong>2-态射</strong> α: f ⇒ g。2-态射有<strong>两种复合</strong>：</p>
+<ul>
+  <li><strong>竖复合</strong>（在同一个 1-态射源与目标之间）：α: f⇒g 与 β: g⇒h 复合成 β∘α: f⇒h；</li>
+  <li><strong>横复合</strong>（沿 1-态射拼接）：α: f⇒g 与 α′: f′⇒g′ 复合成 α′∘α: f′∘f ⇒ g′∘g。</li>
+</ul>
+<p><strong>为什么两种复合都要？</strong> 以自然变换为例：竖复合是"同一对函子之间先后改两遍"，横复合是"先做这个变换再做那个变换"。它们各自满足结合律，但两者交叉时会撞出新的律——<strong>中四元交换律（interchange law）</strong>。这条律是整个 2-范畴"连贯性"的来源。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 1 —— 具体验证中四元交换律。</strong><br>
+<strong>舞台</strong>：A = 单点范畴 1（一个对象 ∗）；B = 2（对象 0,1，唯一箭头 0→1）；C = 3（对象 0,1,2，箭头 0→1, 1→2, 0→2）。<br>
+<strong>数据</strong>：F₁, F₂: A→B 由 F₁(∗)=0、F₂(∗)=1 定义；G₁, G₂: B→C 由 G₁(0)=0、G₁(1)=2、G₂(0)=1、G₂(1)=2 定义。取 α: F₁⇒F₂ 为 α_∗ = (0→1)；β: G₁⇒G₂ 为 β₀ = (0→1)、β₁ = id₂。<br>
+<strong>第 1 步（验证 β 的自然性）</strong>：只需检查唯一非平凡箭头 0→1。自然性要求 β₁ ∘ G₁(0→1) = G₂(0→1) ∘ β₀。左边 = id₂∘(0→2) = (0→2)；右边 = (1→2)∘(0→1) = (0→2)。相等 ✓。<br>
+<strong>第 2 步（按第一种顺序算横复合）</strong>：(β∘α)_∗ = β_{F₂(∗)} ∘ G₁(α_∗) = β₁ ∘ G₁(0→1) = id₂∘(0→2) = (0→2)。<br>
+<strong>第 3 步（按第二种顺序算）</strong>：(β∘α)_∗ = G₂(α_∗) ∘ β_{F₁(∗)} = G₂(0→1) ∘ β₀ = (1→2)∘(0→1) = (0→2)。<br>
+<strong>第 4 步（结论）</strong>：两种顺序结果相同——这就是中四元交换律在这个实例上的完整展开。∎</div>
+<p>这个例子虽小，却展示了高阶范畴论的全部"味道"：每一步计算都在追箭头、核对象，最后的恒等不是"显然"，而是算出来的。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 1.</strong> 把例题 1 中的 C 换成 4 = {0→1→2→3}，G₁、G₂ 取 G₁(0)=0、G₁(1)=3、G₂(0)=1、G₂(1)=3，其余照旧。重算 β 的自然性与两条横复合。<br><em>提示：</em>唯一要注意的是 β₁: 3→3 取恒等，β₀: 0→1 唯一；所有复合都因 C 中箭头唯一而自动成立。你要检查的是"两条路绕下来到的是同一个箭头"。</div>
+</section>
+
+<section>
+<h3>四、双范畴（Bicategories）— Bénabou 1967</h3>
+<p><strong>定义.</strong> 双范畴 B 由对象、1-态射 f: a → b、2-态射 α: f ⇒ g 组成。1-态射的复合有伴随同构 asso: (h ∘ g) ∘ f ≅ h ∘ (g ∘ f)，左/右单位 natural isomorphism λ: 1_b ∘ f ≅ f, ρ: f ∘ 1_a ≅ f，满足 Mac Lane 的连贯公理（五边形公理 + 三角形公理）。</p>
+<div class="formula display" data-tex="(hg)f\xrightarrow{\;a_{h,g,f}\;}h(gf),\quad\text{Mac Lane五边形公理}"></div>
+<p><strong>为什么"弱化"会自然出现？</strong> 严格的结合律要求 (hg)f = h(gf) 作为 1-态射相等。但很多构造（张量积、双模复合、沿纤维的复合）只给出规范的同构而非等式。双范畴正是承认"结合只到同构为止"的最小框架。</p>
+<p><strong>Bénabou（1967）.</strong> 引入双范畴概念的开拓性论文。双范畴自然地建模：单子 = 双范畴 1 中的半群对象 → 提升到双范畴的范畴化单子；模范畴之间的张量积（双范畴 = 环/范畴，1-态射 = 双模，2-态射 = 双模态射）；丛 / 纤维化的对偶。</p>
+<p><strong>从双范畴到 ∞-范畴.</strong> 双范畴是弱 2-范畴（弱组合律到 2-同构）。推广此思想到 n 层：弱 n-范畴 = 组合律在 k &lt; n 时均同构，在 n 层严格。但所有层的弱化（laws hold up to coherent higher morphisms）需要 ∞-范畴。</p>
+</section>
+
+<section>
+<h3>五、严格 vs 弱 n-范畴——定义弱 n-范畴的多条进路</h3>
+<p><strong>严格 n-范畴：</strong>所有层级的组合律都严格满足结合性和单位律。严格 n-范畴范畴 Str-n-Cat 定义简洁——只需递归定义组合。但大部分自然出现的结构（如 Cat 上的函子复合、基于同伦的范畴）都是弱的。</p>
+<p><strong>定义弱 n-范畴的进路（同伦假设的严格化）：</strong></p>
+<ul>
+  <li><strong>Globular 操作数（Batanin, 1998）：</strong>将弱 ∞-范畴定义为 globular 操作数的代数。操作数上的收缩结构（contraction）编码高层连贯律。这是最直接捕捉到"所有层的弱化"的方法。</li>
+  <li><strong>同伦类型理论（HoTT / UF）：</strong>∞-广群 = 类型的 Martin-Löf 恒等类型的内部模型。Kapulkin-Lumsdaine：单形集合模型把类型解释为 Kan 复形（并满足单值公理）——"类型即同伦型"，为同伦假设提供了模型。这给出了弱 ∞-广群的句法定义。</li>
+  <li><strong>拟范畴（Joyal-Lurie）：</strong>单纯集合满足弱 Kan 条件。</li>
+  <li><strong>完备 Segal 空间（Rezk, 2001）：</strong>双重单纯空间的 Segal 条件 + 完备性。</li>
+  <li><strong>Θ_n 空间（Rezk, 2010）/ Θ_∞ 空间（Barwick）：</strong>基于 Joyal 的 Θ 范畴的 presheaf 模型。这是少数可显式构成 (∞,n)-范畴的框架。</li>
+</ul>
+<p><strong>唯一性定理（Barwick-Schommer-Pries, 2011/2021）：</strong>所有合理的 (∞,n)-范畴模型互相等价。公理化的"同伦 n-范畴"满足某些生成性条件的任意理论必等价于完备 Segal Θ_n-空间。这意味着 ∞-范畴是客观的数学概念——与定义无关。</p>
+<div class="formula display" data-tex="\text{同伦假设:}\;\infty\text{-Gpd}\simeq\text{Top}_{/\text{homotopy}}\;\text{(Grothendieck, Pursuing Stacks, 1983)}"></div>
+</section>
+
+<section>
+<h3>六、拟范畴（Quasi-categories）——Lurie 的 (∞,1)-范畴论基石</h3>
+<p><strong>逐步铺垫：单纯集合作为"组合的拓扑空间"。</strong> 一个单纯集合 X 由一族集合 Xₙ（n-单纯形）与"面/退化"运算组成。直觉：X₀ 是点、X₁ 是线段、X₂ 是三角形（给出"可复合 + 有复合结果"的证据）。范畴的 Nerve N(𝒞) 把每个范畴变成单纯集合：N₀ = 对象，N₁ = 态射，N₂ = 可复合对。</p>
+<p><strong>Joyal 条件（2002）。</strong> 单纯集合 X 是拟范畴（∞-范畴）若满足弱 Kan 条件：对 0 &lt; k &lt; n，任意内 Horn Λ_k^n → X 可在 X 中填充为 n-单纯形。这与 Kan 复形（Kan 条件对所有 k 成立）的区别仅在<strong>外部</strong> horn（k=0, k=n）的填充。这精巧设计使得：Kan 复形 = (∞,0)-范畴（∞-广群 = 空间的同伦型）；拟范畴 = (∞,1)-范畴（最高非平凡态射在层 1，高层态射均可逆）。</p>
+<p><strong>为什么"内 Horn 填充"正是"可复合"？</strong> 取 n=2、内 Horn Λ²₁（两条边 0→1、1→2 但缺边 0→2）：填充它就是在给"x→y→z"配一个复合箭头 x→z 加证据三角形。这正是范畴的复合规则——拟范畴把"复合"从"必须唯一"放松为"存在且高层等价唯一"。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 2 —— 证明：范畴的 Nerve 是拟范畴。</strong><br>
+<strong>定理</strong>：对任意范畴 𝒞，N(𝒞) 满足弱 Kan 条件；内 Horn 的填充还是唯一的（复合的唯一性）。<br>
+<strong>第 1 步（看清内 Horn 给了什么）</strong>：内 Horn 映射 Λⁿₖ → N(𝒞)（0&lt;k&lt;n）给出除第 k 个面外的所有面 d₀,…,dₙ₋₁, dₖ₊₁,…,dₙ。这些面编码了一整串对象 x₀→x₁→…→xₙ 的复合信息，唯独"缺失"的是含顶点 k 的那块。<br>
+<strong>第 2 步（n=2 的情形）</strong>：Λ²₁ 给出边 (0,1)（即 1-态射 f: x₀→x₁）与边 (1,2)（即 g: x₁→x₂）。填充需要 2-单纯形 = 一个可复合对 (f, g) 连同复合 gf: x₀→x₂。取该复合即可；唯一性来自复合的唯一性。<br>
+<strong>第 3 步（一般 n 的情形）</strong>：对任意 0&lt;k&lt;n，内 Horn 给出所有"短边" (i, i+1)（每个短边都落在某个保留的面里，因为 0&lt;k&lt;n 时总有一个面避开顶点 i 和 i+1）。由这些短边组成链 x₀→…→xₙ，并逐一复合得到所有长边；因为复合唯一且满足结合律，这些长边互相一致，拼成一个唯一的 n-单纯形。<br>
+<strong>第 4 步（结论）</strong>：N(𝒞) 每个内 Horn 有唯一填充 ⟹ 拟范畴。∎</div>
+<p>这证明给我们的启示：<strong>普通范畴 = "复合唯一"的 (∞,1)-范畴</strong>；去掉唯一性就得到一般拟范畴。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 2.</strong> 在例题 2 的第 3 步里，为什么特别强调"0&lt;k&lt;n"？请找一个 k=0 或 k=n 的例子，说明此时某个短边可能不在任何保留的面里。<br><em>提示：</em>画 n=2、k=0 的 Horn Λ²₀（它只有边 (0,1) 和 (0,2)，缺 (1,2)）。"短边" (1,2) 就不在任何保留面中——这正是外 Horn 与内 Horn 的本质差别。</div>
+<p><strong>反例：不是拟范畴的"V"形。</strong> 取单纯集合 X = Δ¹ ∪ Δ¹ 沿顶点 1 粘连（形如"V"：顶点 0、1、2，边 0→1、1→2，没有任何 2-单纯形，也没有边 0→2）。内 Horn Λ²₁ → X（两条边恒等映射）无法填充：任何 2-单纯形都会带来边 0→2，而 X 没有。所以 X 不是拟范畴——它想表达"0→1→2 可复合"却没有复合结果的证据，是"半吊子的范畴"。</p>
+<p><strong>Lurie 的高阶拓扑斯理论（2009）。</strong> Lurie 的 <em>Higher Topos Theory</em> 约 925 页的系统工程：</p>
+<ul>
+  <li>(∞,1)-范畴的范畴 sSet_Joyal 具有丰富的模型结构（与通常 Kan-Quillen 结构不同）。</li>
+  <li>(∞,1)-拓扑斯 = 满足 (∞,1)-Giraud 公理的 (∞,1)-范畴。等价刻画：可表现 (∞,1)-范畴上的 (∞,1)-层。</li>
+  <li>每个 (∞,1)-拓扑斯有内部逻辑：对象 = 同伦类型 → 与 HoTT 的联系。</li>
+  <li>导出版本的层论：超完备化 / 超下降保持导出函子。</li>
+</ul>
+<div class="formula display" data-tex="\text{Kan复形}\simeq\text{空间},\quad \text{拟范畴}\simeq(\infty,1)\text{-范畴 (Joyal)}"></div>
+</section>
+
+<section>
+<h3>七、Kan 复形与 (∞,0)-范畴：∞-广群 = 空间</h3>
+<p><strong>逐步铺垫。</strong> 拟范畴允许"缺外侧的复合证据"，因为有些箭头不可逆。若我们把外 Horn 也要求填充，就得到 Kan 复形——每个箭头都有逆的证据。Kan 复形正是 (∞,0)-范畴（∞-广群）：所有层级的态射都可逆。经典事实：满足 Kan 条件的单纯集合等价于拓扑空间的同伦型。</p>
+<p>函子 Sing: Top → sSet（奇异单纯集合；Kan）和几何实现 |−|: sSet → Top 构成 Quillen 等价。这提供了空间同伦论在单纯范畴论上的内部模型。拟范畴理论在其上添加"方向性"——内 Horn 填充 = 态射可复合、外 Horn 不要求填充 = 某些态射不可逆。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 3 —— 群的分类空间：对 G = ℤ/2 验证 N(BG) 是 Kan 复形。</strong><br>
+<strong>舞台</strong>：把群 G 看作单对象范畴 BG（对象 ∗，态射 = G 的元素，复合 = 群乘法）。n-单纯形 = n 元组 (g₁,…,gₙ) ∈ Gⁿ；面运算 d₀(g₁,…,gₙ) = (g₂,…,gₙ)、dᵢ(g₁,…,gₙ) = (g₁,…,gᵢgᵢ₊₁,…,gₙ)、dₙ(g₁,…,gₙ) = (g₁,…,gₙ₋₁)。<br>
+<strong>第 1 步（n=2 的内 Horn）</strong>：Λ²₁ 给出 d₀ = g₂、d₂ = g₁。填充 (g₁, g₂) 本身即可。✓<br>
+<strong>第 2 步（外 Horn Λ²₀，这就是 Kan 与拟范畴的分水岭）</strong>：给出 d₁ = g₁g₂ =: c、d₂ = g₁ =: α。要填需要 g₂ = α⁻¹c——<strong>这要求 α 可逆</strong>。G 是群 ⟹ α⁻¹ 存在，填充 (α, α⁻¹c)。✓ 对 G = ℤ/2 具体算：α=1, c=0 时填 (1, 1·0)=(1,0)（因为 ℤ/2 中 1⁻¹=1）；检查 d₁(1,0) = 1·0 = 0 = c ✓。<br>
+<strong>第 3 步（外 Horn Λ²₂）</strong>：给出 d₀ = g₂ =: β、d₁ = g₁g₂ =: c。填充 (cβ⁻¹, β)。对 ℤ/2：β=1, c=1 时填 (1,1)；β=1, c=0 时填 (0,1)。逐一验证面运算一致。✓<br>
+<strong>第 4 步（结论）</strong>：n=2 的三种 Horn 全部可填，且对一般 n 可系统推广。故 N(Bℤ/2) 是 Kan 复形，即一个 ∞-广群。∎</div>
+<p>这一步算出了最本质的东西：<strong>外 Horn 填充 ⟺ 取逆元</strong>。群里有逆 ⟹ Kan；只有幺半群没有逆 ⟹ 卡壳（见反例 2）。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 3.</strong> 对 G = ℤ/3，具体写出外 Horn Λ²₀ 在 (α, c) = (2, 1) 时的唯一填充（用 ℤ/3 的模算术），并验证两个面运算。<br><em>提示：</em>填充为 (α, α⁻¹c) = (2, 2⁻¹·1)，而 2⁻¹ ≡ 2 (mod 3)，故 2⁻¹·1 ≡ 2。检查 d₁(2,2) = 4 ≡ 1 = c ✓，d₂ = 2 = α ✓。</div>
+<p><strong>反例 2：幺半群不构成 Kan 复形。</strong> 取 ℕ = 自然数加法幺半群，看作单对象范畴。外 Horn Λ²₀ 要求填充 (g₁, g₂) 使 g₁g₂ = c 且 g₁ = α：即 g₂ = α⁻¹c。在 ℕ 中取 α = 2、c = 1：需要 2 + g₂ = 1，无解。故 N(Bℕ) 不是 Kan 复形——它只差"逆元"，正好差了从 (∞,1) 到 (∞,0) 那一步。</p>
+</section>
+
+<section>
+<h3>八、无穷范畴速览——为什么需要无穷范畴？</h3>
+<p>普通范畴：对象 + 箭头。2-范畴：箭头之间也有 2-箭头。无穷范畴：所有层级的箭头都有。在无穷范畴中，"相等"被"等价"取代——没有两个对象严格相等，只有它们是同伦等价的。</p>
+<div class="key-insight">Lurie 的拟范畴（quasi-category）：用单纯集合模拟无穷范畴的最成功模型。这是 Higher Topos Theory（2009, 800+ 页）的核心工具。</div>
+<p><strong>为什么需要无穷范畴？</strong> 导出代数几何（DAG）：Lurie 用无穷范畴重新奠基代数几何。导出范畴 D(X) 是无穷范畴——三角范畴只是"无穷层级的 1 阶影子"。拓扑量子场论：扩展 TQFT = (infinity,n)-函子。</p>
+</section>
+
+<section>
+<h3>九、导出代数几何（DAG）——Lurie 的革命</h3>
+<p>Lurie 的 DAG 用无穷范畴重写代数几何。核心思想：交换环 → 单纯交换环 → E_∞-环谱。Spec 推广到"派生概形"——切空间自带高阶同伦信息。这统一了相交理论（Serre 重数自动正确）和形变理论（Tangent complex 是自然的导出不变量）。Toën-Vezzosi 和 Lurie 各自发展了 DAG 的完整框架。</p>
+</section>
+
+<section>
+<h3>十、(∞,1)-范畴的三种等价模型</h3>
+<p><strong>1.</strong> 拟范畴（Joyal-Lurie）：满足弱 Kan 条件的单纯集合。<strong>2.</strong> 完备 Segal 空间（Rezk）：特定的双重单纯空间。<strong>3.</strong> 相对范畴（Barwick-Kan）：范畴 + 弱等价。三种模型互相等价——说明"无穷范畴"是一个客观的数学概念，不依赖于具体定义。</p>
+</section>
+
+<section>
+<h3>十一、拓扑斯理论——逻辑的范畴化</h3>
+<p>拓扑斯（topos）= 类似 Set 的范畴。每个拓扑斯有内部逻辑——可以是直觉主义的。Grothendieck 拓扑斯 = 层范畴 = 广义"空间"。初等拓扑斯 = 纯范畴论定义。拓扑斯理论统一了逻辑、几何和范畴论。</p>
+</section>
+
+<section>
+<h3>十二、Cobordism 假设——TQFT 的完整分类</h3>
+<p><strong>Baez-Dolan（1995）。</strong> 配边假设的陈述：令 Bord_n^⊗ 为 n-维全扩展配边 (∞,n)-范畴（对象 = 点，1-态射 = 线，…，n-态射 = n-维配边的微分同胚类）。令 C 为带对偶的对称 monoidal (∞,n)-范畴。则</p>
+<div class="formula display" data-tex="\operatorname{Fun}^\otimes(\operatorname{Bord}_n^\otimes,\mathcal{C})\xrightarrow{\;\operatorname{ev}_{*}\;}\mathcal{C}^{\text{fd}}\quad\text{是}\infty\text{-广群的弱等价}"></div>
+<p>即：全扩展 n-维 TQFTs 完全由<strong>单个完全对偶化对象</strong> ∗ 在 C 中的像决定。这是一个"无需参数"的分类——TQFTs 与完全对偶化对象一一对应。这就极大地简化了 TQFT 的构造和分析。</p>
+<p><strong>Lurie 的证明（2009）。</strong> 在 <em>On the Classification of Topological Field Theories</em>（Current Developments in Mathematics, 2008）中，Lurie 用 (∞,n)-范畴的完整语言给出了完整的归纳证明。核心步骤：</p>
+<ul>
+  <li>构造 Bord_n^⊗ 的完整 (∞,n)-范畴模型（借助于 Segal / Θ_n 空间的逼近——使用特定配边族上的完整单纯范畴化）</li>
+  <li>使用 (∞,n)-范畴的配对函子的可延拓性质（amalgamation）——将 Bord_n^⊗ 的函子依次约束到直到对偶层为止</li>
+  <li>完全对偶化对象的定义：在 C 中，对象 X 有对偶 ⇔ 存在对偶对 (X, X^∨, coev: 1 → X ⊗ X^∨, ev: X^∨ ⊗ X → 1) 满足 zigzag 方程 → 但这是 1 层的概念。完全对偶化（fully dualizable）要求所有层的对偶都可升到——在对偶过程中生成的所有态射也必须是对偶化的。</li>
+</ul>
+<p><strong>应用。</strong> Chern-Simons 理论 = 完全对偶化对象在 C = Alg(ggMod) 中的像；Rozansky-Witten 理论 = C = 三角范畴中的完全对偶化对象；弦紧致化 = C = 镜对称的 Fukaya 范畴。</p>
+<div class="formula display" data-tex="\operatorname{Bord}_n^\otimes\;\text{是自由生成的对称monoidal}\;(\infty,n)\text{-范畴，生成元为点}"></div>
+</section>
+
+<section>
+<h3>十三、工作题——自己动手填 Horn</h3>
+<p><strong>工作题 1（认单纯形）。</strong> 写出 Δ²、∂Δ²、Λ²₀、Λ²₁、Λ²₂ 各自包含的边与面；判断其中哪些是拟范畴、哪些是 Kan 复形。</p>
+<details><summary>显示解答</summary>
+<p>Δ²：3 条边 (0,1),(1,2),(0,2) + 1 个面；∂Δ² = 3 条边无面；Λ²₀ = 边 (0,1),(0,2)（缺 (1,2)）；Λ²₁ = 边 (0,1),(1,2)（缺 (0,2)）；Λ²₂ = 边 (0,2),(1,2)（缺 (0,1)）。Δ² 是 Kan 复形（三角形可看作单点空间的组合替代）；∂Δ² 不是拟范畴：内 Horn Λ²₁ → ∂Δ²（边 0→1、1→2）无法填出边 0→2。三个 Horn 都不是拟范畴（各自缺一条边，任何要求用上缺失边的 Horn 都无法填）。∎</p></details>
+<p><strong>工作题 2（内 Horn 唯一性）。</strong> 对任意小范畴 𝒞，说明内 Horn Λⁿₖ → N(𝒞) 的填充为什么唯一，并由此得出"拟范畴中同伦复合的唯一性"。</p>
+<details><summary>显示解答</summary>
+<p>由例题 2 第 3 步：内 Horn 已确定所有短边 (i,i+1)，从而确定整条链 x₀→…→xₙ 及所有长边（逐段复合）。n-单纯形完全由这些数据决定（Nerve 中 n-单纯形 = 链），故唯一。同伦复合唯一性由此得证。∎</p></details>
+<p><strong>工作题 3（偏序集的 Nerve）。</strong> 证明：对偏序集 P（看作范畴），N(P) 是拟范畴；并证明 N(P) 是 Kan 复形 ⟺ P 中每对元素之间的关系可逆（即 P 是"反身 + 对称"的等价关系）。</p>
+<details><summary>显示解答</summary>
+<p>拟范畴：P 中任意可复合对都有唯一的复合（偏序的传递性），由例题 2 得证。Kan：外 Horn 填充需要"逆"。取 Λ²₀ 的两个边 (0,1)、(0,2) 分别对应关系 a≤b、a≤c；填充需要 b≤c。一般地，外 Horn 的填充等价于"任何 a≤b 都可配出 b≤a"（取三顶点 a,b,a），即 P 的关系对称。对称 + 自反（P 自带）即等价关系，此时 N(P) ≅ 离散集 / 平凡 Kan 复形。∎</p></details>
+</section>
+
+<section>
+<h3>十四、前沿：导出版本的代数几何——Lurie 的 DAG</h3>
+<p>Lurie 的 "Higher Algebra"（2017）用无穷范畴重写了同调代数。Toën-Vezzosi 的 "Homotopical Algebraic Geometry"（HAG）给了导出模空间的完整理论。仍开放：导出代数几何在物理（弦紧致化、超对称 gauge 理论）中的全部应用。</p>
+</section>
+
+<section>
+<h3>十五、Key Papers 与开放问题</h3>
+<p><strong>奠基文献：</strong></p>
+<ul>
+  <li>Bénabou, J. (1967). "Introduction to bicategories." In <em>Reports of the Midwest Category Seminar</em>, LNM 47, Springer, pp. 1-77. （双范畴概念的起源）</li>
+  <li>Baez, J. &amp; Dolan, J. (1995). "Higher-dimensional algebra and topological quantum field theory." <em>J. Math. Phys.</em> 36(11): 6073-6105. （cobordism 假设的首次陈述）</li>
+  <li>Joyal, A. (2002). "Quasi-categories and Kan complexes." <em>JPAA</em> 175(1-3): 207-222. （弱 Kan 条件正式成为 (∞,1)-范畴的定义）</li>
+  <li>Lurie, J. (2009). <em>Higher Topos Theory.</em> Annals of Math. Studies 170, Princeton UP. ~925 页. （拟范畴模型下 (∞,1)-范畴的系统理论；References 中详述所有前置）</li>
+  <li>Rezk, C. (2001). "A model for the homotopy theory of homotopy theory." <em>Trans. AMS</em> 353(3): 973-1007. （完备 Segal 空间模型）</li>
+  <li>Barwick, C. &amp; Schommer-Pries, C. (2021). "On the unicity of the homotopy theory of higher categories." <em>J. AMS</em> 34(4): 1011-1058. （所有合理的 (∞,n)-范畴模型相互等价——唯一性定理）</li>
+  <li>Lurie, J. (2009). "On the classification of topological field theories." In <em>Current Developments in Mathematics, 2008</em>, Int. Press, pp. 129-280. （cobordism 假设的冗长证明）</li>
+  <li>Rezk, C. (2010). "A Cartesian presentation of weak n-categories." <em>Geometry &amp; Topology</em> 14(1): 521-571. （Θ_n 空间模型）</li>
+  <li>Batanin, M. (1998). "Monoidal globular categories as a natural environment for the theory of weak n-categories." <em>Advances in Mathematics</em> 136(1): 39-103.</li>
+</ul>
+<p><strong>重大开放问题：</strong></p>
+<ul>
+  <li><strong>弱 n-范畴的终极唯一性定理。</strong> 尽管 Barwick-Schommer-Pries 给出了 (∞,n)-范畴的唯一性，但弱 n-范畴（非 ∞）（即有限层的严格化——严格的 n-层但弱化同构）的权威统一框架仍缺失。是否有对所有 n ≥ 3 都适用的有限层弱 n-范畴的完整模型结构？</li>
+  <li><strong>(∞,∞)-范畴的模型。</strong> (∞,2)-范畴已有多种模型（Lurie 的 scaled 单纯集合 / ∞-bicat；Haugseng 的 ∞-operad 的对偶）。但 (∞,∞)-范畴（所有方向均至高阶）的精确定义尚无共识——即使是拟范畴的类似物。</li>
+  <li><strong>高阶范畴的量子场论统一。</strong> Cobordism 假设对拓扑（即 flat）TQFT 给出了完整分类。对于非拓扑 QFT（Riemannian / 共形 / 超共形 QFT），是否有类似的高阶范畴化分类？Witten 代数的 (∞,n)-范畴是否有自然推广（factorization 同调 + Costello-Gwilliam 的胶合理论）？</li>
+  <li><strong>导出代数几何与弦论的完整结合。</strong> DAG 已被 Toën-Vezzosi 和 Lurie 应用于模空间（导出代数叠的维数公式、Serre 相交的自动正确性）。但如何在"超弦紧致化的整体模空间"这一背景下实现？Fukaya 范畴、导出代数叠与超对称 gauge 理论的三方统一仍未完成。</li>
+  <li><strong>同伦类型论（HoTT）与 (∞,n)-范畴的内部语言。</strong> HoTT 目前只捕获 (∞,0)-范畴（即 ∞-广群 = 同伦类型）的内部逻辑（通过类型 + 单值公理 = Kan 复形）。(∞,n)-范畴是否需要"方向化"的类型论（directed type theory）？Licata-Shulman（2016）开始探索，但完整的 (∞,2)-内部语言的连贯性仍未完全确立。</li>
+</ul>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Mac Lane, Categories for the Working Mathematician</strong></p>
+<p>&rarr; <strong>E. Riehl, Category Theory in Context</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/category-theory-adjoint.html">伴随函子</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/category-theory-adjoint.html">🔀 伴随函子</a>：同一学科分类「范畴论」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/higher-category-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

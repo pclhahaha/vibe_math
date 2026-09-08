@@ -1,0 +1,156 @@
+<section>
+<h3>〇、直觉入门——把一个点转一整圈：它"平均地"访问每一个角落吗</h3>
+<p>在圆周上取一点，每次把它旋转角度 α：x_{n+1} = x_n + α (mod 1)。现在问一个看似简单的问题：<strong>这个点跑过的轨迹，是否"均匀地"布满整个圆周？它落在任何小区间的频率，是否等于该区间的长度？</strong></p>
+<p>答案取决于 α 是有理数还是无理数。α=1/2：点只在两个位置之间跳（0 → 1/2 → 0 →…），轨迹只有 2 个点；α 为任何有理数 p/q：轨迹只有 q 个点，在圆周上形成周期轨道。但 α 一旦是<strong>无理数</strong>（如黄金比 (√5−1)/2 ≈ 0.618），奇迹发生：轨迹<strong>永远不会回到原点</strong>，却<strong>稠密地</strong>散布在圆周上，并且<strong>等分布</strong>——落在任意区间 [a,b] 的时间比例趋向区间长度 b−a（本课画布会亲眼展示：直方图渐渐变成平的）。</p>
+<p>这只是"遍历理论"的一个入口。这门学问研究更一般的口号：<strong>时间平均 = 空间平均</strong>。对一个保测系统 (X,T,μ)（T 保持测度 μ：μ(T⁻¹A)=μ(A)），Birkhoff 遍历定理（1931）说：对"足够好"的函数 f 和"几乎每个"起点 x，</p>
+<div class="formula display" data-tex="\lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}f(T^{k}x)=\int_X f\,d\mu\qquad(\text{时间平均}=\text{空间平均})"></div>
+<p>——只要 T 是<strong>遍历的</strong>（任何不变集合的测度只能是 0 或 1，即系统"不可分解"）。统计力学里"时间平均等于系综平均"的遍历假设、Poincaré 的回归定理（每个系统都会无限次回到几乎原来的状态）、混沌系统的不可预测性，全都是这条定理的亲戚。</p>
+<div class="key-insight">洞察：遍历理论把"动力学"翻译成"测度论"。三个层次递进：保测（T 不改变体积）→ 遍历（系统不可分解成更小的不变块，时间平均=空间平均）→ 混合（任意两块区域长时间后"搅拌"均匀，相关性衰减为零）。无理旋转遍历但<strong>不</strong>混合；倍角映射 x→2x 遍历<strong>且</strong>混合——画布上的直方图与相关性曲线会讲清这个差别。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/measure-theory.html">测度论</a>（不变测度与 a.e. 收敛）、<a href="/pages/fourier-series.html">傅里叶级数</a>（Weyl 判据的武器）、<a href="/pages/lorenz-attractor.html">Lorenz 吸引子</a>（混沌的直观背景）。遍历假设还直接连接 <a href="/pages/boltzmann.html">Boltzmann 方程</a> 与 <a href="/pages/entropy.html">熵</a>。</p></div>
+
+<section>
+<h3>一、一个具体问题——从"等分布"到 Birkhoff 定理</h3>
+<p><strong>圆旋转是最简单、也最深刻的例子。</strong> 无理旋转 R_α 的轨道为什么等分布？Weyl（1916）给出判据：数列 {nα} 等分布 mod 1 ⟺ 对每个非零整数 m，</p>
+<div class="formula display" data-tex="\frac1n\sum_{k=0}^{n-1}e^{2\pi i m k\alpha}\xrightarrow{n\to\infty}0\qquad(\text{Weyl 判据})"></div>
+<p>对无理 α，这是等比级数求和：|(1/n)·(1−e^{2πimnα})/(1−e^{2πimα})| ≤ 2/(n|1−e^{2πimα}|) → 0。用三角多项式逼近指示函数（阶梯函数），等分布随之而来。∎ <strong>傅里叶分析在这里是主角</strong>——频率 m 的"平均振幅"必须消失，轨道才均匀。</p>
+<p><strong>从等分布到遍历定理只有一步。</strong> 把"落在区间 [a,b] 的频率 = b−a"改写成"f 的时间平均 = f 的空间平均"（f 先取区间指示函数，再取可测函数），就得到 Birkhoff 遍历定理对旋转的版本。而一般系统的遍历定理需要两个概念：</p>
+<ul>
+<li><strong>保测：</strong> μ(T⁻¹A)=μ(A) 对所有可测 A——T 是"保体积"的变换（Liouville 定理在哈密顿系统的化身，→ <a href="/pages/classical-mechanics.html">经典力学</a>）。</li>
+<li><strong>遍历：</strong> 不变集只有 0 测度与全测度（T⁻¹A=A ⟹ μ(A)∈{0,1}）。等价表述：不可约地分解成更小的保测系统。</li>
+</ul>
+<p><strong>两条遍历定理：</strong> von Neumann（1932）在 L² 中证明（平均收敛，谱方法）；Birkhoff（1931）证明逐点几乎处处收敛（更精细，测度论方法）。对"好的"系统二者殊途同归，画布上的经验直方图收敛正是它们的数值化身。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——为什么无理旋转遍历、倍角映射混合</h3>
+<p><strong>用傅里叶判断遍历性。</strong> 对保测系统 (X,T,μ)，考虑希尔伯特空间 L²(μ) 上的 Koopman 算子 Uf = f∘T（酉算子）。T 遍历 ⟺ U 的不动点只有常数。对圆旋转：U(e^{2πimx})=e^{2πimα}·e^{2πimx}——若 e^{2πimα}=1 且 m≠0，则 e^{2πimx} 是非平凡不动点，系统不遍历。无理 α 使 e^{2πimα}≠1 对所有 m≠0，故不动点只有常数：<strong>无理旋转遍历</strong>。有理 α 有 e^{2πiqα}=1：不遍历（周期轨道给出不变集）。</p>
+<p><strong>混合是更苛刻的要求。</strong> 强混合：对任意 A、B，μ(T⁻ⁿA∩B) → μ(A)μ(B)——任意区域被长时间"搅拌"后与任何区域独立。无理旋转<strong>不混合</strong>：它只是刚体旋转，把 A 平移来平移去，圆盘 A 的像与 B 的重叠不会"消失"（沿回归子列 n_k 还会完全重叠回去），相关函数 μ(T⁻ⁿA∩B)−μ(A)μ(B) 不趋于 0。<strong>旋转保持距离，无法搅拌。</strong></p>
+<p><strong>倍角映射 x ↦ {2x} 为什么混合？</strong> 看二进制：x=0.b₁b₂b₃… 时，{2x}=0.b₂b₃…——映射只是<strong>丢弃第一位二进制小数</strong>（伯努利移位）。于是 T⁻ⁿA 的形状是"前 n 位不受约束、后面的位约束在 A 里"的集合族，随着 n 增大它们像洋葱一样摊薄，与任何 B 的重叠趋于 μ(A)μ(B)：强混合成立。画布的"相关性衰减"面板会显示：倍角映射的相关函数指数衰减，旋转的几乎不衰减。</p>
+<div class="key-insight">记忆锚：旋转 = 刚体（遍历但老地方打转，不搅拌）；倍角映射 = 揉面（每步"拉伸—折叠"，信息以 log 2/步的速度丢失）。混沌=混合=信息的持续产生；Kolmogorov–Sinai 熵度量"每步丢失多少比特"：倍角映射熵 = log 2。</div>
+</section>
+
+<section>
+<h3>三、例题 1——α = √2 − 1：手数前 10 步（一步步算完）</h3>
+<p><strong>题目。</strong> α=√2−1≈0.41421356…（无理）。列出轨道前 10 项的小数部分，并数落入 [0,1/2) 的个数。</p>
+<p><strong>第一步：逐项计算（小数部分）。</strong></p>
+<div class="formula display" data-tex="n\alpha\bmod 1:\quad 0.414,\ 0.828,\ 0.242,\ 0.657,\ 0.071,\ 0.485,\ 0.899,\ 0.314,\ 0.728,\ 0.142\ \dots"></div>
+<p><strong>第二步：数 [0,1/2) 内的项。</strong> 0.414✓、0.828✗、0.242✓、0.657✗、0.071✓、0.485✓、0.899✗、0.314✓、0.728✗、0.142✓ → 6 项。</p>
+<p><strong>第三步：频率 = 6/10 = 0.6，区间长 0.5。</strong> N=10 时误差 0.1；等分布定理保证误差 → 0（画布上 N=1000 时频率 ≈0.5±0.016；N=10⁵ 时 ≈0.5±0.002——误差 ~1/√N，与 <a href="/pages/clt.html">中心极限定理</a> 课的 1/√n 律同源！）。∎</p>
+<p><strong>第四步：对比有理旋转 α=1/3。</strong> 轨道 0, 1/3, 2/3, 0, 1/3, …只取 3 个值：落入 [0,1/2) 的频率 = 2/3 ≠ 1/2。等分布彻底失败——周期轨道把测度"锁"在有限点上。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——倍角映射就是"掷硬币机"（一步步算完）</h3>
+<p><strong>题目。</strong> 说明 x ↦ {2x} 与抛硬币的对应，并由此算出它的熵。</p>
+<p><strong>第一步：二进制。</strong> x=0.b₁b₂b₃…（二进制）。{2x}=0.b₂b₃…：每步丢掉第一位。</p>
+<p><strong>第二步：观测 = 掷硬币。</strong> 初始 x₀ 均匀随机（Lebesgue 测度）时，b₁、b₂、b₃…是<strong>独立均匀的 0/1 序列</strong>（二进制小数展开的独立性）——丢硬币机。所以倍角映射在测度意义下同构于伯努利移位。</p>
+<p><strong>第三步：熵。</strong> 每步产生 1 个独立比特：Kolmogorov–Sinai 熵</p>
+<div class="formula display" data-tex">h(T)=H(\text{每步新信息})=\log_2 2=1\ \text{bit/步}\qquad(\text{自然对数下 }h=\ln 2)"></div>
+<p><strong>第四步：这个同构为什么重要？</strong> 它说明"确定性系统可以产生完全随机"——信息论意义的随机不是"来源随机"，而是"过去无法预测未来"（x_{n+1} 的第 1 位与 x₀ 的前 n 位独立）。混沌与随机在测度论下握手：Ornstein（1970）证明伯努利移位是"最随机的"系统的同构标准。∎</p>
+<p><strong>第五步：Poincaré 回归的幽默。</strong> 二进制视角下"回归"很直观：因为每步丢掉首位，x₀ 会被"忘掉"——但 Poincaré 定理说几乎每个点仍会<strong>无限次</strong>回到起点任意近处（丢掉的首位以某种组合在未来重现）。确定性 + 随机性的辩证，正是遍历论的美。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——本课定理清单</h3>
+<ul>
+<li><strong>保测变换。</strong> (X,μ) 概率空间，T:X→X 可测且 μ(T⁻¹A)=μ(A)。</li>
+<li><strong>遍历性。</strong> T⁻¹A=A ⟹ μ(A)∈{0,1}。</li>
+<li><strong>Poincaré 回归定理（1890）：</strong> 若 μ(A)&gt;0，则几乎每个 x∈A 都无限次回到 A（∃n_k→∞：T^{n_k}x∈A）。证明要点：B={x∈A：永不回归}，则 T⁻ᵏB 两两不交且同测度，μ(B)·∞ ≤ 1 ⟹ μ(B)=0。∎</li>
+<li><strong>Birkhoff 逐点遍历定理（1931）：</strong> f∈L¹，时间平均 (1/n)Σ_{k&lt;n} f∘Tᵏ 几乎处处收敛到可积函数 f*，且 ∫f* = ∫f；T 遍历时 f* = ∫f dμ（常数）。</li>
+<li><strong>von Neumann 平均遍历定理（1932）：</strong> 同一结论在 L² 范数下成立；证明是谱定理的应用。</li>
+<li><strong>混合。</strong> 强混合 μ(T⁻ⁿA∩B)→μ(A)μ(B)；弱混合（沿密度 1 的子列）；遍历 ⟸ 混合（弱混合 ⟹ 遍历，反之不真：无理旋转遍历不混合）。</li>
+<li><strong>Kolmogorov–Sinai 熵（1958/59）：</strong> h(T) 度量单位时间的平均信息产生；倍角 = log 2，旋转 = 0（无信息产生）。</li>
+<li><strong>等分布（Weyl 判据）。</strong> {nα} mod 1 等分布 ⟺ α 无理；这是遍历论进入解析数论的第一座桥。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="x_{n+1}=x_n+\alpha\ (\mathrm{mod}\ 1);\qquad \text{α 无理 } \Longrightarrow\ \{n\alpha\}\ \text{等分布}"></div>
+<div class="formula display" data-tex="\frac1n\sum_{k=0}^{n-1}f(T^{k}x)\xrightarrow{n\to\infty}\int_X f\,d\mu\quad\text{a.e.}\qquad(\text{Birkhoff})"></div>
+<div class="formula display" data-tex="\mu(T^{-n}A\cap B)\to\mu(A)\mu(B)\quad(\text{强混合});\qquad h(x\mapsto\{2x\})=\ln 2"></div>
+<div class="formula display" data-tex="\text{Weyl:}\ \ \frac1n\sum_{k<n}e^{2\pi imk\alpha}\to 0\ \forall m\ne0\iff \{n\alpha\}\ \text{等分布}"></div>
+</section>
+
+<section>
+<h3>七、延伸——遍历论的现代足迹</h3>
+<ul>
+<li><strong>统计力学。</strong> Boltzmann 的遍历假设（相空间时间平均 = 微正则系综平均）正是 Birkhoff 定理的物理母题；Kac 的平均回归时间定理给 Poincaré 回归定量化。→ <a href="/pages/boltzmann.html">Boltzmann</a>、<a href="/pages/entropy.html">熵</a> 课。</li>
+<li><strong>数论。</strong> 等分布定理是解析数论的常备工具（ζ 函数、指数和）；Furstenberg 的多重遍历定理给出 Szemerédi 定理（等差数列）的遍历证明——遍历论与加性组合学的世纪联姻（→ 即将上线的 <a href="/pages/additive-combinatorics.html">加性组合学</a> 课）。</li>
+<li><strong>连分数动力学。</strong> Gauss 映射 x↦{1/x} 是遍历系统，其不变测度密度 1/((1+x)ln2)；连分数部分商的统计（Gauss–Kuzmin 定理）是遍历论的古典杰作。</li>
+<li><strong>齐性动力学与刚性。</strong> Ratner 定理（1991）分类单比流在李群齐性空间上的不变测度——"遍历的刚性"，是遍历论 20 世纪最强的定理之一，连接李群表示（→ <a href="/pages/lie-algebra.html">李代数</a> 课）与数论（等分布 Hecke 点、Margulis 对 Oppenheim 猜想的证明）。</li>
+<li><strong>量子混沌。</strong> 量子唯一遍历性猜想（Rudnick–Sarnak）说：混沌系统的量子本征态在相空间等分布；Lindenstrauss（2006）证明算术情形。遍历方法深入数学物理最前线。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——四个"想当然"</h3>
+<p><strong>陷阱 1："遍历 = 轨道稠密"？</strong> 测度论 ≠ 拓扑。遍历是"不可分解为保测子块"；轨道稠密（极小性）是拓扑性质，两者在紧致系统上不完全互推。反例方向：存在轨道稠密但系统可分解的（如唯一遍历概念下的病态例）；更常见的误区是拿"某个点的轨道稠密"证明遍历——遍历定理说的是<strong>几乎每个</strong>点的时间平均，个别点的行为说明不了测度论性质。</p>
+<p><strong>陷阱 2："有理旋转也遍历，因为……（随便想的理由）"？</strong> 不。α=p/q 时系统有 q 个周期轨道；取其中一条轨道 E（有限点集），它是非平凡不变集且 μ(E)=0——等等，测度 0 的不变集不违反"测度 0 或 1"……<strong>更准确的破坏者</strong>：把测度换成周期轨道的均匀分布 δ，得到 T 不变的非平凡概率测度；在标准 Lebesgue 测度下，正确反例是取 A = 偶数倍周期点的并（测度 0，不违规）——真正的问题是：有理旋转在 Lebesgue 下其实"不可分解性"失败于<strong>另一个测度</strong>。教学上简洁说法：等分布失败（周期轨道），从 Birkhoff 视角即有非平凡不变可测函数（特征 e^{2πiqx} 是 U 的不动点）。</p>
+<p><strong>陷阱 3："遍历 ⟹ 混合"？</strong> 反了！无理旋转遍历但不混合（第四节）。混合是更强的搅拌性质。画布相关性曲线是最直接的证据：旋转的相关函数不衰减（它周期性地回到 1），倍角映射指数衰减到 0。</p>
+<p><strong>陷阱 4："确定性系统不会'随机'"？</strong> 倍角映射的轨道完全确定，却与掷硬币序列测度同构（例题 2）。"随机"在动力系统中不是来源问题，而是<strong>信息产生率</strong>问题（熵 &gt; 0 = 对初值的持续放大）。Poincaré 回归与熵可以共存——这正是统计力学"时间箭头悖论"的答案之一。</p>
+</section>
+
+<section>
+<h3>九、当前状态——遍历论的前沿</h3>
+<ol>
+<li><strong>多重遍历与组合。</strong> Furstenberg 的遍历证明路线催生"多重遍历定理"与 Host–Kra 结构理论（nilsystems 分层）；它反向给出 Szemerédi 定理与 Green–Tao 定理的证明——遍历论当前最活跃的数论接口。</li>
+<li><strong>齐性空间动力学。</strong> Ratner 刚性 + Margulis 技巧统治 SL(2,Z)\SL(2,R) 上的等分布问题；Littlewood 猜想、量子唯一遍历的算术版本仍有大量开放。</li>
+<li><strong>熵与混沌。</strong> 熵理论（局部熵、维数熵）连接分形与维数理论（→ <a href="/pages/fractal.html">分形</a> 课）；Lorenz 吸引子等几何 Lorenz 流的遍历性至今是活跃研究（Tucker 1999 验证 + 后续严格化）。</li>
+<li><strong>普适性与随机矩阵。</strong> 动力系统的统计（相关性衰减率、大偏差）在量子混沌中与随机矩阵理论交汇——"经典混沌的谱统计"是把遍历论、调和分析、概率拧在一起的当代主题。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Poincaré (1890)</strong>：三体问题中的回归定理——遍历论的第一块基石（"庞加莱回归"）。</li>
+<li><strong>Birkhoff (1931)</strong>：<em>"Proof of the ergodic theorem"</em>, <em>PNAS</em>——逐点遍历定理。</li>
+<li><strong>von Neumann (1932)</strong>：平均遍历定理（与 Birkhoff 同期独立）。</li>
+<li><strong>Kolmogorov (1958) / Sinai (1959)</strong>：测度熵——混沌的"信息产生率"量化。</li>
+<li><strong>Furstenberg (1977)</strong>：<em>"Ergodic behavior of diagonal measures and a theorem of Szemerédi"</em>——遍历论证明 Szemerédi 定理，多重遍历时代的开端。</li>
+<li><strong>Ornstein (1970)</strong>：伯努利移位同构理论——"随机系统"的分类。</li>
+<li><strong>Ratner (1991)</strong>：齐性空间测度的刚性定理——遍历论最深的成果之一。</li>
+<li><strong>Lindenstrauss (2006)</strong>：算术量子唯一遍历——遍历方法攻入量子混沌（Fields 奖工作之一）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——判据、回归与等分布</h3>
+<p><strong>题 1（有理旋转为什么失败）。</strong> 用 Weyl 判据说明 α=1/3 时 {nα} 不等分布。<strong>提示：</strong>取 m=3：e^{2πi·3n·(1/3)}=e^{2πin}=1，平均不趋于 0。判据"每个非零 m"的每个字都重要。</p>
+<p><strong>题 2（手数验证）。</strong> 对 α=√2−1，把 N=10 的轨道（例题 1）数出落入 [0.5,1) 的个数，并与区间长比较。<strong>提示：</strong>0.828、0.657、0.899、0.728 → 4/10=0.4 ≈ 0.5（N 增大趋近）。</p>
+<p><strong>题 3（遍历的傅里叶判别）。</strong> 证明：无理旋转 R_α 在 Lebesgue 测度下遍历（用 Koopman 算子不动点）。<strong>提示：</strong>Uf=f∘R_α 的不动点 f：f 有傅里叶展开 Σc_m e^{2πimx}，Uf=Σc_m e^{2πimα}e^{2πimx}=f ⟹ c_m(e^{2πimα}−1)=0；α 无理时 e^{2πimα}≠1（m≠0）⟹ c_m=0 ⟹ f 常数。</p>
+<p><strong>题 4（Poincaré 回归证明要点）。</strong> 补全正文的证明：设 B={x∈A：x 永不回到 A}，说明 T⁻ᵏB 两两不交并推导 μ(B)=0。<strong>提示：</strong>若 x∈T⁻ᵏB∩T⁻ᵐB（k&lt;m），则 Tᵏx∈B 且 Tᵐx∈B；但 Tᵐx=T^{m−k}(Tᵏx) 属于 B 的像？矛盾在"B 的元素永不回 A、而 Tᵏx∈A"——细节：x∈T⁻ᵏB ⟹ Tᵏx∈B⊆A；又 Tᵐx∈B 意味着从 Tᵏx（∈A）出发经 T^{m−k} 回到 A，与 B 定义矛盾。故两两不交；同测度 ⟹ μ(B)=Σμ(T⁻ᵏB)≤μ(X)=1 要求 μ(B)=0。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：m=3 时几何级数不消失 ⟹ 不等分布。∎</p>
+<p><strong>题 2</strong>：4/10=0.4。∎</p>
+<p><strong>题 3</strong>：见提示：非零傅里叶系数被 (e^{2πimα}−1) 因子清除。∎</p>
+<p><strong>题 4</strong>：见提示：T⁻ᵏB 两两不交且同测度，总测度 ≤1 ⟹ μ(B)=0。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布直方图）。</strong> 选无理 α（黄金比或 √2−1），把 N 拉到 10⁴：直方图变平，右栏"落入 [0,1/2) 的频率"→0.5。换 α=0.5 或 1/3：直方图只亮少数几根柱子——周期轨道 vs 等分布，一目了然。</p>
+<p><strong>试试看 2（相关性曲线）。</strong> 切到"相关性衰减"面板：倍角映射的曲线指数衰减到 0（混合），无理旋转的曲线几乎不衰减（遍历但不混合）——这是"混合 ≠ 遍历"最直接的数值证据。</p>
+<p><strong>试试看 3（二进制）。</strong> 切到倍角映射，输入 x₀=0.1（二进制 0.000110011…）：手动算前几步（丢弃首位），验证与画布轨道一致。观察相邻轨道 x、x+2⁻²⁰ 如何指数分离（每步误差 ×2）——敏感依赖性的来源。</p>
+<p><strong>试试看 4（连分数伏笔）。</strong> 想一个"无理但特别"的 α：连分数全 1 的黄金比。它的轨道等分布吗？（是。）把黄金比换成"几乎有理"的 α=0.41421356…：画布的有限 N 直方图可能仍"不够平"——体会收敛速度依赖 α 的丢番图性质（好的无理数收敛快，Liouville 数慢）。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>P. Walters, An Introduction to Ergodic Theory</strong>（研究生标准教材）</p>
+<p>&rarr; <strong>C. Silva, Invitation to Ergodic Theory</strong>（友好的入门，含大量例子）</p>
+<p>&rarr; <strong>M. Einsiedler, T. Ward, Ergodic Theory with a View towards Number Theory</strong>（面向数论的现代路线）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.11（动力系统）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>、<a href="/pages/lorenz-attractor.html">Lorenz 吸引子</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/lorenz-attractor.html">🌪️ Lorenz 吸引子</a>：混沌动力系统的直观入口，遍历论是它的测度论语言。</p>
+<p>&rarr; <a href="/pages/fractal.html">🌀 分形</a>：熵、维数与动力系统共享同一套工具。</p>
+<p>&rarr; <a href="/pages/boltzmann.html">📊 Boltzmann 方程</a>：遍历假设 = 统计力学版"时间平均=系综平均"。</p>
+<p>&rarr; <a href="/pages/entropy.html">🎲 熵与信息</a>：Kolmogorov–Sinai 熵是信息熵在动力系统的化身。</p>
+<p>&rarr; <a href="/pages/clt.html">🎰 大数定律与 CLT</a>：遍历定理是"对时间平均的大数定律"。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：不变测度与几乎处处收敛的地基。</p>
+</section>

@@ -1,0 +1,147 @@
+<section>
+<h3>〇、直觉入门——给"面积为零却无处不在"的集合称重</h3>
+<p>康托尔三分集 C：从 [0,1] 挖去中段、再挖……长度（Lebesgue 测度）最后是 0，但它显然比一个点"更厚"——它有多少"维度"？Hausdorff（1918）给出的答案：用 <strong>s-维 Hausdorff 测度 H^s</strong> 给集合"称重"，再找那个临界指数：</p>
+<div class="formula display" data-tex="H^{s}(A)=\lim_{\delta\to0}\ \inf\Bigl\{\sum_i(\mathrm{diam} U_i)^{s}: A\subseteq\bigcup U_i,\ \mathrm{diam} U_i\le\delta\Bigr\};\qquad \dim_H A=\inf\{s:H^s(A)=0\}"></div>
+<p>H^0 数点、H^1 量长度、H^2 量面积（到常数）——整数维的 Lebesgue 测度只是这个家族的特例。康托尔集的维度落在非整数：</p>
+<div class="formula display" data-tex="\dim_H C=\frac{\ln 2}{\ln 3}\approx0.6309\qquad(\text{两个拷贝、尺度 }1/3)"></div>
+<p>这门"几何测度论（GM theory）"由 Hausdorff、Besicovitch、Federer 等建立，研究非光滑集合的"几何可测"结构：任意集合的维数（Hausdorff/密度/Frostman）、Lipschitz 映射下的面积与余面积公式、可求长/可求积集合（几乎处处有切平面）、以及变分问题（极小曲面、周长、currents）。它是分形几何（→ <a href="/pages/fractal.html">分形</a>）、Kakeya/限制性猜想（→ <a href="/pages/kakeya.html">Kakeya</a> 课，Besicovitch 集合正是"面积 0 却满维"的教材例）、PDE 自由边界与最优传输（Monge）的共同地基。</p>
+<div class="key-insight">洞察：几何测度论的座右铭——<strong>维度与测度是两把尺</strong>：面积可以是 0、维数照样满（Besicovitch 集）；测度为零 ≠ 维数低。它的三件工具支撑着现代分析几何：Hausdorff 测度（维数的秤）、Frostman 引理（维数下界的"质量分布"证明法）、面积/余面积公式（Lipschitz 世界的微积分）。画布上把康托尔集递归到第 k 层，看 H^s 估计如何在 s=dim 处从 ∞ 跳到 0——维数就是那条"相变线"。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/measure-theory.html">测度论</a>（Lebesgue 测度与可测函数）、<a href="/pages/fractal.html">分形</a>（维数的直观）、<a href="/pages/kakeya.html">Kakeya 猜想</a>（集合维数与调和分析的接口）。</p></div>
+
+<section>
+<h3>一、一个具体问题——三个递进的问题把"病态集合"变成数学对象</h3>
+<p><strong>问题 1：任何集合的"维数"是多少？</strong> Hausdorff 用覆盖给出 H^s 与 dim_H：满足单调、可数半加、Lipschitz 下不增（dim_H f(A)≤dim_H A），对 ℝ^d 的 d-维子集给出 dim=d。例子：Cantor 三分集 ln2/ln3、Cantor×Cantor（维数相加 2ln2/ln3）、Koch 曲线 ln4/ln3≈1.2619、Sierpiński 地毯 ln8/ln3。</p>
+<p><strong>问题 2：病态函数/集合怎么"微积分"？</strong> Rademacher：ℝⁿ→ℝ^m 的 Lipschitz 映射几乎处处可微——Lipschitz 世界里有微积分；面积公式把"曲面的积分"化成"映射雅可比"的积分，余面积公式把"分层计数"化成纤维上的积分。可求积集合 = Lipschitz 像的可数并（a.e. 有切平面）——"光滑"的弱版本。</p>
+<p><strong>问题 3：变分问题（极小曲面）有解吗？</strong> Plateau 问题（给定边界找面积最小曲面）在任意边界下需要"允许有奇异点的广义曲面"：周长/currents/varifolds 框架（Federer–Fleming）给出存在性——几何测度论因此是现代变分法与自由边界理论的语法。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——维数的两把尺与 Frostman 引理</h3>
+<p><strong>覆盖数与缩放。</strong> 若 A 的每个 ε-覆盖至少需 N(ε) 段、每段 ~ε，则"体积"估计 ~N(ε)ε^s。s 太小：N(ε)ε^s→∞（覆盖太细数太多）；s 太大：→0。临界 s=dim_A 处既不爆也不灭——<strong>维数是"测量成本"的临界指数</strong>。</p>
+<p><strong>Frostman 引理（质量分布法）。</strong> 紧集 A 满足 dim_A&gt;s ⟺ 存在概率测度 μ 支在 A 上，使 μ(B(x,r)) ≤ C·r^s 对所有 x、r——"A 上能放一个把质量摊得足够薄的测度"。用途：证明维数下界时，先造这样的 μ，再估计能量的积分（如 ∬|x−y|^{−s}dμdμ&lt;∞）。这是 Kakeya、限制性、丢番图（数的几何）里反复出现的"称重技巧"。</p>
+<p><strong>维数不是 Lebesgue 的投影。</strong> Besicovitch 集：面积 0（H²=0）却 dim=2——维数与测度独立（→ <a href="/pages/kakeya.html">Kakeya</a> 课反例 1）。几何测度论的第一课就是别把"测度为 0"当成"维数低"。</p>
+</section>
+
+<section>
+<h3>三、例题 1——康托尔三分集的维数（一步步算完）</h3>
+<p><strong>题目。</strong> 计算 C 的 dim_H = ln2/ln3，并解释上/下界。</p>
+<p><strong>第一步：上界（覆盖）。</strong> 第 k 层 C_k 是 2^k 段、每段长 3^{−k} 的并：对 s&gt;ln2/ln3，H^s 用这些段覆盖，得 H^s(C) ≤ lim 2^k·3^{−sk} = lim (2/3^s)^k。s&gt;ln2/ln3 ⟹ 2/3^s&lt;1 ⟹ 趋于 0 ⟹ H^s=0 ⟹ dim ≤ ln2/ln3。</p>
+<p><strong>第二步：下界（Frostman）。</strong> 在 C 上取均匀测度 μ（每层每个拷贝质量 2^{−k}）：对长度 r≈3^{−k} 的区间，μ(B)≤2·2^{−k}≤C·r^s（s=ln2/ln3 时 2^{−k}=(3^{−k})^{ln2/ln3}）。Frostman ⟹ dim ≥ s。</p>
+<p><strong>第三步：合并。</strong> dim_H C=ln2/ln3≈0.6309。∎ 画布会画出"第 k 层估计 f(s)=2^k·3^{−sk}"在 s 处的行为：s&lt;dim 时随 k→∞ 爆炸、s&gt;dim 时塌缩到 0、恰在 dim 处持平——维数就是那条相变线。</p>
+<p><strong>第四步：同类例。</strong> Koch 曲线 ln4/ln3；Cantor×Cantor ln4/ln3? 2ln2/ln3=ln4/ln3 ✓ 相同——注意 C×C 维数是两倍 C 的维数（乘积公式），与 Koch 数值巧合相同是常见的混淆点。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——面积公式与余面积公式：Lipschitz 世界的微积分（一步步算完）</h3>
+<p><strong>题目。</strong> 陈述并解释面积公式，并用 1 维例子核对。</p>
+<p><strong>第一步：面积公式。</strong> 对 Lipschitz f:ℝ^m→ℝ^n（m≤n），对可测 A：</p>
+<div class="formula display" data-tex="\int_A Jf(x)\,dx=\int_{\mathbb R^{n}} H^{m}(A\cap f^{-1}(y))\,dH^{m}(y)\qquad(\text{重积分 + 纤维计数})"></div>
+<p>Jf 是雅可比（m 维体元放大率）。它把"m 维曲面上的积分"与"定义域上的积分"互换——曲面测度的"换元公式"。∎</p>
+<p><strong>第二步：m=n=1 核对。</strong> f(t)=(t, g(t))（图曲线，g 光滑）：Jf=√(1+g′²)；A=[a,b]：左边 ∫√(1+g′²)dt = 弧长；右边 H¹(f([a,b])) 也是弧长 ✓——面积公式就是"曲线的长度 = ∫速度"。∎</p>
+<p><strong>第三步：余面积公式（分层计数）。</strong> 对 f:ℝ^n→ℝ^m（m≤n）：∫_ℝⁿ Jf dx = ∫_ℝ^m H^{n−m}(f^{−1}(y)) dy——把 n 维积分分成 (n−m) 维纤维的积分。例：f(x)=x₁ 时 Jf=1，公式给 ∫dx = ∫_ℝ H^{n−1}(切片)dy——正是 Fubini！∎</p>
+<p><strong>第四步：读意义。</strong> 两个公式把"曲面的测度理论"还原成"映射的微积分"——这是 rectifiable 集合（可求积、a.e. 切平面）上做分析的通行证。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>Hausdorff 测度与维数：</strong> H^s 定义（δ-覆盖的下确界）、单调/可数半加、Lipschitz 收缩、ℝ^d 中 H^d=常·Lebesgue；dim_H 临界点。</li>
+<li><strong>Frostman：</strong> dim_A&gt;s ⟺ 存在概率测度 μ⊂A 使 μ(B(x,r))≤Cr^s；推论：紧集维数可由"可放质量分布"刻画。</li>
+<li><strong>密度与微分：</strong> Lebesgue 密度定理；Besicovitch 覆盖与微分定理（L¹_loc 的 a.e. 微积分基本定理）——测度论分析的地基。</li>
+<li><strong>Rademacher：</strong> Lipschitz ℝ^m→ℝ^n 几乎处处可微。</li>
+<li><strong>面积/余面积公式：</strong> 如上（m≤n 与 n≥m 两个方向）。</li>
+<li><strong>可求积集：</strong> H^m-rectifiable = Lipschitz 像的可数并（去掉零测集后）；a.e. 有 m 维切平面；结构定理（Besicovitch–Federer）。</li>
+<li><strong>变分框架：</strong> BV 函数与周长（De Giorgi）、integral currents 的紧性（Federer–Fleming 1960）⟹ Plateau/极小曲面存在性；isoperimetric 不等式的测度论证明。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="H^{s}(A)=\lim_{\delta\to0}\inf\sum(\mathrm{diam}U_i)^{s};\qquad \dim_H(A)=\inf\{s:H^{s}(A)=0\}"></div>
+<div class="formula display" data-tex="\dim_H(C)=\frac{\ln2}{\ln3}\approx0.631;\qquad \dim_H(\text{Koch})=\frac{\ln4}{\ln3}\approx1.262"></div>
+<div class="formula display" data-tex="\text{Frostman: }\dim A>s\iff\exists\mu:\ \mu(B(x,r))\le Cr^{s};\qquad \text{面积公式: }\int_A Jf=\int H^{m}(A\cap f^{-1}y)\,dH^{m}y"></div>
+</section>
+
+<section>
+<h3>七、延伸——几何测度论的现代足迹</h3>
+<ul>
+<li><strong>分形与复动力学。</strong> Julia 集、康托尔集的维数计算（→ <a href="/pages/fractal.html">分形</a>、<a href="/pages/complex-dynamics.html">复动力系统</a>）用 Frostman/Hausdorff 工具；Kakeya 与限制性猜想是"集合维数 × 调和分析"的战场（→ <a href="/pages/kakeya.html">Kakeya</a>）。</li>
+<li><strong>PDE 自由边界。</strong> Alt–Caffarelli、障碍问题、燃烧面：几何测度论给"解的正则性与自由边界的维数"提供语言。</li>
+<li><strong>极小曲面与几何流。</strong> Plateau 问题、调和映射、以及曲率流中的奇异集（→ <a href="/pages/curvature.html">曲率</a> 课）——测度论性方法统治奇异分析。</li>
+<li><strong>度量测度空间与合成曲率。</strong> Ricci 下界的"测度论化"（Lott–Villani–Sturm：测度空间上的合成曲率）把 GM 工具推进到最优传输（→ <a href="/pages/optimal-transport.html">最优传输</a>）与度量几何。</li>
+<li><strong>调和测度与节点集。</strong> 调和测度维数（Bourgain 等）、拉普拉斯本征函数节点集测度（Logunov–Malinnikova，→ <a href="/pages/laplace-eigenvalue.html">鼓的谱</a> 课的 2020 大进展）——GM 是这些现代结果的工具箱。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"测度想当然"</h3>
+<p><strong>陷阱 1："面积 0 ⟹ 维数低"？</strong> 反例：Besicovitch/Kakeya 集 H²=0 却 dim=2（→ <a href="/pages/kakeya.html">Kakeya</a> 课）。测度与维数是两把独立的尺——"测度小"不承诺"维数低"。</p>
+<p><strong>陷阱 2："box 维数 = Hausdorff 维数"？</strong> 盒维数（覆盖计数 lim log N(ε)/log(1/ε)）≥ Hausdorff，可严格更大：ℚ∩[0,1] 盒维 1、Hausdorff 维 0（可数点集 H^s=0 对 s&gt;0）。Hausdorff 维对可数并稳健，盒维不是——别混用。</p>
+<p><strong>陷阱 3："H^s 在维数处自动有限正"？</strong> 临界处 H^{dim}(A) 可以是 0 或 ∞（dim 只是"变号的点"）。说"维数 d 的集合有有限正 H^d"需要额外条件（如 Ahlfors 正则），不是默认。</p>
+<p><strong>陷阱 4："Lipschitz 映射保持维数"？</strong> 只给 ≤（dim f(A)≤dim A）；投影可把维数压下去——Kakeya 猜想反过来说"投影不压维"是深刻内容。把"≤"当"="是几何测度论常见事故。</p>
+<p><strong>陷阱 5："可求积 = 光滑曲面（到处有切平面）"？</strong> 可求积只要求<strong>几乎处处</strong>有切平面（去掉零测集后可数 Lipschitz 像）。康托尔函数图像、尖角并集可以可求积却处处不光滑。把"光滑"当"可求积"会低估它的宽容度。</p>
+</section>
+
+<section>
+<h3>九、当前状态——几何测度论的前沿</h3>
+<ol>
+<li><strong>奇异集与正则性。</strong> 极小曲面/曲率流奇异集的维数分析（Almgren、White、最近的高维进展）——GM 正则性理论仍是活跃前线。</li>
+<li><strong>度量空间分析。</strong> Lipschitz/切锥/维数的度量推广（Cheeger–Kleiner 微分结构）与合成曲率（Lott–Villani–Sturm）把 GM 方法带到非欧氏空间（→ <a href="/pages/optimal-transport.html">最优传输</a>）。</li>
+<li><strong>调和分析交叉。</strong> Kakeya/限制性、Frostman 与测度能量在"分形测度上的傅里叶变换"问题里反复登场——GM 与调和分析已难分彼此。</li>
+<li><strong>数据与计算。</strong> 数值 varifold/currents（几何数据的离散化）、最优传输的数值 GM——几何测度论进入现代计算几何与机器学习。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Hausdorff (1918)</strong>：分数维测度——维数的现代定义。</li>
+<li><strong>Besicovitch (1920s–30s)</strong>：集合的结构理论、Besicovitch 集与覆盖定理。</li>
+<li><strong>Frostman (1935)</strong>：质量分布引理（维数的测度刻画）。</li>
+<li><strong>Federer–Fleming (1960)</strong>：integral currents 与紧性——Plateau 问题的测度论解法。</li>
+<li><strong>De Giorgi (1960s)</strong>：BV 与周长、等周不等式的测度论证明。</li>
+<li><strong>Federer (1969)</strong>：<em>Geometric Measure Theory</em>——学科的百科全书式奠基。</li>
+<li><strong>Almgren (1980s)</strong>：多重值函数与面积极小化奇异集（约化正则性）。</li>
+<li><strong>Lott–Villani / Sturm (2005–06)</strong>：合成 Ricci 曲率——GM 的度量测度时代。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——维数手算</h3>
+<p><strong>题 1（Cantor 上界）。</strong> 用第 k 层覆盖算 H^s(C) 的上界并定位临界 s。<strong>提示：</strong>2^k·3^{−sk}=(2/3^s)^k：s&gt;ln2/ln3 时 →0。</p>
+<p><strong>题 2（Frostman 常数）。</strong> 对均匀 Cantor 测度验证 μ(B(x,r))≤Cr^s 的 C 可统一取。<strong>提示：</strong>每层质量减半、半径按 3 缩：r≈3^{−k} 时 μ≤2^{1−k}，而 2^{−k}=(3^{−k})^{ln2/ln3}=r^s。</p>
+<p><strong>题 3（乘积维数）。</strong> dim(C×C) 是多少？<strong>提示：</strong>乘积维数相加：2·ln2/ln3≈1.262。</p>
+<p><strong>题 4（面积公式核对）。</strong> f(t)=(t,t²)（抛物线弧），Jf=√(1+4t²)：弧长 ∫√(1+4t²)dt 与 H¹(图) 一致。<strong>提示：</strong>面积公式（m=n=1）即弧长公式。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示。∎</p>
+<p><strong>题 2</strong>：见提示。∎</p>
+<p><strong>题 3</strong>：2ln2/ln3。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布称重）。</strong> 选康托尔/柯赫/Sierpiński，把递归层数 k 拉大：下方 H^s 估计曲线在 s=dim 处从爆炸变塌缩——那条垂直跳变线就是维数。换集合并对照公式 lnN/ln(尺度)。</p>
+<p><strong>试试看 2（测度≠维数）。</strong> 在 <a href="/pages/kakeya.html">Kakeya</a> 课反例 1 重温 Besicovitch 集：面积 0、维数满——本课的"两把尺"是那里结论的正式语言。提示：Kakeya 猜想的本质是"投影/覆盖下维数不塌"。</p>
+<p><strong>试试看 3（Frostman 直觉）。</strong> 想为什么"能放质量分布"会给出维数下界：质量摊得越薄（μ(B(x,r))≤Cr^s），集合越"胖"。提示：任何覆盖都要用 |C|·r^s 的总质量包住全质量 1。</p>
+<p><strong>试试看 4（跨课连线）。</strong> 本课的面积公式 ↔ <a href="/pages/optimal-transport.html">最优传输</a> 的 Monge 地图；奇异集正则性 ↔ <a href="/pages/curvature.html">曲率</a>/极小曲面；节点集测度界 ↔ <a href="/pages/laplace-eigenvalue.html">鼓的谱</a>——几何测度论把分析几何课焊在一起。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>H. Federer, Geometric Measure Theory</strong>（权威巨著）</p>
+<p>&rarr; <strong>F. Morgan, Geometric Measure Theory: A Beginner's Guide</strong>（友好入口）</p>
+<p>&rarr; <strong>P. Mattila, Geometry of Sets and Measures in Euclidean Spaces</strong>（维数与 Frostman 的现代标准）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV（分析/调和相关条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/fractal.html">分形</a>、<a href="/pages/kakeya.html">Kakeya 猜想</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fractal.html">🌀 分形</a>：维数与自相似的直观，本课是其严格化。</p>
+<p>&rarr; <a href="/pages/kakeya.html">🪡 Kakeya 猜想</a>：面积 0 满维集合 + Frostman 的应用场。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：Lebesgue 测度与可测函数是 H^s 的祖先。</p>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：Monge/余面积公式与度量测度空间的现代接口。</p>
+<p>&rarr; <a href="/pages/laplace-eigenvalue.html">🥁 拉普拉斯与鼓的形状</a>：节点集测度的 Logunov 界（GM 现代应用）。</p>
+<p>&rarr; <a href="/pages/complex-dynamics.html">🪸 复动力系统</a>：Julia 集维数与 Hausdorff 工具。</p>
+</section>

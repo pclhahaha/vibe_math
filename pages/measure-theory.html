@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lebesgue测度的构造、可测函数、三大收敛定理" />
+  <meta property="og:title" content="测度论 — Vibe Math" />
+  <meta property="og:description" content="Lebesgue测度的构造、可测函数、三大收敛定理" />
+  <title>测度论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📏 测度论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">Lebesgue测度的构造、可测函数、三大收敛定理</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='measure-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/real-analysis.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📐 实分析</a>
+  <a href="/pages/galois-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔗 伽罗瓦理论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——数轴上"每一段都有长度"，但能不能量出所有集合？</h3>
+<p>先用具体数字感受我们要做什么。闭区间 [0,1] 的长度是 1；[2,5] 的长度是 3；[a,b] 的长度是 b−a。这些都不需要争论。现在问你：</p>
+<div class="formula display" data-tex="A=\mathbb{Q}\cap[0,1]=\{\text{0 到 1 之间的所有有理数}\},\qquad A\text{ 的“长度”是多少？}"></div>
+<p>这个集合"几乎看不见"——数轴上把它画出来，是一个个孤立的点（1/2, 1/3, 1/4, 2/3, …），但点太多，多到数不清。直觉告诉你它的长度该是 0。可它不是有限个点，甚至不是可数个"整齐"的点。怎么严格地算？</p>
+<p>更糟的还在后面。1905 年，Vitali 用下面这个手法造出一个集合 V⊂[0,1]：把 [0,1] 里的数按"差是有理数"分成一堆等价类（x~y ⟺ x−y∈ℚ），每个等价类都像筛子一样<strong>密密麻麻</strong>地洒在整条数轴上；然后用选择公理从每个等价类里挑一个代表元，收集起来。</p>
+<p>这个 V 集合，你会惊奇地发现：<strong>它无法被赋予任何长度</strong>。假设它有长度 ℓ：把 V 平移一个有理数 q 得到 V+q，长度应该不变（还是 ℓ）。可 0 到 1 之间能用<strong>可数个</strong>这样的平移把整个 [0,1] 盖住，同时每个平移彼此不相交——于是"所有 V+q 的总长"既要把 [0,1] 全部盖住（总长 ≥ 1），又不超过 [−1,2]（总长 ≤ 3）。可数个 ℓ 相加要么是 0（若 ℓ=0），要么是无穷（若 ℓ&gt;0），<strong>永远落不进 [1,3]</strong>。矛盾。</p>
+<div class="key-insight">这就是测度论要回答的问题：<strong>不是所有集合都能量出长度。</strong>有些集合（Vitali 集）想量，就会算出矛盾。于是我们必须划清界限：哪些集合"配"有长度？以及如何给"长度、面积、体积、概率"立一套统一、永不打架的规矩？这就是测度论。只想懂核心思想，看到本课〇和第三节即可。</div>
+</section>
+
+<section>
+<h3>一、起点：区间有长度——把"长度"推广到更多集合</h3>
+<p>我们有的素材是：每个区间 I=[a,b] 有长度 |I|=b−a。要从这个素材出发，推算出<strong>任何"长得还行"的集合</strong>的长度。想让"长度"像真长度，至少得满足几条不证自明的要求：</p>
+<ul>
+<li><strong>平移不变：</strong>整个集合挪一个位置，长度不变（λ(A+t)=λ(A)）。</li>
+<li><strong>单调：</strong>大集合长度 ≥ 小集合长度。</li>
+<li><strong>可数可加：</strong>可数多个互不相交的集合，总长度等于各自长度之和（两个不重叠的区间拼起来，长度当然相加）。</li>
+</ul>
+<p>Vitali 的例子已经宣告：<strong>这三条加上"所有集合都能量"，四条同时成立会打架。</strong>所以必须牺牲一条。最自然的牺牲是"所有集合都能量"——我们只给一部分集合（叫<strong>可测集</strong>）定义长度，其余的不碰。这就是 Lebesgue 测度的思路。</p>
+<p>先看第一条能用素材直接得出的结论——"太稀疏"的集合长度是 0：</p>
+<p><strong>命题（可数集测度为 0）。</strong>任何可数集合（如 ℚ、ℤ、有限集）的 Lebesgue 测度为 0。</p>
+<p><strong>例 1（一步步算：ℚ∩[0,1] 的长度 = 0）。</strong>把 ℚ∩[0,1] 的数排成序列 r₁, r₂, r₃, …（可数）。对每个 rₙ，用一个小区间 Iₙ 把它盖住，Iₙ 的长度取 ε/2ⁿ（随便给一个很小的 ε）。这些小区间的总长度：</p>
+<div class="formula display" data-tex="\sum_{n=1}^{\infty}|I_n|=\sum_{n=1}^{\infty}\frac{\varepsilon}{2^{n}}=\varepsilon\left(\frac{1/2}{1-1/2}\right)=\varepsilon."></div>
+<p>由于 ℚ∩[0,1] ⊂ ∪ₙ Iₙ，它的长度至多是 ε。而 ε 可以取任意小（1/2、1/100、10⁻⁹…），所以它的长度只能是 0。∎ 方法的名字叫"用一串任意小的盖子去盖"——这正是外测度的雏形，下一节严格化。</p>
+<p><strong>先记一个惊人对比：</strong>[0,1] 里的有理数长度是 0（可数），[0,1] 里的无理数长度是 1（补集）；Cantor 集（见例 4）<strong>不可数</strong>，但长度也是 0。所以"不可数"和"有长度"毫不相干——测度论度量的是集合的"占据度"，不是"个数"。</p>
+</section>
+
+<section>
+<h3>二、外测度：先给"每一个集合"发一个候选长度</h3>
+<p>例 1 的做法值得推广：<strong>用可数多个区间盖住集合 A，把"盖子总长度"的下确界当作 A 的候选长度。</strong>盖子的选择自由，谁盖得越省，越接近真实长度。</p>
+<p><strong>定义（Lebesgue 外测度）。</strong>对任意 A⊂ℝ，</p>
+<div class="formula display" data-tex="m^{*}(A)=\inf\Big\{\sum_{n=1}^{\infty}|I_n|\ :\ A\subset\bigcup_{n}I_n,\ I_n\text{ 为开区间}\Big\}."></div>
+<p>这个 m* 对<strong>所有</strong>集合 A 都有定义（可能是 ∞）。它能自动满足：单调性（A⊂B ⇒ m*A ≤ m*B）、次可数可加（m*(∪Aₙ) ≤ Σm*Aₙ，因为可以把各自的最优盖子拼起来，略微加宽一点）。它<strong>也</strong>自动满足平移不变性（把盖子一起平移即可）。</p>
+<p>听起来一切完美，那问题出在哪？出在<strong>可数可加性</strong>。m* 只保证"次"可加（≤），不保证"等号"。Vitali 集正是让可数可加性翻车的集合：可数可加性若对所有集合成立，V 的所有平移加起来就该等于 1~3 之间的某个数，但它等于 0 或 ∞——矛盾。所以外测度只能当作"候选"，还要再挑出一批集合，让 m* 限制在它们身上真的可数可加。</p>
+<p><strong>例 2（外测度的计算：m*(ℚ∩[0,1])=0）。</strong>就是例 1 换一个词：对任意 ε&gt;0 构造总长 ε 的覆盖，故 m* ≤ ε，令 ε→0 得 m*=0。∎</p>
+<p><strong>例 3（外测度区间吻合：m*([0,1])=1）。</strong> ① 下界：对任何覆盖 ∪Iₙ ⊃ [0,1]，由有限覆盖与区间长度次可加可证 Σ|Iₙ| ≥ 1，故 m* ≥ 1。② 上界：用单个区间 (0−ε, 1+ε) 就能盖住，总长 1+2ε，令 ε→0 得 m* ≤ 1。合起来 m*([0,1])=1。∎ 这是"外测度没有辜负区间长度"的基本验证。</p>
+</section>
+
+<section>
+<h3>三、σ-代数：为什么可测集合要"关起门来"，不能要所有集合？</h3>
+<p>先回答一个最常被问的问题：<strong>为什么用 σ-代数，而不是"干脆所有集合"？</strong>答：因为测度必须有可数可加性，而可数可加性会强迫一些集合不可测（Vitali 已经证明）。数学家的选择是：把"能放心量的集合"关进一个遵守纪律的家族，家族要足够大、足够封闭，让可数可加性成立且不再打架。</p>
+<p>这个家族需要具备的性质，全部来自"测度要能算"的自然要求：</p>
+<ul>
+<li>整个空间要能量（X∈𝓜）；</li>
+<li>能量的集合取补集也要能量（A∈𝓜 ⇒ Aᶜ∈𝓜，否则 λ(A)+λ(Aᶜ)=λ([0,1])=1 无从谈起）；</li>
+<li>可数多个能量的集合的并也要能量（∪ₙAₙ∈𝓜，否则可数可加性没地方使）。</li>
+</ul>
+<p><strong>定义（σ-代数）。</strong>满足上述三条（含可数并封闭，因此也含可数交、差集）的集族 𝓜 叫 σ-代数。由开区间生成的 σ-代数叫 <strong>Borel σ-代数</strong> 𝓑，其成员叫 Borel 集。Lebesgue 要做的，是把 Borel σ-代数再放大一点（吸收零测集的所有子集），得到 <strong>Lebesgue σ-代数</strong>——它"大"到包含你能想到的一切正常集合，又"小"到躲开 Vitali 的陷阱。</p>
+<div class="key-insight"><strong>为什么 σ-代数：</strong>测度要在"并、交、补、可数极限"这些操作下保持可用，就需要一个在这些操作下封闭的集合家族。Vitali 告诉我们的正是：这个家族不能是全集合（否则矛盾），但可以是"几乎全"的 σ-代数。</div>
+</section>
+
+<section>
+<h3>四、Carathéodory 构造：把外测度"削"成测度</h3>
+<p>外测度已发给每个集合候选长度，现在要划出"真正可测"的集合。Carathéodory 的判据漂亮且精确：</p>
+<p><strong>定义（Carathéodory 可测性判据）。</strong>A 称为 Lebesgue 可测，若对<strong>每一个</strong>集合 E⊂ℝ，</p>
+<div class="formula display" data-tex="m^{*}(E)=m^{*}(E\cap A)+m^{*}(E\cap A^{c})."></div>
+<p>直觉：A 是"一把干净的刀"，无论切哪块"肉" E，切出来的两半长度恰好等于整块的长度——A 不会"藏"任何质量，不会让外测度的加性吃亏。反过来，Vitali 集是"脏刀"：用 (0,1) 去切它，两半总长和跟整块对不上。</p>
+<p><strong>例 4（一步步算：Cantor 三分集的测度 = 0）。</strong></p>
+<p>Cantor 集 C 这样造：从 C₀=[0,1] 开始，每一步删掉每个现有区间的中间 1/3 开区间。</p>
+<ul>
+<li>第 1 步删 (1/3, 2/3)，长 1/3，剩 2 段，总长 2/3。</li>
+<li>第 2 步删两段各自中间的三分之一，各长 1/9，共删 2/9，剩 4 段，总长 4/9。</li>
+<li>第 n 步删 2ⁿ⁻¹ 段，每段长 3⁻ⁿ，共删 2ⁿ⁻¹/3ⁿ，剩总长 (2/3)ⁿ。</li>
+</ul>
+<p>被删去的总长度是等比级数：</p>
+<div class="formula display" data-tex="\sum_{n=1}^{\infty}\frac{2^{n-1}}{3^{n}}=\frac13\cdot\frac{1}{1-2/3}=1."></div>
+<p>故 C 的长度 = 1 − 1 = 0。但注意 C 是<strong>不可数</strong>的（每位三进制选 0 或 2，与二进制小数一一对应，连续统基数）——又一次说明"个数"与"测度"无关。∎</p>
+<p><strong>例 5（可测性判断）。</strong>判断几个集合是否可测：ℚ∩[0,1] 可测且测度 0（可数）；Cantor 集可测且测度 0（例 4，它是紧致完备集）；Vitali 集 V 不可测；V∪{π} 不可测（否则减掉单点 {π} 得 V 可测，矛盾）；V∩C 可测且测度 0——因为它是零测集 C 的子集，而 Lebesgue 测度<strong>完备</strong>（零测集的子集都可测），这正是 Lebesgue σ-代数比 Borel σ-代数大的原因。</p>
+<p><strong>为什么 Carathéodory 判据真的能把外测度变成测度？</strong>这是本课最重的一步，标准证明（Carathéodory 延拓定理）分五步：① 外测度（已做）；② 可测性判据（已做）；③ 可测集构成 σ-代数且 m* 限制在其上是完备测度（Carathéodory 引理）；④ 原来的代数 𝒜 里的集合都可测；⑤ σ-有限保证唯一性。完整证明见<strong>附：定理证明</strong>一节，它同时构造出 Lebesgue、Hausdorff、乘积等一切标准测度。</p>
+</section>
+
+<section>
+<h3>五、可测函数与 Lebesgue 积分——测出来之后怎么"用"</h3>
+<p>有了"能测量的集合"，下一步是"能测量的函数"——<strong>可测函数</strong>。直觉：一个函数 f 如果能被我们量出来的集合"描述"，它就可测。严格说：<strong>对任何实数区间，f 的原像（那些 x 使得 f(x) 落在区间里）必须是可测集</strong>。为什么几乎所有函数都可测？因为连续函数、逐点极限的连续函数（Baire 类）、取正负部、取极限——这些操作都保持可测性，所以实际中遇到的函数几乎都可测。</p>
+<p><strong>Lebesgue 积分</strong>怎么定义？先定义"简单函数"（有限个台阶，每级在一个可测集上取常值）的积分为"高度 × 该级集合的测度"之和，再通过单调逼近推广到一般非负可测函数：</p>
+<div class="formula display" data-tex="\int f\,d\mu=\sup\Big\{\int s\,d\mu\ :\ s\text{ 简单},\ 0\le s\le f\Big\}"></div>
+<p>直觉：和 Riemann 积分"竖着切定义域"不同，Lebesgue 积分是"横着切值域"——按函数值分层，每层测度乘以层高再加总。这种"横切"让积分和极限的交换变得异常宽松。</p>
+<p><strong>例 6（一步步算：用横切法算 ∫₀¹ x dx = 1/2）。</strong></p>
+<p>值域 [0,1] 切 n 层，第 k 层取高度 k/n：</p>
+<div class="formula display" data-tex="s_n(x)=\sum_{k=0}^{n-1}\frac{k}{n}\,\mathbf{1}_{[k/n,(k+1)/n)}(x)."></div>
+<p>第 k 层在定义域上对应的集合是 {x : k/n ≤ x &lt; (k+1)/n} = [k/n,(k+1)/n)，它是长度为 1/n 的区间。所以</p>
+<div class="formula display" data-tex="\int s_n\,d\lambda=\sum_{k=0}^{n-1}\frac{k}{n}\cdot\lambda\Big(\Big[\frac{k}{n},\frac{k+1}{n}\Big)\Big)=\sum_{k=0}^{n-1}\frac{k}{n^2}=\frac{n(n-1)/2}{n^2}=\frac{n-1}{2n}."></div>
+<p>注意到 sₙ 单调上升地逼近 f(x)=x（每一层的高度越来越细密）。由单调收敛定理（下一节），</p>
+<div class="formula display" data-tex="\int_0^1 x\,dx=\lim_{n\to\infty}\frac{n-1}{2n}=\frac12. \qquad \text{∎}"></div>
+<p>这个例子真正的信息不是"算出 1/2"——这个 Riemann 积分早就知道——而是<strong>方法的普适性</strong>：</p>
+<p><strong>例 7（算一个 Riemann 算不了的积分）。</strong>考虑 d(x)=1 当 x∈ℚ∩[0,1]，否则 0（Dirichlet 函数）。Riemann 积分不存在（任何划分的上下和分别是 1 和 0，不收敛）。但它是简单函数本身：d = 1·1_{ℚ∩[0,1]}。所以</p>
+<div class="formula display" data-tex="\int d\,d\lambda=1\cdot\lambda(\mathbb{Q}\cap[0,1])+0\cdot\lambda(\text{其余})=1\cdot0=0."></div>
+<p>用到了例 1 的结论：可数集的测度为 0。∎ 同一个函数，Riemann 束手无策，Lebesgue 一次算清——这就是"横切值域"带来的力量。</p>
+<div class="key-insight">可测函数 + Lebesgue 积分 = 用测度"读出"函数的信息。到这会了测度论最核心的工具链：测度（能量集合）→ 可测函数（能量函数）→ 积分（能量的总和）。</div>
+</section>
+
+<section>
+<h3>六、收敛定理的完整谱系——MCT→Fatou→DCT→Egorov→Lusin</h3>
+<p>横切积分最大的红利是：<strong>极限与积分在极宽松的条件下可以交换。</strong>三条主力定理，称为"三级阶梯"：</p>
+<ul>
+<li><strong>单调收敛定理 (MCT)</strong>：0 ≤ fₙ ↗ f ⇒ ∫fₙ ↗ ∫f。要求单调，不要求任何控制。</li>
+<li><strong>Fatou 引理</strong>：∫liminf fₙ ≤ liminf ∫fₙ。要求非负，只给不等号。</li>
+<li><strong>控制收敛定理 (DCT)</strong>：|fₙ| ≤ g∈L¹ 且 fₙ → f a.e. ⇒ ∫fₙ → ∫f。用一块"可积的布"罩住所有 fₙ。</li>
+</ul>
+<p><strong>为什么需要这么多收敛概念？</strong>因为在无穷世界里"收敛"有太多含义，它们捕捉的侧面不同：<strong>依测度收敛</strong>看"集合"（测度大的集合上离得近），<strong>a.e. 收敛</strong>看"点"（每个点最终都靠近，允许零测集上的点捣乱），<strong>Lᵖ 收敛</strong>看"大小"（整体能量差趋于 0）。这三个互不蕴含，必须各有名字。它们的层次（蕴含方向）：</p>
+<ul>
+<li>强 Lᵖ 收敛 ⇒ 依测度收敛（Chebyshev 不等式）；</li>
+<li>有限测度空间上 λ-a.e. 收敛 ⇒ 依测度收敛（Egorov 的推论）；</li>
+<li>依测度收敛 ⇒ 存在子列 λ-a.e. 收敛；</li>
+<li>弱 Lᵖ 收敛与依测度收敛互不蕴含（如 fₙ(x)=e^{inx} 弱收敛于 0 却不依测度收敛）。</li>
+</ul>
+<p>还有两条"把抽象测度拉回经典分析"的闭合回路：<strong>Egorov 定理</strong>（有限测度上 a.e. 收敛 ⇒ 在任意小测度的集合外一致收敛）与 <strong>Lusin 定理</strong>（可测函数"几乎连续"：对任意 ε&gt;0 存在闭集 F 使 λ(ℝⁿ∖F)&lt;ε 且 f 在 F 上连续）。</p>
+<p><strong>例 8（一步步算：Fatou 的不等号为什么取不到等号）。</strong>设 fₙ(x) = n·1_{(0,1/n)}(x)。对任意固定的 x&gt;0，当 n &gt; 1/x 时 x∉(0,1/n)，故 fₙ(x)=0，所以逐点 fₙ → 0，∫liminf fₙ = 0。但</p>
+<div class="formula display" data-tex="\int f_n\,d\lambda=n\cdot\lambda((0,1/n))=n\cdot\frac1n=1,\qquad \liminf\int f_n=1."></div>
+<p>于是 0 = ∫liminf fₙ ≤ liminf ∫fₙ = 1，严格不等号。为什么 Fatou 拿不到等号？因为质量"逃逸"了：fₙ 的峰越来越高（n）、越来越窄（1/n），峰的面积恒为 1，但峰尖不断跑向 x=0 这个单点，把质量"漏"进了极限函数的缝隙里。这正是"极限与积分不交换"的机制，也是 DCT 要防的事故。∎</p>
+<p><strong>例 9（一步步算：用 DCT 求极限）。</strong>计算 L = lim∫₀¹ (1−x/n)ⁿ dx。</p>
+<p>① <strong>逐点极限：</strong>对每个固定的 x∈(0,1]，(1−x/n)ⁿ → e⁻ˣ（基本极限）。</p>
+<p>② <strong>找控制：</strong>利用 e⁻ᵘ ≥ 1−u（u≥0），有 (1−x/n)ⁿ ≤ e⁻ˣ ≤ 1，故被 1∈L¹[0,1] 控制。✓</p>
+<p>③ <strong>用 DCT 交换：</strong>L = ∫₀¹ lim(1−x/n)ⁿ dx = ∫₀¹ e⁻ˣ dx = 1−e⁻¹。∎</p>
+<p>三步走——"求逐点极限 → 找 L¹ 控制 → 交换"——是 DCT 的看家套路。</p>
+</section>
+
+<section>
+<h3>七、乘积测度与 Fubini-Tonelli</h3>
+<p>一维的长度推广到平面、空间，就是乘积测度：矩形 [a,b]×[c,d] 的"面积" = (b−a)(c−d)。把它严格化，关键是<strong>重积分能不能先积一个变量、再积另一个？</strong></p>
+<p><strong>Tonelli 定理（非负函数）：</strong>在 σ-有限乘积空间 (X×Y, μ×ν) 上，对任意非负可测 f：</p>
+<div class="formula display" data-tex="\int_{X\times Y} f\,d(\mu\times\nu)=\int_X\Big(\int_Y f(x,y)\,d\nu(y)\Big)d\mu(x)=\int_Y\Big(\int_X f(x,y)\,d\mu(x)\Big)d\nu(y)."></div>
+<p>注意：<strong>非负，三个方向直接相等，甚至不需要知道有限与否。</strong>若 f 可正可负，则需 <strong>Fubini 定理</strong>：假设 |f| 可积，同样可先积任一变量。两定理的区别只是：非负白送（Tonelli），可负要验积（Fubini）。</p>
+<p><strong>为什么 σ-有限性不可或缺？</strong>没有它，累次积分可以差很多。经典例子：取 X=Y=[0,1]，对角集上的非平凡测度会造成"先积 x 得 1，先积 y 得 0"的荒唐局面。σ-有限保证每个乘积测度能被可数块"有限矩形"拼出来，交换才安全。</p>
+<p><strong>例 10（一步步算：换序积分的算到底）。</strong>令 f(x,y) = e⁻ʸ·1_{0≤x≤y} 在 (0,∞)² 上，f≥0，用 Tonelli 两个方向都算一遍：</p>
+<ul>
+<li>先积 x：对固定 y，f 在 0&lt;x&lt;y 上等于 e⁻ʸ，宽 y，故 ∫₀^∞ f(x,y)dx = y e⁻ʸ。再积 y：∫₀^∞ y e⁻ʸ dy = [−y e⁻ʸ]₀^∞ + ∫₀^∞ e⁻ʸ dy = 0+1 = 1（分部积分）。</li>
+<li>先积 y：对固定 x，f 在 y&gt;x 上等于 e⁻ʸ，∫ₓ^∞ e⁻ʸ dy = e⁻ˣ。再积 x：∫₀^∞ e⁻ˣ dx = 1。</li>
+</ul>
+<p>两个方向都得到 1。∎ 这个 f 定义的区域是 y 轴上方的等腰直角三角形（斜边 y=x），换序时区域从"竖切"变"横切"，但面积不变——Tonelli 保证这点永远成立。</p>
+<p><strong>Kolmogorov 延拓定理：</strong>相容的有限维分布在 ℝ^T 上唯一确定测度 → 无穷乘积空间上的概率测度。这是<strong>随机过程理论的数学基石</strong>——Wiener 测度（Brownian 运动）、Poisson 随机测度均由此构造。</p>
+</section>
+
+<section>
+<h3>八、Radon-Nikodym 定理——条件期望的测度论根基</h3>
+<p>两个测度之间也能"比大小"：若 ν(A)=0 ⟹ μ(A)=0，称 μ<strong>关于 ν 绝对连续</strong>，记 μ≪ν——"μ 能被 ν 看到的地方一定也不瞒着 ν"。Radon-Nikodym 定理说：</p>
+<div class="formula display" data-tex="\nu\ll\mu\ \Longleftrightarrow\ \nu(A)=\int_A f\,d\mu\quad\text{对某非负可测 }f."></div>
+<p>这个 f 叫 <strong>Radon-Nikodym 导数</strong> dν/dμ，它是 μ-a.e. 唯一确定的。这就是测度的"导数"——把两个测度的比值局部化成逐点的密度。</p>
+<p><strong>为什么概率论离不开它？</strong>条件期望 E[X|𝒢] 的严格定义是：E[X|𝒢]·dP|_{𝒢} = dQ|_{𝒢}，其中 Q(E)=∫_E X dP。换言之，<strong>条件期望就是 R-N 导数在子 σ-代数上的限制</strong>——"已知信息的条件下求平均"这个概率直观，在测度论里变成了"限制到子 σ-代数再求导"。鞅收敛定理的证明本质上是 R-N 定理在递增 σ-代数族上的极限应用：E[X|𝒢ₙ] → E[X|𝒢_∞] a.s.</p>
+</section>
+
+<section>
+<h3>九、两条通向一般测度的路：Carathéodory 框架与 Riesz 表示</h3>
+<p>Lebesgue 测度只是一切的样板，两条更一般的生产线已经建好：</p>
+<p><strong>第一条：Carathéodory 构造（"盖盖子"路线）。</strong>任意集合 X 上，只要先给代数 𝒜 上的 σ-有限预测度 μ₀，就能依"外测度 → 可测性判据 → σ-代数"的标准流程得到 σ(𝒜) 上的唯一测度。Lebesgue 测度、Hausdorff 测度、乘积测度都是这个模板的特例。</p>
+<p><strong>第二条：Riesz 表示定理（"期望算子"路线）。</strong>紧致 Hausdorff 空间 X 上的正线性泛函，一一对应正则 Borel 测度：测度 = 线性泛函。这是泛函分析到测度论的桥梁——每个"期望算子"对应一个概率测度；Lebesgue 积分的泛函分析版本叫 <strong>Daniell 积分</strong>。</p>
+<p>两者在局部紧 Hausdorff 空间上汇合：<strong>Radon 测度</strong> = 在每个紧致集上有限的正 Borel 测度，且 Riesz 表示在该设定下成立（正线性泛函 ⟺ Radon 测度）。这是概率论（CDF 对应 Stieltjes 测度）和表示论（Haar 测度）的基础。</p>
+</section>
+
+<section>
+<h3>十、关键公式</h3>
+<div class="formula display" data-tex="\lambda([a,b])=b-a\quad\text{(Lebesgue测度)}"></div>
+<div class="formula display" data-tex="m^{*}(A)=\inf\Big\{\sum|I_n|\ :\ A\subset\cup I_n\Big\}\quad\text{(外测度)}"></div>
+<div class="formula display" data-tex="A\text{ 可测}\iff m^{*}(E)=m^{*}(E\cap A)+m^{*}(E\cap A^c)\ \forall E\quad\text{(Carathéodory)}"></div>
+<div class="formula display" data-tex="\int f\,d\mu=\sup\Big\{\int s\,d\mu\ :\ 0\le s\le f,\ s\text{ 简单}\Big\}\quad\text{(Lebesgue 积分)}"></div>
+<div class="formula display" data-tex="\int\lim f_n=\lim\int f_n\quad\text{(DCT: }|f_n|\le g\in L^1\text{)}"></div>
+<div class="formula display" data-tex="\nu\ll\mu\iff\nu(A)=\int_A \frac{d\nu}{d\mu}\,d\mu\quad\text{(Radon-Nikodym)}"></div>
+</section>
+
+<section>
+<h3>十一、试试看（每题附提示）</h3>
+<p><strong>1. 外测度的几何意义。</strong>计算 m*((0,1))、m*([0,1])、m*((0,1)∪{2})，并解释它们为什么符合直觉。</p>
+<p><em>提示：区间 (0,1) 被 (0,1) 自己盖住，m* ≤ 1；任何盖子都要长 ≥ 1（例 3 的论证），故 =1。闭区间同样 =1（端点不影响）。单点测度 0，故 m*((0,1)∪{2})=1。</em></p>
+<p><strong>2. 平移不变与可测性。</strong>证明：若 A 可测，则 A+q 可测且测度相同。</p>
+<p><em>提示：外测度平移不变（把最优盖子整体平移即可验证 m*(E+q)=m*(E)），再用可测性判据：验证 m*(F)=m*(F∩(A+q))+m*(F∩(A+q)ᶜ) 时，把 F 整体平移 −q 化归到 A 的可测性。</em></p>
+<p><strong>3. 简单函数逼近。</strong>把 f(x)=x² 在 [0,1] 上切成 n 层（值域分层），写出对应简单函数 sₙ，并用 MCT 求 ∫₀¹ x² dx。</p>
+<p><em>提示：第 k 层集合 {x : x²∈[k/n,(k+1)/n)} = [√(k/n), √((k+1)/n))，测度 = √((k+1)/n)−√(k/n)。对 sₙ 积分并对 n 求和——或更省事：既然分层集合的测度能算，可用黎曼-斯蒂尔杰斯/直接代入，或直接用"横切"思想验证答案 1/3。若分层求和繁琐，可换用单调逼近 1_{[0,1]}·x² 的上台阶，等价于 1/3。</em></p>
+<p><strong>4. Fatou 的另一副面孔。</strong>构造例子说明：即使 ∫fₙ = 1 恒成立且 fₙ ≥ 0，∫lim fₙ 仍可以不是 1。</p>
+<p><em>提示：例 8 的"质量逃逸"就是答案——fₙ = n·1_{(0,1/n)} 让 ∫lim = 0 而 ∫ 恒为 1。换个方向让质量"从无到有"（比如移动的峰），结论对称。</em></p>
+<p><strong>5. DCT 的失败。</strong>设 fₙ(x)=n²·1_{[0,1/n]}(x)。说明为什么 DCT 不适用，并分别求 ∫lim fₙ 与 lim∫fₙ。</p>
+<p><em>提示：∫lim = 0（每个点最终被甩出支撑）；∫fₙ = n²·(1/n)=n→∞。supₙ fₙ 无处有界，L¹ 控制函数不存在——DCT 前提被破坏，这正是"交换有代价"的示范。</em></p>
+<p><strong>6. Fubini 的边界。</strong>f(x,y)=e⁻ˣʸ·1_{0&lt;x&lt;y&lt;∞} 非负。用 Tonelli 换序并求积分。</p>
+<p><em>提示：先积 x：∫₀^y e⁻ˣʸ dx = (1−e⁻ʸ²)/y，于是积分为 ∫₀^∞ (1−e⁻ʸ²)/y dy——这个发散的比值提示：该函数在乘积空间上可能不可积（∫∫ = ∞），此时 Tonelli 仍成立（等式，两边都 ∞）。若要有限例子，把区域换成 x&lt;y&lt;1 试算。</em></p>
+<p><strong>7. 为什么 σ-代数而不是代数？</strong>把"可数并封闭"换成"有限并封闭"（即只要求代数），Vitali 的矛盾还成立吗？</p>
+<p><em>提示：矛盾来自把可数个平移 V+q 拼在一起，这用到可数并。若只对有限并可测，Vitali 论证在有限个平移上不产生矛盾——正因为这样，测度论必须坚持可数（而不是有限）封闭，可数可加性才有意义。</em></p>
+</section>
+
+<section>
+<h3>附：定理证明——Carathéodory 延拓定理</h3>
+<p><strong>陈述。</strong>设 μ₀ 是集合 X 上某代数 𝒜 上的 σ-有限预测度（μ₀ 可数可加、μ₀(∅)=0，且 X = ∪ₙ Aₙ，μ₀(Aₙ) &lt; ∞）。则 μ₀ 可唯一延拓为 σ(𝒜) 上的测度 μ；Lebesgue 测度、Hausdorff 测度、乘积测度都是它的特例。</p>
+<p><strong>证明框架（五步）。</strong></p>
+<p><strong>第一步（外测度）。</strong>对任意 E⊂X 定义</p>
+<div class="formula display" data-tex="\mu^*(E)=\inf\Big\{\sum_{n=1}^{\infty}\mu_0(A_n)\ :\ E\subset\bigcup_{n}A_n,\ A_n\in\mathcal{A}\Big\},"></div>
+<p>并逐条验证外测度公理：单调性、次可数可加性（对覆盖取 ε/2ⁿ 逼近）。</p>
+<p><strong>第二步（Carathéodory 判据）。</strong>称 E 为 μ*-可测，若对所有 F⊂X 有</p>
+<div class="formula display" data-tex="\mu^*(F)=\mu^*(F\cap E)+\mu^*(F\cap E^c)."></div>
+<p><strong>第三步（可测集是 σ-代数）。</strong>全体 μ*-可测集 𝔐 构成 σ-代数，且 μ* 限制在 𝔐 上是完备测度（Carathéodory 引理）。</p>
+<p><strong>第四步（𝒜 中集合可测）。</strong>对任意 F、任意 A∈𝒜 与覆盖 F⊂∪Aₙ，用 μ₀ 的预测度性质与次可加性推 μ*(F) ≥ μ*(F∩A) + μ*(F∩A^c)；反方向由单调性给出，故等号成立，𝒜⊂𝔐。</p>
+<p><strong>第五步（σ-有限 ⇒ 唯一性）。</strong>若 ν 是另一延拓，先在 𝒜 上 ν=μ₀，再由 π-λ 定理（或单调类定理）把等号从代数 𝒜 提升到 σ(𝒜)；σ-有限性保证截断逼近可行。完备化（并入所有测度零集的子集）即得 Lebesgue σ-代数。∎</p>
+</section>
+
+<section>
+<h3>附：定理证明——单调收敛定理（MCT）</h3>
+<p><strong>陈述。</strong>设 0 ≤ f₁ ≤ f₂ ≤ ⋯ 是可测函数，fₙ → f 逐点（或 a.e.），则</p>
+<div class="formula display" data-tex="\int f\,d\mu=\lim_{n\to\infty}\int f_n\,d\mu\qquad(0\cdot\infty=0\ \text{约定})."></div>
+<p><strong>证明。</strong>由单调性 ∫fₙ 单调上升，极限存在且 ≤ ∫f（允许 ∞）。只需证 ≥：</p>
+<p>① 记 L = lim ∫fₙ。任取简单函数 0 ≤ s ≤ f 与常数 0 &lt; c &lt; 1，定义 Eₙ = {fₙ ≥ c·s}。由 fₙ ↗ f 得 Eₙ ↗ X，再用简单函数积分与测度的连续性：</p>
+<div class="formula display" data-tex="L\ge\int f_n\ge c\int_{E_n}s\,d\mu\;\nearrow\;c\int s\,d\mu."></div>
+<p>② 令 c→1⁻ 得 L ≥ ∫s；再对满足 0≤s≤f 的所有简单函数取上确界（积分的经典定义 ∫f = sup{∫s}），得 L ≥ ∫f。反向不等式平凡，两式合起来 MCT 成立。∎</p>
+<div class="key-insight">MCT 的力量在于把"交换极限与积分"从简单函数（有限和）经单调逼近无痛推广到任意非负可测函数。Fatou 引理是 MCT 的推论，DCT 再放宽"单调"为"被 g∈L¹ 控制"。</div>
+</section>
+
+<section>
+<h3>附：反例——Vitali 不可测集与 Banach-Tarski 悖论</h3>
+<p><strong>构造（Vitali, 1905）。</strong>在 [0,1] 上定义等价关系 x~y ⟺ x−y ∈ ℚ。每个等价类都稠密。用<strong>选择公理</strong>在每个等价类中选一个代表元，收集成集合 V（Vitali 集）。</p>
+<p><strong>证明 V 不可测。</strong>取可数集 Q = ℚ∩(−1,1)。可数并 {V+q : q∈Q} 互不相交，且</p>
+<div class="formula display" data-tex="[0,1]\subset\bigcup_{q\in Q}(V+q)\subset[-1,2]."></div>
+<p>若 V 可测，则由平移不变性 λ(V+q)=λ(V)，测度可数可加给出 1 ≤ Σ_{q∈Q}λ(V) ≤ 3。但该和要么为 0（若 λ(V)=0，与 1≤Σ 矛盾），要么为 ∞（若 λ(V)&gt;0，与 Σ≤3 矛盾）。故 λ(V) 不存在——V 不可测。∎</p>
+<p><strong>Banach-Tarski 悖论（陈述）。</strong>ℝ³ 中单位球 B 可分解为<strong>有限</strong>（5 块）互不相交的部分，各部分经刚体运动（平移+旋转）重新拼接后可得到<strong>两个</strong>与 B 全等的球。它是选择公理的惊人后果：那些"部分"全是不可测集——正因为 Lebesgue 测度无法对全体子集定义，体积才会"翻倍"。反之，若 Lebesgue 测度能延拓到一切子集，该悖论不可能出现。</p>
+</section>
+
+<section>
+<h3>附：工作题（带解答）</h3>
+<p><strong>题 1（判断可测性）。</strong>设 V 是 [0,1] 中的 Vitali 集，C 是 Cantor 集。判断下列集合是否 Lebesgue 可测；可测的求测度：(a) V；(b) V∪{π}；(c) ℚ∩[0,1]；(d) C；(e) V∩C。</p>
+<details><summary>显示解答</summary><p>(a) 不可测——由构造，若可测则 1 ≤ Σλ(V) ≤ 3 矛盾。(b) 不可测：若 V∪{π} 可测，则 V = (V∪{π})∖{π} 是可测集之差，可测，矛盾。(c) 可测，测度 0——可数集。(d) 可测，测度 0——Cantor 集是紧致完备不可数集且 λ(C)=0（删除区间总长 1）。(e) V∩C 是 Cantor 集（零测集）的子集；Lebesgue 测度完备，故可测，测度 0。注：零测集的所有子集都可测——这正是 Lebesgue σ-代数大于 Borel σ-代数之处。</p></details>
+<p><strong>题 2（MCT）。</strong>用单调收敛定理计算 lim∫₀^∞ x·e⁻ˣ·1_{[0,n]}(x) dx，并说明为何可用 MCT。</p>
+<details><summary>显示解答</summary><p>fₙ(x) = x·e⁻ˣ·1_{[0,n]}(x) 非负且 fₙ ↗ x·e⁻ˣ，故 MCT 适用。分部积分：∫₀^∞ x·e⁻ˣ dx = [−xe⁻ˣ]₀^∞ + ∫₀^∞ e⁻ˣ dx = 0 + 1 = 1。因此极限 = 1。</p></details>
+<p><strong>题 3（Fatou 严格性）。</strong>设 fₙ = n·1_{(0,1/n)}(x)（μ 为 Lebesgue 测度）。计算 ∫liminf fₙ 与 liminf ∫fₙ，说明 Fatou 引理为何取不到等号。</p>
+<details><summary>显示解答</summary><p>对任意 x&gt;0，当 n&gt;1/x 时 fₙ(x)=0，故 fₙ→0 逐点，∫liminf fₙ = 0。但 ∫fₙ = n·(1/n) = 1，liminf ∫fₙ = 1。严格不等号 0 &lt; 1——Fatou 的下极限性质不能加强为等式，除非附加条件（单调性 MCT 或受控性 DCT）。</p></details>
+<p><strong>题 4（DCT）。</strong>计算 lim∫₀¹ (1 − x/n)ⁿ dx，并验证控制条件。</p>
+<details><summary>显示解答</summary><p>由 (1−x/n)ⁿ ≤ e⁻ˣ ≤ 1，被积函数被常函数 1∈L¹[0,1] 控制，DCT 适用。逐点极限 (1−x/n)ⁿ → e⁻ˣ。故原式 = ∫₀¹ e⁻ˣ dx = 1 − e⁻¹。</p></details>
+<p><strong>题 5（极限与积分交换）。</strong>设 fₙ(x) = n²·1_{[0,1/n]}(x) 在 (0,1] 上。判断 ∫lim fₙ 与 lim ∫fₙ 是否相等。</p>
+<details><summary>显示解答</summary><p>对任意 x&gt;0，当 n &gt; 1/x 时 x ∉ (0,1/n]，fₙ(x)=0，故 fₙ→0 逐点，∫lim fₙ = 0。但 ∫fₙ = n²·(1/n) = n → ∞。故 lim∫fₙ = ∞ ≠ 0：没有 L¹ 控制函数（supₙ fₙ 无上界），DCT 前提被破坏，极限与积分不可交换。这正是 Fatou 不等号（0 ≤ ∞）的来源。</p></details>
+</section>
+
+<section><h3>附：关键文献</h3><p>Lebesgue(1902, "Intégrale, longueur, aire"——博士论文,开创现代积分理论)。Carathéodory(1914, 外测度到测度的系统构造)。Radon(1913, 在ℝ^n上证明R-N定理)。Nikodym(1930, R-N导数的一般证明)。Kolmogorov(1933, "Grundbegriffe der Wahrscheinlichkeitsrechnung"——<strong>现代概率论的奠基之作</strong>,将概率公理化为测度论的特例:P(Ω)=1)。</p></section>
+
+<section><h3>前沿：测度论与量子场论的公理化</h3><p>量子场论的Wightman公理和Osterwalder-Schrader公理将QFT建立在测度论(路径积分测度)上。4D Yang-Mills的构造性QFT——千禧年问题。仍开放:在测度论框架下构造任何非平凡4D QFT。</p></section>
+
+<section><h3>前沿：非交换测度论与自由概率</h3><p>Voiculescu(1985)的自由概率论是"非交换随机变量"的测度论。当矩阵维数->无穷,独立随机矩阵的渐近自由性使得其组合结构完全可计算。仍开放:自由概率和量子信息的深层联系(Q-熵、自由熵维度)。</p></section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>W. Rudin, Real and Complex Analysis</strong></p>
+<p>&rarr; <strong>G. Folland, Real Analysis</strong></p>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/functional-analysis.html">📊 泛函分析</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：同一学科分类「分析」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/measure-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

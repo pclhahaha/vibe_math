@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="计算的极限——停机问题" />
+  <meta property="og:title" content="图灵机 — Vibe Math" />
+  <meta property="og:description" content="计算的极限——停机问题" />
+  <title>图灵机 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📝 图灵机 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">计算的极限——停机问题</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='turing-machine',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/ergodic-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ♻️ 遍历理论</a>
+  <a href="/pages/p-vs-np.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⏳ P vs NP 与 NP 完备性 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一台"加一机"算给你看</h3>
+<p>先看一个你可以亲手验算的具体问题。<strong>在一卷无限长的纸带上写着三个 1：<code>1 1 1</code>，我们约定它代表数字 3。请你设计一台机器，把纸带变成四个 1：<code>1 1 1 1</code>。</strong>这听起来像脑筋急转弯，但答案本身就是图灵机的雏形——而且它小得可笑。</p>
+<p>这台"加一机"只需要<strong>一个干活的状态</strong>和一个<strong>停机状态</strong>，规则只有两条（q₀ 表示"正在干活"，q_halt 表示"干完了"）：</p>
+<div class="formula display" data-tex="\delta(q_0,\,1)=(q_0,\,1,\,R),\qquad \delta(q_0,\,\square)=(q_{\text{halt}},\,1,\,R)."></div>
+<p>第一条规则说"读到 1 就保持 1、向右走一格"；第二条说"读到空格 □（纸带上的空白）就在那里写一个 1、然后停下"。我们把读写头的位置一步步跟踪一遍（下划线标出当前对准的格子）：</p>
+<p><strong>第 1 步</strong>（q₀，对准第 1 格）：读 1 → 写 1，向右移。纸带 <code>1 1 1 □</code></p>
+<p><strong>第 2 步</strong>（q₀，对准第 2 格）：读 1 → 写 1，向右移。纸带 <code>1 1 1 □</code></p>
+<p><strong>第 3 步</strong>（q₀，对准第 3 格）：读 1 → 写 1，向右移。纸带 <code>1 1 1 □</code></p>
+<p><strong>第 4 步</strong>（q₀，对准空格）：读 □ → 写 1，停机。纸带 <code>1 1 1 1</code>。</p>
+<p>结果：三个 1 变成四个 1，+1 完成。∎</p>
+<p>一台只有两个"内部状态"的机器就能做加一；那我们能不能靠增加状态、增加规则，做出乘法、排序、甚至今天所有软件的活？1936 年，年仅 24 岁的英国数学家 Alan Turing 给出了一个让同行震惊的回答：<strong>能。只要"纸带 + 读写头 + 一张有限状态表"这三件套，就足够完成任何"能算"的事</strong>——包括今天每台电脑能做的事，都逃不出这台"纸带机器"的手掌心。</p>
+<div class="key-insight">洞察：算力的极限不取决于机器有多贵、多复杂，而取决于这个简单的模型本身——三件套已经强到极致；而且有些问题，再聪明的电脑也算不出来。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、图灵机的三件套——纸带、读写头、状态表（直觉）</h3>
+<p>把刚才的"加一机"抽象成三样东西，就是图灵机的全部家当：</p>
+<p><strong>第一件：无限纸带（tape）。</strong>一卷向两头无限延伸的纸条，上面分成一格一格，每格写一个符号。一格可以是数字、字母，也可以是空白 □。纸带就是机器的"记忆"——需要记多少东西，就占多少格，永不耗尽。</p>
+<p><strong>第二件：读写头（head）。</strong>一个能"盯着"某一格的小装置。它一次只能看一格，能做三件事：<strong>读</strong>那一格是什么、<strong>写</strong>一个符号覆盖它、<strong>移</strong>——往左或往右走一格。它没有眼睛以外的感知，不知道自己"在纸带的第几格"。</p>
+<p><strong>第三件：有限状态表（state table）。</strong>一张小纸条，上面写着"当我现在处于状态 q、眼前这一格是符号 a 时，我该怎么做"。每个条目形如：<code>(状态 q，读到 a) → (写 b，往左或往右，进到状态 q′)</code>。状态的数量必须是有限的——因为这张表是事先写在机器里、不能再长的。</p>
+<p>这三件套为什么"可笑地简单"？因为聪明的部分全在<strong>表</strong>里，而表只是一堆 if-then 规则；机器本身只是个笨拙的抄写员。可正是这个笨模型，被证明能模拟一切算法——这是本课第一个要解释的"为什么"。</p>
+<div class="key-insight">图灵机 = 无限纸带 + 读写头 + 有限状态表。读写头每次只读一格、写一格、移一格，然后按表决定下一步。聪明全在表里，机器本身很笨。</div>
+</section>
+
+<section>
+<h3>〇·二、正式定义——从直觉到严格的四元组</h3>
+<p>直觉讲清楚了，现在给出严格定义。教科书上，一台图灵机通常写成四元组：</p>
+<div class="formula display" data-tex="M=(Q,\ \Sigma,\ \Gamma,\ \delta),\qquad Q\ \text{有限},\ \Sigma\subseteq\Gamma\setminus\{\square\},\ \Gamma\ \text{有限含}\ \square."></div>
+<p><strong>Q：状态集。</strong>所有"内部状态"的集合，有限。含一个起始状态 q₀，以及两个特殊停机状态 q_accept（接受）、q_reject（拒绝）——机器一旦进入二者之一就立即停止。</p>
+<p><strong>Σ：输入字母表。</strong>写在一开始纸带上的符号集合，不含空白 □。比如上面的例子 Σ = {1}。</p>
+<p><strong>Γ：纸带字母表。</strong>机器在运行中允许写下的全部符号，包含 Σ 和空白 □（还可以有辅助记号，如下一节的 X）。</p>
+<p><strong>δ：转移函数。</strong>它回答"现在怎么办"：</p>
+<div class="formula display" data-tex="\delta\colon Q\times\Gamma\ \longrightarrow\ Q\times\Gamma\times\{L,R\},\qquad \delta(q,a)=(q',b,\text{dir})."></div>
+<p>意思是：在状态 q、读到符号 a 时，写下 b，向 dir 方向（L=左，R=右）走一格，进入状态 q′。整个计算，就是反复执行这张表——每次一个格子的"读-写-移"称为<strong>一步</strong>。</p>
+<p><strong>为什么这样定义？</strong>三点都有深刻理由。① 纸带<strong>无限</strong>：保证"记忆永不耗尽"——否则长输入会撑爆存储，那只是工程限制而非数学限制。② 状态<strong>有限</strong>：保证每台机器能用一张"写死在硬件里的表"描述，从而能作为数据被另一台机器读入（这是停机问题证明的钥匙，见第五节）。③ 读写头每次只<strong>一格</strong>：逼你把算法拆成最细的机械步骤，任何花哨动作都要靠"多走几步"实现——这保证了模型的普适性而非针对性。</p>
+<p>当机器从状态 q₀、纸带上的输入 w 开始运行时，它要么最终进入 q_accept（我们说它<strong>接受</strong> w）、进入 q_reject（<strong>拒绝</strong> w），要么永远不停止（我们说它<strong>不停止/发散</strong>）。"图灵机在输入 w 上停机"的意思就是它最终进入 q_accept 或 q_reject 之一。</p>
+<div class="key-insight">严格定义：M = (Q, Σ, Γ, δ)。纸带无限、状态有限、读写头逐格移动。接受/拒绝/发散三种结果。形式化这东西的目的，是为了让"计算"本身成为可以放进定理里研究的数学对象。</div>
+</section>
+
+<section>
+<h3>一、完整例题 1：奇偶判定机——逐格跟踪状态表</h3>
+<p>现在亲手运行一台有"决策"的机器。<strong>问题：设计一台图灵机，输入是一串 1（如 <code>1111</code>），当 1 的个数为偶数时接受，为奇数时拒绝。</strong>（约定：代表偶数个 1 的输入在……之后我们会看到，这台机器就是"数到哪了"的状态机。）</p>
+<p><strong>第一步（设计思想）。</strong>用一个状态记录"到现在为止数到的是奇数个还是偶数个"：q₀ 表示"目前偶数"，q₁ 表示"目前奇数"。每读到一个 1 就翻转一次；读到空格时检查目前是哪个状态，决定接受还是拒绝。</p>
+<p><strong>第二步（写转移表）。</strong>四个非平凡转移：</p>
+<p><code>δ(q₀, 1) = (q₁, 1, R)　δ(q₁, 1) = (q₀, 1, R)</code><br><code>δ(q₀, □) = (q_accept, □, R)　δ(q₁, □) = (q_reject, □, R)</code></p>
+<p><strong>第三步（在输入 1 上运行——奇数，应拒绝）。</strong></p>
+<p>第 1 步｜q₀ 读到 <code>1</code> → 按 δ(q₀,1)=(q₁,1,R)：写 1、右移、进入 q₁。纸带 <code>1 □</code>。</p>
+<p>第 2 步｜q₁ 读到 <code>□</code> → 按 δ(q₁,□)=(q_reject,□,R)：进入 q_reject，停机。<strong>拒绝 ✓</strong>（1 个 1 是奇数）。</p>
+<p><strong>第四步（在输入 11 上运行——偶数，应接受）。</strong></p>
+<p>第 1 步｜q₀ 读到第 1 个 <code>1</code> → (q₁, 1, R)。纸带 <code>1 1 □</code>。</p>
+<p>第 2 步｜q₁ 读到第 2 个 <code>1</code> → (q₀, 1, R)。纸带 <code>1 1 □</code>。</p>
+<p>第 3 步｜q₀ 读到 <code>□</code> → 按 δ(q₀,□)=(q_accept,□,R)：进入 q_accept，停机。<strong>接受 ✓</strong>（2 个 1 是偶数）。</p>
+<p><strong>第五步（验证一般规律）。</strong>这台机器读 n 个 1 需要 n+1 步：每读一个 1 翻转一次状态，所以 n 为偶数时结束时停在 q₀ → 接受；n 为奇数时停在 q₁ → 拒绝。它实际上用"状态"做了存储——这是图灵机最简单的"程序"。</p>
+<div class="key-insight">例题 1 的启示：状态 = 程序能记的"一小点记忆"。奇数/偶数这种只需要一个比特信息的问题，靠两个状态就能判；信息再多一点，就要靠纸带上多写记号了（见例题 2）。</div>
+</section>
+
+<section>
+<h3>二、完整例题 2：翻倍机——多趟扫描的完整计算</h3>
+<p>例 1 只用"扫一趟"；本例要展示真正的算法结构：<strong>多趟扫描 + 就地做记号</strong>。<strong>问题：设计一台图灵机，输入是 k 个 1（代表 k），结束时纸带上正好是 2k 个 1（代表 2k）。</strong>（比如 <code>11</code> → <code>1111</code>。）</p>
+<p><strong>第一步（设计思想）。</strong>逐个处理输入里的 1：把第一个未处理的 1 改成记号 X（表示"这一个已经处理过了"），跑到纸带右端补写一个 1（它就是复制出来的那一份），再返回左端处理下一个。等所有 1 都变成 X，再把 X 全部还原成 1。这样每个输入 1 都"多生出一个 1"，总数就是 2k。</p>
+<p><strong>第二步（状态表）。</strong>字母表 Γ = {1, X, □}，状态：q₀ 找未标记的 1；q₁ 去右端补写；q₃ 返回左端；q₂ 还原 X；q_halt 停机。</p>
+<p><code>q₀: (1)→(q₁, X, R)　(X)→(q₀, X, R)　(□)→(q₂, □, R)</code><br><code>q₁: (1)→(q₁, 1, R)　(X)→(q₁, X, R)　(□)→(q₃, 1, L)</code><br><code>q₃: (1)→(q₃, 1, L)　(X)→(q₃, X, L)　(□)→(q₀, □, R)</code><br><code>q₂: (1)→(q₂, 1, L)　(X)→(q₂, 1, L)　(□)→(q_halt, □, R)</code></p>
+<p>逐条读一遍：q₀ 找到最左边的 1 就把它标成 X 并开始"去补写"（q₁）；q₁ 向右跑到第一个空格，写一个 1，然后掉头（q₃）；q₃ 向左跑回左端空格，重新开始（q₀）；当 q₀ 发现已经没有任何 1 可标（只有 X 和 □）时，进入还原阶段 q₂，把 X 全部改回 1，越过头继续左移到最左空格就停机。</p>
+<p><strong>第三步（在输入 11 上完整运行）。</strong>用粗体标出读写头位置，逐步列出（只列关键状态切换，中间的纯移动步已经写明）：</p>
+<p>初始 <code><strong>1</strong> 1 □</code>，q₀。<br>
+第 1 步｜q₀ 对准 <code>1</code> → 标 X、右移进 q₁：<code><strong>X</strong> 1 □</code><br>
+第 2–3 步｜q₁ 向右扫过 <code>1</code>，到 <code>□</code> → 写 1、左移进 q₃：<code>X 1 <strong>1</strong></code><br>
+第 4–6 步｜q₃ 向左扫回，从 <code>1</code>、<code>X</code> 一路到左端空格 → 右移进 q₀：<code><strong>X</strong> 1 1</code><br>
+第 7 步｜q₀ 对准 <code>X</code> → 右移跳过。<br>
+第 8 步｜q₀ 对准 <code>1</code> → 标 X、右移进 q₁：<code>X <strong>X</strong> 1</code><br>
+第 9–10 步｜q₁ 扫过 <code>1</code>，到 <code>□</code> → 写 1、左移进 q₃：<code>X X 1 <strong>1</strong></code><br>
+第 11–14 步｜q₃ 向左扫回 <code>1</code>、<code>X</code>、<code>X</code> 到左端空格 → 右移进 q₀。<br>
+第 15–17 步｜q₀ 一路跳过两个 <code>X</code>，对准 <code>□</code> → 进 q₂。<br>
+第 18–20 步｜q₂ 左移，把两个 <code>X</code> 依次还原成 1：<code>1 1 1 <strong>1</strong></code><br>
+第 21 步｜q₂ 对准左端空格 → 进入 q_halt，停机。<br>
+结果：纸带上是 <code>1 1 1 1</code> = 4 个 1 = 2 × 2。∎</p>
+<p><strong>第四步（复杂度估计）。</strong>每处理一个输入 1 要"右跑到末尾再左跑回来"，约 2k+O(1) 步；共处理 k 个，加上还原阶段，总步数约为 O(k²)。你注意到"用 X 做记号"这个技巧了吗？它是图灵机算法里最常用的一招——纸带不只存输入，还存"中间状态"。</p>
+<div class="key-insight">例题 2 的启示：图灵机"编程"就是设计状态与记号策略。翻倍 = 逐次标记 + 末尾追加 + 复位 + 还原。O(k²) 步、用 X 当工作记号——这就是图灵机意义上的"算法"。</div>
+</section>
+
+<section>
+<h3>三、为什么偏偏是这三件套？——Church-Turing 论题</h3>
+<p>你可能不服：翻倍机还要写 5 个状态；那复杂的操作系统、神经网络呢？图灵的回答是：<strong>不管你的算法多复杂，总可以翻译成某个有限状态表 + 一条纸带</strong>——翻译过程是机械的，不靠灵感。这就是著名的</p>
+<div class="key-insight"><strong>Church-Turing 论题</strong>：一切"直观上可计算"的函数，都能被某台图灵机计算。反之亦然：图灵机算得出来的，也恰是算法直觉里"算得出"的。</div>
+<p>这个论题不是定理，而是一条关于"可计算"这一直观概念的经验定律——但它的证据压倒性地强。1930 年代，五组完全不同的形式系统几乎同时被提出，并全部被证明定义了同一类函数：</p>
+<p><strong>Turing 机（Turing，1936）</strong>＝ <strong>λ 演算（Church，1936）</strong>＝ <strong>递归函数（Gödel–Kleene）</strong>＝ <strong>Post 系统</strong>＝ <strong>Markov 算法</strong>。</p>
+<p>其中 λ 演算只是"函数套函数"的纯粹符号替换规则，递归函数只是"用更小的自己定义自己"，Turing 机是"格子 + 读写头"——它们的出发点半点不相像，却划出了<strong>完全相同</strong>的可计算类。这不是巧合：这说明"可计算"不是一个由某个系统拍脑袋定的概念，而具有<strong>客观的数学实在性</strong>。</p>
+<p><strong>为什么这个论题如此重要？</strong>因为它给了"上限"一个具体形状：任何声称"算得出"的东西，只要翻译不成图灵机，就值得怀疑；而一旦翻译成图灵机，它的每一步都是可检查的机械步骤。下一节我们会看到，恰恰是"机械可检查"这一点，反过来成了某些问题永远算不出来的根因。</p>
+</section>
+
+<section>
+<h3>四、通用图灵机——把机器本身变成数据</h3>
+<p>图灵 1936 年论文里最惊人的构造是<strong>通用图灵机（universal Turing machine）U</strong>：一台固定的图灵机，输入是"另一台机器 M 的描述 ⟨M⟩ 加上 M 的输入 w"，输出恰好等于"让 M 在 w 上运行"的结果。一台机器能<strong>模拟任何机器</strong>——这就是"存储程序"思想的诞生，也是现代电脑的雏形。</p>
+<p><strong>为什么这件事能做到？</strong>关键在于机器的描述 ⟨M⟩ 只是一段有限的数据：状态表是有限长的文字，可以编码成纸带上的一串符号（例如把每个 (q,a,q′,b,dir) 排成一行）。既然图灵机本身就是字符串，它就可以被另一台图灵机当输入"读进去、查表、一步步执行"。通用的 U 就是这么工作的：读 ⟨M⟩，记住 M 的转移表，然后在 w 上"扮演" M 的每一步。</p>
+<p><strong>一个具体的后果。</strong>有了 U，"这段程序会不会停"就有了精确的数学形式：输入是 ⟨M⟩ 加 w，问 U 模拟 M 会不会停。注意：这是一个<strong>可以被 U 当作输入的问题</strong>——这正是第五节里"证明不存在停机判定器"的舞台。</p>
+<div class="key-insight">通用图灵机 = 一台能模拟一切图灵机的固定机器。它说明"程序 = 数据"：机器的描述 ⟨M⟩ 是字符串，可以被别的机器读、查、执行。现代电脑的"装什么软件就能干什么活"就是这个构造的直接后代。</div>
+</section>
+
+<section>
+<h3>五、完整例题 3：停机问题不可判定——完整的对角线证明</h3>
+<p>现在来看图灵 1936 年最重要、也最反直觉的定理。<strong>停机问题：给定一台图灵机 M 和一个输入 w，能否用一台固定的机器 H 判定"M 在 w 上最终会不会停机"？</strong>答案：<strong>不能</strong>。没有任何图灵机能做到，哪怕给它再多的状态和时间。</p>
+<p><strong>第一步（假设存在）。</strong>反设存在这样一台 H，它满足：对任意 (M, w)，H 读入 ⟨M⟩ 和 w，若 M 在 w 上停机则接受、否则拒绝。我们把 H 想成一个"无所不知的预言机"。</p>
+<p><strong>第二步（用 H 造出捣乱机器 D）。</strong>定义 D 如下：D 的输入是 ⟨M⟩（一台机器的描述）。D 先调用 H 问"<strong>M 在输入 ⟨M⟩ 上会停机吗？</strong>"（即：把 ⟨M⟩ 同时当作程序和程序自己的输入）。若 H 回答"会"，D 就故意<strong>进入死循环</strong>（永远不停）；若 H 回答"不会"，D 就<strong>立刻停机</strong>。</p>
+<p>注意 H 是给定的、D 是完全合法的构造——就像例 1、例 2 那样按状态表拼出来。</p>
+<p><strong>第三步（把自己喂给自己，制造矛盾）。</strong>问：<strong>D 在输入 ⟨D⟩ 上会不会停机？</strong>分两种情况：</p>
+<p>情况一：若 D 在 ⟨D⟩ 上停机，那么按 H 的定义，H(⟨D⟩, ⟨D⟩) 回答"会"，于是 D 按第二步的规则选择进入死循环——<strong>不停机</strong>，矛盾。</p>
+<p>情况二：若 D 在 ⟨D⟩ 上不停机，那么 H(⟨D⟩, ⟨D⟩) 回答"不会"，于是 D 选择立刻停机——<strong>停机</strong>，矛盾。</p>
+<p>两种可能都矛盾。因此"存在这样的 H"这一假设必须被推翻：<strong>H 不存在</strong>。∎</p>
+<p><strong>第四步（为什么这不是诡辩）。</strong>注意 D 的构造里"把 ⟨D⟩ 喂给 D 自己"这一手——它之所以合法，是因为 ⟨D⟩ 只是一段数据（第四节的代码化）。这与康托尔证明"实数不可数"的对角线法一脉相承：把所有 M 排成一列，D 在每个"格点"上和那一行的预言唱反调。下一节把这个连接讲清楚。</p>
+<div class="key-insight">停机问题不可判定：假设有 H → 造出 D 自我唱反调 → 矛盾。计算的极限是<strong>数学定理</strong>，不是工程障碍——再快再贵的机器也绕不过去。</div>
+</section>
+
+<section>
+<h3>六、可计算函数的可数性——"大多数函数根本算不出来"</h3>
+<p>停机问题是"判定问题"里最著名的不可解例子。本节的目的是给它配一个更朴素的对角线背景，让你看清它和"数不过来"的渊源。</p>
+<p><strong>可计算的函数是可数的。</strong>每台图灵机的描述 ⟨M⟩ 是一个有限字符串，而有限字符串可以按长度、按字典序逐个列出来：M₁, M₂, M₃, … 因此<strong>全体图灵机是可数的</strong>——它们和自然数一样多。于是"可计算函数"至多可数。</p>
+<p><strong>但全体函数是不可数的。</strong>考虑从自然数到 {0, 1} 的一切函数 f: ℕ → {0,1}。设它们全部可排列为 f₁, f₂, f₃, …，定义对角函数 g(n) = 1 − fₙ(n)。g 和每个 fₙ 都在位置 n 处不同（g(n) ≠ fₙ(n)），所以 g 不在表里——矛盾。故这样的函数有<strong>不可数无穷多个</strong>。</p>
+<p><strong>推论（反例的源泉）。</strong>可计算函数至多可数，而全体函数不可数——所以<strong>几乎所有的函数都不可计算</strong>。停下想一想：你平日遇到的每个函数都是可计算的，是因为你只看得到"能算出来"的那一小撮；不可计算的函数不是罕见物，它们才是多数。</p>
+<p>停机问题不可判定正是这个现象的<strong>判定版本</strong>：问题太多、机器太少。第六节停机的证明（第五步的对角线）和本节 g 的构造是同一个动作的两副面孔。</p>
+<div class="key-insight">可计算函数可数、全体函数不可数 ⟹ 绝大多数函数不可计算。停机问题 = 这个"数不过来"现象的、带具体形式的化身。</div>
+</section>
+
+<section>
+<h3>七、P vs NP——百万美元的问题</h3>
+<p>停机问题问"能不能算"，复杂度理论进一步问"要<strong>多久</strong>才能算"。先定义两个最基本的类。习惯上把图灵机在输入上的步数看作<strong>运行时间</strong>，随输入长度 n 增长。</p>
+<p><strong>P</strong> = 存在一个多项式时间图灵机判定的语言（可解）。多项式时间 = 步数 ≤ nᶜ（某个常数 c）。</p>
+<p><strong>NP</strong> = 存在一个"证书"使得可以在多项式时间内验证的语言（可验证）。"验证"意思是：给出一个解，检查它是否正确很省时；但找到它可能极难。</p>
+<p>一个具体例子让你体会差距：<strong>找出 128 位数的因数分解</strong>。验证一个候选因子对不对只要一次除法；但从头找一个因子，目前没有多项式算法（最著名的通用算法仍是亚指数的数域筛法）。这正是一个典型的 NP 问题的味道。</p>
+<p><strong>如果 P = NP 会怎样？</strong>那么"找到解"和"验证解"将变得一样容易。密码学（RSA 的安全性正建立在"因数分解难"上）将崩溃；所有调度、装箱、旅行商等优化问题瞬间可解；AI 领域"搜索"的复杂性天花板被整体掀掉。普遍相信 P ≠ NP，但五十多年来<strong>无人能证明</strong>——它是 Clay 数学研究所悬赏百万美元的千禧年问题之一。</p>
+<p><strong>为什么这个问题这么难？</strong>直觉上的障碍在于：P = NP 相当于断言"每一种能有效验证的推理都能被有效找到"——这是关于<strong>全部</strong>算法的一个无穷陈述，而人类目前没有任何武器能同时控制所有算法（"算法下界"技术极度匮乏）。</p>
+<div class="key-insight">P = 多项式时间可判定；NP = 多项式时间可验证。P = NP 将崩塌 RSA、解放优化、改写 AI；普遍相信 P ≠ NP 但无人能证——Clay 千禧年问题之一。</div>
+</section>
+
+<section>
+<h3>八、计算复杂度层级——P 到 EXPTIME</h3>
+<p>把 P、NP 放进更大的层级图里，你会看到哪些包含关系是<strong>已证</strong>的，哪些是<strong>开放</strong>的：</p>
+<div class="formula display" data-tex="P\ \subseteq\ NP\ \subseteq\ PSPACE\ \subseteq\ EXPTIME,\qquad P\ \neq\ EXPTIME\ (\text{已证})."></div>
+<p><strong>PSPACE</strong> = 多项式空间可判定（空间指纸带用掉的格子数）。时间换空间：只用多项式空间、但允许指数时间的机器，能算得比 P 多得多。已知 P ≠ EXPTIME（对角线法可证，事实上 EXPTIME 里有 P 之外的问题），但 P 与 NP、NP 与 PSPACE 之间的严格不等号一个都没证出来——注意：P ≠ EXPTIME 是<strong>已知</strong>的，所以 P ⊆ NP ⊆ PSPACE ⊆ EXPTIME 这串里，<strong>两头已知分开、中间成谜</strong>。</p>
+<p><strong>量子计算插进来。</strong>量子计算机能算的问题类记作 <strong>BQP</strong>。已知的事实是</p>
+<div class="formula display" data-tex="P\ \subseteq\ BQP\ \subseteq\ PSPACE."></div>
+<p>它是否严格夹在 P 与 PSPACE 之间、和 NP 到底谁包含谁，都还悬而未决。但有一个<strong>具体、已证</strong>的成果：<strong>Shor 算法</strong>把因数分解从亚指数（数域筛法）一举拉到多项式时间——这是量子计算"确实比经典更快"的最强已知证据。</p>
+<div class="key-insight">P ⊆ NP ⊆ PSPACE ⊆ EXPTIME，且 P ≠ EXPTIME 已证、两端已分；中间的 P = ?NP 是百万美元开放问题。BQP 满足 P ⊆ BQP ⊆ PSPACE，Shor 算法已把因数分解从亚指数拉到多项式。</div>
+</section>
+
+<section>
+<h3>九、Busy Beaver——超越一切可计算函数的具体数字</h3>
+<p>停机问题说"判定停机不可计算"；本节给这个抽象的不可计算性一个<strong>可以摸到的数字面孔</strong>。</p>
+<p><strong>定义。</strong>考虑所有"n 个状态、2 个符号（0 和 1）"的图灵机（从全 0 纸带开始，允许停机状态），把其中会停机的那批拿出来。设 BB(n) = 这些会停机的机器里，停机前在纸带上写下的 1 的最多个数。BB 叫<strong>忙碌海狸函数</strong>（Busy Beaver function）。</p>
+<p><strong>具体数值。</strong>目前人类确知（前几个可以直接枚举，BB(5) 在 2024 年由一个使用 Coq 证明助手的形式化团队最终确认）：</p>
+<div class="formula display" data-tex="BB(1)=1,\quad BB(2)=6,\quad BB(3)=21,\quad BB(4)=107,\quad BB(5)=47{,}176{,}870."></div>
+<p>BB(6) 目前只知道下界：BB(6) &gt; 10³⁶⁵³⁴——一个比可观测宇宙的粒子数还大的数字。注意：状态只从 4 到 5，答案从 107 跳到四千万；从 5 到 6，跳到 10 的 3.6 万次方。这是"极端爆炸"的教科书级例子。</p>
+<p><strong>为什么 BB 不可计算？</strong>如果存在一台机器能算出 BB(n)，我们就能解停机问题：想判 M 在 w 上是否停机，先算出 BB(|⟨M⟩| + |w| + 常数)，然后模拟 M 那么多步；若还没停，则它永远不会停（因为会停的机器都在 BB 步内停下）。这会与第五节矛盾。故<strong>BB 的增长速度超越一切可计算函数</strong>——它跑得比任何"有限规则能定义"的函数都快。</p>
+<div class="key-insight">BB(n) = n 状态 2 符号图灵机停机前能写下的最多 1 数。BB(1..5) = 1, 6, 21, 107, 47,176,870；BB(6) &gt; 10³⁶⁵³⁴。若 BB 可计算则停机问题可解——它是"不可计算"最具体的体现。</div>
+</section>
+
+<section>
+<h3>十、工作题（带解答）</h3>
+<p><strong>题 1（加一机的严谨化）。</strong>把〇节的"加一机"写成四元组 (Q, Σ, Γ, δ)，说明它在输入 <code>111</code> 上的每一步。</p>
+<details><summary>显示解答</summary><p>Q = {q₀, q_halt}，Σ = {1}，Γ = {1, □}，起始状态 q₀。转移：δ(q₀,1) = (q₀,1,R)，δ(q₀,□) = (q_halt,1,R)。运行：q₀ 依次读过三个 1（三步右移），在第四个格子读到 □，写入 1 并进入 q_halt。纸带由 <code>111□</code> 变为 <code>1111</code>。∎</p></details>
+<p><strong>题 2（左移版奇偶机）。</strong>把例 1 的奇偶机改成"从输入右边开始向左扫描"，仍要求偶数接受、奇数拒绝。写出转移表并说明它仍正确。</p>
+<details><summary>显示解答</summary><p>翻转状态的动作不变，只把方向换成 L：δ(q₀,1)=(q₁,1,L)，δ(q₁,1)=(q₀,1,L)，δ(q₀,□)=(q_accept,□,L)，δ(q₁,□)=(q_reject,□,L)。从右端第一个 1 开始向左扫，读完 n 个 1 后停在左端空格：n 偶 → q₀ → 接受；n 奇 → q₁ → 拒绝。行为与例 1 相同。∎</p></details>
+<p><strong>题 3（BB(2) 自检）。</strong>按 BB 的定义说明为什么 BB(2) = 6：试着一个 2 状态、2 符号的机器，看它最多能写下几个 1。（提示：允许的机器只有有限多台，可以穷举，但先试着理解"为什么再多状态会写更多"。）</p>
+<details><summary>显示解答</summary><p>2 状态（不含停机状态）2 符号的转移表总共有有限多种（每个 (q,a) 格点可选的"写哪个符号、移哪边、进哪个状态"都有限），所以可以一一模拟穷举。穷举结果：最长的、会停机的 2 状态机器恰好写出 6 个 1 后停机。穷举法在这里可行是因为 n 很小；n=5 时状态空间已爆炸到必须借助定理和形式化验证（2024 年 Coq 证明）。∎</p></details>
+<p><strong>题 4（停机问题的另一个证明风味）。</strong>用第六节"可数 vs 不可数"的思路，说明为什么"判定每台图灵机是否接受空输入"这个看似更简单的问题也不可能被一台机器判定。</p>
+<details><summary>显示解答</summary><p>反设存在 K 判定"⟨M⟩ 是否在空输入上接受"。枚举所有图灵机 ⟨M₁⟩, ⟨M₂⟩, …。定义函数 f(n) = 1 若 Mₙ 在空输入上接受，否则 0。K 能判定 f 吗？关键：对"空输入是否接受"也可以做对角线：构造 N 使其在空输入上的行为与 Mₙ 在空输入上的行为唱反调。这比原停机问题还要直接地落入第五节的矛盾框架（事实上"空输入停机"与"一般停机"可互相规约，二者同真同假）。∎</p></details>
+<p><strong>题 5（P 与 NP 的包含）。</strong>严格说明为什么 P ⊆ NP：任何多项式时间可判定的语言，为什么自动满足"多项式时间可验证"的定义。</p>
+<details><summary>显示解答</summary><p>NP 的验证定义允许"输入 + 证书"。对 L ∈ P，取证书为空串：验证算法就是那个多项式时间的判定器本身，读入 w，直接在多项式时间内输出"是否接受"，无视（不读）证书。所以每个 P 语言都是 NP 语言，P ⊆ NP。∎</p></details>
+</section>
+
+<section>
+<h3>十一、试试看（带提示）</h3>
+<p><strong>1. 把加一机升级成"加二机"。</strong>设计一台机器，输入 k 个 1，输出 k+2 个 1。<strong>提示：</strong>在纸带右端补写两个 1 即可；或者先用一个状态右扫到底，再补一个、再补一个（可借第二个状态区分"补第几个"）。</p>
+<p><strong>2. 例 1 的奇偶机若输入是 <code>1 1 1 1 1</code>（5 个），最后停在哪个状态？</strong><strong>提示：</strong>每读一个 1 翻转一次状态，5 次翻转后停在 q₁（奇）→ 拒绝；读 1 的个数就是翻转到奇偶的次数。</p>
+<p><strong>3. 例 2 的翻倍机对输入 <code>111</code>（k=3）应输出几个 1？大概要多少步？</strong><strong>提示：</strong>应输出 6 个 1。复杂度约 O(k²) = 常数 × 9，所以约几十步；想想每个输入 1 需要"跑到右端再跑回左端"。</p>
+<p><strong>4. 为什么停机问题里"⟨D⟩ 喂给 D 自己"是合法的？</strong><strong>提示：</strong>因为第四节证明机器的描述 ⟨M⟩ 是普通字符串，任何图灵机都能把它当作输入；D 把 ⟨D⟩ 当输入，和例 1 把 <code>111</code> 当输入在原理上毫无区别。</p>
+<p><strong>5. BB(3) 为什么比 BB(2) 大得多？给出一个直觉原因。</strong><strong>提示：</strong>多一个状态 = 多一份"记忆"，能写出更复杂的循环与计数程序；BB(3)=21 对应一台能在 21 步里往返移动并写满 21 个 1 的机器。</p>
+<p><strong>6. P ≠ EXPTIME 已证而 P ≠ NP 未证，这个"不对称"为什么不算奇怪？</strong><strong>提示：</strong>证明 P ≠ EXPTIME 只靠对角线（某个 EXPTIME 完全问题对多项式时间闭于对角线）；而 P ≠ NP 需要同时控制"一切多项式算法"，现在根本没有这类强下界技术。</p>
+</section>
+
+<section><h3>前沿：量子计算与 Church-Turing 论题的命运</h3><p>Shor 算法证明量子计算机可以高效分解因数——这违反 Church-Turing 论题了吗？不。答案藏在"物理 Church-Turing 论题"里：<strong>宇宙中所有物理过程可被量子计算机高效模拟</strong>——这<strong>包括</strong>量子物理本身。经典图灵机受困于量子纠缠的指数级状态空间，但量子计算机天生就是为这种状态空间设计的，所以"物理可计算"需要量子模型才能恰当地描述。仍开放的核心问题：<strong>BQP 是否严格大于 P</strong>——这等价于"量子计算机在理论上的加速是否真实"；以及 BQP 与 NP 的关系（Shor 目前只打破了因数分解这类"NP 边界"问题，尚未证明 BQP ⊄ NP 或反之）。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Boolos et al., Computability and Logic</strong></p>
+<p>&rarr; <strong>S. Aaronson, Quantum Computing Since Democritus</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/y combinator.html">λ Y Combinator</a>：同一学科分类「逻辑与计算」。</p>
+<p>&rarr; <a href="/pages/godel.html">⚡ Gödel 不完备</a>：同一学科分类「逻辑与计算」。</p>
+<p>&rarr; <a href="/pages/proof-theory.html">📝 证明论</a>：逻辑与计算核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/turing-machine.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

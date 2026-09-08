@@ -1,0 +1,178 @@
+<section>
+<h3>〇、直觉入门——猜谜定价：信息值几个"是/否"问题</h3>
+<p>先做一件人人都能立刻动手的事。我抛一枚公平硬币，用手捂住，问你："结果是正面还是反面？"在你开口之前，你需要问几个"是/否"的问题才能<strong>确定</strong>答案？答案是 <strong>1 个</strong>："它是正面吗？"——只要 1 个比特（bit）就够。</p>
+<p>换成掷一个 8 面的骰子（每个面概率各 1/8）：你需要问几个"是/否"问题才能确定掷出了几？先问"比 4 大吗？"，再问"是偶数吗？"，再问一次就能锁定——<strong>3 个</strong>。为什么偏偏是 3？因为 2³ = 8：三个是/否答案共有 8 种组合，正好一一对应 8 个结果。推而广之：<strong>一个概率为 p 的事件，确定它需要 log₂(1/p) 个"是/否"问题</strong>——这就是"信息量"的火种。</p>
+<p>现在把镜头转向物理课。一盒气体"乱不乱"，等价于你有多不确定"每个分子现在在哪"——分子越多、分布越散，你需要问的问题就越多。于是"乱的程度"和"信息量"就是同一个数：<strong>熵（entropy）</strong>。它同时站在物理和信息两边，是连接两者的桥。</p>
+<div class="key-insight">核心直觉：熵 = "确定结果平均要问几个是/否问题" = 平均不确定度 = 乱度。不确定越多，要问的问题越多，熵越大；完全确定，一个问题都不用问，熵为 0。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/thermodynamics.html">热力学与熵</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体问题：一盒 4 个分子的"乱"，能被数出来吗？</h3>
+<p>把一滴墨水滴进一杯清水，它会自己散开成均匀的浅色；反过来，让浅色水自己"缩回"成滴墨水？几乎没人见过。直觉说这叫"越来越乱"，但"乱"不是形容词，我们要把它变成可以<strong>数出来</strong>的数字。</p>
+<p>想一个最简单的盒子：分成左右两半，里面装着 <strong>4 个分子</strong>（真实分子数目是天文数字，先拿 4 个练手）。只看"左边几个、右边几个"，这叫<strong>宏观状态</strong>（macroscopic state）："左边 4 个右边 0 个"、"左边 2 个右边 2 个"，都是一种宏观状态。</p>
+<p>但如果给每个分子取名（1 号、2 号、3 号、4 号），具体到"哪一个分子在左边"，这叫<strong>微观状态</strong>（microscopic state）。关键差别来了：<strong>越"乱"的宏观状态，实现它的微观状态数越多。</strong></p>
+<p><strong>完整例题：把 4 个分子的所有宏观状态一个个数完。</strong>选"去左边"的分子：</p>
+<div class="formula display" data-tex="\begin{array}{c|c|c}
+\text{宏观状态 (左,右)} & \text{微观状态数 }W=\binom{4}{n_{\mathrm{L}}} & \text{熵（nat）}\ln W\\[2pt]
+(4,0) & \binom{4}{0}=1 & 0\\[2pt]
+(3,1) & \binom{4}{1}=4 & \ln 4\approx 1.386\\[2pt]
+(2,2) & \binom{4}{2}=6 & \ln 6\approx 1.792\\[2pt]
+(1,3) & \binom{4}{3}=4 & \ln 4\approx 1.386\\[2pt]
+(0,4) & \binom{4}{4}=1 & 0
+\end{array}"></div>
+<p>一步步核对："全挤在左边"只有 1 种排法（W=1）；"左边 3 个右边 1 个"是"选哪 1 个去右边"，C(4,1)=4 种；"左右各 2"是"选哪 2 个去左边"，C(4,2)=6 种；左右互换的 (1,3)、(0,4) 对称。总和 1+4+6+4+1 = 16 = 2⁴，正好是"每个分子独立选左或右"的全部可能——校验通过。</p>
+<p>结论呼之欲出：<strong>"均匀散开"有 6 种排法，"全挤一边"只有 1 种。</strong>如果每个微观状态机会均等，你几乎总会看到均匀分布——不是因为有谁在推它，单纯因为<strong>那样排的方法太多了</strong>。科学家于是宣布：<strong>"乱的程度"就用 W 来量，再取个对数让数字别太大。</strong>这就是熵的第一直觉：<strong>熵 = 数一数这个状态有多少种实现方法（取对数压缩）</strong>。</p>
+<div class="key-insight">宏观状态 = 只看大概（左边几个、右边几个）；微观状态 = 细看到每个分子在哪。"乱"的本质 = 微观状态数多。上表最右列就是"用 ln W 给乱的程度打分"：均匀分布得分最高。</div>
+</section>
+
+<section>
+<h3>二、信息量为什么取对数？——"涨"字电报与"猜几次"</h3>
+<p>上面的熵从"物理的乱"进来。现在换一个角度，从"信息"进来——你会发现它们说的是同一件事。什么叫"有信息"？比两个场景：</p>
+<p><strong>场景一：</strong>你收到一封电报，上面只有一个字："涨"。（意思是股市今天大涨。）</p>
+<p><strong>场景二：</strong>朋友发来一段长消息："今天天气不错，我早上吃了粥，路上遇到一只猫，它对我喵了一声……"</p>
+<p>哪个"信息量大"？直觉告诉你，是那个"涨"字——<strong>越意外的消息，携带的信息越多</strong>。"股市今天涨了"本来极难猜中，它大幅改变你的认知；而日常废话你早能猜到九成，几乎不带新东西。于是信息论规定：<strong>一个概率为 p 的结果，发生时带来的信息量是 −log p</strong>。</p>
+<p><strong>为什么偏偏是对数？三个理由，一步步来。</strong></p>
+<p>① <strong>要非负。</strong>概率 p 总在 0 和 1 之间，log p 恒为负，加个负号 −log p 就是非负的"意外度"。概率越小，意外度越大。</p>
+<p>② <strong>要可加（最关键）。</strong>直觉要求：两件独立事情各自的信息量应该<strong>相加</strong>（同时确认"硬币是正"和"骰子是 3"，收获应等于两件事收获之和）。但两件事同时发生的概率要<strong>相乘</strong>。唯一同时满足"概率相乘、信息相加"的函数就是对数，因为 log(ab) = log a + log b。用数字验一遍：公平硬币 p=½，8 面骰子每面 p=⅛，联合概率 ½×⅛=1/16；而 log₂16 = 4 = log₂2 + log₂8 = 1 + 3。✓</p>
+<p>③ <strong>要有单位。</strong>以 2 为底，信息量单位叫<strong>比特（bit）</strong>，恰好等于"要问几个是/否问题"；以 e 为底叫 nat，以 10 为底叫 hartley。底只差一个常数，不改变任何本质。</p>
+<p><strong>完整例题：三个具体事件的信息量。</strong>① 公平硬币掷出正面：p=½，I = log₂(1/½) = log₂2 = <strong>1 bit</strong>（问 1 个问题）。② 8 面骰子掷出 3：p=⅛，I = log₂8 = <strong>3 bit</strong>。③ 加载硬币掷出正面：p=0.9，I = log₂(1/0.9) ≈ log₂1.111 ≈ <strong>0.152 bit</strong>——你几乎早知道是正面，所以几乎没收获。</p>
+<p>"涨"这种小概率事件，−log p 很大；"天气不错"这种大概率事件，−log p 很小。所以<strong>信息量衡量的是"意外程度"，与字数无关</strong>。</p>
+<div class="key-insight">信息量 = 意外程度 = 确定它要问几个是/否问题。概率越小越难猜，信息量越大；人人能猜到的话，信息量约等于 0。取对数是为了让"独立事件的意外度相加"，而概率在相乘。</div>
+</section>
+
+<section>
+<h3>三、熵 = 平均信息量：把"乱"和"意外"合成一个数</h3>
+<p>现在把前两节的线索接起来。第一节说熵衡量"乱"，第二节说信息量衡量"意外"。它们是同一个数——这正是熵最迷人的地方。</p>
+<p><strong>把"乱"重新想成"不确定"：</strong>一盒均匀散开的气体，你问"某个分子在哪一边？"——两边都有可能，你<strong>很不确定</strong>。分子全挤在一边的气体，答案永远是"那边"，你非常确定。<strong>越乱 = 越不确定。</strong>配上第二节：不确定，意味着确定它要问很多问题、收到很多"意外"；确定，意味着毫无惊喜。于是熵的定义自然出现——<strong>熵，就是"平均每个结果带来的信息量"</strong>，即所有可能结果按概率加权平均的意外程度：</p>
+<div class="formula display" data-tex="H=-\sum_i p_i\log p_i=\sum_i p_i\,\log\frac{1}{p_i}\qquad(\text{每个结果意外度 }-\log p_i\text{ 的概率平均})"></div>
+<p><strong>完整例题 1：公平硬币。</strong>p=(½,½)。逐项算：第一项 −p₁log₂p₁ = −½·log₂½ = −½·(−1) = ½；第二项同样 ½。相加：H = ½ + ½ = <strong>1 bit</strong>。这正对应〇节的结论：抛公平硬币要问 1 个问题。</p>
+<p><strong>完整例题 2：8 面骰子（均匀）。</strong>8 个概率各 ⅛，每项 −⅛·log₂⅛ = −⅛·(−3) = ⅜，共 8 项：H = 8 × ⅜ = <strong>3 bit</strong> = log₂8。公式 H = log₂ n 对任意 n 面均匀骰子都成立。</p>
+<p><strong>完整例题 3：不均匀分布 p=(½, ¼, ⅛, ⅛)。</strong>逐项算，不跳步：</p>
+<div class="formula display" data-tex="\begin{aligned}H&=-\tfrac12\log_2\tfrac12-\tfrac14\log_2\tfrac14-\tfrac18\log_2\tfrac18-\tfrac18\log_2\tfrac18\\&=\tfrac12\cdot1+\tfrac14\cdot2+\tfrac18\cdot3+\tfrac18\cdot3\\&=\tfrac12+\tfrac12+\tfrac38+\tfrac38=1.75\ \text{bit}\end{aligned}"></div>
+<p>注意它比均匀 4 选项的 2 bit 小——分布越偏、越确定，熵越小。</p>
+<p><strong>完整例题 4：退化分布 p=(1,0)。</strong>−1·log₂1 = 0，第二项 −0·log₂0 按约定取 0。H = <strong>0 bit</strong>：结果铁定，毫无意外。</p>
+<p>验证直觉：抛公平硬币你完全猜不中，熵最大 1 bit；抛两面都是正面的硬币，结果铁定，熵为 0。所以<strong>熵同时是"乱的程度"和"不确定的程度"</strong>——物理的 Boltzmann 熵 S = k log W 和信息的 Shannon 熵 H 用同一个公式，只差底和单位。这就是本课叫"熵与信息"的原因。</p>
+<div class="key-insight">熵 = 平均信息量 = 平均意外程度 = 不确定度 = 乱度。它同时站在物理和信息两边：越乱越不确定，熵越大；完全确定，熵为 0。</div>
+</section>
+
+<section>
+<h3>四、Boltzmann 熵 S = k log W：物理的乱度</h3>
+<p>现在把第一节的数推广到真实气体。想象你有一盒空气：从<strong>宏观</strong>看——温度、压强、体积——只有几个数字；从<strong>微观</strong>看——每个分子在哪儿、往哪飞——有天文数字种可能的排列。</p>
+<p>Boltzmann 的洞见：<strong>S = k log W</strong>。W = 给定宏观条件下有多少种微观实现方式。第一节的 4 分子例子就是它最袖珍的版本：全挤在左边 → W=1，S=0；均匀分布 → W=C(4,2)=6，S 最大。<strong>均匀分布有压倒性的微观状态优势</strong>——所以系统自发趋向它。这不是什么神秘的"驱动力"，纯粹是<strong>计数</strong>的结果。</p>
+<p><strong>为什么物理里也要取对数？两个理由，都不是随便选的。</strong></p>
+<p>① <strong>数字太大。</strong>真实一摩尔气体 N ≈ 6×10²³ 个分子，每个分子有左右两种选择，W ≈ 2^N，一个 10^20 位长的天文数字，根本没法写。取 log 后 ln W ≈ N ln 2 ≈ 4×10²³，变成可以运算的普通数量级。</p>
+<p>② <strong>可加性（热力学要求熵是广延量）。</strong>把两盒气体并成一盒，总熵必须等于两盒熵之和（S 是广延量，你倒一杯水再倒一杯水，总"乱度"相加）。但并起来后微观状态数要<strong>相乘</strong>：W₁₂ = W₁×W₂。唯一把"乘"变"加"的映射就是对数：log(W₁W₂) = log W₁ + log W₂。<strong>熵的可加性恰恰逼出了 log。</strong></p>
+<p>常数 k 是 Boltzmann 常数，k ≈ 1.38×10⁻²³ J/K，作用是把"纯计数"换算出热力学单位（焦耳每开尔文）；若以 bit 为单位，就把 ln 换成 log₂ 且 k 换成 1，本质完全相同。</p>
+<div class="key-insight">熵 = 信息的缺失。你对系统越无知，它的熵越大。Jaynes 的洞察：统计力学不是物理——是<strong>推理</strong>。在已知约束下做最不偏不倚的推断 = 最大化熵。这就是"最大熵原理"。</div>
+</section>
+
+<section>
+<h3>五、Shannon 信息熵：同一个公式，另一种单位</h3>
+<p>Claude Shannon 1948 年把"信息"从日常用语变成了数学：</p>
+<div class="formula display" data-tex="H=-\sum_i p_i\log_2 p_i"></div>
+<p>抛公平硬币 → 1 bit/次（完全不知道会正还是反）。抛必然正面的硬币 → 0 bit（没有惊喜）。第三节已逐步算过：均匀分布 H = log₂ n，偏斜分布更小，退化分布为 0。</p>
+<p><strong>完整例题：把同一分布用两种单位各算一遍，看到"换单位"。</strong>取 p=(½, ¼, ⅛, ⅛)，第二节已算过 log₂ 底：H = 1.75 bit。现在换成 e 为底（nat）：</p>
+<div class="formula display" data-tex="H=\tfrac12\ln 2+\tfrac14\ln 4+\tfrac18\ln 8+\tfrac18\ln 8\approx 0.3466+0.3466+0.2599+0.2599=1.2130\ \text{nat}"></div>
+<p>换算验证：1.2130 ÷ ln 2 ≈ 1.2130 ÷ 0.6931 ≈ 1.75。✓ 底从 e 换成 2、系数从 k 换成 1——Shannon 的熵和 Boltzmann 的熵是<strong>同一个公式</strong>，单位不同而已。物理熵和信息熵的统一是 20 世纪科学最深层的统一之一。信息不是玄学——它和热量、功一样，是可以量化的物理量。</p>
+</section>
+
+<section>
+<h3>六、Landauer 原理：擦除信息必须生热</h3>
+<p>Rolf Landauer 1961 年证明了一个让所有人震惊的定理：<strong>任何逻辑上不可逆的操作（如擦除 1 bit 信息）必然向环境排放至少 kT ln 2 的热量。</strong></p>
+<p>把数字代进去感受一下：室温 T = 300 K 时，kT ln 2 ≈ (1.38×10⁻²³)·300·0.693 ≈ <strong>2.87×10⁻²¹ J</strong>，约 0.018 eV。单擦一比特的热量极小，但它是<strong>下界</strong>——任何"信息处理"都不能低于它，哪怕处理器做得再完美。</p>
+<p>这意味着：<strong>信息是物理的。</strong>热力学第二定律和信息处理极限是同一枚硬币的两面。Maxwell 妖的悖论（一个小妖可以只开快分子通行的门，从而无成本减少熵）被 Landauer 解决了：妖必须<strong>擦除记忆</strong>才能继续运作——而擦除记忆必然产生熵。</p>
+<div class="key-insight">Charles Bennett 1982 年的经典表述：测量不消耗能量（原则上可逆），但<strong>遗忘</strong>会。妖的"免费午餐"幻觉来自忽略了清理内存的热力学代价。</div>
+</section>
+
+<section>
+<h3>七、第二定律：时间之箭</h3>
+<p>dS/dt ≥ 0 —— 孤立系统的熵<strong>永不减少</strong>。这不是"倾向于"增加——所有不可逆过程<strong>必然</strong>产生熵。宇宙的熵单向增加 → 定义了时间的<strong>方向</strong>。鸡蛋打碎了不会复原。你只能记住过去不能记住未来。咖啡和牛奶混在一起不会自动分离。这些都是同一件事：<strong>从较少微观态走向较多微观态是不可逆的</strong>。</p>
+<p>注意：第二定律是<strong>统计</strong>定律——原则上熵暂时减小不被禁止（涨落），但对宏观系统概率小到宇宙年龄尺度上看不到一次。</p>
+</section>
+
+<section>
+<h3>试试看（带提示）</h3>
+<p>1. 掷一个 6 面骰子，掷一次的信息量是多少 bit？<br>提示：每个面 p=1/6，I = log₂6 ≈ 2.585 bit；均匀 n 选项的信息量恒为 log₂ n。</p>
+<p>2. 分布 p=(0.999, 0.001) 的熵有多大？这告诉我们什么？<br>提示：H ≈ −0.999log₂0.999 − 0.001log₂0.001 ≈ 0.011 bit，几乎为 0——结果几乎确定，几乎不含信息。</p>
+<p>3. N=2 个分子分左右两格：列出全部宏观状态及各自的 W，验证总和 = 2²。<br>提示：(2,0) → W=1；(1,1) → W=C(2,1)=2；(0,2) → W=1；总和 1+2+1=4=2²。</p>
+<p>4. 抛两枚独立公平硬币，联合分布 X、Y 的 H(X,Y) 是多少？<br>提示：链式法则（独立时）H(X,Y)=H(X)+H(Y)=1+1=2 bit。对比第一节"分子左右"的 2⁴=16 个微观态：均匀分布熵 log₂16=4 bit。</p>
+<p>5. 为什么不能用"方差"代替熵来量不确定度？<br>提示：方差对取值的<strong>数值</strong>敏感，熵只关心<strong>标签</strong>——把字母表重排，熵不变而方差大变。完整反例见下文「反例与注记」一节。</p>
+<p>6. 对 p=(½, ¼, ⅛, ⅛)，用自然对数算熵（nat），再除以 ln 2 验证等于 1.75 bit。<br>提示：¼ln4 = ¼·2ln2 = ½ln2，⅛ln8 = ⅛·3ln2 = ⅜ln2，四项相加得 (½+½+⅜+⅜)ln2 = 1.75 ln2，除以 ln2 得 1.75。</p>
+</section>
+
+<section>
+<h3>工作题（带解答）</h3>
+<p><strong>题 1（离散熵）。</strong>计算下列分布的熵（以 bit 计）：(a) 公平硬币；(b) p = (½, ¼, ⅛, ⅛)；(c) 六面骰子的均匀分布；(d) 退化分布 p=(1,0,0)。</p>
+<details><summary>显示解答</summary><p>(a) H = −½log₂½ − ½log₂½ = 1 bit。(b) H = −½(−1) − ¼(−2) − ⅛(−3) − ⅛(−3) = ½ + ½ + ⅜ + ⅜ = 1.75 bit。(c) H = log₂6 ≈ 2.585 bit（均匀分布熵 = log n）。(d) H = −1·log₂1 = 0 bit（确定事件无信息）。</p></details>
+<p><strong>题 2（互信息）。</strong>X、Y 联合分布：p(0,0)=p(1,1)=3/8，p(0,1)=p(1,0)=1/8。求 H(X)、H(Y)、H(X,Y)、H(X|Y)、I(X;Y)。（条件熵 H(X|Y)=知道 Y 后 X 还剩多少不确定；互信息 I(X;Y)=H(X)−H(X|Y)，衡量两变量共享的信息量。）</p>
+<details><summary>显示解答</summary><p>边缘：p(X=0)=p(X=1)=1/2，Y 同，故 H(X)=H(Y)=1 bit。H(X,Y) = −2·(3/8)log₂(3/8) − 2·(1/8)log₂(1/8) = −0.75·(−1.415) − 0.25·(−3) = 1.8113 bit。条件熵 H(X|Y) = H(X,Y) − H(Y) = 0.8113。互信息 I(X;Y) = H(X) − H(X|Y) = 1 − 0.8113 ≈ 0.1887 bit。检查：I = H(X)+H(Y)−H(X,Y) = 2 − 1.8113 = 0.1887 ✓。直观：知道 X 能消除约 19% 的关于 Y 的不确定性。</p></details>
+<p><strong>题 3（数据处理不等式验证）。</strong>设 X、Y 如题 2，Z 由 Y 通过翻转概率 ε 的二元对称信道得到（Z = Y ⊕ N，N~Bernoulli(ε) 与 Y 独立）。验证 I(X;Z) ≤ I(X;Y)，并分别计算 ε=0 与 ε=1/2 时的 I(X;Z)。</p>
+<details><summary>显示解答</summary><p>X→Y→Z 构成马尔可夫链，由 DPI 立得 I(X;Z) ≤ I(X;Y) = 0.1887。ε=0：Z=Y，I(X;Z) = I(X;Y) = 0.1887（等号，无损信道）。ε=1/2：Z 与 Y（进而是 X）独立，I(X;Z) = 0（信息全被噪声淹没）。一般地，I 随 ε 从 0.1887 单调下降到 0——处理链越长或噪声越大，关于源的信息越少。</p></details>
+<p><strong>题 4（最大熵）。</strong>在 {1,2,3,4} 上求熵最大的分布及最大熵；若再加约束均值 E[X]=3，最大熵分布的形式是什么？</p>
+<details><summary>显示解答</summary><p>无约束：均匀 p=(¼,¼,¼,¼)，H_max = log₂4 = 2 bit（Gibbs 不等式取 q 均匀：H(p) ≤ −Σp log q = log 4，等号当且仅当 p=q）。加均值约束后，用拉格朗日乘子法最大化 H 得指数族 p_i ∝ e^{λi}（即 p_i = (1/Z)e^{λi}，Z 归一化），λ 由均值方程 Σip_i = 3 唯一确定：分布向 3、4 倾斜（λ&gt;0）。这就是"带矩约束的最大熵（Gibbs）分布族"——统计力学正则分布 p ∝ e^{−βE}（β=1/kT）的离散原型。</p></details>
+</section>
+
+<section>
+<h3>反例与注记：熵 vs 方差，最大熵分布</h3>
+<p><strong>熵与方差的区别。</strong>方差量度"偏离均值的平方平均"，对取值的<strong>数值</strong>与离群点敏感；熵量度"结果的不可预测性"，对取值的<strong>标签</strong>完全不敏感（重排字母表，熵不变而方差大变）。</p>
+<p>反例 1（同熵不同方差）：X 均匀于 {−1,1}：H = 1 bit，Var(X) = 1。Y = Bernoulli(0.999) 取值 {0, 1000}：H(Y) ≈ −0.999log₂0.999 − 0.001log₂0.001 ≈ 0.011 bit（几乎确定，熵极小），但 Var(Y) = 0.999·0.001·(1000)² ≈ 999（巨大）。</p>
+<p>反例 2（方差不变而熵剧变）：取 {0, L} 上的两点分布 p(0)=1−δ、p(L)=δ，其中 L=1/√(δ(1−δ)) 使方差恒为 Var=δ(1−δ)L²=1。随着 δ→0，熵 H=h(δ)=−δlog₂δ−(1−δ)log₂(1−δ)→0（几乎确定取 0），而方差始终等于 1。结论：<strong>方差不是不确定性的稳健度量</strong>——它可以纹丝不动，熵却连续地任意接近 0；方差只关心"取值的分散"，熵才刻画"结果的不可预测性"。熵（或 Rényi 熵族，熵的参数化推广）的凸性使最大值问题良定，方差则无上界、最大化无意义。</p>
+<p><strong>最大熵分布。</strong>固定约束下的最大熵分布，用 Gibbs 不等式一步证出（取 q 为候选分布，H(p) ≤ −Σp log q）：</p>
+<p>① 离散、支撑 {1,…,n}：均匀分布，H_max = log n。② 固定均值 μ、方差 σ² 的 ℝ 上分布：Gaussian N(μ,σ²)，H_max = ½log(2πeσ²)。③ 固定一阶矩的 ℝ⁺ 上分布：指数分布 Exp(1/μ)。④ 支撑区间 [a,b]：均匀分布，H_max = log(b−a)。这些是"已知约束下最不偏不倚的推断"——Jaynes 最大熵原理的具体解。注意：连续熵可为负（如 [0,½] 上均匀分布 H = −log 2 &lt; 0），因为密度不是概率——差分熵是相对而非绝对。</p>
+</section>
+
+<section>
+<h3>定理证明：数据处理不等式（DPI）</h3>
+<p><strong>陈述。</strong>若 X、Y、Z 构成马尔可夫链 X → Y → Z（即给定 Y 时 X 与 Z 条件独立：p(z|x,y) = p(z|y)），则</p>
+<div class="formula display" data-tex="I(X;Z)\ \le\ I(X;Y)."></div>
+<p>任何对 Y 的（确定或随机的）处理都不能增加关于 X 的信息量。</p>
+<p><strong>证明。</strong></p>
+<p>① 互信息的链式法则：</p>
+<div class="formula display" data-tex="I(X;Y,Z)=I(X;Z)+I(X;Y\mid Z)=I(X;Y)+I(X;Z\mid Y)."></div>
+<p>（这是 H 的链式法则的改写，逐项代入即验证。）</p>
+<p>② 马尔可夫性给出 I(X;Z|Y) = 0：给定 Y 后 p(x,z|y) = p(x|y)p(z|y)，故条件 KL 散度 D(p(x,z|y)‖p(x|y)p(z|y)) = 0。</p>
+<p>③ 代入：I(X;Z) + I(X;Y|Z) = I(X;Y) + 0。互信息非负 ⇒ I(X;Z) ≤ I(X;Y)。∎</p>
+<div class="key-insight">DPI 的三层含义：①信息沿处理链不增（"无用功不增加信息"）；②确定性函数 Z=g(Y) 是其特例（I(X;g(Y)) ≤ I(X;Y)）——特征选择、降维、量化永远损失或不增互信息；③Fano 不等式 + DPI 给出信道编码定理上界的标准证法。</div>
+</section>
+
+<section>
+<h3>定理证明：Gibbs 不等式（信息论基本不等式）</h3>
+<p><strong>陈述。</strong>对同一字母表上的两个分布 p、q，</p>
+<div class="formula display" data-tex="-\sum_i p_i\log p_i\ \le\ -\sum_i p_i\log q_i,"></div>
+<p>等号当且仅当 p=q。等价地，KL 散度非负：D(p‖q) = Σp_i log(p_i/q_i) ≥ 0。</p>
+<p><strong>证明（方法一：对数不等式）。</strong>基本不等式 ln t ≤ t−1（等号当且仅当 t=1）。取 t = q_i/p_i：</p>
+<div class="formula display" data-tex="D(p\|q)=\sum_i p_i\ln\frac{p_i}{q_i}=-\sum_i p_i\ln\frac{q_i}{p_i}\ \ge\ -\sum_i p_i\Big(\frac{q_i}{p_i}-1\Big)=1-1=0."></div>
+<p>（末等号：Σp_i = Σq_i = 1。）等号当且仅当每个 q_i/p_i = 1，即 p=q。</p>
+<p><strong>证明（方法二：Jensen）。</strong>−ln 是凸函数，</p>
+<div class="formula display" data-tex="D(p\|q)=\mathbb{E}_p\Big[-\ln\frac{q}{p}\Big]\ \ge\ -\ln\mathbb{E}_p\Big[\frac{q}{p}\Big]=-\ln 1=0."></div>
+<p>由 −ln 严格凸，等号仅当 q/p 为常数（=1）。∎</p>
+<p><strong>推论。</strong>① H(p) ≤ −Σp_i log q_i 对任意 q（"交叉熵 ≥ 熵"）。② 固定支撑 {1,…,n} 时 H(p) ≤ log n，等号当且仅当 p 均匀（取 q 均匀）——这是<strong>最大熵原理</strong>离散情形的证明。③ 连续情形（对密度）：∫f ln f ≥ ∫f ln g 同样成立，用于刻画高斯、指数等最大熵分布。</p>
+</section>
+
+<section>
+<h3>定理证明：Shannon 熵的性质</h3>
+<p><strong>非负性。</strong>H(p) = −Σp_i log p_i ≥ 0：因 0 ≤ p_i ≤ 1 ⇒ log p_i ≤ 0 ⇒ −p_i log p_i ≥ 0（约定 0·log 0 = 0）。H = 0 当且仅当分布退化（某 p_i = 1）。</p>
+<p><strong>可加性（链式法则）。</strong>联合分布 p(x,y) 的边缘与条件熵满足</p>
+<div class="formula display" data-tex="H(X,Y)=H(X)+H(Y\mid X),\qquad H(Y\mid X)=\sum_x p(x)\,H(Y\mid X=x)."></div>
+<p>证明：把 H(X,Y) = −Σ_{x,y}p(x,y) log p(x,y) 中的 p(x,y) 写成 p(x)p(y|x)，用 log 的乘积性拆成两项：H(X,Y) = −Σp(x,y)log p(x) − Σp(x,y)log p(y|x) = H(X) + H(Y|X)。特别地，X、Y 独立时 H(X,Y) = H(X) + H(Y)（可加性）。</p>
+<p><strong>凹性。</strong>H 是概率单纯形上的凹函数：对 0≤θ≤1，</p>
+<div class="formula display" data-tex="H(\theta p+(1-\theta)q)\ \ge\ \theta H(p)+(1-\theta)H(q)."></div>
+<p>证明：f(t) = t log t 在 (0,∞) 凸（f″ = 1/t &gt; 0）。凸性给出 f(θp_i+(1−θ)q_i) ≤ θf(p_i)+(1−θ)f(q_i)，求和并取负（凹函数）即 H(θp+(1−θ)q) = −Σf(·) ≥ −θΣf(p_i) − (1−θ)Σf(q_i) = θH(p)+(1−θ)H(q)。∎ 直观：把两种分布"混匀"只增加不确定性——均匀分布在所有离散分布中熵最大，正是凹性的最大值点。</p>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Kardar, Statistical Physics of Particles</strong></p>
+<p>&rarr; <strong>K. Huang, Statistical Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/thermodynamics.html">热力学与熵</a>。</p>
+</section>
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/brownian-motion.html">布朗运动</a>：熵产生在微观尺度的直接体现——花粉颗粒被分子随机撞击。</p>
+<p>&rarr; <a href="/pages/carnot-cycle.html">Carnot 循环</a>：可逆循环的熵变为零——效率上限由熵决定。</p>
+<p>&rarr; <a href="/pages/boltzmann.html">Boltzmann 方程</a>：H-定理 = 熵增的动力学版本。</p>
+<p>&rarr; <a href="/pages/turing-machine.html">图灵机</a> / <a href="/pages/godel.html">G&ouml;del 不完备</a>：信息熵和计算复杂度的深层联系。</p>
+</section>
+<section><h3>前沿：量子熵与黑洞信息悖论</h3><p>Bekenstein-Hawking熵 S = A/4G 暗示黑洞有微观态——但广义相对论中黑洞"无毛"。黑洞蒸发(Hawking辐射)是热的——但热辐射携带信息吗？如果是→量子力学对。如果否→广义相对论对。<strong>不能都对。</strong></p><p>1997年Maldacena的AdS/CFT对偶表明黑洞熵可以解释为边界共形场论的统计熵。2019年Penington等用"岛公式"(Island formula)恢复了Page曲线——证明信息在蒸发后期<strong>确实</strong>返回。</p></section>

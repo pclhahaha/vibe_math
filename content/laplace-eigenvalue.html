@@ -1,0 +1,154 @@
+<section>
+<h3>〇、直觉入门——鼓的声音里，藏着多少关于鼓的信息？</h3>
+<p>敲一面鼓，鼓皮按"驻波模式"振动：有的模式把鼓面分成几块此起彼伏的区域，相邻区域反相振动，中间隔着不动的<strong>节线</strong>。每个模式对应一个固有频率——鼓的全部固有频率组成它的<strong>谱</strong>，也就是你听到的音色。数学上，鼓皮的小振动满足波动方程 u_tt = c²Δu，时间上做谐波分解后，空间部分满足</p>
+<div class="formula display" data-tex="-\Delta\varphi=\lambda\varphi\quad\text{在域内},\qquad \varphi=0\quad\text{在边界上}\qquad(\text{Dirichlet 特征值问题})"></div>
+<p>谱 {λ₁&lt;λ₂≤λ₃≤…} 就是鼓的"指纹"。1966 年，Kac 发表名文 <em>"Can one hear the shape of a drum?"</em>（能听出鼓的形状吗？）：给定全部特征值，能否唯一确定鼓面（平面区域）？答案出人意料：<strong>一维能（弦的谱决定长度），二维不能</strong>——1992 年 Gordon、Webb 与 Wolpert 构造了两块<strong>形状不同却谱完全相同</strong>的平面鼓（"等谱鼓"）。但谱仍"听得出"很多：面积、周长（Weyl 律的前两项）、以及边界的一些精细量。</p>
+<div class="key-insight">洞察：特征值问题 −Δφ=λφ 是"振动如何被形状雕刻"的精确语言。矩形/圆盘的谱可显式算出（分离变量）；一般区域不行，却仍受普适定律约束——Weyl 律（λ_k ~ (4π/Area)k）、Courant 节线定理（第 k 个本征函数至多 k 个节域）。"能听出的"与"听不出的"之间的边界，是谱几何（spectral geometry）八十年的核心故事。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/pde.html">PDE：热与波</a>（波动方程与分离变量）、<a href="/pages/fourier-series.html">傅里叶级数</a>（本征函数展开）、<a href="/pages/spectral-theorem.html">谱定理</a>（算子谱的语言）。简并现象与 <a href="/pages/representation-theory.html">群表示论</a> 的方块对称性相连。</p></div>
+
+<section>
+<h3>一、一个具体问题——Kac 的问题与三条答案</h3>
+<p><strong>先把问题精确化。</strong> 鼓面 = 平面有界区域 Ω（带边界的开集）。特征值问题 −Δφ=λφ、φ|_∂Ω=0 有离散谱 0&lt;λ₁&lt;λ₂≤λ₃→…（特征值变分刻画：λ_k = 对 k 维子空间取 Rayleigh 商 ∫|∇u|²/∫u² 的极大极小）。谱确定形状吗？三个层次的答案：</p>
+<ul>
+<li><strong>一维：能。</strong> 区间 (0,L) 的谱 λ_k=(kπ/L)²——谱给出 L=π/√λ₁，形状（区间）唯一。</li>
+<li><strong>高维流形：不能（最早）。</strong> Milnor（1964）构造了 16 维环面上等谱但不等距的两个例子——Kac 的问题在大维度先被否定。</li>
+<li><strong>平面鼓：也不能（终局）。</strong> Gordon–Webb–Wolpert（1992）：存在两个不同胚、不同构的平面区域（"太阳与月亮"拼接构造）谱完全相同。方法：Sunada（1985）的群覆盖移植技术——用有限群的表示把特征函数从一块"移植"到另一块。∎ 从此问题变为：<strong>哪些形状可被听出？</strong>（圆盘、矩形可以；凸域整体是否可听仍是开放问题）。</li>
+</ul>
+<p><strong>但谱确实听得出几何量：</strong> Weyl 律（1911）：</p>
+<div class="formula display" data-tex="N(\lambda)=\#\{k:\lambda_k\le\lambda\}\sim\frac{\mathrm{Area}(\Omega)}{4\pi}\,\lambda\qquad(\lambda\to\infty)"></div>
+<p>所以<strong>面积可听</strong>：Area = 4π·lim N(λ)/λ。第二项（边界项）给出<strong>周长</strong>（光滑边界时 N(λ) = (Area/4π)λ − (Length/4π)√λ + o(√λ)，Iwaniec/Ivrii 等）。谱几何由此分为两支：<strong>正向</strong>（从形状算谱）与<strong>逆向</strong>（从谱反推几何量）。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——驻波、节线与为什么"分形状"那么难</h3>
+<p><strong>矩形鼓是教科书。</strong> Ω=(0,a)×(0,b)：分离变量得本征函数</p>
+<div class="formula display" data-tex="\varphi_{m,n}(x,y)=\sin\frac{m\pi x}{a}\sin\frac{n\pi y}{b},\qquad \lambda_{m,n}=\pi^{2}\Bigl(\frac{m^{2}}{a^{2}}+\frac{n^{2}}{b^{2}}\Bigr)"></div>
+<p>第 (m,n) 模式有 m−1 条竖直节线、n−1 条水平节线，把鼓面分成 <strong>m·n 个节域</strong>，相邻区域反相。方形 (a=b) 时 λ_{m,n}=λ_{n,m}——<strong>简并</strong>（同一频率两个独立模式）：这是方块的 90° 旋转对称在算子上的投影（→ <a href="/pages/representation-theory.html">群表示论</a>：对称群使特征空间成表示）。</p>
+<p><strong>Courant 节线定理（1923）。</strong> 第 k 个本征函数（按谱序）的节域数 ≤ k。矩形 (m,n) 模式的节域 m·n 恰好不超过它在谱中的序号（画布可验证）。节线是"模式如何切分鼓面"的地图，也是谱几何最直观的对象。</p>
+<p><strong>为什么一般形状难？</strong> 分离变量只在"坐标对称"的域有效。L 形、多边形、任意鼓面没有闭式本征函数——只能用数值（画布的"节线模式"即解析例；一般域需有限元/有限差分，→ <a href="/pages/numerical-methods.html">数值计算方法</a>）。谱几何的美在于：<strong>即使算不出单个本征函数，渐近律（Weyl）、计数律（Courant）、与热核的关系（Σe^{−λt}）依然精确地成立</strong>。</p>
+</section>
+
+<section>
+<h3>三、例题 1——方形鼓的谱与简并（一步步算完）</h3>
+<p><strong>题目。</strong> 方形鼓 Ω=(0,π)²，求前几个不同谱值并数简并度；检查 Courant 定理于 (m,n)=(2,2)。</p>
+<p><strong>第一步：谱公式。</strong> λ_{m,n}=m²+n²（π² 已归一化），m,n≥1。</p>
+<p><strong>第二步：前 6 个不同值。</strong></p>
+<div class="formula display" data-tex="\lambda=2:(1,1);\quad 5:(1,2),(2,1);\quad 8:(2,2);\quad 10:(1,3),(3,1);\quad 13:(2,3),(3,2);\quad 17:(1,4),(4,1)"></div>
+<p>λ=5 出现 2 次（简并度 2）、λ=10、13、17 各 2 次——<strong>凡 m≠n 必成对</strong>（旋转 90° 的伙伴）；m=n 的模式（(1,1),(2,2)…）不与任何其他模式简并。∎</p>
+<p><strong>第三步：Courant 核对。</strong> 按谱序：λ=2（第 1）、λ=5（第 2、3，简并）、λ=8（第 4）。模式 (2,2) 是第 4 个本征函数（λ=8 的序号 4），其节域数 = 2·2=4 ≤ 4 ✓——定理恰好紧。∎</p>
+<p><strong>第四步：频率比。</strong> (1,2) 模式频率 = √5，与基频 √2 之比 √(5/2)≈1.581；(2,2) 之比 = 2。乐器的"音色"正是这些比值的集合——方形鼓与矩形鼓的谱结构完全不同，这就是"听出形状"的可能性的物理来源。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——Weyl 律数字核对 + 一维可听（一步步算完）</h3>
+<p><strong>题目。</strong> (a) 对方形 (0,π)² 数 N(20) 并与 Weyl 渐近比较；(b) 说明一维弦为何"可听"。</p>
+<p><strong>第一步：(a) 精确计数。</strong> N(20)=#{(m,n)∈ℕ²：m²+n²≤20}：</p>
+<div class="formula display" data-tex="m=1:n\le4\ (4);\ m=2:n\le4\ (4);\ m=3:n\le3\ (3);\ m=4:n\le2\ (2)\quad\Rightarrow\quad N(20)=13"></div>
+<p><strong>第二步：Weyl 预测。</strong> Area=π²：N(20) ≈ (π²/4π)·20 = 5π ≈ 15.7——低阶计数 13 已在渐近线附近（√λ 与常数修正约 −2.7，符合"第二项来自周长"：−Length√λ/4π = −4π·√20/4π ≈ −4.47 与常数项相抵后 ≈15.7−4.5+…≈11+…修正，数量级吻合）。∎</p>
+<p><strong>第三步：(b) 一维可听。</strong> 弦长 L 的谱 λ_k=(kπ/L)²：两相邻谱值之比 ((k+1)/k)² 与 L 无关，但 <strong>绝对尺度</strong> λ₁=π²/L² 反解出 L。<strong>一维的形状只有一个参数（长度），谱恰好携带它</strong>；二维的形状有无穷自由度，谱（可数集）原则上可以携带，但 Gordon–Webb–Wolpert 证明它<strong>没有</strong>忠实记录。∎</p>
+<p><strong>第四步：为什么反例不平凡？</strong> 等谱鼓的构造用"移植"：把一个域的本征函数族（满足 0 边界）通过覆盖映射搬到另一个域上，使得搬运后的函数仍满足同样的 0 边界——两个域因此"共用"一整套谱。几何不同（一个域在另一个上"卷"出的对称性不同），谱却分毫不差。这就是 Sunada 方法：<strong>谱是域的"线性化影子"，影子相同的两个物体可以形状迥异</strong>。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>谱的离散性：</strong> 有界域上 −Δ（Dirichlet）有离散谱 0&lt;λ₁&lt;λ₂≤…→∞，本征函数构成 L²(Ω) 正交基（紧算子 + 谱定理，→ <a href="/pages/spectral-theorem.html">谱定理</a> 课）。</li>
+<li><strong>变分刻画：</strong> λ_k = min_{dim S=k} max_{u∈S} ∫|∇u|²/∫u²（Courant–Fischer）；λ₁ 是基频（鼓的最低音）。</li>
+<li><strong>Weyl 律：</strong> N(λ) ~ (Area/4π)λ（1911，对所有有界域）；第二项 −(Length/4π)√λ 对光滑边界成立（Ivrǐi 等，含"周长可听"）。高维推广：N(λ) ~ (Vol(Bⁿ)Vol(Ω)/(2π)ⁿ)λ^{n/2}。</li>
+<li><strong>Courant 节线定理（1923）：</strong> 第 k 个本征函数节域 ≤ k。节线总长度与节点测度的现代界：Logunov–Malinnikova（2018–）——本征函数零点集的 (n−1)-维测度有普适上界。</li>
+<li><strong>热核与谱：</strong> Σ_k e^{−λ_k t} = ∫_Ω K(t,x,x)dx，t→0⁺ 渐近展开首项 Area/(4πt)（高维 (4πt)^{−n/2}·Vol）——"从谱听面积"的热力学证明。</li>
+<li><strong>等谱问题：</strong> 一维可听；Milnor（1964）16 维环面反例；Gordon–Webb–Wolpert（1992）平面鼓反例（Sunada 方法）。可听集合目前确知包含：面积、周长、部分对称信息；凸域"整体可听"未知。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="-\Delta\varphi=\lambda\varphi,\ \varphi|_{\partial\Omega}=0;\qquad \lambda_k=\pi^2\Bigl(\frac{m^2}{a^2}+\frac{n^2}{b^2}\Bigr)\ (\text{矩形})"></div>
+<div class="formula display" data-tex="N(\lambda)\sim\frac{\mathrm{Area}}{4\pi}\lambda-\frac{\mathrm{Length}}{4\pi}\sqrt\lambda+o(\sqrt\lambda)"></div>
+<div class="formula display" data-tex="\lambda_k=\min_{\dim S=k}\ \max_{u\in S}\ \frac{\int|\nabla u|^2}{\int u^2};\qquad \text{节域数}\le k\ (\text{Courant})"></div>
+<div class="formula display" data-tex="\sum_k e^{-\lambda_k t}=\int_\Omega K(t,x,x)\,dx\sim\frac{\mathrm{Area}}{4\pi t}\qquad(t\to0^+)"></div>
+</section>
+
+<section>
+<h3>七、延伸——鼓声之外</h3>
+<ul>
+<li><strong>物理与工程。</strong> 声学（乐器音色 = 谱）、地震学（地幔自由振荡模式反演地球内部）、微波腔（雷达）、量子点（盒中粒子能级——氢原子课之外的最小盒子）。谱无处不在，因为它就是"振动如何被容器雕刻"。</li>
+<li><strong>量子混沌。</strong> 不可积区域（如典型三角）的谱统计接近随机矩阵（GOE，Berry–Tabor/ Bohigas 猜想）；可积区域（矩形/圆盘）呈泊松统计。"谱统计区分可积与混沌"是量子混沌的核心经验律。→ <a href="/pages/hydrogen-atom.html">氢原子</a>、<a href="/pages/uncertainty.html">不确定性</a> 课。</li>
+<li><strong>谱 zeta 与物理。</strong> ζ_Δ(s)=Σλ_k^{−s} 可延拓到全平面（谱几何工具）；Casimir 效应（真空中两块板之间的力）可写成谱 zeta 在 s=−1/2 的取值——"听形状"与量子真空涨落同源。</li>
+<li><strong>表示论的影子。</strong> 方形鼓的简并（例题 1）是方块对称群作用的直接结果；对称性越高简并越强——群表示论给"为什么谱会重合"提供了解释（→ <a href="/pages/representation-theory.html">群表示论</a>）。</li>
+<li><strong>反问题。</strong> 从谱/散射数据反推介质（医学成像、无损检测）——"听形状"的工程版是一个庞大产业（Calderón 问题、电阻抗成像）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——四个"听觉幻觉"</h3>
+<p><strong>陷阱 1："谱相同 = 形状相同（Kac 问题的答案应为'能'）"？</strong> 不能。Gordon–Webb–Wolpert 1992 的平面反例终结了猜想；"能听出形状"只在特殊类（圆盘、矩形、一维）成立。把"音色相似"当"形状相同"是最大误解。</p>
+<p><strong>陷阱 2："任何鼓面都能像矩形那样写出本征函数"？</strong> 不能。分离变量只在可分离坐标的域（矩形、圆、环、极坐标可分）工作；一般域的本征函数没有闭式。画布的矩形模式是"分析样本"，不代表一般域可手算——这也是谱几何强调<strong>普适渐近</strong>而非逐模式公式的原因。</p>
+<p><strong>陷阱 3："λ₁ 大 = 面积大"？</strong> 方向反了：域越小 λ₁ 越大（λ₁(Ω) ≥ π²j²_{0,1}/Area 之类的下界；圆盘 λ₁=…）。Weyl 律给面积用的是<strong>整个渐近谱</strong> N(λ)~Area·λ/4π，不是单个 λ₁。单个特征值携带的信息极有限。</p>
+<p><strong>陷阱 4："Courant 说第 k 个本征函数恰有 k−1 条节线"？</strong> Courant 说的是<strong>节域数 ≤ k</strong>（区域数，不是线数；二维里节线把面分成区域）。矩形 (m,n) 模式是 m·n 个节域，恰好 = 序号（当无简并时取等是可能的），但一般域"等于多少"没有公式——"≤"是上界不是等式。</p>
+</section>
+
+<section>
+<h3>九、当前状态——谱几何的前沿</h3>
+<ol>
+<li><strong>等谱问题收尾。</strong> 平面反例之后：等谱但形状不同的<strong>凸</strong>域是否存在？（仍开放）；"圆盘是否可听"（圆盘谱 j_{0,k}² 有平方间隔特征——是否唯一被该谱确定的域）也是经典开放问题。</li>
+<li><strong>节点集几何。</strong> Logunov（2018）证明本征函数节点集的 (n−1) 维测度普适上界（"yoke 界"），Logunov–Malinnikova 对内部下界取得突破——"节线有多长"从猜想变成定理。</li>
+<li><strong>谱统计与量子混沌。</strong> "能级排斥"（GOE 谱统计）在不可积域已被大量数值与部分理论支持；与随机矩阵（→ <a href="/pages/operator-algebras.html">算子代数</a> 的谱）和动力系统（→ <a href="/pages/ergodic-theory.html">遍历理论</a>）的合流仍在进行。</li>
+<li><strong>数值谱几何。</strong> 有限元特征值计算（→ <a href="/pages/numerical-methods.html">数值方法</a>）让"任意形状鼓的音色"可算——工程与纯数学在此共享同一张鼓。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Weyl (1911)</strong>：<em>"Über die asymptotische Verteilung der Eigenwerte"</em>——特征值渐近律（Weyl 律）。</li>
+<li><strong>Courant (1923)</strong>：节线定理与变分特征值刻画。</li>
+<li><strong>Kac (1966)</strong>：<em>"Can one hear the shape of a drum?"</em>, <em>Amer. Math. Monthly</em>——问题的提出与命名。</li>
+<li><strong>Milnor (1964)</strong>：16 维环面的等谱反例（黎曼流形版）。</li>
+<li><strong>Sunada (1985)</strong>：等谱流形的群覆盖构造方法。</li>
+<li><strong>Gordon–Webb–Wolpert (1992)</strong>：<em>"Isospectral plane domains and surfaces via Riemannian orbifolds"</em>——平面等谱鼓（Kac 问题终结）。</li>
+<li><strong>Ivrii (1980s)</strong>：Weyl 律第二项（周长项）对光滑边界的一般证明。</li>
+<li><strong>Berry–Tabor (1977) / Bohigas–Giannoni–Schmit (1984)</strong>：可积 vs 混沌域的谱统计（泊松 vs GOE）。</li>
+<li><strong>Logunov (2018) / Logunov–Malinnikova</strong>：本征函数节点集的普适测度界。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——谱值、节线与 Weyl</h3>
+<p><strong>题 1（方形谱）。</strong> 列出方形鼓 λ=m²+n² ≤17 的全部模式与简并度。<strong>提示：</strong>2(1)、5(2)、8(1)、10(2)、13(2)、17(2)——简并全来自 m↔n 对换。</p>
+<p><strong>题 2（Courant 核对）。</strong> 模式 (m,n)=(1,3) 的节域数是多少？它在谱中大约第几个（λ=10）？<strong>提示：</strong>节域 = m·n=3 ≤ 序号（λ=10 是第 5 个不同值后的第 6–7 个本征函数）✓。</p>
+<p><strong>题 3（Weyl 反推面积）。</strong> 若已知某鼓的谱且 N(λ)/λ → 0.75（λ→∞），面积是多少？<strong>提示：</strong>Area = 4π·0.75 = 3π。</p>
+<p><strong>题 4（弦的可听性）。</strong> 两根弦测得基频分别为 440 Hz 与 220 Hz（音高 A₄/A₃），它们的长度比？<strong>提示：</strong>λ₁=π²/L² ∝ f² ⟹ L₁/L₂ = f₂/f₁ = 1/2：低八度的弦长是两倍。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示：不同谱值 6 个，总本征函数 1+2+1+2+2+2=10 个。∎</p>
+<p><strong>题 2</strong>：节域 3，序号 ≤ 7，Courant 成立。∎</p>
+<p><strong>题 3</strong>：Area = 3π。∎</p>
+<p><strong>题 4</strong>：L₁/L₂ = 1/2（低八度弦长加倍）。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布模式）。</strong> 把 (m,n) 从 (1,1) 拖到 (4,3)：颜色图显示节线（白线把鼓面分成 m·n 块）；读 λ=m²+n² 与频率比 √(λ/2)。体会"模式越碎频率越高"。</p>
+<p><strong>试试看 2（简并的对称性）。</strong> (m,n)=(2,3) 与 (3,2) 同谱（λ=13）：把画布模式从 (2,3) 切到 (3,2)，节线图绕中心旋转 90°——同一频率的"两个独立模样"正是方块对称的表示论投影。提示：想想 <a href="/pages/representation-theory.html">群表示论</a> 的方块对称群。</p>
+<p><strong>试试看 3（Weyl 现场）。</strong> 在 <a href="/pages/pde.html">PDE 课</a> 的热方程画布回想：热核 Σe^{−λt} 的 t→0 展开 = 从谱读面积；把 λ 换成热扩散的速度，同一套谱两副面孔。</p>
+<p><strong>试试看 4（数值鼓）。</strong> 想一个 L 形或任意多边形鼓：它的最低几个频率长什么样？提示：无法手算——打开 <a href="/pages/numerical-methods.html">数值计算方法</a> 的思路用有限差分/有限元逼近，你会发现谱几何的定理（Weyl、Courant）对数值谱照样成立——普适性不是近似，是定理。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>I. Chavel, Eigenvalues in Riemannian Geometry</strong>（流形谱几何标准教材）</p>
+<p>&rarr; <strong>P. Bérard, Spectral Geometry: Direct and Inverse Problems</strong>（鼓问题的优雅路线）</p>
+<p>&rarr; <strong>G. Gordon et al. 综述, "Isospectral deformations..."（Notices AMS）</strong>：等谱鼓的可读故事</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.12（PDE）与 IV.9（微分几何）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/pde.html">偏微分方程：热与波</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>、<a href="/pages/spectral-theorem.html">谱定理</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/pde.html">🌡️ 偏微分方程：热与波</a>：−Δφ=λφ 是波动/热方程的"空间音叉"。</p>
+<p>&rarr; <a href="/pages/fourier-series.html">🎼 傅里叶级数</a>：本征函数展开 = 无穷维傅里叶。</p>
+<p>&rarr; <a href="/pages/spectral-theorem.html">🎯 谱定理</a>：算子谱的抽象框架，本课是它在 PDE 的具体化身。</p>
+<p>&rarr; <a href="/pages/representation-theory.html">🎭 群表示论</a>：方形鼓简并 = 方块对称群的表示。</p>
+<p>&rarr; <a href="/pages/numerical-methods.html">💻 数值计算方法</a>：任意形状的谱只能数值求（画布方法可扩展）。</p>
+<p>&rarr; <a href="/pages/ergodic-theory.html">♻️ 遍历理论</a>：量子混沌：谱统计区分可积与混沌域。</p>
+</section>

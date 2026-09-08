@@ -1,0 +1,117 @@
+<section>
+<h3>〇、直觉入门——发动机再厉害，也翻不过效率的"天花板"</h3>
+<p>从热水和冷水两个水箱里"捞"出动力，就像用瀑布发电：水越急，发的电越多。Carnot发现，任何机器——不管用蒸汽、汽油还是什么鬼工质——能捞出的动力都有一道天花板，天花板的高度只取决于热水有多热、冷水有多冷。</p>
+<p>这东西在干什么：给所有发动机划出"效率极限"，也是"热量不会白白流走"这条自然法则的第一个数学公式。</p>
+<div class="key-insight">效率天花板只由冷热水温决定，别的怎么折腾都没用。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/thermodynamics.html">热力学与熵</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、数字驱动的问题——600 K 与 300 K，天花板有多高？</h3>
+<p>一台热机：锅炉里的蒸汽 600 K（约 327 °C），冷却水（河水）300 K（约 27 °C）。它每从锅炉吸进 Q_h = 1200 J，最多能吐多少功？</p>
+<p>答案由 <strong>Carnot 公式</strong> 一锤定音：</p>
+<div class="formula display" data-tex="\eta=1-\frac{T_c}{T_h}=1-\frac{300}{600}=0.5,\qquad W=\eta Q_h=0.5\times 1200=600\ \mathrm{J}"></div>
+<p>最好也只有 <strong>600 J</strong> 功，剩下的 600 J 必须排给河水。换成更热的锅炉呢？T_h = 1000 K、T_c = 300 K：η = 0.7，同样吸 1200 J 可得 840 J。可见天花板只由冷热源温度决定——工质是蒸汽、理想气体还是别的，统统无所谓。这是 1824 年、热力学尚未成型时，年仅 28 岁的 Sadi Carnot 凭天才直觉写下的第一道"自然法则公式"。</p>
+<p>这门课要回答三个问题：<strong>天花板为什么存在？为什么恰好是 1 − T_c/T_h？为什么谁也翻不过它？</strong></p>
+</section>
+
+<section>
+<h3>二、Carnot 循环的机械结构——四步走一个圆</h3>
+<p>Carnot 循环在 T_h（热源）与 T_c（冷源）之间来回，由两个等温段和两个绝热段组成。以 1 mol 理想气体为例，T_h = 600 K、T_c = 300 K，四个步骤依次是：</p>
+<ol>
+<li><strong>等温膨胀 A→B（600 K，吸热 Q_h）</strong>：气体从热源吸热，同时对外做功。温度不变——内能不变，吸多少热就做多少功。</li>
+<li><strong>绝热膨胀 B→C（600 K → 300 K）</strong>：断掉热源，气体靠自己的内能继续推动活塞，降温到冷源温度。</li>
+<li><strong>等温压缩 C→D（300 K，放热 Q_c）</strong>：气体向冷源放热，外界对它做功，温度仍不变。</li>
+<li><strong>绝热压缩 D→A（300 K → 600 K）</strong>：断掉冷源，外界继续压缩，气体升温回到起点，循环闭合。</li>
+</ol>
+<p><strong>为什么必须四步？</strong> 因为热机要<em>循环</em>工作：工质必须回到原状态。等温段是与热源交换热量的唯一窗口——只有等温，工质才能与固定温度的源保持热平衡；绝热段是从 T_h 下到 T_c 的梯子——只有绝热，工质才能不跟外界换热地改变温度，从而保证不"漏热"。四步拼起来就是一个可逆闭合回路：每一刻系统都处于平衡。</p>
+<div class="formula display" data-tex="W=Q_h-Q_c,\qquad \eta=\frac{W}{Q_h}=1-\frac{Q_c}{Q_h}=1-\frac{T_c}{T_h}"></div>
+</section>
+
+<section>
+<h3>三、关键公式</h3>
+<div class="formula display" data-tex="\eta=1-\frac{T_c}{T_h}=1-\frac{Q_c}{Q_h}"></div>
+<div class="formula display" data-tex="W=Q_h-Q_c,\qquad \oint\frac{\delta Q}{T}=0\quad(\text{可逆循环})"></div>
+<p>把数字带进去：T_h = 600 K、T_c = 300 K 时 η = 0.5；T_h = 1000 K、T_c = 300 K 时 η = 0.7。效率永远小于 1，因为 T_c 永远是正的（绝对零度不可达）。</p>
+</section>
+
+<section>
+<h3>四、完整例题1——1 mol 理想气体，逐段算完 Carnot 循环</h3>
+<p>1 mol 单原子理想气体（γ = 5/3）运行 Carnot 循环：T_h = 600 K、T_c = 300 K，等温膨胀段 V_A = 1 L → V_B = 2 L。逐段计算每一步的 Q 与 W。</p>
+<p><strong>步骤 1：等温膨胀 A→B（600 K，V: 1 → 2 L）</strong></p>
+<div class="formula display" data-tex="Q_h=nRT_h\ln\frac{V_B}{V_A}=8.314\times 600\times\ln 2\approx 3458\ \mathrm{J},\qquad W_1=Q_h\approx 3458\ \mathrm{J},\quad \Delta U_1=0"></div>
+<p><strong>步骤 2：绝热膨胀 B→C（600 → 300 K）</strong>。Q = 0，做功靠内能：W₂ = nC_v(T_h − T_c) = 12.47×300 ≈ 3742 J。由绝热关系 T_h V_B^(γ−1) = T_c V_C^(γ−1) 得 V_C = V_B × 2^(3/2) ≈ 5.657 L。</p>
+<p><strong>步骤 3：等温压缩 C→D（300 K，V: 5.657 → 2.828 L）</strong>。绝热关系给出 V_D = V_A × 2^(3/2) ≈ 2.828 L。</p>
+<div class="formula display" data-tex="Q_c=nRT_c\ln\frac{V_C}{V_D}=8.314\times 300\times\ln 2\approx 1729\ \mathrm{J}\ (\text{放出}),\qquad W_3=-Q_c\approx -1729\ \mathrm{J}"></div>
+<p><strong>步骤 4：绝热压缩 D→A（300 → 600 K）</strong>。Q = 0，外界对气体做功 W₄ = −nC_v(300) ≈ −3742 J。</p>
+<p><strong>对账</strong>：净功 W = 3458 + 3742 − 1729 − 3742 = 1729 J；净热 Q_h − Q_c = 3458 − 1729 = 1729 J。能量守恒 ✓。效率：</p>
+<div class="formula display" data-tex="\eta=\frac{W}{Q_h}=\frac{1729}{3458}=0.5=1-\frac{300}{600}"></div>
+<p>两个绝热段的功（±3742 J）恰好抵消——它们只负责"上下楼"，不参与净功；净功完全来自"吸热多、放热少"的温差。</p>
+<div class="key-insight">把每一步的 Q 和 W 都算一遍，循环才真正"闭合"：W_net = Q_h − Q_c，而 W_net/Q_h 恰好等于 1 − T_c/T_h。数字不是巧合，而是逐段积分的结果。</div>
+</section>
+
+<section>
+<h3>五、推导——为什么效率只取决于温度比（且与工质无关）</h3>
+<p>以理想气体为工质，逐段计算 Carnot 循环四个过程的传热（等温膨胀 A→B 吸热、等温压缩 C→D 放热；绝热过程 Q=0）：</p>
+<div class="formula display" data-tex="Q_h=nRT_h\ln\frac{V_B}{V_A},\qquad Q_c=nRT_c\ln\frac{V_C}{V_D}"></div>
+<p>两条绝热线给出 T_hV_B^{γ−1}=T_cV_C^{γ−1} 与 T_cV_D^{γ−1}=T_hV_A^{γ−1}，相除得 V_B/V_A=V_C/V_D，于是：</p>
+<div class="formula display" data-tex="\frac{Q_h}{Q_c}=\frac{T_h}{T_c}\;\Rightarrow\;\eta=1-\frac{Q_c}{Q_h}=1-\frac{T_c}{T_h}\quad\blacksquare"></div>
+<div class="key-insight">效率与工质无关——任何可逆循环（Stirling、Ericsson……）在相同两热源间效率都等于 1−T_c/T_h，因为可逆时 ∮δQ/T=0。</div>
+</section>
+
+<section>
+<h3>六、卡诺定理——为什么没有热机能超过 1−T_c/T_h</h3>
+<p><strong>定理</strong>：工作在 T_h 与 T_c 之间的任意热机，效率 ≤ 1−T_c/T_h，等号当且仅当循环可逆。</p>
+<p><strong>为什么必须证明它？</strong> 上面的推导只对"理想气体的可逆循环"给出 η = 1−T_c/T_h；可现实机器用蒸汽、汽油、任何工质，还可能不可逆。卡诺定理把结论推广到<strong>一切</strong>热机——这才是"天花板"三个字的完整含义。</p>
+<p><strong>证明（反证）</strong>：假设存在热机 E 的效率 η_E&gt;η_Carnot。把 Carnot 机倒过来当制冷机，用 E 的做功 W_E 驱动它：制冷机从冷源吸热 Q_c′，向热源放热 Q_h′。令两机净功为零（W_E=W_C），则由 η_E&gt;η_Carnot 推得 Q_h′&gt;Q_h（同样的功，E 从热源取热更少、Carnot 制冷机向热源放热更多），能量守恒又给出 Q_c′−Q_c=Q_h′−Q_h&gt;0。净效果是热量自发地从冷源流向热源而无任何其他变化——<strong>违反 Clausius 表述</strong>（热不能自发从低温流向高温）。矛盾，故 η_E≤1−T_c/T_h。∎</p>
+<p><strong>推论</strong>：绝对零度不可达——若 T_c=0 则 η=1，需要第二个更冷的冷源来吸收 Q_c，无限递推。</p>
+</section>
+
+<section>
+<h3>七、反例——真实引擎为什么永远差一点</h3>
+<p>有限时间热机（Curzon–Ahlborn，1975）在最大功率点效率 η=1−√(T_c/T_h)。取 T_h=600 K、T_c=300 K：Carnot η=1−300/600=0.5，而有限时间 η=1−√0.5≈0.293&lt;0.5——因为可逆要求无限缓慢（功率→0）。Otto 循环 η=1−1/r^(γ−1)（r 为压缩比）同样严格低于同温度区间的 Carnot 效率。任何摩擦、有限温差传热、节流等不可逆因素都会产生熵 S_gen&gt;0，使 η&lt;1−T_c/T_h。</p>
+</section>
+
+<section><h3>八、Stirling循环和Ericsson循环——Carnot的竞争者</h3><p>Stirling:两个等温+两个等容。Ericsson:两个等温+两个等压。在可逆极限下它们和Carnot循环有相同的效率——因为η=1−T_c/T_h仅取决于温度比,不取决于具体循环形状。</p></section>
+<section><h3>九、有限时间热力学——Carnot效率在有限功率下的修正</h3><p>Carnot效率是可逆极限(功率=0)。实际热机需要有限功率→效率低于Carnot。Curzon-Ahlborn效率:η=1−√(T_c/T_h)——有限时间下最大功率点的效率。这和Carnot的1−T_c/T_h不同——因为可逆需要无限慢。</p></section>
+<section><h3>十、前沿：量子热机与量子热力学</h3><p>量子热机用单个原子/离子作为工质——Carnot效率仍然是上限,但量子相干性可以增加<strong>功率</strong>(超过经典热机)。仍开放:量子热机中"功"和"热"的精确定义——量子版本的能量分流。</p></section>
+
+<section>
+<h3>十一、完整例题2——倒过来的 Carnot：冰箱的账本</h3>
+<p>把 Carnot 循环反向运转就成了冰箱：用外界输入的最小功 W，把热量从冷库（T_c = 250 K）搬到厨房（T_h = 300 K）。设每循环外界输入 W = 200 J。</p>
+<p><strong>第 1 步</strong>：可逆循环满足 Q_c/T_c = Q_h/T_h（等温段 ∮δQ/T = 0），故</p>
+<div class="formula display" data-tex="Q_c=W\frac{T_c}{T_h-T_c}=200\times\frac{250}{50}=1000\ \mathrm{J},\qquad Q_h=Q_c+W=1200\ \mathrm{J}"></div>
+<p><strong>第 2 步</strong>：制冷系数 COP = Q_c/W = 1000/200 = 5；作为热泵，Q_h/W = 1200/200 = 6。</p>
+<p><strong>第 3 步</strong>：为什么这是上限？若某台真实冰箱用 200 J 能搬出超过 1000 J，把它与正向 Carnot 机联用，就能让热从冷流向热而不留任何痕迹——违反 Clausius 表述。所以 COP ≤ T_c/(T_h−T_c) = 5，等号仅在可逆时成立。</p>
+<div class="key-insight">冰箱的"免费搬运量"也是第二定律钉死的天花板：用 200 J 的功，最多只能把 1000 J 从冷搬到热。温差越大，搬运越贵（COP 越小）。</div>
+</section>
+
+<section>
+<h3>十二、工作题——计算效率与熵变</h3>
+<p>(a) Carnot 热机工作于 600 K 与 300 K 之间，从热源吸热 Q_h=1200 J。求 η、对外做功 W、向冷源放热 Q_c，以及 ΔS_h、ΔS_c、ΔS_total。</p>
+<p>(b) 一台不可逆机同样从 600 K 吸热 1200 J，但对外只做 500 J 功（向 300 K 放热 700 J）。求总熵变，并说明为何 η 小于 Carnot 效率。</p>
+<details><summary>显示解答</summary><p>(a) η=1−T_c/T_h=1−300/600=0.5；W=ηQ_h=600 J；Q_c=Q_h−W=600 J；ΔS_h=−Q_h/T_h=−2.0 J/K，ΔS_c=+Q_c/T_c=+2.0 J/K，ΔS_total=0（可逆）。<br>(b) ΔS_total=−1200/600+700/300=−2.0+2.33=+0.33 J/K&gt;0——熵增即不可逆的标志；η=500/1200≈0.417&lt;0.5=Carnot。</p></details>
+</section>
+
+<section>
+<h3>十三、试试看——练习与提示</h3>
+<ol>
+<li><strong>更热的锅炉</strong>：热机在 T_h = 800 K 与 T_c = 200 K 之间工作，吸热 Q_h = 2000 J。求 η、W、Q_c。<br><details><summary>提示</summary><p>η = 1−200/800 = 0.75；W = ηQ_h = 1500 J；Q_c = Q_h − W = 500 J。画一张能量流向图，三个数字必须满足 Q_c = Q_h − W。</p></details></li>
+<li><strong>冰箱的最小功</strong>：一台冰箱要从 250 K 的冷冻室抽出 Q_c = 1000 J，向 300 K 的厨房放热。最小需要多少功？<br><details><summary>提示</summary><p>可逆时 Q_c/T_c = Q_h/T_h；W_min = Q_h − Q_c = Q_c(T_h−T_c)/T_c = 1000×50/250 = 200 J。若某台冰箱只需 150 J，它能不能与正向 Carnot 机组成永动机？</p></details></li>
+<li><strong>不可逆的代价</strong>：一台真实热机从 600 K 吸 1200 J，只做 400 J 功。求总熵变，并与工作题 (b) 比较。<br><details><summary>提示</summary><p>向冷源放热 Q_c = 1200−400 = 800 J；ΔS_total = −1200/600 + 800/300 = −2.0 + 2.67 = +0.67 J/K。做功越少，熵增越大——这是不可逆的"罚款"。</p></details></li>
+<li><strong>效率为何永远小于 1</strong>：用文字回答：为什么任何热机的 η 都严格小于 1？<br><details><summary>提示</summary><p>η = 1 需要 T_c = 0 或 T_h = ∞；但绝对零度不可达（第三定律），且你需要一个更冷的冷源接受排出的热。也可以直接看第二定律：若 η = 1，循环不排热，等于"从单一热源吸热全部做功"——Kelvin–Planck 表述直接禁止。</p></details></li>
+</ol>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>H. Callen, Thermodynamics</strong></p>
+<p>&rarr; <strong>M. Kardar, Statistical Physics of Particles</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/thermodynamics.html">热力学与熵</a>。</p>
+</section>
+<section><h3>十四、关联课程</h3>
+<p>&rarr; <a href="/pages/entropy.html">熵与信息</a>：Carnot循环的可逆等温过程熵变为Q/T——Clausius正是从Carnot循环的定量分析中发明了"熵"这个概念，热力学第二定律由此诞生。</p>
+<p>&rarr; <a href="/pages/boltzmann.html">Boltzmann方程</a>：Carnot效率η=1−T_c/T_h是宏观热力学第二定律的定量丰碑——Boltzmann方程则从微观分子动力学推导出熵增，H-定理是Carnot原理的统计力学版本。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">布朗运动</a>：热机中工质的无规热运动是布朗运动的宏观集体体现——有限时间热力学修正了Carnot效率公式，随机热力学则将功和热的涨落定量化。</p>
+</section>

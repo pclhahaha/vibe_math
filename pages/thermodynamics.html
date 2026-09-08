@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="四大定律与热力学的逻辑结构" />
+  <meta property="og:title" content="热力学与熵 — Vibe Math" />
+  <meta property="og:description" content="四大定律与热力学的逻辑结构" />
+  <title>热力学与熵 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🔥 热力学与熵 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">四大定律与热力学的逻辑结构</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='thermodynamics',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/carnot-cycle.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔥 Carnot 循环</a>
+  <a href="/pages/navier-stokes.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌪️ Navier-Stokes 流场 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——热力学是"能量往哪跑"的记账本</h3>
+<p>热水放久了会凉，冰会化，这是热在"到处跑"。热力学就是研究能量和热怎么转移的学问，像一本严格的记账本：能量不会凭空消失（第一定律），而热量总爱从热的流向冷的、不会自动回头（第二定律）。</p>
+<p>它为什么存在？因为从发动机、冰箱到天气和宇宙演化，都要靠这几点简单规则来解释，它不问细节，只用几条大原则就把整个"能量世界"管住。</p>
+<div class="key-insight">能量不会凭空消失，热量总爱往冷处跑——热力学就是这两句话的完整记账本。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/probability.html">概率论基础</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、数字驱动的问题——一罐气体能掏出多少功？</h3>
+<p>把 1 mol 理想气体（例如氦气）封在带活塞的气缸里，温度 T = 300 K。让它做<strong>等温可逆膨胀</strong>：活塞缓缓后移，气体始终保持 300 K，体积从 V₁ = 1 L 胀到 V₂ = 2 L。这一步能算出多少功？</p>
+<p>对 pV = nRT 求积分：W = nRT ln(V₂/V₁)。代入 n = 1、R = 8.314 J·mol⁻¹·K⁻¹、T = 300 K：</p>
+<div class="formula display" data-tex="W=nRT\ln\frac{V_2}{V_1}=1\times 8.314\times 300\times \ln 2\approx 1729\ \mathrm{J}"></div>
+<p>气体对外做了 <strong>1729 J</strong> 的功。能量不会凭空产生——这笔功从哪来？只能来自它从外界吸的热。等温时理想气体内能不变（ΔU = 0），所以 Q = W ≈ 1729 J。最朴素的一本账：<em>吸热 1729 J，做功 1729 J，内能没变。</em></p>
+<p>换个问法：把同一罐气体夹在 600 K 的热源与 300 K 的冷源之间当热机，哪怕是最理想的情形，效率天花板也只有 1 − 300/600 = 0.5——吸进 1000 J 最多只吐出 500 J 功（详见 <a href="/pages/carnot-cycle.html">Carnot 循环</a>）。这背后，正是"热不肯自动回流"的第二定律。</p>
+<p>这门课的目标：把上面几笔账，用四条定律算清楚、算严格。</p>
+</section>
+
+<section>
+<h3>二、第零定律——为什么"温度"这个概念存在</h3>
+<p>要记账，先要有"币种"——温度。但温度并不是先验存在的：它由<strong>热平衡</strong>定义。把两块铁放到一起，等它们不再变化，就称它们热平衡；一个"温度计"就是能与被测物达成热平衡、并随温度单调变化的小装置。</p>
+<p><strong>第零定律</strong>：若 A 与 B 各自与 C 处于热平衡，则 A 与 B 也热平衡——热平衡是等价关系，从而可定义温度 T 这一状态函数。</p>
+<p><strong>为什么需要第零定律？</strong> 因为我们测量温度靠的是"温度计先与物体平衡，读数再代表物体"——这一步只有在热平衡是等价关系时才有意义。没有它，温度只是心理概念；有了它，温度才是定义在"平衡态集合"上的函数。</p>
+<div class="key-insight">第零定律给出"温度的存在"，第一定律给出"能量是状态量"，第二定律给出"熵的方向"，第三定律给出"熵的标尺"。四者合在一起才定义了完整的热力学。</div>
+</section>
+
+<section>
+<h3>三、第一定律——能量记账本，以及为什么 Q、W 不是状态函数</h3>
+<p><strong>第一定律</strong>：内能是状态函数，dU = δQ − δW。循环过程中 ∮δQ = ∮δW，能量守恒（焦耳当量实验确立热功等价：4.186 J 的机械功等价于 1 cal 的热）。</p>
+<p>内能 U 只依赖热力学态，与路径无关；而热 δQ 与功 δW <strong>依赖路径</strong>——它们不是全微分，故用 δ 而非 d。判据：若 ω = A dx + B dy 满足 ∂A/∂y = ∂B/∂x，则 ω 是全微分。δQ 不满足这一条件，所以"热量"不能写成某个状态函数的微分；功同理。</p>
+<p><strong>为什么 Q、W 依赖路径而 U 不依赖？</strong> 因为热和功是能量<em>穿越系统边界</em>的两种方式。同样的始末态，你可以先多给热再补做功，也可以反过来——边界上"流量"由你选的路决定，而终点油箱里的"存量"由终点决定。这就是 δ 与 d 的本质区别。</p>
+<p><strong>热力学势 = Legendre 变换</strong>。F(T,V,N) 是 U(S,V,N) 对 S 做 Legendre 变换的结果：F = U − TS = inf_S (U − TS)。它把"自然变量从 S 换到 T"——极小化 F 对应在给定温度下系统自发到达的状态。G(T,P,N) 同理对 (S,V) 做变换，是化学势的生成函数。</p>
+<div class="formula display" data-tex="dU=\delta Q-\delta W,\qquad H=U+PV,\qquad F=U-TS,\qquad G=H-TS"></div>
+<div class="formula display" data-tex="\oint \delta Q \ne 0,\qquad \oint dU=0\quad(\text{δ 非全微分 vs d 全微分})"></div>
+</section>
+
+<section>
+<h3>四、完整例题1——同一起终点，三条路，三份不同的功</h3>
+<p>仍取 1 mol 理想气体，起点 A：(V = 1 L, T = 300 K)，终点 C：(V = 2 L, T = 300 K)。走三条不同的路径，验证 Q 与 W 依赖路径、而 ΔU 不依赖。</p>
+<p><strong>路径 ①：等温可逆膨胀</strong>（上一节已算）：</p>
+<div class="formula display" data-tex="W_1=nRT\ln 2\approx 1729\ \mathrm{J},\qquad Q_1=W_1\approx 1729\ \mathrm{J},\qquad \Delta U_1=0"></div>
+<p><strong>路径 ②：先等压加热，再等容冷却</strong>。A→B 在恒定压强 P = nRT_A/V_A ≈ 2.49×10⁶ Pa 下加热到 600 K（体积随之胀到 2 L）；B→C 在恒定体积下冷却回 300 K。</p>
+<p>等压段：W = P(V_B − V_A) = 2.49×10⁶ × 10⁻³ ≈ 2494 J；单原子气体 C_v = (3/2)R ≈ 12.47 J/(mol·K)，故 ΔU = nC_v(T_B − T_A) = 12.47×300 ≈ 3742 J；第一定律给出 Q = ΔU + W = 6236 J。等容段：W = 0，ΔU = −3742 J，Q = −3742 J。</p>
+<div class="formula display" data-tex="W_2=2494+0=2494\ \mathrm{J},\qquad Q_2=6236-3742=2494\ \mathrm{J},\qquad \Delta U_2=0"></div>
+<p><strong>路径 ③：先等容冷却，再等压膨胀</strong>。A→D 等容冷却到 150 K（压强减半为 1.25×10⁶ Pa）；D→C 在恒定压强下膨胀回 (2 L, 300 K)。</p>
+<p>等容段：W = 0，ΔU = 12.47×(−150) ≈ −1871 J，Q = −1871 J。等压段：W = PΔV = 1.25×10⁶ × 10⁻³ ≈ 1247 J，ΔU = +1871 J，Q = 1871 + 1247 = 3118 J。</p>
+<div class="formula display" data-tex="W_3=0+1247=1247\ \mathrm{J},\qquad Q_3=-1871+3118=1247\ \mathrm{J},\qquad \Delta U_3=0"></div>
+<p><strong>总结</strong>：三条路终态相同，ΔU = 0 三者皆同；而功分别是 1729 J、2494 J、1247 J，热对应相等。W 与 Q 没有唯一数值——它们不是状态函数；ΔU 有唯一数值——它是状态函数。这就是"为什么用 δ 而不是 d"。</p>
+<div class="key-insight">同一始末态，功可以是 1247 J、1729 J 或 2494 J——路径决定功与热；但内能的变化永远是 0。状态量守恒，过程量随路。</div>
+</section>
+
+<section>
+<h3>五、第二定律——热为什么只肯往一个方向流</h3>
+<p>第一定律说能量守恒，却不禁止热量从冷水流向热水；经验告诉我们这种事从不发生。第二定律把这条经验变成一条独立于第一定律的法则：</p>
+<p><strong>第二定律</strong>（Kelvin–Planck）：不存在只从单一热源吸热并全部做功的循环过程；等价地（Clausius），热量不能自发从低温流向高温。</p>
+<p><strong>为什么需要第二定律？</strong> 第一定律管"账目平衡"，第二定律管"交易方向"。若没有它，一台永动机就能把大海当热源、吸热全部变成功——第一定律并不禁止（能量仍守恒），第二定律却把它判为死刑。方向性来自微观统计：分子速度分布的细节让"逆过程"在宏观上需要天文数字的时间。这一点最直接的定量后果，正是 <a href="/pages/carnot-cycle.html">Carnot 定理</a>：任何热机效率 η ≤ 1 − T_c/T_h。第二定律还规定 T dS ≥ δQ：可逆时取等号（δQ = T dS），不可逆时 δQ &lt; T dS。</p>
+</section>
+
+<section>
+<h3>六、第三定律——绝对零度是地平线</h3>
+<p><strong>第三定律</strong>（Nernst）：当 T → 0，任何纯物质的熵 S → S₀，S₀ 与压强、相无关（有序基态唯一时 S₀ = 0）；因此<strong>绝对零度不可通过有限步骤到达</strong>——等温与绝热路径的交点无法在有限时间内收敛到 T = 0。</p>
+<p><strong>为什么不可达？</strong> 若 T_c = 0，则 Carnot 效率 = 1，即热完全变成功；更麻烦的是，要冷却一个物体到更低温，你需要更冷的冷源，而制造它又需要更冷的冷源……无限递推（详见 <a href="/pages/carnot-cycle.html">Carnot 循环</a>）。第三定律给出熵的标尺：S₀ 是基准，温度越高熵越大——这是熵能当"时间箭头"的最后一块拼图。</p>
+</section>
+
+<section>
+<h3>七、熵与熵产生——为什么熵会增加</h3>
+<p>把熵的变化拆成"外流项"与"产生项"：dS = dS_ex + dS_int，其中 dS_ex = δQ/T（与外界交换），dS_int ≥ 0（内部产生），等式当且仅当过程可逆。<strong>第二定律 = dS_int ≥ 0</strong>。孤立系统（dS_ex = 0）中熵单调不减。</p>
+<p><strong>为什么熵会增加？</strong> 统计地说，宏观态对应的微观态数 W 越多，占据概率越大；熵 S = k ln W 度量"这个宏观态有多少种微观实现"。平衡态是 W 最大的状态——从任何偏离平衡的态出发，系统"滑向"微观态数更多的态，这就是 dS_int ≥ 0 的统计来源，也是"热不回头的"深度原因。</p>
+<p><strong>自由膨胀</strong>：理想气体从体积 V₁ 绝热自由膨胀到 V₂ &gt; V₁。因绝热且对外不做功，U 不变 → T 不变。但熵变化 ΔS = nR ln(V₂/V₁) &gt; 0——完全由内部产生，无任何外流。微观解释：气体在更大体积中有更多微观态，W₂/W₁ = (V₂/V₁)^N，S = k ln W 严格增加。可逆性 = 每一时刻处于"局部平衡"，不可逆 = 内部耗散（摩擦、粘滞、扩散、有限温差传导）。</p>
+<div class="formula display" data-tex="dS=dS_{ex}+dS_{int},\qquad dS_{int}\ge 0,\qquad dS_{ex}=\frac{\delta Q}{T}"></div>
+<div class="formula display" data-tex="\Delta S = nR\ln\frac{V_2}{V_1}\gt 0\quad(\text{自由膨胀})"></div>
+</section>
+
+<section>
+<h3>八、完整例题2——自由膨胀的熵账本</h3>
+<p>1 mol 理想气体，300 K，绝热自由膨胀，体积从 V 胀到 2V。</p>
+<p><strong>第 1 步</strong>：自由膨胀 Q = 0、W = 0，故 ΔU = 0；理想气体 ΔU 只由 T 决定，T 不变。</p>
+<p><strong>第 2 步</strong>：求熵变。熵是状态函数，可以挑一条<em>可逆的</em>路径从初态走到末态来算——选等温可逆膨胀：</p>
+<div class="formula display" data-tex="\Delta S=nR\ln\frac{2V}{V}=1\times 8.314\times\ln 2\approx 5.76\ \mathrm{J/K}"></div>
+<p><strong>第 3 步</strong>：这笔熵从哪来？可逆路径上它来自吸热 δQ = T dS；但自由膨胀是绝热的（δQ = 0）。所以 ΔS 完全是<em>内部产生</em>的：dS_int = 5.76 J/K &gt; 0，孤立系统熵增。</p>
+<p><strong>对比</strong>：换成"等温可逆膨胀"到同一末态，系统同样 ΔS_sys = 5.76 J/K，但这次它从外界吸热 1729 J，环境损失熵 ΔS_surr = −1729/300 = −5.76 J/K，两者相抵，ΔS_total = 0（可逆）。</p>
+<div class="key-insight">同一始末态的熵变是固定的 5.76 J/K；可逆过程把"熵账"记在环境头上（总账持平），不可逆过程只能记在自己头上（总账盈余）。</div>
+</section>
+
+<section>
+<h3>九、完整例题3——恒定体积还是恒定压强？</h3>
+<p>把 1 mol 单原子理想气体（C_v = (3/2)R ≈ 12.47 J/(mol·K)，C_p = C_v + R ≈ 20.79 J/(mol·K)）从 300 K 加热到 350 K。恒定体积与恒定压强各要花多少热？</p>
+<p><strong>恒定体积</strong>：W = 0，热量全变成内能：</p>
+<div class="formula display" data-tex="Q_V=C_v\Delta T=12.47\times 50\approx 624\ \mathrm{J}"></div>
+<p><strong>恒定压强</strong>：气体膨胀对外做功，要额外"补贴" W = PΔV = nRΔT = 8.314×50 ≈ 416 J，而内能增量相同（624 J）：</p>
+<div class="formula display" data-tex="Q_P=C_p\Delta T=20.79\times 50\approx 1040\ \mathrm{J},\qquad Q_P-Q_V=nR\Delta T\approx 416\ \mathrm{J}"></div>
+<p><strong>这笔差额去哪了？</strong> 变成气体推开大气做的功。为什么恒定压强要多花钱？因为多买了一份"膨胀的功"。这个对比立刻给出一个普遍结论：理想气体总有 C_p − C_v = nR——而 Maxwell 关系（下一节）正是用来把它修正到真实气体的工具。</p>
+<div class="formula display" data-tex="\Delta U=nC_v\Delta T\ (\text{恒容}),\qquad Q_P=\Delta U+P\Delta V\ (\text{恒压})"></div>
+</section>
+
+<section>
+<h3>十、Maxwell 关系——把测不到的换成测得到的</h3>
+<p>由状态函数二阶混合偏导的交换性（Schwarz 定理）导出的四组关系。以 F(T,V)：dF = −S dT − P dV，交叉导数相等 ⟹ (∂S/∂V)_T = (∂P/∂T)_V。同理从 U, H, G 得到另外三个。</p>
+<p><strong>为什么它们有用？</strong> 熵 S 和它对体积的偏导几乎不可直接测量——世上没有"熵计"。但这些关系把 (∂S/∂V)_T 换成 (∂P/∂T)_V：压力对温度在恒容下的偏导，只要把样品放进恒容容器、测不同温度的压强即可。Maxwell 关系 = 把热力学量翻译成实验室里摸得着的量。</p>
+<div class="formula display" data-tex="\left(\frac{\partial S}{\partial V}\right)_T=\left(\frac{\partial P}{\partial T}\right)_V,\qquad \left(\frac{\partial T}{\partial V}\right)_S=-\left(\frac{\partial P}{\partial S}\right)_V"></div>
+<div class="formula display" data-tex="\left(\frac{\partial T}{\partial P}\right)_S=\left(\frac{\partial V}{\partial S}\right)_P,\qquad \left(\frac{\partial S}{\partial P}\right)_T=-\left(\frac{\partial V}{\partial T}\right)_P"></div>
+</section>
+
+<section>
+<h3>十一、统计力学桥——熵从计数中来</h3>
+<p>配分函数 Z = Σ e^{−E_i/kT} 编码了系统全部平衡信息。自由能 F = −kT ln Z：对 F 求导得到 U = −∂ln Z/∂β，S = k(ln Z + βU)，P = −∂F/∂V。微观层面，Boltzmann 关系 <strong>S = k ln W</strong> 把熵定义为微观态数 W 的对数——熵"涌现"自统计：宏观平衡态对应微观态数最多的分布，而概率集中让这个最概然分布几乎确定。</p>
+<p>为什么热力学"涌现"？因为 N ~ 10²³ 个粒子的微观态分布极度集中在少数宏观态上。自由能最小化 = 配分函数求和的对数——它同时是最大熵原理（固定能量约束下的最大不确定性分布）的体现。</p>
+<div class="formula display" data-tex="Z=\sum_i e^{-\beta E_i},\qquad F=-kT\ln Z,\qquad S=k\ln W=k\Big(\ln Z+\beta\,\overline{E}\Big)"></div>
+</section>
+
+<section>
+<h3>十二、关键公式块</h3>
+<div class="formula display" data-tex="dU=T\,dS-P\,dV\qquad(\text{热力学恒等式})"></div>
+<div class="formula display" data-tex="F=-k_B T\ln Z\qquad(\text{自由能—配分函数})"></div>
+<div class="formula display" data-tex="\left(\frac{\partial S}{\partial V}\right)_T=\left(\frac{\partial P}{\partial T}\right)_V\qquad(\text{Maxwell 关系之一})"></div>
+<div class="formula display" data-tex="dS_{int}\ge 0,\qquad S=k_B\ln W\qquad(\text{第二定律 + Boltzmann 熵})"></div>
+</section>
+
+<section>
+<h3>十三、关键论文</h3>
+<p><strong>Clausius (1865)</strong>——在论文中首次命名"熵"(entropy, 源自希腊语"转变")并给出第二定律的熵表述 dS ≥ δQ/T，确立热力学第二定律的现代形式。</p>
+<p><strong>Gibbs (1876-78, "On the Equilibrium of Heterogeneous Substances")</strong>——相平衡与化学势的里程碑，创立吉布斯自由能、相律 F=C−P+2，被 Gibbs 本人称为"一生最重要的贡献"。</p>
+<p><strong>Boltzmann (1877)</strong>——用组合计数给出 S = k ln W，把熵的统计解释奠定为概率论；1896-98 的《Lectures on Gas Theory》系统化。</p>
+<p><strong>Carathéodory (1909)</strong>——热力学的公理化：以"绝热不可达性"（在任意态近旁存在绝热不可达的态）作为第二定律的几何基础，回避了循环过程的语言。</p>
+</section>
+
+<section>
+<h3>十四、前沿</h3>
+<p><strong>非平衡热力学</strong>：Onsager 倒易关系（线性响应矩阵对称性）、Prigogine 最小熵产生原理与耗散结构——远离平衡的自组织。Crooks 涨落定理与 Jarzynski 等式把平衡与非平衡联系起来。</p>
+<p><strong>信息热力学</strong>：Landauer (1961) 原理——擦除 1 bit 信息至少消耗 kT ln 2 的热量；信息熵与热力学熵通过 Szilard 引擎与 Maxwell 妖在 21 世纪的实验（量子热机、光镊单分子）中被定量验证。</p>
+<p><strong>黑洞热力学</strong>：Bekenstein-Hawking 熵 S_BH = kc³A/(4Għ)，黑洞面积永不减少（类比熵增）；AdS/CFT 对偶把体态引力映射到边界量子场论的热力学——广义第二定律的黑洞形式。</p>
+</section>
+
+<section>
+<h3>十五、试试看——练习与提示</h3>
+<p>每题的提示收在 <code>&lt;details&gt;</code> 里；先动手算，再点开核对。</p>
+<ol>
+<li><strong>逆向等温压缩</strong>：1 mol 理想气体在 300 K 等温可逆压缩，从 2 L 压回 1 L。求气体做的功 W、吸的热 Q 与熵变 ΔS。<br><details><summary>提示</summary><p>与例题1的路径①恰好相反，ln(1/2) = −ln 2 ≈ −0.693。压缩时外界对气体做功：W ≈ −1729 J；Q ≈ −1729 J（放热）；ΔS = −5.76 J/K——熵是状态函数，正反路径熵变反号。</p></details></li>
+<li><strong>两倍的气体</strong>：2 mol 单原子理想气体从 300 K 加热到 350 K，恒容与恒压各需多少热？哪个多？为什么？<br><details><summary>提示</summary><p>C_v = (3/2)R、C_p = (5/2)R，n = 2、ΔT = 50。恒容 Q = 2×12.47×50 ≈ 1247 J；恒压 Q = 2×20.79×50 ≈ 2079 J。多出的 832 J ≈ nRΔT，正是膨胀对外做的功。</p></details></li>
+<li><strong>自由膨胀到三倍</strong>：0.5 mol 理想气体绝热自由膨胀，体积从 V 到 3V。求 ΔS。<br><details><summary>提示</summary><p>ΔU = 0，T 不变；ΔS = nR ln 3 ≈ 0.5×8.314×1.0986 ≈ 4.57 J/K。这是纯粹的 dS_int &gt; 0。</p></details></li>
+<li><strong>融冰的熵</strong>：1 mol 冰在 0 °C（273.15 K）完全融化成水，熔化热 6.01 kJ/mol。求 ΔS，并解释为什么相变熵为正。<br><details><summary>提示</summary><p>相变温度不变、可逆吸热：ΔS = Q_rev/T = 6010/273.15 ≈ 22.0 J/K。冰的晶格比水更有序（W 更小），融化把"晶格排列"换成水的"流动无序"，微观态数激增。</p></details></li>
+</ol>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>H. Callen, Thermodynamics</strong></p>
+<p>&rarr; <strong>M. Kardar, Statistical Physics of Particles</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/probability.html">概率论基础</a>。</p>
+</section>
+<section>
+<h3>十六、关联课程</h3>
+<p>&rarr; <a href="/pages/carnot-cycle.html">🔁 Carnot 循环</a>：理想热机与最大效率 η=1−T_c/T_h——同一学科分类「热力学」。</p>
+<p>&rarr; <a href="/pages/entropy.html">📉 熵与信息</a>：Shannon 熵 S=−Σpᵢln pᵢ 与热力学熵的统一——同一学科分类「信息论」。</p>
+<p>&rarr; <a href="/pages/ising-model.html">🧲 Ising 模型</a>：配分函数与相变的统计力学原型——同一学科分类「统计力学」。</p>
+<p>&rarr; <a href="/pages/boltzmann.html">💨 Boltzmann 方程</a>：从微观动力学到宏观不可逆性的严格桥梁——同一学科分类「统计力学」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/thermodynamics.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

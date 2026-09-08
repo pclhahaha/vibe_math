@@ -1,0 +1,1100 @@
+[
+ {
+  "id": "linear-transform",
+  "title": "线性变换",
+  "emoji": "📐",
+  "category": "线性代数",
+  "desc": "拖动矩阵元素，观察空间如何变形",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "eigenvectors",
+  "title": "特征值与特征向量",
+  "emoji": "🎯",
+  "category": "线性代数",
+  "desc": "找到变换下方向不变的向量",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "svd",
+  "title": "奇异值分解 SVD",
+  "emoji": "🔀",
+  "category": "线性代数",
+  "desc": "任何矩阵 = 旋转→拉伸→旋转",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "numerical-methods",
+  "title": "数值计算方法",
+  "emoji": "💻",
+  "category": "数值方法",
+  "desc": "线性代数数值算法与 ODE/PDE 求解",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "determinant",
+  "title": "行列式",
+  "emoji": "📏",
+  "category": "线性代数",
+  "desc": "体积缩放的倍数——为什么 det=0 不可逆",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "spectral-theorem",
+  "title": "谱定理",
+  "emoji": "🌈",
+  "category": "线性代数",
+  "desc": "对称矩阵 = 正交方向上的纯拉伸",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "derivative",
+  "title": "导数与切线",
+  "emoji": "📈",
+  "category": "微积分",
+  "desc": "拖动切点，看切线跟随曲线",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "gradient",
+  "title": "梯度与方向导数",
+  "emoji": "🧭",
+  "category": "微积分",
+  "desc": "3D 曲面上，梯度指向最陡峭的方向",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "riemann-integral",
+  "title": "黎曼积分",
+  "emoji": "📊",
+  "category": "微积分",
+  "desc": "矩形条逼近曲线下面积",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "epsilon-delta",
+  "title": "ε-δ 语言",
+  "emoji": "🔍",
+  "category": "微积分",
+  "desc": "极限的博弈——我给你 ε，你给我 δ",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "complex-plane",
+  "title": "复平面与全纯函数",
+  "emoji": "🔄",
+  "category": "复分析",
+  "desc": "复函数 = 平面到平面的映射",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "contour-integral",
+  "title": "围道积分与留数",
+  "emoji": "⭕",
+  "category": "复分析",
+  "desc": "绕奇点一圈 = 2πi × 留数",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "riemann-surface",
+  "title": "黎曼面",
+  "emoji": "🫧",
+  "category": "复分析",
+  "desc": "多值函数的单值化舞台",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "complex-dynamics",
+  "title": "复动力系统：Julia 集与 Mandelbrot 集",
+  "emoji": "🪸",
+  "category": "复分析",
+  "desc": "点选参数 c：迭代 z²+c，看 Julia 集从圆盘变成尘埃",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "geodesic",
+  "title": "测地线",
+  "emoji": "🌐",
+  "category": "微分几何",
+  "desc": "弯曲空间中的直线——球面大圆",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "curvature",
+  "title": "曲率",
+  "emoji": "📐",
+  "category": "微分几何",
+  "desc": "平行移动绕一圈，矢量转了多少",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "parallel-transport",
+  "title": "平行移动",
+  "emoji": "↗️",
+  "category": "微分几何",
+  "desc": "在弯曲空间中平移矢量——路径决定结果",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "fiber-bundle",
+  "title": "纤维丛",
+  "emoji": "🧵",
+  "category": "微分几何",
+  "desc": "每一点上挂一个内部空间",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "differential-forms",
+  "title": "微分形式与外微分",
+  "emoji": "🌀",
+  "category": "微分几何",
+  "desc": "画闭合路径求线积分：闭形式≠恰当形式的拓扑障碍",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "bloch-sphere",
+  "title": "Bloch 球",
+  "emoji": "🔮",
+  "category": "量子力学",
+  "desc": "量子比特的几何——每个态是球面上一点",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "harmonic-oscillator",
+  "title": "谐振子",
+  "emoji": "🪩",
+  "category": "量子力学",
+  "desc": "经典 vs 量子——零点能在哪里",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "hydrogen-atom",
+  "title": "氢原子轨道",
+  "emoji": "⚛️",
+  "category": "量子力学",
+  "desc": "电子云形状——s, p, d, f 轨道",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "uncertainty",
+  "title": "不确定性原理",
+  "emoji": "🎲",
+  "category": "量子力学",
+  "desc": "Δx·Δp ≥ ħ/2——不是测量干扰，是几何",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "entanglement",
+  "title": "量子纠缠",
+  "emoji": "🪢",
+  "category": "量子力学",
+  "desc": "Bell 态——测量一个，另一个瞬间确定",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "ising-model",
+  "title": "Ising 模型",
+  "emoji": "🧲",
+  "category": "统计力学",
+  "desc": "自旋格子的相变——有序 vs 无序",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "entropy",
+  "title": "熵与信息",
+  "emoji": "📉",
+  "category": "统计力学",
+  "desc": "S = k log W——无序度的量化",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "brownian-motion",
+  "title": "布朗运动",
+  "emoji": "🌊",
+  "category": "统计力学",
+  "desc": "随机游走——扩散的微观起源",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "light-cone",
+  "title": "光锥与时空",
+  "emoji": "💫",
+  "category": "相对论",
+  "desc": "因果律的几何——光锥内外",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "lorentz-transform",
+  "title": "Lorentz 变换",
+  "emoji": "🚀",
+  "category": "相对论",
+  "desc": "拖动速度，看时间膨胀和长度收缩",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "gravitational-lens",
+  "title": "引力透镜",
+  "emoji": "🔭",
+  "category": "相对论",
+  "desc": "质量弯曲时空——光线的偏折",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "group-action",
+  "title": "群作用",
+  "emoji": "🔺",
+  "category": "群论",
+  "desc": "对称操作——旋转三角形",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "lie-algebra",
+  "title": "李代数",
+  "emoji": "🔄",
+  "category": "群论",
+  "desc": "无穷小旋转——角动量对易关系",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "representation-theory",
+  "title": "群表示论",
+  "emoji": "🎭",
+  "category": "群论",
+  "desc": "点击 S₃ 元素：对称性变成矩阵与特征标",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "lie-group-representations",
+  "title": "紧李群表示与 Peter–Weyl",
+  "emoji": "🎻",
+  "category": "群论",
+  "desc": "把调和分析重写成表示论：L²(群) = 不可约表示的叠",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "sieve",
+  "title": "素数筛",
+  "emoji": "🔢",
+  "category": "数论",
+  "desc": "Eratosthenes 筛法可视化",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "zeta",
+  "title": "黎曼 ζ 函数",
+  "emoji": "〰️",
+  "category": "数论",
+  "desc": "ζ(s) 的零点——素数分布的神秘线索",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "diophantine-approximation",
+  "title": "丢番图逼近与连分数",
+  "emoji": "🐚",
+  "category": "数论",
+  "desc": "看收敛子步步逼近：355/113 的误差为何这么小",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "feynman-diagram",
+  "title": "费曼图",
+  "emoji": "✴️",
+  "category": "量子场论",
+  "desc": "粒子相互作用的图形语言",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "higgs-mechanism",
+  "title": "Higgs 机制",
+  "emoji": "💎",
+  "category": "量子场论",
+  "desc": "自发对称破缺——粒子如何获得质量",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "yang-mills-mass-gap",
+  "title": "Yang–Mills 与质量缺口",
+  "emoji": "⚗️",
+  "category": "量子场论",
+  "desc": "从联络曲率到禁闭：四维规范场的千禧年构造问题",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "knot-invariant",
+  "title": "纽结不变量",
+  "emoji": "🪢",
+  "category": "拓扑学",
+  "desc": "三叶结 vs 平凡结——Jones 多项式",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "fundamental-group",
+  "title": "基本群",
+  "emoji": "🕳️",
+  "category": "拓扑学",
+  "desc": "环面上的回路——哪些不能缩成一点",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "surface-topology",
+  "title": "曲面拓扑：分类与覆盖",
+  "emoji": "🫓",
+  "category": "拓扑学",
+  "desc": "粘多边形造曲面：χ 与可定向性定乾坤，覆盖由基本群指挥",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "carnot-cycle",
+  "title": "Carnot 循环",
+  "emoji": "🔥",
+  "category": "热力学",
+  "desc": "P-V 图上的可逆循环——效率上限",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "thermodynamics",
+  "title": "热力学与熵",
+  "emoji": "🔥",
+  "category": "热力学",
+  "desc": "四大定律与热力学的逻辑结构",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "navier-stokes",
+  "title": "Navier-Stokes 流场",
+  "emoji": "🌪️",
+  "category": "流体力学",
+  "desc": "Reynolds 数——从层流到湍流",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "band-structure",
+  "title": "能带结构",
+  "emoji": "📶",
+  "category": "凝聚态",
+  "desc": "Bloch 定理——导体 vs 绝缘体",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "standard-model",
+  "title": "标准模型",
+  "emoji": "🧩",
+  "category": "粒子物理",
+  "desc": "SU(3)×SU(2)×U(1)——所有已知粒子",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "cmb",
+  "title": "宇宙微波背景",
+  "emoji": "🌌",
+  "category": "宇宙学",
+  "desc": "大爆炸的余晖——2.725K 黑体谱",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "qubit-gates",
+  "title": "量子门",
+  "emoji": "🚪",
+  "category": "量子信息",
+  "desc": "Bloch 球上的旋转——X, Y, Z, H, CNOT",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "y combinator",
+  "title": "Y Combinator",
+  "emoji": "λ",
+  "category": "逻辑与计算",
+  "desc": "不动点组合子——递归的 lambda 实现",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "godel",
+  "title": "Gödel 不完备",
+  "emoji": "⚡",
+  "category": "逻辑与计算",
+  "desc": "\"这个命题不可证\"——自指涉的威力",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "fractal",
+  "title": "分形",
+  "emoji": "❄️",
+  "category": "动力系统",
+  "desc": "Mandelbrot 集——无限复杂的边界",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "lorenz-attractor",
+  "title": "Lorenz 吸引子",
+  "emoji": "🦋",
+  "category": "动力系统",
+  "desc": "蝴蝶效应——确定性的混沌",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "bifurcation",
+  "title": "分岔与 Logistic 映射",
+  "emoji": "🌋",
+  "category": "动力系统",
+  "desc": "拖 r 看倍周期瀑布：3.57 之后\"混沌中藏着秩序\"",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "ergodic-theory",
+  "title": "遍历理论",
+  "emoji": "♻️",
+  "category": "动力系统",
+  "desc": "旋转圆周与倍角映射：时间平均何时等于空间平均",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "turing-machine",
+  "title": "图灵机",
+  "emoji": "📝",
+  "category": "逻辑与计算",
+  "desc": "计算的极限——停机问题",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "p-vs-np",
+  "title": "P vs NP 与 NP 完备性",
+  "emoji": "⏳",
+  "category": "逻辑与计算",
+  "desc": "点击真值表行：验证一行与扫描 2ⁿ 行，差距何在",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "fourier-series",
+  "title": "傅里叶级数",
+  "emoji": "🎵",
+  "category": "调和分析",
+  "desc": "方波 = 正弦波的叠加——拖拽谐波数",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "fourier-transform",
+  "title": "傅里叶变换与卷积",
+  "emoji": "🎚️",
+  "category": "调和分析",
+  "desc": "拖截止频率：看频域乘法如何变成空间域滤波",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "pde",
+  "title": "偏微分方程：热与波",
+  "emoji": "🌡️",
+  "category": "偏微分方程",
+  "desc": "拖动时间滑块：热量不可逆地扩散，波动可逆地传播",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "laplace-eigenvalue",
+  "title": "拉普拉斯特征值与鼓的形状",
+  "emoji": "🥁",
+  "category": "偏微分方程",
+  "desc": "看鼓面振动模式：谱能否\"听出\"形状？Weyl 律与等谱鼓",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "optimal-transport",
+  "title": "最优传输",
+  "emoji": "🚚",
+  "category": "分析",
+  "desc": "Monge-Kantorovich——沙堆的最小搬运成本",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "convex-optimization",
+  "title": "凸优化与梯度流",
+  "emoji": "⚖️",
+  "category": "分析",
+  "desc": "滚球下山看收敛：凸性让局部最优成为全局最优",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "soliton",
+  "title": "孤子",
+  "emoji": "🌊",
+  "category": "可积系统",
+  "desc": "KdV 方程——波包不扩散的孤立波",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "kalman-filter",
+  "title": "Kalman 滤波",
+  "emoji": "🎯",
+  "category": "概率论",
+  "desc": "从噪声中估计状态——阿波罗导航的核心算法",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "probability",
+  "title": "概率论基础",
+  "emoji": "🎲",
+  "category": "概率论",
+  "desc": "从测度论到大数定律与中心极限定理",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "clt",
+  "title": "大数定律与中心极限定理",
+  "emoji": "🎰",
+  "category": "概率论",
+  "desc": "蒙特卡洛掷样本：均值收敛、误差按 1/√n 缩小、直方图逼近钟形",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "percolation",
+  "title": "渗流与相变",
+  "emoji": "🪝",
+  "category": "概率论",
+  "desc": "调开孔概率 p：格子何时从碎变通？临界在 1/2",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "random-matrix",
+  "title": "随机矩阵与半圆律",
+  "emoji": "🎱",
+  "category": "概率论",
+  "desc": "采样大矩阵看特征值：谱奔向半圆，边缘奔向 Tracy–Widom",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "martingales",
+  "title": "鞅与随机游走",
+  "emoji": "♟️",
+  "category": "概率论",
+  "desc": "公平赌局的数学：停时、破产概率与加倍下注的陷阱",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "kakeya",
+  "title": "Kakeya猜想",
+  "emoji": "🪡",
+  "category": "分析/几何测度论",
+  "desc": "旋转一根针需要多小面积？与Fourier限制性估计的深刻联系",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "geometric-measure-theory",
+  "title": "几何测度论与 Hausdorff 维数",
+  "emoji": "✂️",
+  "category": "分析",
+  "desc": "给分形称重：Hausdorff 测度、Frostman 与面积公式",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "boltzmann",
+  "title": "Boltzmann方程",
+  "emoji": "💥",
+  "category": "统计力学",
+  "desc": "H定理——微观可逆如何产生宏观不可逆？Loschmidt悖论",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "real-analysis",
+  "title": "实分析",
+  "emoji": "📐",
+  "category": "分析",
+  "desc": "从实数构造到测度论与勒贝格积分",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "measure-theory",
+  "title": "测度论",
+  "emoji": "📏",
+  "category": "分析",
+  "desc": "Lebesgue测度的构造、可测函数、三大收敛定理",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "galois-theory",
+  "title": "伽罗瓦理论",
+  "emoji": "🔗",
+  "category": "代数",
+  "desc": "域扩张与群——五次方程为什么不可解",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "algebraic-topology-homology",
+  "title": "同调论",
+  "emoji": "🕳️",
+  "category": "代数拓扑",
+  "desc": "H_n=ker/im——n维洞的代数检测",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "category-theory-adjoint",
+  "title": "伴随函子",
+  "emoji": "🔀",
+  "category": "范畴论",
+  "desc": "自由⊣遗忘——范畴论最核心的概念",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "differential-topology-morse",
+  "title": "Morse理论",
+  "emoji": "⛰️",
+  "category": "微分拓扑",
+  "desc": "临界点编码拓扑——Morse不等式",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "convex-geometry",
+  "title": "凸几何",
+  "emoji": "⬡",
+  "category": "几何",
+  "desc": "Brunn-Minkowski不等式与等周问题",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "high-dim-geometry",
+  "title": "高维几何与测度集中",
+  "emoji": "📦",
+  "category": "几何",
+  "desc": "调维度看真相：体积都在表面壳里，随机向量几乎正交",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "variational-calculus",
+  "title": "变分法",
+  "emoji": "📐",
+  "category": "分析",
+  "desc": "Euler-Lagrange方程——最优路径的数学",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "classical-mechanics",
+  "title": "经典力学与最小作用量",
+  "emoji": "🎢",
+  "category": "经典力学",
+  "desc": "拉格朗日与哈密顿力学——从最小作用量原理出发",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "functional-analysis",
+  "title": "泛函分析",
+  "emoji": "📊",
+  "category": "分析",
+  "desc": "Banach空间、Hilbert空间、紧致算子——无穷维线性代数",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "operator-algebras",
+  "title": "算子代数",
+  "emoji": "🔮",
+  "category": "分析",
+  "desc": "C*代数、von Neumann代数——量子力学的代数基础",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "homology",
+  "title": "同调代数",
+  "emoji": "⛓️",
+  "category": "代数拓扑",
+  "desc": "链复形、正合序列、Tor与Ext——代数拓扑的代数引擎",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "spectral-sequences",
+  "title": "谱序列与同伦论",
+  "emoji": "🛰️",
+  "category": "代数拓扑",
+  "desc": "逐页逼近同调：Leray–Serre 从纤维与底算出全空间",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "algebraic-geometry",
+  "title": "代数几何",
+  "emoji": "🔷",
+  "category": "代数几何",
+  "desc": "从仿射簇到概形——Grothendieck的几何革命",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "schemes",
+  "title": "概形语言导论",
+  "emoji": "🌾",
+  "category": "代数几何",
+  "desc": "把点换成素理想：Spec ℤ 是一条曲线，幂零元是胖点",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "abstract-algebra",
+  "title": "抽象代数",
+  "emoji": "🧮",
+  "category": "代数",
+  "desc": "群环域——对称性的代数语言",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "combinatorics",
+  "title": "组合数学",
+  "emoji": "🎲",
+  "category": "离散数学",
+  "desc": "图论、生成函数、Ramsey理论",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "additive-combinatorics",
+  "title": "加性组合学",
+  "emoji": "➕",
+  "category": "离散数学",
+  "desc": "点出集合看和集膨胀：小和集=有结构，无三项等差=多项式法",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "graph-theory",
+  "title": "图论与网络",
+  "emoji": "🕸️",
+  "category": "离散数学",
+  "desc": "点击边走一笔画：七桥谜题、欧拉回路与四色问题",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "set-theory",
+  "title": "集合论",
+  "emoji": "📐",
+  "category": "基础",
+  "desc": "ZFC公理、序数基数、连续统假设",
+  "tier": "★",
+  "part": "Part 1: 基础"
+ },
+ {
+  "id": "forcing-ch",
+  "title": "集合论 II：力迫与连续统假设",
+  "emoji": "🌩️",
+  "category": "基础",
+  "desc": "让宇宙长出新的实数：CH 独立于 ZFC 的造法",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "commutative-algebra",
+  "title": "交换代数",
+  "emoji": "💍",
+  "category": "代数",
+  "desc": "Noether环、素理想、Krull维数",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "symplectic-geometry",
+  "title": "辛几何",
+  "emoji": "🌊",
+  "category": "几何",
+  "desc": "相空间的几何——Darboux定理与哈密顿力学",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "hyperbolic-geometry",
+  "title": "双曲几何与庞加莱圆盘",
+  "emoji": "🥏",
+  "category": "几何",
+  "desc": "拖拽三角形顶点：内角和 <180°，面积 = π−内角和",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "algebraic-K-theory",
+  "title": "代数K理论",
+  "emoji": "🔧",
+  "category": "代数/拓扑",
+  "desc": "向量丛的分类——Grothendieck群与Bott周期性",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "noncommutative-geometry",
+  "title": "非交换几何",
+  "emoji": "🌌",
+  "category": "几何/分析",
+  "desc": "Connes的谱三元组——当空间不再有\"点\"",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "proof-theory",
+  "title": "证明论",
+  "emoji": "📝",
+  "category": "逻辑",
+  "desc": "Gentzen切消定理——证明可以\"正规化\"",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "model-theory",
+  "title": "模型论",
+  "emoji": "🧬",
+  "category": "逻辑",
+  "desc": "紧致性造出非标准整数：公理系统可以有多少种\"世界\"",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "modular-forms",
+  "title": "模形式",
+  "emoji": "🎵",
+  "category": "数论",
+  "desc": "Eisenstein级数与Hecke理论——费马大定理的钥匙",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "algebraic-number-theory",
+  "title": "代数数论：数域与理想类",
+  "emoji": "🏰",
+  "category": "数论",
+  "desc": "拖 d 看格点环：唯一分解为何失效，理想类如何修复",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "p-adic-numbers",
+  "title": "p-adic 数与局部域",
+  "emoji": "🥟",
+  "category": "数论",
+  "desc": "把无穷往左写：…1111 = −1，数论在超度量里换一副面孔",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "elliptic-curves",
+  "title": "椭圆曲线与 Wiles 之路",
+  "emoji": "🗝️",
+  "category": "数论",
+  "desc": "拖参数画曲线、用弦切法加点：E↔模形式如何终结费马大定理",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "higher-category-theory",
+  "title": "高阶范畴论",
+  "emoji": "⬆️",
+  "category": "范畴论",
+  "desc": "无穷范畴——当箭头之间也有箭头",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "geometric-group-theory",
+  "title": "几何群论",
+  "emoji": "📐",
+  "category": "群论",
+  "desc": "群的Cayley图——Gromov双曲群与边界",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "several-complex-variables",
+  "title": "多复变",
+  "emoji": "🪞",
+  "category": "复分析",
+  "desc": "Hartogs延拓——多维全纯函数的刚性",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "universal-algebra",
+  "title": "泛代数",
+  "emoji": "🧱",
+  "category": "代数",
+  "desc": "Birkhoff HSP定理——所有代数结构的共同骨架",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "optics",
+  "title": "光学",
+  "emoji": "💡",
+  "category": "物理",
+  "desc": "Fermat原理到量子光学——光的四百年",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "nuclear-physics",
+  "title": "核物理",
+  "emoji": "⚛️",
+  "category": "物理",
+  "desc": "液滴模型、壳层模型——原子核的结构与反应",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "electromagnetism",
+  "title": "电磁学与 Maxwell 方程组",
+  "emoji": "⚡",
+  "category": "电磁学",
+  "desc": "四个方程统一电与磁——狭义相对论的前夜",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "goldbach",
+  "title": "哥德巴赫猜想",
+  "emoji": "👬",
+  "category": "数论",
+  "desc": "每个偶数=两个素数之和？——从Euler到陈景润到Helfgott",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "soul-conjecture",
+  "title": "灵魂猜想",
+  "emoji": "👻",
+  "category": "几何/拓扑",
+  "desc": "Perelman 1994: 非紧非负曲率流形有一个\"灵魂\"——一个紧致全测地子流形",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "poincare-conjecture",
+  "title": "庞加莱猜想",
+  "emoji": "🔮",
+  "category": "几何/拓扑",
+  "desc": "Perelman 2003: 单连通闭三维流形必同胚于S3——千禧年问题唯一被解决的",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "twin-prime",
+  "title": "孪生素数猜想",
+  "emoji": "👯",
+  "category": "数论",
+  "desc": "存在无穷多对相差2的素数吗？Zhang 2013: 差距≤7000万的素数对无穷多——压缩到246",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "cryptography",
+  "title": "密码学：RSA 与公钥",
+  "emoji": "🔐",
+  "category": "数论",
+  "desc": "拖素数造 RSA：加密对所有人开放，解密需要陷门",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
+  "id": "lattice-crypto",
+  "title": "格与后量子密码",
+  "emoji": "🧊",
+  "category": "数论",
+  "desc": "拖二维格看最短向量：量子时代密码改赌 SVP/LWE",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "hilbert-problems",
+  "title": "Hilbert 23个问题",
+  "emoji": "📋",
+  "category": "著名问题",
+  "desc": "1900年Hilbert在巴黎国际数学家大会上提出的23个问题——规划了20世纪数学",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ },
+ {
+  "id": "millennium-problems",
+  "title": "千禧年大奖问题",
+  "emoji": "🏆",
+  "category": "著名问题",
+  "desc": "Clay研究所2000年悬赏的7个百万美元问题——1个已解,6个等待英雄",
+  "tier": "★★★",
+  "part": "Part 3: 前沿与问题"
+ }
+]

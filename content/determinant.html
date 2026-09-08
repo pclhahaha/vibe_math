@@ -1,0 +1,242 @@
+<section>
+<h3>〇、直觉入门——橡皮膜被拉大了几倍</h3>
+<p>想象一块画着单位方格的橡皮膜上，有一个 1×1 的小方块。你用力拉伸、旋转这张膜，小方块变成了一块平行四边形。这块平行四边形比原来大了多少倍？这个"放大倍数"就叫<strong>行列式</strong>（determinant，记作 det）。</p>
+<p>它还藏着两个隐藏信息：如果倍数算出来是负数，说明膜被"翻面"了（像照镜子）；如果倍数是 0，说明膜被整个压扁成一条线——所有信息糊在一起，再也变不回去。</p>
+<p>下面先做一件最具体的事：拿一张写着数字的表格，把"放大倍数"真的算出来。算出来之后，再回头问它为什么恰好等于面积、为什么非零就代表可逆。</p>
+<div class="key-insight">核心洞察：行列式就是一个数字，一句话告诉你变形"放大了几倍、有没有翻面、是不是被压扁了"。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、一个具体的问题：[[2,1],[1,3]] 把单位正方形变成了面积几的平行四边形？</h3>
+<p>矩阵不只是一张数字表格，它还可以看成一种<strong>变换</strong>：把平面上的每个点搬到新位置，规则就是"矩阵 × 点的坐标"。我们先不背任何公式，直接盯住一个具体的矩阵：</p>
+<div class="formula display" data-tex="A=\begin{bmatrix}2&1\\1&3\end{bmatrix},\qquad A(x,y)=(2x+y,\ x+3y)"></div>
+<p>盯住一个<strong>单位正方形</strong>：四个顶点是 (0,0)、(1,0)、(0,1)、(1,1)，面积是 1。把四个顶点逐个送进 A：</p>
+<div class="formula display" data-tex="(0,0)\mapsto(0,0);\quad (1,0)\mapsto(2,1);\quad (0,1)\mapsto(1,3);\quad (1,1)\mapsto(3,4)"></div>
+<p>连起来是一块<strong>平行四边形</strong>——对边仍然平行，但角不再是直角。现在的问题只有一个：<strong>它的面积是多少？</strong>我们用手边就会的工具——<strong>鞋带公式</strong>（shoelace formula，多边形面积 = 相邻点"交叉相乘"之和的一半）——一步步算，绝不跳步：</p>
+<div class="formula display" data-tex="\begin{aligned}\text{面积}&=\tfrac12\left|(0\cdot1-0\cdot2)+(2\cdot4-1\cdot3)+(3\cdot3-4\cdot1)+(1\cdot0-3\cdot0)\right|\\&=\tfrac12\left|\,0+5+5+0\,\right|=5\end{aligned}"></div>
+<p>答案：<strong>面积 5</strong>。一块面积 1 的正方形，被 A 变成了面积 5 的平行四边形——放大 5 倍。这个"5"就是我们最终要讲的行列式 det(A)。</p>
+<p>整个思路可以预告为一条学习路线：<strong>先算数字（5）→ 再找捷径（ad−bc）→ 再问几何意义（面积）→ 再问名字由来（"决定"缩放）→ 最后公理化</strong>。下面一步一个脚印。</p>
+</section>
+
+<section>
+<h3>二、2×2 行列式怎么算？——ad−bc 的具体手算</h3>
+<p>先认识记号。一张写着 4 个数字、排成 2 行 2 列的表格叫 <strong>2×2 矩阵</strong>，表格里每个位置上的数叫矩阵的<strong>元素</strong>：</p>
+<div class="formula display" data-tex="\begin{bmatrix} a & b \\ c & d \end{bmatrix}"></div>
+<p>矩阵变换的一般写法是 (x,y) ↦ (ax+by, cx+dy)。<strong>行列式</strong>就是根据这张表格算出来的一个数字，记号写作 det，或用两条竖线把表格框起来。2×2 矩阵的行列式有一个固定公式：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix} a & b \\ c & d \end{bmatrix} = ad - bc"></div>
+<p>口诀：<strong>主对角线</strong>（左上到右下：a 和 d）的乘积，减去<strong>副对角线</strong>（右上到左下：b 和 c）的乘积。</p>
+<p>用手算我们第一节那个例子，检验它是不是真的给出 5：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix} = 2\cdot 3 - 1\cdot 1 = 6 - 1 = 5"></div>
+<p>一步步来：a=2、d=3，所以 ad=2×3=6；b=1、c=1，所以 bc=1×1=1；两者相减，6−1=5。第一节辛辛苦苦用鞋带公式算出的面积，这里一行就得到同一个 5——<strong>公式果然在追面积</strong>。</p>
+<p>再试一个，这次结果会是负数：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix}1&2\\3&4\end{bmatrix}=1\times4-2\times3=4-6=-2"></div>
+<p>注意到结果可以算成负数——这个负号在后面会代表"翻面"。到这里，你已经能独立计算任何 2×2 矩阵的行列式了。</p>
+</section>
+
+<section>
+<h3>三、为什么 ad−bc 恰好是面积？——几何意义推导</h3>
+<p>第一节我们手工算出了面积 5，第二节公式一步给出 ad−bc=5。这是巧合吗？当然不是。本节把"面积 = |ad−bc|"完整推一遍，让你看到公式从几何里"长"出来。</p>
+<p>关键观察：单位正方形被 A 变成的平行四边形，两条边恰好就是 A 的两个<strong>列向量</strong>。</p>
+<div class="formula display" data-tex="\mathbf{u}=\begin{pmatrix}a\\c\end{pmatrix}=\begin{pmatrix}2\\1\end{pmatrix},\qquad \mathbf{v}=\begin{pmatrix}b\\d\end{pmatrix}=\begin{pmatrix}1\\3\end{pmatrix}"></div>
+<p>两个向量 u=(a,c)、v=(b,d) 张成的平行四边形面积怎么算？有一个不依赖任何"行列式"知识、纯靠内积的恒等式：</p>
+<div class="formula display" data-tex="\text{面积}^2=\|\mathbf{u}\|^2\|\mathbf{v}\|^2-(\mathbf{u}\cdot\mathbf{v})^2"></div>
+<p>为什么？平行四边形面积 = 底 × 高；设 θ 为 u 与 v 的夹角，高 = ‖v‖sinθ，故面积² = ‖u‖²‖v‖²sin²θ = ‖u‖²‖v‖²(1−cos²θ) = ‖u‖²‖v‖² − (u·v)²。现在把坐标代进去，一步步展开：</p>
+<div class="formula display" data-tex="\begin{aligned}\text{面积}^2&=(a^2+c^2)(b^2+d^2)-(ab+cd)^2\\&=a^2b^2+a^2d^2+c^2b^2+c^2d^2-a^2b^2-2abcd-c^2d^2\\&=a^2d^2+b^2c^2-2abcd=(ad-bc)^2\end{aligned}"></div>
+<p>开方取正：<strong>面积 = |ad−bc| = |det(A)|</strong>。于是第一节的数字 5 不是巧合，它正是"面积放大 5 倍"。</p>
+<div class="formula display" data-tex="\text{面积}=\left|\det\begin{bmatrix}2&1\\1&3\end{bmatrix}\right|=|2\cdot3-1\cdot1|=5"></div>
+<p>一句话总结本节：<strong>行列式的绝对值 = 单位正方形（面积 1）被变换成平行四边形的面积 = 面积放大倍数。</strong>下面的交互图让你亲手拖 A 的列向量，验证面积永远等于 |det|。</p>
+<div class="mini-viz" data-demo="area-det"></div>
+</section>
+
+<section>
+<h3>四、为什么叫"行列式"？——它"决定"了什么</h3>
+<p>中文"行列式"来自英文 determinant，词根是"determine"——决定。它"决定"的正是变换的三件大事，一件都不少：</p>
+<p><strong>① 决定放大倍数。</strong>面积放大了 |det| 倍（第三节）。<br>
+<strong>② 决定有没有翻面。</strong>det 的符号告诉你变换是不是像照镜子一样把图形翻了过来（第五节）。<br>
+<strong>③ 决定还能不能撤销。</strong>det=0 表示变换把平面压成一条线，信息被毁，再也回不去（第六节）。</p>
+<p>这三个信息打包在一个数字里，是线性代数里罕见的高密度信息。另外，历史上"determinant"这个名字还有一个更早、更朴素的来源：在研究线性方程组</p>
+<div class="formula display" data-tex="ax+by=p,\quad cx+dy=q"></div>
+<p>时，这个数决定（determine）方程组是否有唯一解——ad−bc≠0 时有唯一解，ad−bc=0 时没有唯一解。后来它被抽象出来，成了描述一切线性变换"缩放、定向、可逆性"的量。</p>
+<div class="key-insight">行列式只用一个数字告诉你变换：放大了几倍（|det|）、有没有翻面（符号）、能不能撤销（是否为 0）。这个数字还等于所有特征值的乘积（见第十一节）。</div>
+</section>
+
+<section>
+<h3>五、正负号——翻没翻面</h3>
+<p>第三节回答了"放大多少倍"，那回答的是<strong>绝对值</strong>。本节回答另一个问题：det 的<strong>正负号</strong>代表什么？</p>
+<p>看一个最简单的翻面例子——交换两个坐标轴的矩阵（把整张纸沿 45° 线"对折"，像照镜子）：</p>
+<div class="formula display" data-tex="M=\begin{bmatrix}0&1\\1&0\end{bmatrix},\qquad \det M=0\cdot0-1\cdot1=-1"></div>
+<p>M(x,y)=(y,x)，它把 (1,0) 送到 (0,1)、把 (0,1) 送到 (1,0)——面积一点没变（|det|=1），但左右手对调了，这就是"翻面"。于是规则很清楚：</p>
+<p>det(A) &gt; 0 → <strong>保持定向</strong>（旋转 + 拉伸，不翻转）。<br>
+det(A) &lt; 0 → <strong>翻转定向</strong>（镜像操作）。<br>
+det(A) = 0 → 正方形被压扁成线段或点——<strong>降维，不可逆</strong>。</p>
+<p>怎么理解"负数倍"这个说法？把变换连续地从 I 变到 M（比如 R(θ)=[[cosθ, sinθ],[sinθ, −cosθ]]，从 0 转到 90°），det 会从 +1 连续滑过 0 到 −1。翻面不是瞬间发生的——它必须"穿过"压扁状态。这个直觉在物理和几何里反复出现：<strong>定向的翻转 = 强制经过一次退化。</strong></p>
+</section>
+
+<section>
+<h3>六、为什么 det=0 意味着"不可逆"？——压扁与信息丢失</h3>
+<p>先看一个具体例子：</p>
+<div class="formula display" data-tex="B=\begin{bmatrix}1&2\\2&4\end{bmatrix},\qquad \det B = 1\cdot4 - 2\cdot2 = 4-4 = 0"></div>
+<p>为什么偏偏是 0？注意 B 的第二个<strong>列向量</strong> (2,4) 正好是第一个 (1,2) 的 2 倍——两条"边"朝同一个方向，根本张不成一块面，只能形成一条线段。用第三节的面积公式看，|det|=面积=0。单位正方形被 B 变换后，四个顶点全部落到同一条直线上，整块正方形被<strong>压扁成一条线段</strong>（数学上叫"退化"，singular），面积变成 0。</p>
+<p>这样的矩阵叫<strong>退化矩阵</strong>（singular matrix，也叫奇异矩阵）。它压扁了平面，被压没的那个方向的信息永远丢了——数学上叫<strong>不可逆</strong>（no inverse）：你没法从一条线段复原整块正方形，因为"垂直方向去哪了"已经无从得知。反过来，只要 det≠0，正方形还保有面积，变换就能"撤销"回去。</p>
+<p>用代数把"不可逆"说得更硬一点，有两种证法，都要用到乘法性质（第九节证明）：</p>
+<p><strong>证法一（用乘性）。</strong>若 A 可逆，则存在 A⁻¹ 使 AA⁻¹=I。两边取 det：</p>
+<div class="formula display" data-tex="1=\det I=\det(AA^{-1})=\det(A)\det(A^{-1})"></div>
+<p>如果 det(A)=0，右边就是 0×det(A⁻¹)=0，与 1 矛盾。<strong>故 det=0 的矩阵不可逆。</strong></p>
+<p><strong>证法二（用行变换）。</strong>Gauss 消元把 A 化成阶梯形。行倍加不改变 det、行倍乘把 det 乘非零数、行交换把 det 变号——三种行变换都不会把 det 从非零变成零。所以 det(A)≠0 ⟹ 阶梯形没有全零行 ⟹ 阶梯形可继续化为单位阵 I ⟹ A 是可逆矩阵（一系列可逆行变换的逆拼成 A⁻¹）。反过来 det(A)=0 ⟹ 阶梯形有全零行 ⟹ rank&lt;n ⟹ 不可逆。</p>
+<p>两条路都通向同一个结论：</p>
+<div class="formula display" data-tex="\det(A)=0 \iff A\text{ 不可逆（奇异）}\iff \text{rank}(A)&lt;n"></div>
+</section>
+
+<section>
+<h3>七、完整例题——三个例子一步步算</h3>
+<p>公式不是摆着看的。教科书风格：每个例子都展开到每一步，不跳步。</p>
+
+<p><strong>例 1：2×2 行列式，含正、负、零三种结果。</strong></p>
+<p>① det[[4,−1],[2,3]] = 4×3 − (−1)×2 = 12+2 = 14（正，保持定向）。</p>
+<p>② det[[1,2],[3,4]] = 1×4 − 2×3 = −2（负，翻面；几何上 |det|=2，面积放大 2 倍并镜像）。</p>
+<p>③ det[[1,1],[2,2]] = 1×2 − 1×2 = 0（零，两列共线，压扁）。</p>
+
+<p><strong>例 2：3×3 行列式，按第一行拉普拉斯展开（余子式展开）。</strong></p>
+<p>3×3 没法用"交叉相乘"的口诀直接算，但有系统的办法：<strong>拉普拉斯展开</strong>（Laplace expansion）——沿任意一行/列展开，每一项 = 元素 × 它的<strong>符号</strong> × 它的<strong>余子式</strong>（划掉该元素所在行和列后剩下的 2×2 行列式）。符号规则：(i,j) 位置的符号是 (−1)^(i+j)，即呈棋盘状 +,−,+；−,+,−；+,−,+。</p>
+<p>我们沿第一行展开 A=[[2,1,1],[1,2,1],[1,1,2]]（第一行三个数都是 1 或 2，符号是 +,−,+）：</p>
+<div class="formula display" data-tex="\det A=2\cdot(+1)\cdot\det\begin{bmatrix}2&1\\1&2\end{bmatrix}+1\cdot(-1)\cdot\det\begin{bmatrix}1&1\\1&2\end{bmatrix}+1\cdot(+1)\cdot\det\begin{bmatrix}1&2\\1&1\end{bmatrix}"></div>
+<p>逐个算三个 2×2：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix}2&1\\1&2\end{bmatrix}=4-1=3;\quad \det\begin{bmatrix}1&1\\1&2\end{bmatrix}=2-1=1;\quad \det\begin{bmatrix}1&2\\1&1\end{bmatrix}=1-2=-1"></div>
+<p>代回：</p>
+<div class="formula display" data-tex="\det A=2\cdot3-1\cdot1+1\cdot(-1)=6-1-1=4"></div>
+<p>换一条更省事的路线验证：沿第二列展开（第二列下方有 1、2，符号是 −,+,−）。两种展开结果相同——拉普拉斯展开与所沿行列无关，这是行列式的重要性质（从三条公理可证）。顺带预告：这个矩阵的特征值是 4,1,1，乘积正好是 4（第十一节会讲为什么）。</p>
+
+<p><strong>例 3：验证 det(AB)=det(A)det(B)。</strong></p>
+<p>取 A=[[2,1],[1,3]]（det=5，第一节算过）、B=[[1,1],[0,2]]（det=1×2−1×0=2）。先算乘积 AB（"矩阵乘法"：第 i 行 × 第 j 列）：</p>
+<div class="formula display" data-tex="AB=\begin{bmatrix}2&1\\1&3\end{bmatrix}\begin{bmatrix}1&1\\0&2\end{bmatrix}=\begin{bmatrix}2\cdot1+1\cdot0&2\cdot1+1\cdot2\\1\cdot1+3\cdot0&1\cdot1+3\cdot2\end{bmatrix}=\begin{bmatrix}2&4\\1&7\end{bmatrix}"></div>
+<p>再两边分别取行列式：</p>
+<div class="formula display" data-tex="\det(AB)=2\cdot7-4\cdot1=14-4=10,\qquad \det(A)\det(B)=5\cdot2=10"></div>
+<p>两边都是 <strong>10</strong>。乘法性质在具体数字上成立——它为什么一定成立，见第九节。</p>
+</section>
+
+<section>
+<h3>八、三条公理——为什么三条就够</h3>
+<p>到现在为止，我们靠几何直觉认识行列式（放大倍数、翻面、压扁）。更严格的做法，是把行列式从三条最基本的规则（公理）重新定义出来，其余一切性质都能从这三条纯代数地推出，不再需要看图形。这就是教材里常说的"公理化定义"。</p>
+<p><strong>公理 1</strong>：det(I)=1。恒等变换不改变体积。<br>
+<strong>公理 2</strong>：交换两行 → det 变号。反射改变定向。<br>
+<strong>公理 3</strong>：行列式对每一行是线性的——某行乘以 c → det 乘以 c；某行是两个向量之和 → det 等于两项之和。</p>
+<p>为什么三条就够了？因为<strong>它们足以把任何一个矩阵的行列式"逼"出来</strong>。先看 2×2，用公理一步步演算，让 ad−bc 自己跳出来：</p>
+<p>设第一行是 (a,b)、第二行是 (c,d)。用公理 3 先把第一行拆开：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix}a&b\\c&d\end{bmatrix}=a\det\begin{bmatrix}1&0\\c&d\end{bmatrix}+b\det\begin{bmatrix}0&1\\c&d\end{bmatrix}"></div>
+<p>再把第二行也拆开，得到四个小行列式。它们都能用公理 1、2 直接读出：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix}1&0\\0&1\end{bmatrix}=1;\qquad \det\begin{bmatrix}0&1\\1&0\end{bmatrix}=-1;\qquad \det\begin{bmatrix}1&0\\1&0\end{bmatrix}=0;\qquad \det\begin{bmatrix}0&1\\0&1\end{bmatrix}=0"></div>
+<p>（两个"0"来自公理 2：把两行相同的矩阵交换两行，应该等于它自己，同时又应变号 ⟹ 它只能等于 0。）于是：</p>
+<div class="formula display" data-tex="\det\begin{bmatrix}a&b\\c&d\end{bmatrix}=a\cdot d+b\cdot(-c)=ad-bc"></div>
+<p>三条公理把 ad−bc 完整逼出来了——不多不少。</p>
+<p>对一般 n 阶矩阵，理由是同一条路的推广：<strong>任何矩阵都能用行变换化为单位阵（Gauss 消元），即写成初等矩阵的乘积；而三条公理把每个初等矩阵的 det 钉死（交换→−1、某行乘 c→c、某行加另一行 c 倍→1），并保证"乘初等矩阵时 det 跟着初等矩阵走"（det(EA)=det(E)det(A)，证明见文末附注）。</strong>每块拼图的 det 都被唯一决定，拼起来的 det 也就唯一了。这就是"公理化"的威力：不需要图形，三条规则就足够，还能在任意维数工作。</p>
+<p>为什么偏偏是这三条？因为它们精确对应 Gauss 消元的三种行操作（交换、倍乘、倍加），而每一种行操作都有一个几何事实：交换 = 定向翻转、倍乘 = 体积成比例放大、倍加 = 错切不改变体积。公理是把几何事实提炼成了代数规则。</p>
+</section>
+
+<section>
+<h3>九、为什么 det(AB)=det(A)det(B)？</h3>
+<p>这是行列式最重要的乘法性质，先用直觉，再给严格版。</p>
+<p><strong>直觉论证（几何）。</strong>A 把正方形面积放大 det(A) 倍。B 再把 A 的像（平行四边形）放大 det(B) 倍。总放大倍数 = det(A)·det(B)。但复合变换 AB 就是把两者依次执行，它的总放大 = det(AB)。所以 det(AB)=det(A)det(B)。</p>
+<p>这个论证漂亮，但要严谨还差一步：A 的像是"平行四边形"，B 对它的作用确实是放大 det(B) 倍吗？严格证明的做法是<strong>初等矩阵</strong>：任一可逆矩阵都是初等矩阵的乘积（Gauss 消元的记录），而 det(EA)=det(E)det(A) 可以沿着公理逐行直接验证（交换、倍乘、倍加三种情况各查一遍，见文末附注）。用初等矩阵的"积木"把 A 一块块搭起来，乘性就严格成立了。若 A 不可逆，两边都是 0（第六节），也成立。∎</p>
+<div class="formula display" data-tex="\det(AB) = \det(A)\det(B)"></div>
+<p>三个马上到手的推论：</p>
+<p><strong>推论 1（逆）</strong>：det(A⁻¹)=1/det(A)。因为 1=det(I)=det(A)det(A⁻¹)。<br>
+<strong>推论 2（相似）</strong>：det(P⁻¹AP)=det(A)。用两次乘性，P 可逆时 det(P⁻¹AP)=det(P⁻¹)det(A)det(P)=det(A)。这告诉我们：<strong>换基底不改变行列式</strong>——行列式是变换的内在属性，不依赖你站在哪个坐标系里看它。<br>
+<strong>推论 3（幂）</strong>：det(A²)=det(A)²，一般地 det(Aᵏ)=det(A)ᵏ。</p>
+</section>
+
+<section>
+<h3>十、行列式和体积——从 2D 到 nD</h3>
+<p>第三节的结论"det 的绝对值 = 面积放大倍数"可以一路推广：</p>
+<p><strong>3×3</strong>：det = 单位立方体变成的<strong>平行六面体</strong>的体积。三条边是 A 的三个列向量，它们张成的平行六面体体积 = |det(A)|。三个列向量共面（体积 0）⟺ det=0 ⟺ 不可逆——和二维"压扁成线段"是一个故事的 3D 版。</p>
+<p><strong>n×n</strong>：det = n 维单位超立方体变成的 <strong>n 维平行多面体</strong>的 n 维体积。det 的符号 = 定向：正保持定向，负翻转（镜像），这与微积分里换元公式的 Jacobian 完全一致：</p>
+<div class="formula display" data-tex="dx_1\cdots dx_n=\left|\det(J)\right|\,du_1\cdots du_n"></div>
+<p>Jacobian（雅可比）行列式就是 n 维的"面积放大倍数"的无穷小版本——把坐标从 u 换成 x，体积元的换算率正是 |det(J)|。这一句把线代和微积分缝在了一起。</p>
+<p>用楔积（wedge product）的语言可以说得更凝练：平行多面体的体积 = 楔积的范数，而楔积的坐标表达式正是行列式：</p>
+<div class="formula display" data-tex="|v_1\wedge\cdots\wedge v_n|=|\det(v_1,\ldots,v_n)|"></div>
+</section>
+
+<section>
+<h3>十一、行列式与特征值——det(A)=∏λᵢ</h3>
+<p>如果 A 可对角化（A=PΛP⁻¹，Λ 是对角阵，对角元是特征值 λᵢ），那么用乘性一步到位：</p>
+<div class="formula display" data-tex="\det(A)=\det(P\Lambda P^{-1})=\det(P)\det(\Lambda)\det(P^{-1})=\det(\Lambda)=\prod_i\lambda_i"></div>
+<p>几何直觉：变换"沿每个特征方向拉伸 λᵢ 倍"，总体积放大的倍数 = 这些拉伸倍数的乘积。推论 2（相似不变）保证换基底不改变行列式，所以无论特征值是否可对角化（用 Schur/Jordan 形），这个等式对<strong>代数重数</strong>计数的特征值都成立：</p>
+<div class="formula display" data-tex="\det(A) = \prod_i \lambda_i"></div>
+<p>回看第七节例 2：矩阵 [[2,1,1],[1,2,1],[1,1,2]] 的特征值是 4,1,1，乘积 4=det A——数字再次吻合。这也顺手给出一个判据：<strong>det=0 ⟺ 至少一个特征值是 0</strong>，这正是"某个方向被完全压扁"的代数说法。</p>
+</section>
+
+<section>
+<h3>十二、历史：从线性方程组到现代代数</h3>
+<p>行列式比矩阵更早出现。Leibniz（1693）和 Cramer（1750，克莱姆法则）在研究线性方程组时独立发现了行列式——它最初就是"决定方程组是否有唯一解"的那个量。Vandermonde（1772）首次把行列式当作独立的数学对象来研究。Cauchy（1812）证明 det(AB)=det(A)det(B)，并首次给出系统的行列式理论。</p>
+<p>有趣的是，符号 |a b; c d|、术语 "determinant" 的定型都发生在"矩阵"这个观念被清晰提出之前很久——行列式是爷爷辈，矩阵是后来为它设计的储物柜。到了数值计算时代，行列式的地位反而下降了：直接算它太慢（朴素算法 O(n!)），但它作为理论工具（可逆性、体积、特征值乘积）依然不可或缺。</p>
+</section>
+
+<section>
+<h3>十三、前沿：行列式的计算复杂性</h3>
+<p>现代数值线性代数不再靠展开来算行列式——而是用行变换化为三角阵，O(n³) 就够。理论上，行列式计算等价于矩阵乘法：O(n^ω)，其中 ω≈2.37 是矩阵乘法指数（2024 年还被改进到 2.371866）。</p>
+<p>但事情在<strong>符号</strong>领域变得很微妙：元素是符号（含未知量的多项式）时，展开会指数爆炸。Valiant（1979）证明了惊人结果：计算 <strong>permanent</strong>（行列式的"无符号"亲戚）是 <strong>#P 完全</strong>的——几乎不可能高效计算；而 <strong>determinant 却在多项式时间 P 内</strong>。这个"永久式 vs 行列式"的复杂度鸿沟，是理论计算机科学最深的开放问题之一（与 Valiant 猜想相关）。</p>
+</section>
+
+<section>
+<h3>十四、试试看（带提示）</h3>
+<p>1. 打开上面的交互图，把 a 拖到 0。det 怎么变？平行四边形被压扁到什么程度？<br>提示：det=ad−bc 直接变小；当 ad=bc（比如 a=0 且 b 或 c=0）时面积为 0，两列共线，图形退化成线段。</p>
+<p>2. 找一组值使 det=1 但平行四边形不是正方形。这意味着什么？<br>提示：如 [[1,1],[0,1]]（错切变换），det=1×1−1×0=1。面积不变但形状歪了——det 只捕捉"面积放大倍数"，不捕捉形状。这正是推论"det(EA)=det(E)det(A)"中行倍加不改变 det 的几何原因。</p>
+<p>3. 行列式的"乘性"意味着什么？如果 A 把面积放大 3 倍，A² 放大几倍？A⁻¹ 呢？<br>提示：det(A²)=det(A)²=9；det(A⁻¹)=1/det(A)=1/3（逆变换把面积缩小回去）。</p>
+<p>4. 沿第一列展开计算 det[[2,0,1],[1,3,2],[0,1,1]]。<br>提示：第一列是 2,1,0，符号 +,−,+；det=2·det[[3,2],[1,1]]−1·det[[0,1],[1,1]]+0=2·(3−2)−1·(0−1)=2+1=3。</p>
+<p>5. det(cA) 与 c·det(A) 是什么关系？<br>提示：公理 3 的线性是对"每一行"而言，n 阶矩阵有 n 行，每行都被乘 c，共 n 个因子：det(cA)=cⁿdet(A)（n 次齐次）。除 n=1 外都不是 c·det(A)——这是行列式对"整个矩阵"非线性的典型体现。</p>
+<p>6. 若 det(A)=0，能不能从乘性直接推出 A 不可逆？<br>提示：反证。若 A 有逆，1=det(I)=det(A)det(A⁻¹)=0·det(A⁻¹)=0，矛盾。</p>
+</section>
+
+<section><h3>前沿：行列式的计算复杂性（续）——从符号到量子</h3><p>除 Valiant 的结果外，还有一个反直觉的结论：permanent 与 determinant 之间只有"一撇"之差（permanent 不变量变号、determinant 按置换符号变号），但计算复杂度天差地别。量子计算一侧，permanent 还与玻色子采样（Boson Sampling）的经典模拟难度直接相关——Aaronson & Arkhipov (2013) 证明"近似永久式困难"是量子霸权实验的基础。一个古老的行列式亲戚，至今仍卡在量子与经典计算的分界线上。</p></section>
+
+<section>
+<h3>附：det(AB)=det(A)det(B) 的初等矩阵证明</h3>
+<p><strong>引理 1（初等矩阵的 det）。</strong>三类初等矩阵 E：交换两行、某行乘 c、某行加另一行的 c 倍。由公理直接逐行验证：det(E) 分别为 −1、c、1。</p>
+<p><strong>引理 2（行操作与乘性）。</strong>对任意初等矩阵 E 与任意方阵 A，恒有 det(EA)=det(E)det(A)。</p>
+<p>验证：左乘 E 就是给 A 做对应的行操作；公理 2 说交换行 det 变号，公理 3 说某行乘 c 则 det 乘 c、某行加另一行 c 倍不改变 det（把"加的那行"与"被加的行"一起看，两行成比例的部分贡献为 0）。三种情况都给出 det(EA)=det(E)det(A)。</p>
+<p><strong>证明 det(AB)=det(A)det(B)。</strong>固定 B，考察 F(A)=det(AB)。若 A 可逆，则 A 是初等矩阵之积：A=E₁⋯Eₖ（Gauss 消元把 A 化为 I 的过程反过来写），于是</p>
+<div class="formula display" data-tex="\det(AB)=\det(E_1\cdots E_kB)=\det(E_1)\cdots\det(E_k)\det(B)=\det(A)\det(B)"></div>
+<p>逐次使用引理 2，最后一次用引理 1 把 det(E₁⋯Eₖ)=det(A) 拼出来。若 A 不可逆，则 rank(AB)≤rank(A)&lt;n，故 AB 不可逆，det(AB)=0=det(A)det(B)。两种情形均成立。∎</p>
+<p>推论：det(A⁻¹)=1/det(A)（取 B=A⁻¹）；det(P⁻¹AP)=det(A)（取 B=P⁻¹、P 可逆，两次乘性）。</p>
+</section>
+
+<section>
+<h3>附：行列式与体积的严格联系</h3>
+<p><strong>定理。</strong>设 A 为 n 阶实矩阵，则 A 作用于单位立方体得到的平行多面体 A[0,1]ⁿ 满足 vol(A[0,1]ⁿ)=|det(A)|。</p>
+<p><strong>严格证明思路。</strong>令 V(A)=A[0,1]ⁿ 的带符号体积。验证 V 满足行列式唯一刻画的公理：</p>
+<p><strong>① V(I)=1</strong>——单位立方体体积为 1。<strong>② 交换两列 V 变号</strong>——交换两条边相当于反射（定向翻转），体积保持绝对值但符号取反。<strong>③ 对每列多重线性</strong>——把一列写成 u+w 时多面体沿该方向被"切开"成两片，体积相加；某列乘 c 时对应边拉长 |c| 倍，带符号体积乘 c。</p>
+<p>由于满足这三条公理的函数唯一（行列式公理刻画定理，见第八节），必有 V=det，故 vol=|det|。∎</p>
+<div class="formula display" data-tex="\mathrm{vol}(A[0,1]^n)=|\det(A)|,\qquad |v_1\wedge\cdots\wedge v_n|=|\det(v_1,\ldots,v_n)|"></div>
+<p>代数与微积分版本：楔积范数 |v₁∧⋯∧vₙ| 定义平行多面体体积；Jacobian 变量替换公式 dx₁⋯dxₙ=|det(J)|du₁⋯duₙ 正是这一联系的无穷小形态。</p>
+</section>
+
+<section>
+<h3>附：标准反例</h3>
+<p><strong>反例 1（行列式不可加）</strong>：det(A+B)≠det(A)+det(B)。取 A=[[1,0],[0,0]]、B=[[0,0],[0,1]]：det A=0、det B=0，但 A+B=I₂，det(A+B)=1≠0。行列式对矩阵加法没有线性——公理 3 的线性只对"单行"，不对"整矩阵"。</p>
+<p><strong>反例 2（退化矩阵）</strong>：A=[[1,2],[2,4]]，第二列是第一列的 2 倍，det A=0。几何上两列张成的平行四边形面积为 0——两向量共线被压成线段。退化 ⟺ 不可逆 ⟺ det=0，这是 rank(A)&lt;n 的直接判据。</p>
+<div class="formula display" data-tex="\det\begin{bmatrix}1&2\\2&4\end{bmatrix}=0;\qquad \det\left(\begin{bmatrix}1&0\\0&0\end{bmatrix}+\begin{bmatrix}0&0\\0&1\end{bmatrix}\right)=1\neq 0+0"></div>
+<p>补充警示：det 对"整个矩阵"非线性——det(cA)=cⁿdet(A)（n 次齐次），除 n=1 外都不是 c·det(A)。</p>
+</section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：用拉普拉斯展开（余子式展开）计算 A=[[1,2,3],[0,1,4],[5,6,0]]，选择最省事的展开行/列。</p>
+<p><strong>题 2</strong>：判断可逆性：B=[[2,0,0],[3,−1,0],[4,5,2]]（三角阵），C=[[1,2,3],[4,5,6],[7,8,9]]。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：沿第一列展开最省事（第二行 a₂₁=0 消去一项）：det A=1·det[[1,4],[6,0]]−0+5·det[[2,3],[1,4]]=1·(−24)+5·(8−3)=−24+25=1。直接展开校验：1·(1·0−4·6)−2·(0·0−4·5)+3·(0·6−1·5)=−24+40−15=1 ✓。</p>
+<p><strong>题 2</strong>：B 为上三角，det B=2·(−1)·2=−4≠0 ⟹ 可逆。C：第 3 行 −2×第 2 行=(−1,−2,−3)=−第 1 行 ⟹ 第 3 行−2×第 2 行+第 1 行=0，行线性相关 ⟹ det C=0，不可逆。也可这样看：C 的列向量线性相关（第三列=第二列+(1,1,1) 之类的组合），三列共面，平行六面体体积为 0。</p>
+</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Axler, Linear Algebra Done Right (4th ed.)</strong></p>
+<p>&rarr; <strong>K. Hoffman & R. Kunze, Linear Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/linear-transform.html">📐 线性变换</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/eigenvectors.html">🎯 特征值与特征向量</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/svd.html">🔀 奇异值分解 SVD</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/spectral-theorem.html">🌈 谱定理</a>：同一学科分类「线性代数」。</p>
+</section>

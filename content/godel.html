@@ -1,0 +1,253 @@
+<section>
+<h3>〇、直觉入门——先玩一局"自指"游戏</h3>
+<p>先玩一个游戏。在一张纸上写下这句话：</p>
+<p><strong>"这句话是假的。"</strong></p>
+<p>现在"运行"这句话，只有两条路可走：</p>
+<p>&rarr; 假设它<strong>为真</strong>：它说的是"这句话是假的"，于是它就应该是<strong>假的</strong>——矛盾。<br>
+&rarr; 假设它<strong>为假</strong>：那么"这句话是假的"这句话本身是假的，也就是说它<strong>不是假的</strong>，于是它<strong>为真</strong>——还是矛盾。</p>
+<p>两条路都通向矛盾。这就是两千年来困扰逻辑学家的<strong>说谎者悖论</strong>（liar paradox）：一句话<strong>谈论它自己</strong>（自指），就绕出了一个解不开的圈。逻辑学家当然想躲开它——所以给数学立下严格规则，想把"自己说自己"关在门外。</p>
+<p>本课要问的问题：<strong>这个"自指"的圈，能不能在一个不矛盾（一致）的形式系统里"复活"？</strong>直觉上答案当然是"不能"。可 Gödel（1931）证明了令人不安的答案：<strong>能，而且根本挡不住</strong>。</p>
+<p>但复活之后的它变了形态：不再爆炸成矛盾，而是变成一句"温和的真理"——系统里存在一个<strong>真句子</strong>，你<strong>既证明不了它，也证明不了它的否定</strong>。规则没有坏，只是永远漏着一个洞。这就是<strong>哥德尔不完备定理</strong>。</p>
+<p><strong>本课路线图</strong>（每步先直觉、后严格）：</p>
+<p>&rarr; <strong>形式系统</strong>：规则、"证明"到底指什么（第一节）；<br>
+&rarr; <strong>算术编码</strong>：把"句子"变成"数字"，元数学走进算术（第二节）；<br>
+&rarr; <strong>替换函数</strong>：让一句话谈论"它自己"（第三节）；<br>
+&rarr; <strong>对角线构造</strong>：造出"我说我不可证"的句子 G（第四节）；<br>
+&rarr; <strong>两条定理</strong>：第一定理（存在不可证明的真理）与第二定理（系统不能自证一致）（第五、六节与"证明"章）。</p>
+<div class="key-insight">一句话记住本课：<strong>规则足够强，就必然能"谈论自己"；而一旦能谈论自己，就必然存在它既证明不了、也否证不了的真理。</strong>不完备不是规则的缺陷，而是规则足够强大的代价。</div>
+</section>
+
+<section>
+<h3>一、形式系统：一场"符号操作"的证明游戏</h3>
+<p>要让数学证明能被机器检查，就得先立下"规矩"。一个<strong>形式系统</strong>（formal system）由三样东西组成：</p>
+<p>① <strong>符号</strong>（symbols）：允许出现的字符表，比如 <code>0</code>、<code>s</code>、<code>+</code>、<code>=</code>、括号。<br>
+② <strong>公理</strong>（axioms）：一开始就无条件承认的句子，不需要证明。<br>
+③ <strong>推演规则</strong>（rules of inference）：允许从已知句子合法地推出新句子的操作，每一步就像游戏里走一步。</p>
+<p><strong>证明</strong>（proof）就是一条从公理出发、每一步都按规则走、最终停在目标句子的脚印。<strong>一个句子只要存在这样一串脚印，就叫它在系统内可证明</strong>（provable）。关键点：这套规则只关心"符号怎么摆"，不关心符号"是什么意思"——正因为如此，证明才能被精确检查，甚至被机器验证。</p>
+<p>用一个具体的小游戏来体会。著名的 <strong>MIU 系统</strong>：用大写字母 M、I、U 组成字符串，公理只有一条 <code>MI</code>，规则四条：</p>
+<p>&rarr; R1：以 <code>I</code> 结尾的串，可在末尾加 <code>U</code>（xI &rarr; xIU）。<br>
+&rarr; R2：<code>Mx</code> 可改写成 <code>Mxx</code>（把 <code>M</code> 后面的内容复制一遍）。<br>
+&rarr; R3：串中任意 <code>III</code> 可换成 <code>U</code>。<br>
+&rarr; R4：串中任意 <code>UU</code> 可删去。</p>
+<p><strong>例题 0（热身的推演）</strong>：证明 <code>MUIU</code> 是定理。一步步来：</p>
+<p><code>MI</code> （公理）<br>
+&rarr; <code>MII</code> （R2）<br>
+&rarr; <code>MIIII</code> （R2）<br>
+&rarr; <code>MUI</code> （R3：把中间的 <code>III</code> 换成 <code>U</code>）<br>
+&rarr; <code>MUIU</code> （R1）</p>
+<p><strong>追问</strong>：<code>MU</code> 是定理吗？规则这么多、离得又近，但答案是<strong>否</strong>。理由是一个<strong>不变量</strong>：任何定理中 <code>I</code> 的个数都不能被 3 整除——公理有 1 个 <code>I</code>；R1、R4 不改 <code>I</code> 的个数；R2 把个数翻倍，翻倍不改变"能否被 3 整除"（2 在模 3 下可逆）；R3 减去 3，也不改变。而 <code>MU</code> 有 0 个 <code>I</code>，能被 3 整除，所以永远推不出来。</p>
+<p>请注意这个现象的滋味：<strong>"MU 不是定理"是我们站在系统外、用不变量证明的事实，可系统内部永远推不出 MU。</strong>这种"关于系统的真理"与"系统能推出的结论"之间的裂痕，正是哥德尔要挖到最深处的东西。</p>
+<p>最后立下两个贯穿全课的定义：</p>
+<p><strong>一致性</strong>（consistency，无矛盾）：不存在句子 φ，使 T⊢φ 且 T⊢¬φ。等价地说，系统不会证明矛盾，从而不会"什么都能证"。<br>
+<strong>完备性</strong>（completeness）：对每个句子 φ，要么 T⊢φ，要么 T⊢¬φ——每个问题系统都给得出答案。</p>
+<div class="key-insight">形式系统＝符号操作游戏：意义被关在门外，只留下可机械检查的推演。而"证明可检查"正是这一切的地基——正因为如此，"证明"本身才可能变成研究对象（第二节），也正因为如此，系统才可能"谈论自己"。</div>
+</section>
+
+<section>
+<h3>二、算术编码：把"句子"变成"数字"</h3>
+<p>我们的目标是让算术系统"谈论自己"。但算术的句子只能谈论数字。怎么办？搭一座桥：<strong>给每个句子发一个学号</strong>——这就是 <strong>Gödel 编码</strong>（Gödel numbering）。一旦句子成了数字，"谈论句子"就自动变成了"谈论数字"。</p>
+<p><strong>第一步：给符号编号。</strong>用一张符号表固定下来：</p>
+<p><code>0</code>&rarr;1，<code>s</code>&rarr;3，<code>+</code>&rarr;5，<code>×</code>&rarr;7，<code>=</code>&rarr;9，<code>(</code>&rarr;11，<code>)</code>&rarr;13，<code>¬</code>&rarr;15，<code>∧</code>&rarr;17，<code>∨</code>&rarr;19，<code>→</code>&rarr;21，<code>∀</code>&rarr;23，<code>∃</code>&rarr;25，<code>,</code>&rarr;27；变量 x₀, x₁, x₂, … 依次用 29, 31, 33, …。</p>
+<p>注意：数字"2"不是符号，而是由符号拼出来的——数字 n 写成 <code>s…s0</code>（n 个 <code>s</code> 后接 <code>0</code>），叫 n 的<strong>数字名</strong>（numeral）。</p>
+<p><strong>第二步：给公式编码。</strong>设符号串 s₁s₂⋯sₖ 各符号的编号为 c₁, c₂, …, cₖ，定义：</p>
+<div class="formula display" data-tex="\operatorname{gn}(s_1s_2\cdots s_k)=2^{c_1}\cdot 3^{c_2}\cdot 5^{c_3}\cdots p_k^{c_k}"></div>
+<p>其中 pₖ 是第 k 个素数（2, 3, 5, 7, …）。</p>
+<p><strong>为什么非要用素数幂？</strong>因为<strong>唯一分解定理</strong>：同一个自然数只能拆成唯一的一组素数幂乘积，所以从编码能<strong>唯一读回</strong>原来的公式——编码是"单射"，不会两个句子撞同一个学号。</p>
+<p><strong>例题 1（算到底）</strong>：给公式 <code>0 = 0</code> 做编码。</p>
+<p>查表：<code>0</code>&rarr;1，<code>=</code>&rarr;9，<code>0</code>&rarr;1。三个符号对三个素数 2, 3, 5 取幂：</p>
+<div class="formula display" data-tex="\operatorname{gn}(0{=}0)=2^{1}\cdot 3^{9}\cdot 5^{1}=2\cdot 19683\cdot 5=196830"></div>
+<p>反过来，从 196830 也能唯一解出：先除以 2 得 98315，除以 3 得 … 一路能整除 3 恰好 9 次，再除以 5 恰好 1 次，剩下 1——指数是 (1, 9, 1)，即符号 <code>0, =, 0</code>。编码可逆。</p>
+<p><strong>例题 2</strong>：给含变量的公式 <code>x₁ = s 0</code> 做编码。</p>
+<p>查表：<code>x₁</code>&rarr;31，<code>=</code>&rarr;9，<code>s</code>&rarr;3，<code>0</code>&rarr;1。四个符号对四个素数 2, 3, 5, 7 取幂：</p>
+<div class="formula display" data-tex="\operatorname{gn}(x_1{=}s0)=2^{31}\cdot 3^{9}\cdot 5^{3}\cdot 7^{1}=36{,}985{,}305{,}563{,}136{,}000"></div>
+<p>这个数字比可观测宇宙的原子数还大，但它是唯一确定的——并且"从数字读回公式"这件事本身是一个<strong>可计算</strong>的过程。</p>
+<p><strong>第三步：给证明编码。</strong>证明是公式的有限序列 (F₁, …, Fₙ)，照葫芦画瓢，再套一层素数幂：</p>
+<div class="formula display" data-tex="\operatorname{gn}(F_1,\dots,F_n)=2^{\operatorname{gn}(F_1)}\cdot 3^{\operatorname{gn}(F_2)}\cdots p_n^{\operatorname{gn}(F_n)}"></div>
+<p><strong>为什么元数学走进了算术（关键解释）</strong>：编码之后，"F 是定理"变成一个算术句子——"存在一个自然数 x，它是 F 的证明编码"；"T 一致"也变成一个算术句子——"不存在编码了矛盾证明的数"。于是<strong>关于系统的命题全部可以写成算术内部的公式</strong>，算术系统就有资格"谈论自己"了。数学家在外面（元层次）说的话，被这座桥翻译成了系统内部能说的算术话。</p>
+<div class="key-insight">Gödel 编码把"公式"和"证明"都变成了自然数。从此元数学与算术之间有了双向翻译：外面的断言变成里面的算术句子——自指的舞台搭好了。</div>
+</section>
+
+<section>
+<h3>三、替换函数与自指：让一句话谈论它自己</h3>
+<p>编码之后，一个算术句子可以谈论"某公式的编码"。但"它自己的编码"要怎么指到？答案藏在<strong>替换函数</strong>里。</p>
+<p><strong>替换函数 sub(a, b)</strong>：设 a 是含一个自由变量 x₁ 的公式 φ(x₁) 的编码。把 φ 里所有自由出现的 x₁ 换成数字 b 的<strong>数字名</strong>（numeral），得到新公式，返回这个新公式的编码：</p>
+<div class="formula display" data-tex="\operatorname{sub}(a,b)=\operatorname{gn}\big(\varphi(\underline{b})\big),\qquad a=\operatorname{gn}\big(\varphi(x_1)\big)"></div>
+<p><strong>例题 3（算到底）</strong>：计算 sub(gn(x₁ + 0 = x₁), 2)。</p>
+<p>第一步，先给 <code>x₁ + 0 = x₁</code> 编码：符号 <code>x₁, +, 0, =, x₁</code> 对应编号 [31, 5, 1, 9, 31]，于是</p>
+<div class="formula display" data-tex="\operatorname{gn}(x_1{+}0{=}x_1)=2^{31}\cdot 3^{5}\cdot 5^{1}\cdot 7^{9}\cdot 11^{31}"></div>
+<p>第二步，写出数字 2 的数字名：<code>ss0</code>（符号编号 [3, 3, 1]）。</p>
+<p>第三步，把公式里两个自由 x₁ 都换成 <code>ss0</code>：</p>
+<div class="formula display" data-tex="\operatorname{sub}\big(\operatorname{gn}(x_1{+}0{=}x_1),\,2\big)=\operatorname{gn}(ss0{+}0{=}ss0)=2^{3}\cdot 3^{3}\cdot 5^{1}\cdot 7^{5}\cdot 11^{1}\cdot 13^{9}\cdot 17^{3}\cdot 19^{3}\cdot 23^{1}"></div>
+<p>逐位核对：新公式 <code>s,s,0,+,0,=,s,s,0</code> 的编号 [3,3,1,5,1,9,3,3,1] 依次对素数 2,3,5,7,11,13,17,19,23 取幂——和上面完全一致。</p>
+<p><strong>为什么 sub 在算术里可实现？</strong>sub 是一个可计算的函数（可以写出程序来算），而足够强的算术系统能表示<strong>所有可计算函数</strong>（可表示性定理 / Church–Turing 论题 + 递归函数可定义性）。关键在于素因子分解让"从数字读回公式"可行，于是"替换"就变成了纯粹的数的运算——甚至乘法。</p>
+<p><strong>对角化 d(n) = sub(n, n)</strong>：把"编码为 n 的公式"自己代入自己。当 n = gn(φ(x₁)) 时：</p>
+<div class="formula display" data-tex="d(n)=\operatorname{sub}(n,n)=\operatorname{gn}\big(\varphi(\underline{n})\big)"></div>
+<p>公式对着<strong>自己的编码</strong>说话。这就是"自指"的算术形态。</p>
+<p><strong>对角引理（Gödel–Carnap 不动点）</strong>——自指为什么在算术里可能。正式陈述（证明见"证明"章）：对任意含一个自由变量的公式 φ(x₁)，都存在一个句子 ψ，使</p>
+<div class="formula display" data-tex="T\vdash \psi\ \longleftrightarrow\ \varphi(\ulcorner \psi\urcorner)"></div>
+<p>其中 ⌈ψ⌉ 是 ψ 的编码的数字名。ψ 就"说"：<strong>我是那个满足 φ 的句子</strong>。</p>
+<p><strong>为什么自指在算术里是可能的（关键解释）</strong>：因为在算术里，"公式"是数字、"代入"是乘法、"把公式自己代入自己"是一个可计算的函数 d。于是"让句子谈论自己"不再是语言的花招，而是一个能一步步算出来的算术操作。对角引理保证：<strong>任何性质 φ，都能造出一个"关于自己"的句子来满足它</strong>——包括下一节要用的 φ = "我是不可证的"。</p>
+<div class="key-insight">自指是算术计算的结果：替换函数把"编码"和"被指称"焊在了一起，对角化 d(n) = sub(n, n) 就是"自己提到自己"的算术化身。下一节用它把说谎者悖论在算术里复活。</div>
+</section>
+
+<section>
+<h3>四、不可证明的真理 G：第一定理的直觉论证</h3>
+<p>舞台已经搭好，现在上演主角。</p>
+<p><strong>第一步：定义"可证明性"谓词。</strong>因为"是不是证明"可以机械检查、证明又能编码，所以存在一个算术公式 Prf(x, y)，表示"x 是句子 y 的一个证明的编码"。于是定义</p>
+<div class="formula display" data-tex="\text{Provable}(y)\ \equiv\ \exists x\, \text{Prf}(x,y)"></div>
+<p>读作"y 可证明"。"可证明性"现在是一个货真价实的算术性质。</p>
+<p><strong>第二步：用对角引理造 G。</strong>取 φ(x₁) = ¬Provable(x₁)，对角引理给出一个句子 G，使</p>
+<div class="formula display" data-tex="T\vdash G\ \longleftrightarrow\ \neg\,\text{Provable}(\ulcorner G\urcorner)"></div>
+<p>G 的意思就是：<strong>"不存在我的证明"</strong>，即<strong>"我说我不可证"</strong>——说谎者悖论的句子"这句话是假的"，被换成了"这句话不可证"。</p>
+<p><strong>第三步：两条路，逐一堵死。</strong></p>
+<p>&rarr; <strong>若 T⊢G</strong>：那么存在一个真正证明 G 的数 n，由表示性，T 能证明 Prf(n, ⌈G⌉)，进而 T⊢Provable(⌈G⌉)。但 G ↔ ¬Provable(⌈G⌉) 又给出 T⊢¬Provable(⌈G⌉)——矛盾于一致性。所以 <strong>T 证不出 G</strong>。</p>
+<p>&rarr; <strong>若 T⊢¬G</strong>：由 G ↔ ¬Provable(⌈G⌉) 推出 T⊢Provable(⌈G⌉)。但另一方面，T 证不出 G（上一步），于是对每个具体数字 n，n 都不是 G 的证明，由表示性 T⊢¬Prf(n, ⌈G⌉) 对每个 n 都成立；<strong>ω-一致性</strong>（比一致性稍强的假设，见"证明"章）就推出 T 证不出 ∃x Prf(x, ⌈G⌉)——与 T⊢Provable(⌈G⌉) 矛盾。所以 <strong>T 也证不出 ¬G</strong>。</p>
+<p><strong>第四步：G 是真的。</strong>G 的内容就是"我没有证明"。而我们刚刚在元层次证明了确实没有证明（T⊢G 不可能），所以 G 在标准模型中<strong>为真</strong>——只是这个"真"是站在系统外面说的事实，系统内部恰恰证明不了它。</p>
+<div class="formula display" data-tex="\text{PA}\not\vdash G,\qquad \text{PA}\not\vdash\neg G"></div>
+<div class="key-insight">说谎者悖论说"这句话是假的"——矛盾；Gödel 说"这句话不可证"——不矛盾，只是成了漏网之鱼。<strong>把"假"换成"不可证"，矛盾就成了不完备。</strong>这一句话，就是整门课。</div>
+</section>
+
+<section>
+<h3>五、完备性与一致性：分清两条不同的"轴"</h3>
+<p>先并排摆出两个定义，它们极易混淆：</p>
+<div class="formula display" data-tex="\text{Consistent (一致):}\ \nexists\,\varphi\ \big(T\vdash \varphi \wedge T\vdash \neg \varphi\big)"></div>
+<div class="formula display" data-tex="\text{Complete (完备):}\ \forall\,\varphi\ \big(T\vdash \varphi \vee T\vdash \neg \varphi\big)"></div>
+<p>一致性说的是"<strong>不矛盾</strong>"，完备性说的是"<strong>每个问题都有答案</strong>"。它们不是一回事：一个系统可以一致但不完备（PA），可以完备但不一致（矛盾系统平凡地完备），可以一致且完备但太弱（Presburger 算术）。哥德尔定理堵死的是"<strong>又强、又一致、又完备</strong>"这个组合。</p>
+<p><strong>例题 4（三个系统逐一对照）</strong>：</p>
+<p>&rarr; <strong>(a) 不一致的系统</strong>：公理同时含 φ 和 ¬φ，再用规则"从矛盾推出任何句子"（爆炸原则）。结果什么都能证，于是<strong>完备</strong>（平凡地）——但自相矛盾，毫无价值。结论：<strong>完备，但不一致</strong>。<br>
+&rarr; <strong>(b) Presburger 算术</strong>（自然数 + 加法，无乘法）：<strong>一致且完备、可判定</strong>。注意它躲过不完备的原因：没有乘法，就做不了素因子分解，<strong>定义不了替换函数 sub</strong>，于是<strong>无法自指</strong>。结论：<strong>一致、完备，但太弱</strong>。<br>
+&rarr; <strong>(c) Peano 算术 PA</strong>（加法 + 乘法）：一致（在更强的元理论中可证——Gentzen 用 ε₀ 归纳证明了它）、够强，于是<strong>不完备</strong>。结论：<strong>一致、够强、不完备</strong>。</p>
+<p>还要分清<strong>真（truth）与可证（provable）</strong>：在 Presburger 里两者重合；在 PA 里分家了——G 在标准模型为真却不可证。别把"系统证明不了"误读成"数学不知道答案"。</p>
+<div class="key-insight">不完备定理是"完备性 + 一致性 + 足够强"三者不可兼得的精确表述。想同时拥有三者？唯一出路是把系统做弱到不能自指（Presburger 路线）——这就是"强大的代价"。</div>
+</section>
+
+<section>
+<h3>证明——对角引理（自指的算术化）</h3>
+<p><strong>定理（对角引理 / 不动点引理）</strong>。设 T 足够强，能表示替换函数 sub（从而所有可计算函数）。则对任意含一个自由变量的公式 φ(x₁)，存在句子 ψ 使：</p>
+<div class="formula display" data-tex="T\vdash \psi\ \longleftrightarrow\ \varphi(\ulcorner \psi\urcorner)"></div>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：把"替换自己"写成公式。</strong>sub 是（原始）递归函数，故存在公式 Sub(x, y, z) 表示"z = sub(x, y)"。令</p>
+<div class="formula display" data-tex="\text{Diag}(x,z)\ \equiv\ \text{Sub}(x,x,z)"></div>
+<p>表示"z = d(x)"，其中 d(n) = sub(n, n) 是对角化。</p>
+<p><strong>第二步：搭一个"指向自己"的中间公式。</strong>对给定的 φ(x₁)，令</p>
+<div class="formula display" data-tex="\theta(x_1)\ \equiv\ \exists y\, \big( \text{Diag}(x_1,y)\wedge \varphi(y) \big)"></div>
+<p>θ(x₁) 的意思是"对 x₁ 做对角化得到的公式满足 φ"。记 m = gn(θ(x₁))。</p>
+<p><strong>第三步：定义 ψ 并计算它的编码。</strong>令 ψ ≡ θ(m)。关键是这一步的计算：</p>
+<div class="formula display" data-tex="d(m)=\operatorname{sub}(m,m)=\operatorname{gn}\big(\theta(m)\big)=\operatorname{gn}(\psi)=\ulcorner \psi\urcorner"></div>
+<p>第一个等号是对角化的定义，第二个等号是"把 m 代入 θ"——而 ψ 恰好就是 θ(m)，所以对角化 m 的结果就是 ψ 自己的编码。</p>
+<p><strong>第四步：收尾。</strong>因为唯一满足 Diag(m, y) 的 y 就是 d(m) = ⌈ψ⌉，所以 θ(m) 与 φ(⌈ψ⌉) 等价，即 ψ ↔ φ(⌈ψ⌉)。∎</p>
+<p><strong>备注</strong>：为什么叫"不动点"？映射 ψ ↦ φ(⌈ψ⌉) 在句子空间里有固定点，对角引理保证它总是存在。Tarski 定理（见"反例"）则说"真"没有这样的固定点——真不可定义，而可证性可以。</p>
+</section>
+
+<section>
+<h3>证明——第一不完备定理</h3>
+<p><strong>定理（Gödel, 1931）</strong>。设 T 是递归可公理化、ω-一致、且足够强（能表示替换函数）的理论。则存在句子 G，使</p>
+<div class="formula display" data-tex="T\not\vdash G,\qquad T\not\vdash\neg G"></div>
+<p>其中 ω-一致性指：若 T 对每个 n 都证明 A(n)，则 T 不证明 ∃x¬A(x)。</p>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：构造 G。</strong>由可表示性存在谓词 Prf(x, y)；令 Provable(y) ≡ ∃x Prf(x, y)。对 φ(x₁) = ¬Provable(x₁) 用对角引理，得</p>
+<div class="formula display" data-tex="T\vdash G\ \longleftrightarrow\ \neg\,\text{Provable}(\ulcorner G\urcorner)"></div>
+<p><strong>第二步：T 证不出 G。</strong>反设 T⊢G。取一个真正证明 G 的编码 n，由可表示性 T⊢Prf(n, ⌈G⌉)，故 T⊢Provable(⌈G⌉)；再由 G ↔ ¬Provable(⌈G⌉) 得 T⊢¬G，矛盾于一致性。故 T⊬G。</p>
+<p><strong>第三步：T 也证不出 ¬G。</strong>反设 T⊢¬G。由 G ↔ ¬Provable(⌈G⌉) 得 T⊢Provable(⌈G⌉)。另一方面，由一致性 T⊬G，故对每个具体数字 n，n 都不是 G 的证明，由可表示性 T⊢¬Prf(n, ⌈G⌉) 对每个 n 成立；ω-一致性推出 T 不证明 ∃x Prf(x, ⌈G⌉)，即 T 不证明 Provable(⌈G⌉)——矛盾。故 T⊬¬G。∎</p>
+<p><strong>第四步：G 为真。</strong>元层次上我们已证"不存在 G 的证明"，而 G 恰好断言这一点，故 G 在标准模型中为真。这个"真"是元数学结论，系统内部无法证明——见第二定理与 Tarski 定理。</p>
+<p><strong>备注（Rosser 的改进，1936）</strong>：把 G 换成更精巧的 Rosser 句子 R（"任何证明 R 的编码，都存在比它更小的编码证明 ¬R"），可以把 ω-一致性降为普通一致性。所以第一定理对<strong>一致</strong>的足够强系统同样成立。</p>
+</section>
+
+<section>
+<h3>证明——第二不完备定理</h3>
+<p><strong>定理（Gödel, 1931）</strong>。若 T 一致且足够强（含 PA），则 T 证明不了自身的一致性：</p>
+<div class="formula display" data-tex="\text{Con}(T)\ \equiv\ \neg\,\exists x\, \text{Prf}\big(x, \ulcorner 0{=}1\urcorner\big)"></div>
+<div class="formula display" data-tex="T\not\vdash \text{Con}(T)"></div>
+<p><strong>证明思路（把第一定理的论证"算术化"进 T）。</strong></p>
+<p><strong>第一步：形式化第一定理。</strong>第一定理的推理可以在 T 内部完全复述，得到</p>
+<div class="formula display" data-tex="T\vdash \text{Provable}(\ulcorner G\urcorner)\rightarrow \neg\,\text{Con}(T)"></div>
+<p>意思是：若 G 可证，则 T 内部就能推出矛盾。</p>
+<p><strong>第二步：取逆否。</strong>得 T ⊢ Con(T) → ¬Provable(⌈G⌉)；结合 G ↔ ¬Provable(⌈G⌉)，得</p>
+<div class="formula display" data-tex="T\vdash \text{Con}(T)\rightarrow G"></div>
+<p><strong>第三步：反设。</strong>若 T⊢Con(T)，则 T⊢G，与第一定理的"T⊬G"矛盾。故 T⊬Con(T)。∎</p>
+<p>严格化需要可证性谓词满足 <strong>Hilbert–Bernays 可证性条件</strong>（可证性自身可证、对推演规则封闭、对蕴含分配）；这些是证明论的专门技术，此处略去细节。</p>
+<p><strong>意义：Hilbert 纲领的破产。</strong>Hilbert 想用"有限组合方法"证明数学一致；Gödel 证明系统<strong>不能自证其身</strong>。要证明 PA 一致，必须借助 PA 之外的更强手段（Gentzen 用 ε₀ 归纳）。于是诞生了"用更大的序数证明更强的系统一致"的<strong>证明论序数</strong>纲领——见"前沿"。</p>
+<div class="key-insight">Con(T) 不可证，不是系统不够努力，而是"我一致"这句话本身断言了一个系统够不着的事实。<strong>数学不能从内部证明自己没问题。</strong></div>
+</section>
+
+<section>
+<h3>六、不完备是特征，不是缺陷</h3>
+<p>不完备定理不是说"数学不可靠"。它们是关于形式系统<strong>表达能力</strong>的深刻定理：足够强的系统必然包含"自己无法证明的真理"。这不是系统的 bug——是系统足够强大的必然代价。</p>
+<p>弱系统（Presburger 算术：自然数 + 加法，无乘法）是完备且可判定的。不完备来自<strong>算术的丰富性</strong>——特别是<strong>乘法</strong>。为什么恰恰是乘法？因为素因子分解依赖乘法，替换函数 sub 依赖素因子分解，自指依赖 sub——<strong>没有乘法，自指这台机器根本转不起来</strong>。所以"不完备"＝系统强大到能谈论自身。</p>
+<p>还有一个更细的层次值得注意：不需要完整的 PA。Robinson 算术 Q（有限条公理，只含算术基本运算）就已经不完备。所以不完备不是"公理太多"的毛病，而是"语言足够表达自身"的必然。</p>
+</section>
+
+<section>
+<h3>七、和计算机科学的联系</h3>
+<p>Turing（1936）把不完备定理翻译为计算语言：<strong>停机问题不可判定</strong>（halting problem，通俗说：不存在一个程序，能检查出任意程序会不会永远跑下去）。证明结构几乎相同：假设存在 HALT 程序 → 构造"当且仅当自己不停机才停机"的程序 → 矛盾。Gödel 和 Turing 在同一个逻辑边界上工作——Gödel 从证明论端，Turing 从计算论端，两边摸到的是同一堵墙：可证明/可计算的界限。</p>
+<p><strong>Curry–Howard 同构</strong>：证明＝程序，命题＝类型。Gödel 不完备 ＝ 存在类型正确的表达式，但不是所有程序都能归约到范式（停机）。这是类型论和程序语言设计的核心约束：类型系统再强，也不能同时保证"每个类型正确的程序都终止"且"覆盖所有程序"。</p>
+<p>这个家族还有第三个成员：Tarski 定理——算术的真不可定义（见"反例"）。证明力、可计算性、可定义性，共享同一道对角线。</p>
+</section>
+
+<section>
+<h3>反例——边界、假完备与自指的"安全区"</h3>
+<p><strong>反例 1：Presburger 算术是"不完备定理"的边界反例。</strong>它一致、完备、可判定——说明不完备不是算术的普遍属性，而是"能编码乘法/能自指"的系统的属性。离开乘法，Gödel 论证的每一步都失灵：没有唯一分解、没有 sub、没有自指。</p>
+<p><strong>反例 2：不一致系统平凡地完备。</strong>若 T 不一致，则"从矛盾推出一切"让每个句子都可证，完备性平凡成立——但这恰恰说明<strong>完备性单独不足取</strong>。哥德尔定理的震撼在于"一致 + 完备 + 够强"三者不可兼得，缺一不可。</p>
+<p><strong>反例 3：一致但 ω-不一致的系统可以证 ¬G。</strong>Gödel 原始论证需要 ω-一致性；存在一致却 ω-不一致的理论——例如 PA + ¬Con(PA)：由第二定理它一致，但它证明 ¬Con(PA)（即"存在证明矛盾的编码"），同时对每个标准数字 n 都证明 ¬Prf(n, ⌈0=1⌉)——正是 ω-不一致。这解释了为什么 Rosser 必须把假设降为普通一致性，也打开了"标准模型之外还有别的模型"（非标准模型）的入口。</p>
+<p><strong>反例 4：Löb 定理——自指不一定产生悖论。</strong>"这个句子可证"是可以证明的：若 T⊢Provable(⌈S⌉)→S，则 T⊢S。自指不是敌人，关键在于句子断言什么："我是假的"→矛盾；"我不可证"→不完备；"我可证"→没问题（可证）。自指是一台中性的机器，装什么进去由你决定。</p>
+<p><strong>反例 5：Tarski 定理——"真"不可定义。</strong>若存在公式 True(x) 表示"编码为 x 的句子为真"，则由对角引理可得 S ↔ ¬True(⌈S⌉)，即"我是假的"——矛盾。所以<strong>"真"不能成为算术公式，而"可证"可以</strong>。这就是为什么 G 的"真"只能站在系统外面说，也是"真 ≠ 可证"最深层的证据。</p>
+</section>
+
+<section>
+<h3>工作题——试试看（带提示）</h3>
+<p><strong>工作题 1（编码）</strong>。计算 gn("0 + 0 = 0") 和 gn("x₁ = x₁") 的素数幂展开。</p>
+<p><em>提示</em>：查符号表（0→1, +→5, =→9, x₁→31）；公式第 k 个符号对第 k 个素数取幂。7⁹ 很大，可以只写到素数幂展开，再给出第一个式子的完整数值。</p>
+<details><summary>显示解答</summary><p>
+"0 + 0 = 0" 的符号编号为 [1, 5, 1, 9, 1]，故<br>
+gn = 2¹·3⁵·5¹·7⁹·11¹ = 2·243·5·40353607·11 = <strong>1,078,651,915,110</strong>。<br>
+"x₁ = x₁" 的符号编号为 [31, 9, 31]，故 gn = 2³¹·3⁹·11³¹（数值约 8×10⁴⁵）。</p></details>
+<p><strong>工作题 2（替换函数）</strong>。计算 sub(gn(x₁ + 0 = x₁), 3)，写出结果公式的符号串及其编码的素数幂展开。</p>
+<p><em>提示</em>：数字 3 的数字名是 <code>sss0</code>（编号 [3, 3, 3, 1]）；把原公式里两个自由 x₁ 都替换掉。</p>
+<details><summary>显示解答</summary><p>
+结果公式是 <code>sss0 + 0 = sss0</code>，符号编号为 [3,3,3,1,5,1,9,3,3,3,1]，故<br>
+gn = 2³·3³·5³·7¹·11⁵·13¹·17⁹·19³·23³·29³·31¹。</p></details>
+<p><strong>工作题 3（对角线固定点）</strong>。用对角化构造 φ(x₁) = "x₁ = 0" 的固定点 ψ，并判断 ψ 在标准模型中的真假。</p>
+<p><em>提示</em>：仿照"证明——对角引理"：先设 m = gn("x₁ = 0")；ψ 是把 m 代入 φ 得到的句子，即"sub(m, m) = 0"。再问：sub(m, m) 到底等于什么？</p>
+<details><summary>显示解答</summary><p>
+m = gn("x₁ = 0") = 2³¹·3⁹·7¹。ψ = "sub(m, m) = 0"，由对角引理 T⊢ψ↔(⌈ψ⌉ = 0)。而 sub(m, m) = d(m) = ⌈ψ⌉ 是一个巨大的数，不等于 0，故"⌈ψ⌉ = 0"在标准模型中为假，ψ 也为假。关键教训：<strong>对角引理对任何 φ 都造得出固定点（哪怕 φ 恒假）——自指是机器，不是悖论</strong>；固定点的真假由 φ 本身决定。</p></details>
+<p><strong>工作题 4（区分完备性与一致性）</strong>。对下列四个系统逐一判断"一致？完备？"，并解释。(a) 语言 {0, s, =}，公理 "0 = 0"，无推演规则；(b) 同语言，公理 "0 = 0" 和 "¬(0 = 0)"，规则是从矛盾推出任何句子；(c) Presburger 算术（自然数 + 加法）；(d) Peano 算术 PA（加法 + 乘法）。</p>
+<p><em>提示</em>：回顾定义——一致＝推不出矛盾；完备＝每个句子或其否定可证。先问：(a) 能证出几个句子？(b) 能证出几个？(c)(d) 直接用第五节结论。</p>
+<details><summary>显示解答</summary><p>
+(a) 一致，但<strong>不完备</strong>——无规则时只有公理 "0 = 0" 可证，像 "s0 = s0" 这样的句子及其否定都不可证。<br>
+(b) <strong>不一致</strong>（公理直接给出矛盾），由爆炸规则什么都能证，故<strong>完备</strong>（平凡地）——完备性单靠"一致"远远不够。<br>
+(c) 一致且完备（Presburger），但太弱，无法自指。<br>
+(d) 一致（假定）且够强，故<strong>不完备</strong>。<br>
+结论：完备性与一致性互相独立，"强 + 一致"才是难对付的组合。</p></details>
+<p><strong>工作题 5（自指骨架）</strong>。用本课的思想解释：为什么"停机问题不可判定"与"不完备定理"共享同一个自指骨架？</p>
+<p><em>提示</em>：假设存在程序 HALT(p) 判定任意程序是否停机。构造程序 D："调用 HALT(D)，如果 D 会停机，D 就不停机"。看看 HALT(D) 该返回什么。</p>
+<details><summary>显示解答</summary><p>
+反设 HALT 存在。程序 D 的做法：先调用 HALT(D)，若它回答"D 停机"，D 就进入死循环（不停机）；若回答"D 不停机"，D 就立即停机。于是 HALT(D) 回答哪个都自相矛盾。这正是算术里造 G 的同一台机器：<strong>把"自己"喂给自己，再用"不"翻转答案</strong>。可证性/停机这类元概念一旦能表达（编码成数/程序），就必然包含自己的对角线——所以证明论与计算理论摸到的是同一堵墙。</p></details>
+</section>
+
+<section>
+<h3>前沿：证明论序数与反推数学</h3>
+<p>第二不完备定理给出一个任务清单：要证明更强的系统一致，必须借助系统外的更强手段，而"更强"可以有序数来度量——这就是<strong>证明论序数</strong>纲领。Peano 算术的理论强度＝ε₀，Gentzen（1936）正是用 ε₀ 归纳证明了 PA 的一致性，绕过了不完备定理——"有限"不够，但"可接受的构造性方法"够。</p>
+<p><strong>反推数学</strong>（Reverse Mathematics）：从数学定理反向推出需要的公理。大多数本科微积分等价于 WKL₀（弱 König 引理）。仍开放：哪些数学定理严格需要超越 PA 的更强公理（Higman 定理 = Borel 确定性 = 超越 PA）。</p>
+</section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Boolos et al., Computability and Logic</strong>（Gödel 编码与可表示性的标准参考）</p>
+<p>&rarr; <strong>S. Aaronson, Quantum Computing Since Democritus</strong>（第 3 章对不完备的直觉讲解）</p>
+<p>想读更亲和的入门：</p>
+<p>&rarr; <strong>E. Nagel &amp; J. R. Newman, Gödel's Proof</strong>（流传半个世纪的经典小册子）</p>
+<p>&rarr; <strong>R. Smullyan, Gödel's Incompleteness Theorems</strong>（Oxford Logic Guides，讲义式、重练习）</p>
+</section>
+
+<section>
+<h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>（对角线法与基数）、<a href="/pages/turing-machine.html">图灵机</a>（可计算性直觉）。</p>
+</section>
+
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/y combinator.html">λ Y Combinator</a>：同一学科分类「逻辑与计算」，自指与不动点在 λ 演算里的兄弟。</p>
+<p>&rarr; <a href="/pages/turing-machine.html">📝 图灵机</a>：同一学科分类「逻辑与计算」，停机问题与本课共享自指骨架。</p>
+<p>&rarr; <a href="/pages/proof-theory.html">📝 证明论</a>：逻辑与计算核心链，Gentzen 的 ε₀ 归纳正是第二定理的"出路"。</p>
+</section>

@@ -1,0 +1,139 @@
+<section>
+<h3>〇、开场问题——一束光 3 秒后在哪里？谁能收到它的信号？</h3>
+<p>在你面前点燃一支激光笔，光束沿 x 轴射出。取时间单位为"秒"、长度单位为"光秒"（1 光秒 = 3×10⁸ m，即光 1 秒走的距离），于是光速就是 c = 1 光秒/秒。把每一个"事件"记作坐标 <strong>(ct, x)</strong>——注意横轴用 ct 而不是 t，这样坐标的"单位"一致，光线画出来永远是一条 45° 斜线。</p>
+<p>光在 (ct, x) = (0, 0) 出发。3 秒后，向右的光到达 <strong>(3, 3)</strong>，向左的光到达 <strong>(3, −3)</strong>。这条 45° 线就是光锥的边界。现在比较三个事件：</p>
+<ul>
+<li><strong>事件 A = (3, 1)</strong>（光锥内部）：要在 3 秒内到达 x = 1 光秒处，只需平均速度 v = 1/3 c &lt; c——一束普通信号就能按时到达。</li>
+<li><strong>事件 B = (3, 3)</strong>（光锥表面）：恰好只有光能以 c 到达。</li>
+<li><strong>事件 C = (3, 5)</strong>（光锥外部）：要在 3 秒内到达 x = 5 光秒处，需要 v = 5/3 c &gt; c——没有任何信号能赶到。</li>
+</ul>
+<p>于是这张图第一次告诉你：<strong>并非"时间够久就能到达任何地方"——未来光锥之外的事件，无论等多久都够不到。</strong>本课的全部内容，就是把这句直觉变成一条严谨的几何判据（时空间隔），并解释为什么它不可能被绕开。</p>
+<div class="key-insight">一句话：光锥 = 因果关系的边界。未来的光锥是你的信号能影响的范围，过去的光锥是能影响你的范围，光锥之外的东西无论等多久都不会波及你。只想懂核心思想，看到这里就够了。</div>
+</section>
+
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/electromagnetism.html">电磁学与 Maxwell 方程组</a>、<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、时空间隔——闵可夫斯基的"勾股定理"，为什么时间要带负号</h3>
+<p>在欧氏空间中，两点距离是 Δs² = Δx² + Δy² + Δz²，永远非负。但在时空中，两事件"相隔多远"必须这样量：</p>
+<div class="formula display" data-tex="ds^2 = -c^2dt^2 + dx^2 + dy^2 + dz^2"></div>
+<p><strong>为什么时间项带负号？</strong>因为光速不变。设想时间项若带正号（像欧氏那样 ds² = c²dt²+dx²+...），那么对一束沿 x 轴的光（dx = cdt），间隔算出来是 2c²dt² ≠ 0——"光信号"就与"零间隔"脱钩了。而事实上光速不变要求：任何惯性系里光的轨迹都满足 c²dt² = dx²+dy²+dz²，即 <strong>ds² = 0</strong>。要让"光速不变"成为一个几何事实，时间项必须带负号，且系数必须是 −c²。</p>
+<p>间隔的符号因此把时空分成三类，这就是<strong>光锥</strong>的代数形式：</p>
+<ul>
+<li><strong>类时</strong>（ds² &lt; 0）：因果可达。你的世界线只能走这类方向。</li>
+<li><strong>类光</strong>（ds² = 0）：光速。</li>
+<li><strong>类空</strong>（ds² &gt; 0）：因果不可达，两个事件不能互相影响。</li>
+</ul>
+<p><strong>例 1（一步步算：间隔的分类）。</strong>设光秒单位（c = 1）。事件 P = (0, 0)。现在要判断另外三个事件能否被 P 发出的信号触发：Q = (3, 2)、R = (3, 4)、S = (3, 3)。</p>
+<p>① <strong>算间隔 PQ：</strong>Δs² = −(Δt)² + (Δx)² = −(3)² + (2)² = −9 + 4 = <strong>−5 &lt; 0，类时</strong>。Q 需要速度 v = Δx/Δt = 2/3 c &lt; c，可被触发。</p>
+<p>② <strong>算间隔 PR：</strong>Δs² = −9 + 4² = −9 + 16 = <strong>+7 &gt; 0，类空</strong>。R 需要 v = 4/3 c &gt; c，不可能被触发——无论等多久。</p>
+<p>③ <strong>算间隔 PS：</strong>Δs² = −9 + 9 = <strong>0，类光</strong>。S 恰好被光信号触及。</p>
+<p>④ <strong>核对：</strong>三个符号对应三种命运，与开场问题的 A、B、C 完全吻合（内部/表面/外部）。∎</p>
+<div class="key-insight">光锥 = 因果律的几何表达。你此时此地发出一个信号——它只能在<strong>未来光锥内部</strong>传播。没有任何信号可以跑出光锥。超光速 = 类空间隔 = 因果律被破坏。</div>
+</section>
+
+<section>
+<h3>二、世界线——粒子在时空中的轨迹，以及"固有时"</h3>
+<p>一个粒子在时空中留下的全部轨迹叫<strong>世界线</strong>：静止粒子画出一条竖直直线（沿 t 轴）；匀速运动画出倾斜直线；加速运动画出弯曲曲线。<strong>所有质量粒子的世界线必须在光锥内部</strong>（类时），光子的世界线在光锥表面（类光）——这是"不可能超光速"的几何翻译。</p>
+<p>世界线的"长度"有一个深刻含义：它是粒子随身携带的钟（固有时）走过的读数。因为</p>
+<div class="formula display" data-tex="\tau = \frac{1}{c}\int\sqrt{-ds^2}\quad\text{(固有时)}"></div>
+<p><strong>为什么世界线的长度是时间？</strong>在粒子自己的瞬时静止系里 dx = dy = dz = 0，于是 ds² = −c²dτ²，故 dτ = √(−ds²)/c——间隔的"开方"正是静止钟跳过的固有时间元（附 B 给出完整推导）。注意：因为 ds² 带负号，<strong>弯得更"狠"的世界线（经历更大加速的那条）长度反而更短</strong>——这直接导出双生子悖论。</p>
+<p><strong>例 2（一步步算：双生子悖论的具体数字）。</strong>飞船以 v = 0.6c 匀速飞往 6 光年外的星球，立即掉头以同速飞回。地面上的人经历多久？飞船上的人经历多久？</p>
+<p>① <strong>地面时间：</strong>单程 Δt = 距离/速度 = 6/0.6 = 10 年；往返共 <strong>Δt = 20 年</strong>。</p>
+<p>② <strong>飞船固有时：</strong>在飞船上 v 恒定，固有时</p>
+<div class="formula display" data-tex="\tau = \int dt\sqrt{1-v^2/c^2} = 20\times\sqrt{1-0.36} = 20\times 0.8 = 16\ \text{年}"></div>
+<p>③ <strong>结论：</strong>地球人老 20 岁，宇航员只老 <strong>16 岁</strong>，回来时年轻了 4 岁。差距不是错觉：两条世界线的"长度"（固有时）本来就不等——加速往返者的世界线更弯、长度更短。∎</p>
+<p>注意：此例中飞船其实是"先匀速 + 掉头瞬间加速 + 再匀速"，更严格的写法是逐段积分 dτ = ∫√(1−v²/c²)dt，结果相同（各段 v = 0.6c，掉头瞬间 v→0 只贡献瞬时的可忽略段）。</p>
+</section>
+
+<section>
+<h3>三、同时性的相对性——为什么"现在"不是绝对的</h3>
+<p>在静止参考系 S 中，t = 常数的所有事件是"同时"的。在运动参考系 S' 中，t' = γ(t − vx/c²) = 常数定义的是<strong>另一组</strong>事件。因为公式里含 x，不同位置的"同时"时刻并不同——这就是同时性的相对性。</p>
+<p><strong>为什么"现在"必须是相对的？</strong>追根究底是光速不变逼出来的：如果 S 中"同时"的事件在 S' 中仍"同时"，那么对同一束光，S 说它同时到达车厢两端、S' 也必须说同时到达——但车厢在运动，光要追上运动中的车头必须走更远的路（见 Lorentz 变换课附 D 的标准反例）。物理定律只能有一个答案，于是"同时"只能随参考系而变。</p>
+<p><strong>例 3（一步步算：同地的两件"同时"事，换参考系就不同时）。</strong>在 S 中取两个同时事件：P = (t, x) = (0, 1)、Q = (0, 3)（光秒单位，c = 1）。设 S' 相对 S 以 v = 0.6c 运动。</p>
+<p>① <strong>取 γ：</strong>γ = 1/√(1−0.6²) = 1/0.8 = 1.25。</p>
+<p>② <strong>变换 P：</strong>t'_P = γ(t − vx) = 1.25×(0 − 0.6×1) = <strong>−0.75</strong>。</p>
+<p>③ <strong>变换 Q：</strong>t'_Q = 1.25×(0 − 0.6×3) = <strong>−2.25</strong>。</p>
+<p>④ <strong>结论：</strong>t'_P ≠ t'_Q，且 Q 在 P 之前发生。S 说"同时"，S' 说"先后"——两者都是对同一物理事实的合法描述。<strong>不存在绝对的"现在"。</strong>∎</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="ds^2 = -c^2dt^2 + dx^2 + dy^2 + dz^2"></div>
+<div class="formula display" data-tex="ds^2 &lt; 0\text{: 类时},\ ds^2 = 0\text{: 类光},\ ds^2 &gt; 0\text{: 类空}"></div>
+<div class="formula display" data-tex="\tau = \frac{1}{c}\int\sqrt{-ds^2}\quad\text{(固有时)}"></div>
+</section>
+
+<section>
+<h3>五、试试看（每题附提示）</h3>
+<p><strong>1.（类空间隔与因果）</strong> 两个事件 ds² &gt; 0（类空分离）——它们之间能有因果关系吗？</p>
+<p><em>提示：类空 = 存在某个惯性系使两者同时发生（附 A 分类定理）。若 A 能触发 B，则因果必须是"全参考系一致"的客观事实；但既然有参考系说它们同时、甚至 A 更晚，就不可能有合法信号连接它们——超光速才能办到，而超光速违背光速不变。</em></p>
+<p><strong>2.（45° 光锥）</strong> 光锥的边界为什么永远是 45 度斜线？这和光速不变原理有什么关系？</p>
+<p><em>提示：坐标轴取 (ct, x) 后，光的轨迹满足 x = ±ct，斜率 ±1。若换个参考系光锥不再 45°（例如伽利略变换下光速要"加"上参考系速度），就会有两种光速——所以光速不变 ⟺ 光锥形状不变。</em></p>
+<p><strong>3.（双生子悖论）</strong> 为什么加速飞行的那个回来更年轻？从世界线的"长度"角度解释。</p>
+<p><em>提示：固有时 = ∫√(−ds²)。在 S 系看，地球系和飞船系的两条世界线连接同一对事件，但飞船系绕远路（有加速段）；由于 ds² 带时间负号，两条不等长世界线的"长短"与直觉相反——更弯的那条 τ 更小。若还不信，用例 2 的 16 与 20 年核对。</em></p>
+</section>
+
+<section><h3>Lorentz群与四维矢量</h3><p>Lorentz变换=保持eta_{mu nu}=diag(-1,1,1,1)的线性变换Lambda:Lambda^T eta Lambda=eta。群O(1,3)=6维<strong>李群</strong>（连续对称群）(3旋转+3boost，boost=沿某一方向的相对论速度变换)。固有正规Lorentz群SO^+(1,3)保持定向和时间方向。四维矢量x^mu=(ct,x),四维动量p^mu=(E/c,p)——都在Lorentz变换下协变。</p></section>
+<section><h3>Penrose图——无穷远的共形紧致化</h3><p>Penrose(1964)引入共形紧致化:将无穷远"拉到有限"——时空的因果结构一目了然。Minkowski时空的Penrose图是钻石形。Schwarzschild时空的Penrose图揭示了黑洞+白洞+两个渐近平坦区域的完整因果结构。</p></section><section><h3>前沿：因果结构定理与量子引力</h3><p>Malament(1977)证明:时空的因果结构(光锥)和体积元唯一决定度规——不需要知道"距离"。这暗示"因果优先于几何"——可能是指引量子引力的新原理。仍开放:如何在离散因果集(Causal Set)上构造连续时空的极限。</p></section>
+
+<section>
+<h3>附A· 时空间隔分类 ds²&lt;0/=0/&gt;0 的严格推导</h3>
+<p><strong>引理（间隔不变性）</strong>：ds²=−c²dt²+dx²+dy²+dz² 在任意惯性系中取相同值。</p>
+<p><strong>证明</strong>：设两惯性系间为线性变换 x'^μ=Λ^μ_ν x^ν（时空均匀⇒线性；原点重合⇒无常数项）。取沿 x 轴的光信号，光速不变给出 x=ct ⇔ x'=ct'，故 (ct,x) 子块必为含整体尺度因子 k 的 1+1 维 Lorentz 形式：</p>
+<div class="formula display" data-tex="ct'=k\gamma(ct-\beta x),\quad x'=k\gamma(x-\beta ct),\quad \beta=v/c,\quad \gamma=1/\sqrt{1-\beta^2}"></div>
+<p>再取带微小横向分量的光信号，由 dx²+dy²=c²dt² ⇔ dx'²+dy'²=c²dt'² 比较 y 分量，得 y'=ℓy 中 ℓ=k。于是整体缩放为</p>
+<div class="formula display" data-tex="ds'^2=k^2(-c^2dt^2+dx^2+dy^2+dz^2)=k^2\,ds^2"></div>
+<p>由相对性原理，正变换与逆变换（v→−v）复合必为恒等，且各向同性给出 k(v)=k(−v)，故 k²=1、k=1。得 ds'^2=ds^2。∎</p>
+<p><strong>分类定理</strong>：间隔符号与参考系无关，是两事件间的内禀性质。给定事件 A、B，记 Δs²=−c²Δt²+Δx²+Δy²+Δz²。</p>
+<p><strong>(1) 类时 Δs²&lt;0</strong>：存在惯性系使两事件<strong>同地</strong>（Δx'=Δy'=Δz'=0），时间差 |Δτ|=√(−Δs²)/c&gt;0。可用低于光速的信号连接，先后次序绝对，因果可能。</p>
+<p><strong>(2) 类光 Δs²=0</strong>：两事件恰由光信号相连；任何惯性系中它们既不同地也不同时。</p>
+<p><strong>(3) 类空 Δs²&gt;0</strong>：存在惯性系使两事件<strong>同时</strong>（Δt'=0）。任何不超光速的信号都无法连接它们，因果不可能。</p>
+<div class="formula display" data-tex="\Delta s^2&lt;0:\ \exists\,(\Delta\tau,0,0,0);\qquad \Delta s^2=0:\ \text{光信号};\qquad \Delta s^2&gt;0:\ \exists\,(0,\Delta x',0,0)"></div>
+</section>
+
+<section>
+<h3>附B· 固有时 τ=(1/c)∫√(−ds²) 的推导</h3>
+<p><strong>定义</strong>：固有时 τ 是随粒子一起运动的钟（瞬时静止参考系）读出的时间。</p>
+<p><strong>推导</strong>：在瞬时静止系中粒子满足 dx=dy=dz=0，故间隔</p>
+<div class="formula display" data-tex="ds^2=-c^2dt^2\ \Rightarrow\ d\tau^2=-ds^2/c^2\ \Rightarrow\ d\tau=\frac{1}{c}\sqrt{-ds^2}"></div>
+<p>这里 dτ 正是静止系中的时间元。对任意运动，记 dx²+dy²+dz²=|d<strong>x</strong>|²，</p>
+<div class="formula display" data-tex="d\tau=\frac{1}{c}\sqrt{c^2dt^2-d\vec{x}^2}=dt\sqrt{1-v^2/c^2},\qquad v=|\vec{v}|"></div>
+<p>沿世界线积分（全程类时）：</p>
+<div class="formula display" data-tex="\tau=\int d\tau=\frac{1}{c}\int\sqrt{-ds^2}=\int dt\sqrt{1-v(t)^2/c^2}\le\int dt=\Delta t"></div>
+<p><strong>推论</strong>：因 √(1−v²/c²)≤1，运动粒子的固有时间短于坐标时间——这是时间膨胀的积分形式。v=0 时 τ=Δt；任何运动者 τ&lt;Δt。双生子悖论中加速往返者世界线更短（∫√(−ds²) 更小），故更年轻。∎</p>
+</section>
+
+<section>
+<h3>附C· 标准反例：超光速信号 = 类空间隔 = 因果律破坏</h3>
+<p><strong>构造</strong>：事件 P 在原点发出信号，事件 Q 在 Δt&gt;0 后于 Δx 处接收，平均速度 u=Δx/Δt&gt;c。其间隔</p>
+<div class="formula display" data-tex="\Delta s^2=-c^2\Delta t^2+\Delta x^2=c^2\Delta t^2\left(\frac{u^2}{c^2}-1\right)&gt;0"></div>
+<p>即 PQ 为<strong>类空</strong>。由附A分类定理，存在惯性系 S' 使 Δt'=0，甚至 Δt'&lt;0——存在合法的观察者测得 Q 与 P 同时、甚至 Q 先于 P 发生。</p>
+<p><strong>后果</strong>：在 S' 中"效果先于原因"。利用两个作相对运动的观察者，可把这种信号搭成"祖父悖论"式的闭合因果环（tachyonic telephone），破坏因果律。</p>
+<p><strong>结论</strong>："超光速传播"与"类空间隔"是同一物理情形的两种表述；类空间隔正是因果不可达的精确判据。∎</p>
+</section>
+
+<section>
+<h3>附D· 工作题</h3>
+<p><strong>1.（计算间隔）</strong> 事件 A：(t,x)=(0,0)；事件 B：(t,x)=(1,3)，单位取光年（c=1）。计算 Δs² 并判断 B 能否被 A 发出的信号触发。</p>
+<details><summary>显示解答</summary><p>Δs²=−1²+3²=8&gt;0，类空。不存在（亚光速或光速）信号连接 A、B，故 B 不能被 A 因果触发；事实上存在惯性系使两者同时。</p></details>
+<p><strong>2.（固有时）</strong> 飞船以 v=0.8c 匀速往返 6 光年的星距（单程）。飞船上钟读多少？地面钟读多少？</p>
+<details><summary>显示解答</summary><p>地面单程 Δt=6/0.8=7.5 年，往返 Δt=15 年。飞船固有时 τ=Δt√(1−0.8²)=15×0.6=9 年。飞船比地面年轻 6 年。</p></details>
+<p><strong>3.（判断因果性）</strong> 事件 A 发射光脉冲，事件 B 在 Δx=2 光年、Δt=1.5 年处被"接收到"。B 可能由 A 触发吗？</p>
+<details><summary>显示解答</summary><p>所需平均速度 u=2/1.5≈1.33c&gt;c。Δs²=−1.5²+2²=1.75&gt;0，类空，因果不可能。光需要 2 年才到 Δx=2 处，而 B 发生在 1.5 年，故 B 必须另有更早的原因。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Carroll, Spacetime and Geometry</strong></p>
+<p>&rarr; <strong>R. Wald, General Relativity</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/electromagnetism.html">电磁学与 Maxwell 方程组</a>、<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/lorentz-transform.html">🚀 Lorentz 变换</a>：同一学科分类「相对论」。</p>
+<p>&rarr; <a href="/pages/gravitational-lens.html">🔭 引力透镜</a>：同一学科分类「相对论」。</p>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一难度层次。</p>
+</section>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="群的Cayley图——Gromov双曲群与边界" />
+  <meta property="og:title" content="几何群论 — Vibe Math" />
+  <meta property="og:description" content="群的Cayley图——Gromov双曲群与边界" />
+  <title>几何群论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📐 几何群论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">群的Cayley图——Gromov双曲群与边界</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='geometric-group-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/higher-category-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⬆️ 高阶范畴论</a>
+  <a href="/pages/several-complex-variables.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🪞 多复变 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把群画成一张地铁图</h3>
+<p>先看一个具体、能画出来的例子。<strong>取加法群 ℤ² = { (a, b) : a, b ∈ ℤ }（平面上的整数格点），生成元取两个基本方向 e₁ = (1, 0)、e₂ = (0, 1)。把每个格点当"站点"，从任意格点 (a, b) 出发，沿着 e₁ 或 e₂（或它们的反向）画一条边连到 (a+1, b)、(a, b+1)、……</strong>你得到的就是一张无限大的<strong>方格纸</strong>：</p>
+<div class="formula display" data-tex="\dots\qquad (a,b)\ \xrightarrow{\,e_1\,}\ (a{+}1,b)\ \xrightarrow{\,e_2\,}\ (a{+}1,b{+}1)\qquad\dots"></div>
+<p>这张图叫 ℤ² 的<strong>Cayley 图</strong>。现在问一个带数字的问题：<strong>从原点 (0,0) 走到 (3,4)，最少要几步？</strong>沿 e₁ 走 3 步、沿 e₂ 走 4 步，共 7 步，且不可能少于 7 步（每步只能把横坐标或纵坐标之一增加 1）——所以"距离"是 7。</p>
+<p>这个"最少步数"叫<strong>字度量</strong>（word metric）：群元素的"距离" = 用它表示另一个元素所需的最少生成元个数。注意它的奇异之处：同一个 ℤ²，换个生成元集，距离就变了（试试看 2 会让你算）。</p>
+<p>几何群论（geometric group theory）的纲领就一句话：<strong>研究"群的地铁图"在大尺度上长什么样——像树一样分叉稀疏，还是像棋盘一样规整铺开——并用这种几何长相回答群的代数问题</strong>。自由群 F₂ 的图是棵树、ℤ² 的图是格子、双曲群的图是"处处像树"……代数变成了可以"目测"的东西。</p>
+<div class="key-insight">几何群论把抽象的群画成地铁图（Cayley 图），通过观察图的大尺度形状来理解群本身。ℤ² 的图是方格纸，(0,0) 到 (3,4) 的字距是 7。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/group-action.html">群作用</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、从群到图——为什么"生成元"这么关键（直觉）</h3>
+<p>一个群 G 的元素可以很多（甚至无穷多），但我们往往只要一小撮"基本动作"就能造出全部元素——这一小撮叫<strong>生成元</strong>。</p>
+<p>举例：平面正方形的对称群 D₄ 有 8 个元素，但只需要两个生成元：旋转 90°（记作 r）和关于竖直轴的翻转（记作 s）。任意对称都是 r 和 s 反复拼出来的（比如 r³s = 先翻转再逆旋）。生成元选的越少，描述群越省；但"生成元"不是唯一的——同一个群可以有很多组生成元。</p>
+<p><strong>为什么生成元重要？</strong>因为它把"群里的运算"变成了"图上的走路"。给群 G 和一组生成元 S，我们画：</p>
+<p><strong>顶点</strong> = G 的每个元素（每个群元素一个站点）。<strong>有向边</strong> = 从 g 到 g·s（s ∈ S）连一条标着 s 的边（乘法在左边做，或右边做，约定一致即可）。这样群里的乘法 g·s 就成了图上"沿着 s 走一步"。</p>
+<div class="key-insight">Cayley 图：顶点 = 群元素，边 = 乘以一个生成元。群的运算变成图上的走路——抽象代数从此有了看得见的形状。</div>
+</section>
+
+<section>
+<h3>〇·二、字度量与几何——群如何变成度量空间（严格定义）</h3>
+<p>现在把"地铁图"严格化。设 G 是群、S 是生成元集（含逆元，S = S⁻¹）。</p>
+<p><strong>定义（字与字长）。</strong>元素 g 的<strong>字</strong>是"用 S 里的符号写出 g 的一种方式"：g = s₁ s₂ … sₖ。g 的<strong>字长</strong> ℓ(g) = 能表示 g 的<strong>最短</strong>字的长度 k。</p>
+<p><strong>定义（字度量）。</strong>对 g, h ∈ G，定义</p>
+<div class="formula display" data-tex="d_S(g,h)=\ell(g^{-1}h)."></div>
+<p>直觉：d(g,h) = "从 g 走到 h 的最少步数"。可以验证它满足度量三条公理（非负、对称、三角不等式）——所以 (G, d_S) 是一个<strong>度量空间</strong>。</p>
+<p><strong>为什么字度量值得研究？</strong>三条理由：① 它与 Cayley 图完全一致——图上最短路径的长度就是 d_S；② 它把群变成"空间"，让"群有多大"有了拓扑/几何的意义；③ 它对生成元的选择在"大尺度"下几乎不变（拟等距不变量，见第三节）——所以"字度量"虽然依赖 S，但大尺度的形状不依赖 S。</p>
+<div class="key-insight">字度量 d_S(g,h) = ℓ(g⁻¹h) = 图中从 g 到 h 的最短步数。(G, d_S) 是度量空间。生成元的选择会改变精确距离，但不会改变"大尺度形状"。</div>
+</section>
+
+<section>
+<h3>一、完整例题 1：算 ℤ² 的字度量——生成元不同，距离不同</h3>
+<p>把〇节的直觉算成硬数字。<strong>问题：在 ℤ² 上分别用两组生成元，求 d((3,4), (0,0))。</strong></p>
+<p><strong>第一步（生成元集 S₁ = {±e₁, ±e₂}）。</strong>沿 e₁ 走 |3| = 3 步、沿 e₂ 走 |4| = 4 步。总步数 |3|+|4| = 7。能否更少？每步只能改变一个坐标 ±1，把横坐标从 0 变到 3 至少 3 步、纵坐标从 0 变到 4 至少 4 步，共至少 7。故</p>
+<div class="formula display" data-tex="d_{S_1}((0,0),(3,4))=7."></div>
+<p><strong>第二步（生成元集 S₂ = {±e₁, ±e₂, ±(1,1)}）。</strong>多了一个"斜着走一步 (1,1)"的方向。先沿 (1,1) 走 3 步到 (3,3)，再沿 e₂ 走 1 步到 (3,4)：共 3+1 = 4 步。下界：每次最多让 (横+纵) 增加 2，要凑出 3+4 = 7 需要至少 ⌈7/2⌉ = 4 步。故</p>
+<div class="formula display" data-tex="d_{S_2}((0,0),(3,4))=4."></div>
+<p><strong>第三步（对比与结论）。</strong>同一个群、同一对元素，两组生成元给出 7 与 4 两个不同距离。但注意两者之比 7/4 &lt; 2，且对所有元素都一致地差一个常数倍（用 S₁ 走 x 步，用 S₂ 至多 2x 步）。这正是"大尺度形状不变"的含义：精确数字变，<strong>渐近比例不变</strong>。</p>
+<div class="key-insight">例题 1 的教训：字度量依赖生成元（7 vs 4），但相差有界且成比例——"大尺度"不依赖生成元。这为拟等距（第三节）铺路。</div>
+</section>
+
+<section>
+<h3>二、完整例题 2：自由群 F₂ 的 Cayley 图是棵树——距离与三角形的 δ-薄</h3>
+<p>现在看几何群论最重要的两个例子：自由群和格子群，它们的长相截然不同。</p>
+<p><strong>自由群 F₂。</strong>由两个生成元 a、b（及其逆 a⁻¹, b⁻¹）自由生成：F₂ = ⟨a, b⟩，其中没有任何关系（规则），元素是"a、b、a⁻¹、b⁻¹ 组成且不含相邻互逆"的化简字。F₂ 有无穷多个元素，但生成元只有 4 个符号（a、b、a⁻¹、b⁻¹）。</p>
+<p><strong>第一步（画 Cayley 图）。</strong>F₂ 的 Cayley 图：从空字 e 出发，四个方向 a、b、a⁻¹、b⁻¹ 各连一条边；从每个新点再分出四个方向……因为"无关系"，走到哪都不会出现环。结果是一棵<strong>4-正则树</strong>（每点度数 4，无穷无环）。更一般地，Fₙ 的 Cayley 图是 <strong>2n-正则树</strong>。</p>
+<p><strong>第二步（算距离）。</strong>图上两点的距离 = 化简字 a⁻¹b 的长度。例如 g = abab、h = ab：h⁻¹g = b⁻¹a⁻¹·a b a b = b⁻¹ b a b = a b（中间 a⁻¹a 抵消），字长 2，故 d(g,h) = 2。</p>
+<p><strong>第三步（δ-薄：树是最"极端"的双曲）。</strong>在树里，任意三个点之间形成的三条测地线（最短路径）只有唯一一个交汇点：任何一条边都不在两个顶点之间的第三条测地线里。用术语说，三角形的每条边都包含在另外两条边的 <strong>δ = 0 邻域</strong>内——树是"最薄"的三角形。</p>
+<p><strong>第四步（对照 ℤ²：格子不是 δ-薄的）。</strong>在 ℤ² 的 Cayley 图（方格纸）里取三点 (0,0)、(N,0)、(0,N)。三条测地线围出一个大三角形区域；中间那条斜边离直角边的最远点距离约 N/2，随 N 任意大。所以 ℤ² 的三角形<strong>不是</strong> δ-薄的（对任何固定 δ 都失败）。直觉：树是"无穷分叉、没有面积"，格子是"规整铺开、充满面积"——这正是"双曲"与"非双曲"的分野。</p>
+<div class="key-insight">Fₙ 的 Cayley 图 = 2n-正则树，d(g,h) = 化简字长。树的测地三角形 δ = 0 薄（最薄）；ℤ² 是方格纸，三角形厚 N/2 任意大（不薄）。树 vs 格子 = 双曲 vs 非双曲。</div>
+</section>
+
+<section>
+<h3>三、Švarc-Milnor 引理——群和它作用的几何空间共享大尺度形状</h3>
+<p>为什么关心 Cayley 图的"形状"？因为很多群<strong>本来就生活在一个几何空间上</strong>，而那个空间的形状和群的图形状是同一个。</p>
+<p><strong>先看具体例子：ℤ² 作用在 ℝ² 上。</strong>ℤ² 以平移方式作用在欧氏平面 ℝ² 上：(a,b)·(x,y) = (x+a, y+b)。ℝ² 被 ℤ² 平移成"一模一样的瓷砖"（基本区域是单位正方形 [0,1]²）。在这个作用下，ℝ² 的"大尺度"和 ℤ² 的 Cayley 图（方格纸）是同一个东西——两者互为对方的大尺度近似。</p>
+<p><strong>再抽象出一般框架。</strong>设群 G 作用在度量空间 X 上，作用满足两个"友好"条件：<strong>适当</strong>（每个点附近只有有限个轨道点，即轨道不聚集）和<strong>紧致</strong>（基本区域是紧的，即"有限块瓷砖就铺满一个单位"）。Švarc-Milnor 引理说：</p>
+<div class="key-insight"><strong>Švarc-Milnor 引理</strong>：若有限生成群 G 适当且紧致地作用在测地度量空间 X 上，则 G（带字度量）与 X <strong>拟等距</strong>（quasi-isometric）——两者在大尺度上是同一个形状。</div>
+<p><strong>拟等距是什么？</strong>两个度量空间 X、Y 拟等距，如果存在映射 f: X → Y 使：① 距离被"近似保持"（存在常数 C 使 d(fx,fx′)/C − C ≤ d(x,x′) ≤ C·d(fx,fx′) + C）；② 每个 Y 点落在某个 f(x) 的 C-邻域内。直觉：<strong>拿 C 倍放大镜看，两个空间长得一样</strong>。例题 1 里生成元不同造成的距离差，在拟等距意义下无关紧要——这就是为什么字度量"大尺度不依赖生成元"。</p>
+<p><strong>推论：拟等距不变量。</strong>凡拟等距不变的量（双曲性、增长速率、边界——见下面几节），G 和它作用的 X 共有。所以<strong>群的性质可以放在最顺手的几何空间里研究</strong>：想懂 π₁(紧致双曲 3-流形)，就去研究它的万有覆盖（双曲空间 ℍ³）——这是几何群论的基本策略。</p>
+<div class="key-insight">Švarc-Milnor：G 适当且紧致作用在测地空间 X ⟹ G 拟等距于 X。拟等距 = 大尺度同形。双曲性、增长、边界都是拟等距不变量——于是群的性质可以拿到几何空间里研究。</div>
+</section>
+
+<section>
+<h3>四、Gromov 双曲群——负曲率的群论类比（直觉 → 严格）</h3>
+<p>现在定义本课的主角。<strong>Gromov（1987）</strong>问：双曲几何（负曲率）的本质，能不能只用"三角形薄不薄"来刻画？答案是能——由此诞生双曲群。</p>
+<p><strong>直觉。</strong>负曲率空间的标志性现象：三角形"往里凹"，测地线彼此发散极快，三角形极其"瘦"。树（δ = 0）是极限情形。Gromov 的洞察：把"树"放宽成"和树差不多的瘦"，就得到双曲群。</p>
+<p><strong>严格定义。</strong>设 G 带生成元 S。称 G 是<strong>Gromov 双曲的</strong>，若存在常数 δ ≥ 0，使 Cayley 图里任意测地三角形（三条边都是最短路径）都满足 <strong>δ-薄性质</strong>：每条边都包含在另外两条边的 δ-邻域内。</p>
+<div class="formula display" data-tex="\text{三角形任意边}\ \subseteq\ \text{另外两条边的 }\delta\text{-邻域}\qquad(\text{对固定 }\delta\text{ 一致成立})."></div>
+<p><strong>为什么这样定义？</strong>三条理由：① 它把"负曲率"翻译成纯组合条件，不依赖流形背景——于是"双曲性"可以定义在任意有限生成群上，而不再是流形的专利；② 它是 Cartan-Hadamard 定理的群论版：负曲率流形的基本群（适当作用在负曲率空间上）自动是双曲群；③ 它与具体生成元无关（双曲性是拟等距不变量，而 Cayley 图之间拟等距）。</p>
+<p><strong>两个基本例子。</strong>自由群 Fₙ 双曲（树，δ = 0）；ℤ² 不双曲（格子三角形厚 N/2）。这两个例子就是"双曲 vs 非双曲"的试金石。</p>
+<div class="key-insight">Gromov 双曲群：Cayley 图中所有测地三角形是 δ-薄的（对固定 δ）。它是"负曲率"的群论化身、Cartan-Hadamard 的群论版。Fₙ 双曲（树），ℤ² 不双曲（格子）。</div>
+</section>
+
+<section>
+<h3>五、为什么双曲群有用——字问题快解与群的边界</h3>
+<p>双曲群不是"图好看"，它有两个非常实在的回报。</p>
+<p><strong>回报一：字问题可以快速解。</strong>群的字问题：给定字 w（生成元的符号串），判断它是不是恒等元（能不能化简成 e）。在一般有限生成群里，字问题可以是不可判定的；在双曲群里，有一个<strong>多项式时间</strong>（实际上可由线性时间的自动机）算法。原因是双曲群的"瘦三角形"给出了字化简的局部规则：任何字都能在 Cayley 图的薄三角形里快速判定是否等于 e。这是"几何性质 → 算法性质"的最漂亮案例之一。</p>
+<p><strong>回报二：群有了"边界"——无穷远处长什么样。</strong>取一点 p，从 p 出发的测地射线（无限长的最短路径）指向"无穷远"。定义群的<strong>Gromov 边界</strong> ∂G 为"测地射线在无穷远的等价类"（两条射线若距离有界则视为同一个端点）。∂G 是<strong>紧致度量空间</strong>，它编码了群"望向无穷"的形状：</p>
+<div class="formula display" data-tex="\partial F_2\cong \text{Cantor 集},\qquad \partial\mathbb{Z}^2\ \text{无边(ℤ² 不双曲,无此边界)},\qquad \partial(\text{曲面群})\cong S^1."></div>
+<p>自由群 F₂ 的边界是康托尔集（树的"无穷尽头"是 4 元 Cantor 尘埃）；基本群为曲面群的边界是圆 S¹。边界是<strong>拟等距不变量</strong>，因此是研究"群在无穷远的行为"的主力工具——许多深刻定理（如 Mostow 刚性）的证明都经由边界。</p>
+<div class="key-insight">双曲群的两大回报：① 字问题多项式时间可解（薄三角形给出快速化简规则）；② 有紧致 Gromov 边界 ∂G 描述"无穷远形状"（F₂ 的边界是 Cantor 集、曲面群边界是 S¹）。</div>
+</section>
+
+<section>
+<h3>六、Mostow 刚性——代数完全决定几何</h3>
+<p>双曲群最震撼的应用在低维流形。<strong>Mostow 刚性定理（1968）：</strong></p>
+<div class="key-insight"><strong>Mostow 刚性：</strong>两个紧致双曲 n-流形（n ≥ 3），若基本群同构，则它们等距（几何完全相同）。也就是说——n ≥ 3 的双曲流形里，<strong>代数数据（基本群）完全决定几何数据（度规）</strong>。</div>
+<p><strong>为什么 n ≥ 3？</strong>n = 2 的情形完全不同：同样亏格 ≥ 2 的曲面有无穷多种互不等距的双曲度量（模空间是个正维数空间），基本群相同、几何却不同。原因在于双曲平面 ℍ² 的"刚性"不足——只有双曲空间 ℍⁿ（n ≥ 3）的等距群足够"瘦"，让基本群的正则表示几乎钉死几何。</p>
+<p><strong>用几何群论的语言重述。</strong>双曲 3-流形的万有覆盖是 ℍ³；基本群 π₁ 适当且紧致地作用在 ℍ³ 上，由 Švarc-Milnor 引理 π₁ 拟等距于 ℍ³。Mostow 刚性说的是更强的结论：这个拟等距实际上是"真的等距"——因为 ∂ℍ³ = S² 上的测度论结构（Carnot 度量）刚性到不容许非等距的保测拟等距。于是基本群 → 边界（S² 上的刚性结构）→ 等距 → 唯一几何。</p>
+<div class="key-insight">Mostow 刚性（n ≥ 3）：双曲流形的拓扑/基本群 ⟹ 唯一双曲度规。代数 = 几何。对比：n = 2 有整个模空间，n ≥ 3 却是零自由度——刚性来自 ℍⁿ 的边界结构。</div>
+</section>
+
+<section>
+<h3>七、群的增长——从多项式到指数，及 Grigorchuk 的中间地带</h3>
+<p>最后一个主角是"群膨胀得多快"。<strong>定义：</strong>设 S 是生成元集，球 B(n) = {g ∈ G : ℓ(g) ≤ n}。群的<strong>增长</strong>是函数 n ↦ |B(n)|（单位球内的元素个数）。</p>
+<p><strong>三类典型增长。</strong></p>
+<p><strong>多项式增长</strong>（|B(n)| ≈ nᵈ）：例如 ℤ²，|B(n)| ≈ (2n)² ≈ 4n²。Gromov（1981）定理：<strong>多项式增长 ⟺ 几乎幂零</strong>（有限指数的幂零子群）——一个代数条件完全刻画了几何现象。</p>
+<p><strong>指数增长</strong>（|B(n)| ≈ aⁿ）：例如自由群 F₂，球里有 3·2ⁿ⁻¹ 个元素（树的每层分叉加倍），典型指数增长。</p>
+<p><strong>中间增长</strong>（次指数但超多项式）：比任何多项式都快、又比任何指数都慢。这个第三档存在吗？存在性本身曾被怀疑——Gromov 定理说明"多项式"那头被幂零钉死了，但"指数"与"多项式"之间的空档是否有主人？</p>
+<p><strong>Grigorchuk 群（1980）。</strong>Grigorchuk 构造了一个<strong>中间增长</strong>的 4 生成元群——第一个已知例子，是群论中最重要的反例之一。它通过"自动机/树的递推作用"（在无限正则树上递归定义）构造，其增长满足介于多项式与指数之间的渐近（|B(n)| ≈ e^{n^α}，0 &lt; α &lt; 1）。Grigorchuk 群还以"不可着色于有限步"等惊人性质闻名。</p>
+<div class="key-insight">增长三类：多项式（⟺ 几乎幂零，Gromov）、指数（自由群）、中间（Grigorchuk 群 1980，首个例子）。Grigorchuk 群证明"多项式"和"指数"之间并非空档——它是群论最重要的反例之一。</div>
+</section>
+
+<section>
+<h3>八、工作题（带解答）</h3>
+<p><strong>题 1（字度量再算）。</strong>在 F₂ = ⟨a, b⟩ 里求 d(a³b, b⁻¹a²)。</p>
+<details><summary>显示解答</summary><p>d(a³b, b⁻¹a²) = ℓ((a³b)⁻¹·b⁻¹a²) = ℓ(b⁻¹a⁻³b⁻¹a²)。无相邻互逆可消（b⁻¹ 与 a⁻³ 之间没有逆对），化简字长为 5。∎</p></details>
+<p><strong>题 2（拟等距直觉）。</strong>说明为什么 ℝ 与 ℤ 拟等距（用带常数 C 的映射）。</p>
+<details><summary>显示解答</summary><p>取 f: ℤ → ℝ 为包含映射，每个实数 x 都在某个整数 n 的 1 邻域内（取最近的整数），且对 n, m ∈ ℤ 有 |n−m| ≤ |f(n)−f(m)| ≤ |n−m|。取 C = 1，条件满足，ℤ 与 ℝ 拟等距。直觉：整数点排满整条实线，"大尺度"下就是同一条线。∎</p></details>
+<p><strong>题 3（增长估算）。</strong>对 ℤ²（生成元 ±e₁, ±e₂），证明 |B(n)| 是二次多项式增长，并给出精确公式。</p>
+<details><summary>显示解答</summary><p>B(n) = {(a,b) : |a|+|b| ≤ n}。逐层数：坐标和为 k 的点有 4k 个（k ≥ 1，四个象限各 k），加原点：|B(n)| = 1 + Σ_{k=1}^{n} 4k = 1 + 4·n(n+1)/2 = 2n²+2n+1。主导项 2n²，二次增长。∎</p></details>
+<p><strong>题 4（双曲性的拟等距不变）。</strong>用"树是 δ-薄"直接验证：F₂ 的 Cayley 图里，任意三点 a、b、c 的测地三角形 δ = 0 薄。</p>
+<details><summary>显示解答</summary><p>树里任意两点的唯一最短路径连接；三点 a、b、c 的三条路径在唯一"中心"交汇（就是三对路径两两交叠的公共点）。任取三角形一边，其上任一点到该边的另一端、再沿第三点所在路径，都落在另外两条边之一上，距离 ≤ 0。故每条边包含在另两条边的 0-邻域内，δ = 0。∎</p></details>
+<p><strong>题 5（Švarc-Milnor 的应用）。</strong>说明为什么环面 T² 的基本群拟等距于 ℝ²（利用 Švarc-Milnor）。</p>
+<details><summary>显示解答</summary><p>T² = ℝ²/ℤ²，万有覆盖 ℝ²，π₁(T²) = ℤ² 以平移作用在 ℝ² 上。作用适当（点附近轨道点有限）且紧致（基本区域单位正方形是紧的）。由 Švarc-Milnor，ℤ²（字度量）拟等距于 ℝ²。而 ℤ² 的 Cayley 图本就是方格纸，与 ℝ² 大尺度同形。∎</p></details>
+</section>
+
+<section>
+<h3>九、试试看（带提示）</h3>
+<p><strong>1. F₃ 的 Cayley 图是几正则树？d(a³, a⁵b) 是多少？</strong><strong>提示：</strong>F₃ 有 6 个生成符号（a, b, c, a⁻¹, b⁻¹, c⁻¹），6-正则树。d(a³, a⁵b) = ℓ(a⁻³·a⁵b) = ℓ(a²b) = 3。</p>
+<p><strong>2. ℤ² 换成生成元 {(1,0), (0,1), (1,1)}，重算 d((3,4), (0,0))。</strong><strong>提示：</strong>沿 (1,1) 走 3 步到 (3,3)，再沿 e₂ 一步到 (3,4)，共 4 步；下界 ⌈(3+4)/2⌉ = 4，故 4。</p>
+<p><strong>3. 为什么 ℤ² 不双曲而 ℤ（整数线）也不是 δ-薄的关键例证里，ℤ 算双曲吗？</strong><strong>提示：</strong>ℤ 的 Cayley 图是直线，直线的测地三角形退化（三点共线），每条边在另外两条边的 δ=0 邻域内——所以 ℤ 是双曲的（边界是两个点）。"线"和"面"在此分道扬镳。</p>
+<p><strong>4. 为什么 Grigorchuk 群被称作"反例"？它反的是什么？</strong><strong>提示：</strong>它反的是"群的增长只有多项式或指数两种可能"这一猜想——Gromov 定理只钉死了"多项式那头"，"中间地带是否存在"是开放问题，Grigorchuk 构造出第一个实例，否定了二分猜想。</p>
+<p><strong>5. Mostow 刚性为什么在 n = 2 失效？</strong><strong>提示：</strong>n = 2 时双曲曲面（亏格 ≥ 2）的基本群相同，但双曲结构有无穷多种（模空间有正维数）；刚性缺失的根源是 ℍ² 的边界 S¹ 的保测结构不够"刚"——1 维边界的可塑性比 n ≥ 3 的 Carnot 结构大得多。</p>
+<p><strong>6. 双曲群的边界为什么是紧致的？给一个直觉理由。</strong><strong>提示：</strong>取一点 p，所有从 p 出发的测地射线组成一个"看无穷的视野"；在双曲群（薄三角形）里，任何射线都稳定地走向某个"尽头"，这些尽头构成的集合是 Cantor 式/圆式的紧致空间——因为"穷尽方向"本身是有限分叉产生的闭集。F₂ 边界的 Cantor 结构正来自树的每一层只有有限个分叉。</p>
+</section>
+
+<section><h3>前沿：Agol 的虚拟 Haken 猜想证明</h3><p>几何群论在本世纪最耀眼的进展之一是低维流形方向的突破。<strong>Agol（2012）</strong>证明了<strong>虚拟 Haken 猜想</strong>：每个闭双曲 3-流形都有一个有限覆叠是 Haken 的（即含一个不可压缩嵌入曲面）。这个猜想是几何群论与 3-流形理论中最重要的问题之一，它的证明路线充满几何群论的思想：利用<strong>基本群的 3 维双曲性</strong>、沿测地面的分解、以及 WISE 的"正则语言"技术——本质上是在双曲群的边界与组合结构上做精细控制。结合 Perelman 的几何化定理（2003），3-流形理论从此可以说基本"完成"：几何化 + 虚拟 Haken 把紧致 3-流形的结构分类彻底钉死。仍开放的问题：<strong>4 维的虚拟 Haken 类猜想</strong>——4 维流形没有类似的刚性分类工具，虚拟覆盖与几何结构的关系在维度 ≥ 4 时几乎完全未知，这正是下一代几何群论的主战场。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Bridson &amp; A. Haefliger, Metric Spaces of Non-Positive Curvature</strong></p>
+<p>&rarr; <strong>C. Löh, Geometric Group Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/group-action.html">群作用</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/group-action.html">🔺 群作用</a>：同一学科分类「群论」。</p>
+<p>&rarr; <a href="/pages/lie-algebra.html">🔄 李代数</a>：同一学科分类「群论」。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：群论核心链。</p>
+<p>&rarr; <a href="/pages/convex-geometry.html">⬡ 凸几何</a>：几何核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/geometric-group-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

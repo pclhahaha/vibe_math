@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="紧致性造出非标准整数：公理系统可以有多少种"世界"" />
+  <meta property="og:title" content="模型论 — Vibe Math" />
+  <meta property="og:description" content="紧致性造出非标准整数：公理系统可以有多少种"世界"" />
+  <title>模型论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🧬 模型论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">紧致性造出非标准整数：公理系统可以有多少种"世界"</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='model-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/proof-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📝 证明论</a>
+  <a href="/pages/modular-forms.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎵 模形式 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一套公理，可以有多少个"世界"</h3>
+<p>群公理描述的对象不只一个：整数加群、非零实数乘群、正二十面体的旋转群……全都满足同样的三条公理。模型论的基本视角是：<strong>别问"哪个结构是'真的'"，而问"哪些结构满足这套公理"</strong>——满足给定一阶句子的结构叫它的<strong>模型</strong>。群论研究所有"群模型"的共性，实分析研究 ℝ 这一个特殊模型，而模型论研究的是<strong>公理系统与模型之间的普遍关系</strong>。</p>
+<p>这个看似抽象的角度，产出了数学史上最出人意料的定理。最有名的是<strong>紧致性定理</strong>：</p>
+<div class="formula display" data-tex="\text{理论 }T\text{ 的每个有限子集都有模型}\quad\Longrightarrow\quad T\text{ 本身有模型}"></div>
+<p>意思是：如果一组公理"怎么抽样检查都一致"，那么它就真的有一个（可能极其庞大的）世界。紧致性的一击是<strong>非标准分析</strong>：给实数理论加上"存在一个大于 1、大于 2、大于 3……的常数 c"——任何有限条公理都能用足够大的普通实数满足，于是紧致性保证存在一个真正的模型，里面有"大于一切标准实数"的无穷大。微积分在 20 世纪 60 年代（Robinson）用这种模型复活了莱布尼茨的"无穷小"。</p>
+<div class="key-insight">洞察：一阶逻辑的表达力"有限但干净"——这正是它的威力所在。因为一个句子只能谈论"有限多的对象组合"，紧致性与 Löwenheim–Skolem 定理才能保证：一致的理论必然有"意外的模型"（可数模型、不可数模型、含无穷大的模型）。表达力的边界 = 模型的自由度：理解了一阶逻辑<strong>不能</strong>说什么（"连通""有限""良序"），就理解了模型论。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>（模型是集合结构）、<a href="/pages/godel.html">Gödel 不完备</a>（完备性定理的姊妹篇）、<a href="/pages/proof-theory.html">证明论</a>（语法/语义之分）。</p></div>
+
+<section>
+<h3>一、一个具体问题——"句子永远对，还是总能证明"：完备性定理</h3>
+<p>模型论的地基是 Gödel 完备性定理（1929）：</p>
+<div class="formula display" data-tex="\Gamma\vDash\varphi\ \iff\ \Gamma\vdash\varphi\qquad(\text{语义蕴含}=\text{可证明性})"></div>
+<p>左边"所有 Γ 的模型都满足 φ"（语义），右边"存在形式证明"（语法）。定理说这两件事<strong>重合</strong>——证明系统不多不少地捕捉了"必然为真"。完备性定理是紧致性定理的跳板（紧致性即"Γ 无模型 ⟹ 有有限子集 Γ₀ 无模型"，由证明的有限性 + 完备性立刻得到）。</p>
+<p><strong>紧致性定理（Malcev，1936）的经典应用。</strong></p>
+<ul>
+<li><strong>非标准分析：</strong> 如上所述，得到含无穷大/无穷小的 ℝ 模型（Robinson 1961 严格化，非标准微积分）。</li>
+<li><strong>de Bruijn–Erdős（1951）：</strong> 一个图 k-可着色 ⟺ 它的每个有限子图 k-可着色（把"每个有限部分都能染"翻译成一阶理论并施紧致性——本课例题 2）。这是"无限 = 所有有限的极限"的典范。</li>
+<li><strong>Lefschetz 原理（代数几何）：</strong> 若一个一阶语句在某个特征 p 的代数闭域上成立，则在所有特征 p 的代数闭域上成立；特征 0 的语句若在所有特征 p（p 充分大）成立则也成立。代数几何的"从特征 p 推向特征 0"由此获得逻辑基础。</li>
+<li><strong>超积构造：</strong> 紧致性 ⟺ 超积存在（Łoś 定理）——几乎所有"构造奇怪模型"的手段都归结于此。</li>
+</ul>
+</section>
+
+<section>
+<h3>二、先直觉后严格——表达力的边界与 Löwenheim–Skolem</h3>
+<p><strong>一阶句子能说什么、不能说什么？</strong> 一个句子 φ 能约束"有限多的对象与关系"。它<strong>不能</strong>：说"宇宙是有限的"（∀x₁…∀xₙ∨_{i&lt;j}xᵢ=xⱼ 只处理固定的 n）、不能定义"传递闭包/连通"（需要任意长路径的存在性）、不能说"良序"（需要任意下降序列的不存在性，即二阶全称）。这些"缺陷"是特征而非 bug。</p>
+<p><strong>Löwenheim–Skolem 定理（1915/1920）。</strong> 可数语言的理论若有无限模型，则对任意基数 κ 都有基数为 κ 的模型。两个方向：</p>
+<ul>
+<li><strong>向下（Skolem 化/初等子结构）：</strong> 无限模型中有任意小（≥ 可数）基数的<strong>初等子结构</strong>（Skolem 壳：对每个存在语句选一个见证者闭包）。</li>
+<li><strong>向上（紧致性）：</strong> 加进 κ 个两两不同的常数，任何有限子集仍可满足（原模型够大），紧致性给出大模型。</li>
+</ul>
+<p><strong>Skolem 悖论（1922）。</strong> ZFC（若一致）有<strong>可数</strong>模型，尽管 ZFC 里能证明"存在不可数集"。悖论的消解：模型内的"不可数"是模型内的——那个集合在模型里没有到 ℕ 的映射，但从模型<strong>外</strong>看它只是可数个元素。基数/可数性是<strong>相对于模型</strong>的概念。这个悖论不是矛盾，而是"一阶公理化不能钉死基数宇宙"的第一课——也是模型论与集合论最深的关系点。</p>
+</section>
+
+<section>
+<h3>三、例题 1——用紧致性造非标准自然数（一步步算完）</h3>
+<p><strong>题目。</strong> 证明：存在一个 ℕ 的"真扩张" N*：它满足所有在 ℕ 上为真的一阶算术句子（Th(ℕ)），却含有一个大于所有标准数的元素 c。</p>
+<p><strong>第一步：写理论。</strong> 语言 L={0,1,+,×,&lt;}。令 T = Th(ℕ) ∪ {c&gt;0, c&gt;1, c&gt;2, …}（对每个标准自然数 n 放一句 c&gt;n，c 是新常数）。</p>
+<p><strong>第二步：有限可满足。</strong> 任取有限子集 T₀⊆T。它只含有限多条 c&gt;n，设其中最大下标为 m。把 c 解释成普通自然数 m+1，其余符号按 ℕ 解释：T₀ 被满足。∎</p>
+<p><strong>第三步：紧致性收尾。</strong> T 的每个有限子集有模型 ⟹ T 有模型 N* = (N*, 0*,1*,+*,×*,&lt;*, c)。N* 满足全部标准算术真句且 c&gt;n 对所有标准 n 成立——c 是<strong>非标准自然数</strong>（"无限大整数"）。∎</p>
+<p><strong>第四步：为什么这不与"ℕ 唯一"矛盾？</strong> "标准自然数"不是一个一阶可定义的类——没有任何一阶句子能说"我只想要由 0 逐次加 1 得到的那些数"（需要无限析取或二阶归纳）。所以 Th(ℕ) 管不住 c。∎</p>
+<p><strong>第五步：延伸直觉。</strong> 非标准模型里的 c 有前驱 c−1、后继 c+1、二倍 2c……它们构成一个"ℕ 之后长尾巴"的序型 ℕ+ℤ·η（η 是稠密无端点线性序）。画布右侧会用数轴示意这条"尾巴"。</p>
+</section>
+
+<section>
+<h3>四、例题 2——de Bruijn–Erdős：有限染色 ⟹ 无限染色（一步步算完）</h3>
+<p><strong>题目。</strong> 设图 G（顶点集 V，边 E）的每个有限子图都是 k-可着色的。证明 G 本身 k-可着色。</p>
+<p><strong>第一步：写一阶理论。</strong> 语言含常数 {c_v : v∈V} 与一元谓词 C₁,…,C_k。理论 T 由三部分组成：(1) 每个顶点恰有 1 色：∀x ∨ᵢ Cᵢ(x)，∀x ¬(Cᵢx∧Cⱼx)（i&lt;j）；(2) 边的两端异色：对每条边 uv 与每色 i：¬(Cᵢ(c_u)∧Cᵢ(c_v))；(3) 对每个顶点 v：c_v≠c_w（w≠v，若需要区分点——着色不需要，可省）。</p>
+<p><strong>第二步：有限子模型 = 有限子图着色。</strong> 取 T 的有限子集 T₀：它涉及有限多个顶点常数与有限多条"异色"句，对应 G 的一个有限子图 H。由假设 H 有 k-着色，把该着色翻译成 Cᵢ 的取值即得 T₀ 的模型。∎</p>
+<p><strong>第三步：紧致性。</strong> T 的每个有限子集有模型 ⟹ T 有模型。该模型的 C₁,…,C_k 给出 G 的一个全局 k-着色。∎ 证明完成，全程没有用到选择公理之外的任何"无限组合技巧"——<strong>有限世界的任意有限检验，紧致性替我们升级成无限世界的存在性</strong>。</p>
+<p><strong>第四步：为什么这类定理到处是？</strong> 平面图五色定理（→ <a href="/pages/graph-theory.html">图论</a> 课）保证有限平面图可 5-染 ⟹ 无限平面图也可 5-染。类似地：图的有限子图有哈密顿路径 ⟹ 全图有（反向不显然，需路径版本）。紧致性把"每个有限块都好"自动翻译成"整体好"——只要性质是一阶可表达的。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理与结构理论</h3>
+<ul>
+<li><strong>完备性（Gödel 1929）：</strong> Γ⊨φ ⟺ Γ⊢φ。</li>
+<li><strong>紧致性（Malcev 1936/41）：</strong> T 有模型 ⟺ 每个有限子集有模型。（等价于完备性 + 证明的有限性，或 Łoś 超积定理。）</li>
+<li><strong>Löwenheim–Skolem 上/下：</strong> 可数语言中，无限模型的基数可大可小（任意 ≥ℵ₀）。</li>
+<li><strong>初等等价与初等嵌入：</strong> M≡N（同满足一切句子）≠ M≅N；向下 LS 靠初等子结构。</li>
+<li><strong>类型：</strong> p(x) = 与某元素满足性相容的公式集（n-型）；紧致性保证"局部相容的类型在饱和模型中被实现"。类型 = "元素的可能性格画像"。</li>
+<li><strong>量词消去：</strong> 若每个公式等价于无量词公式，理论有极好的可定义集分类。例子：代数闭域 ACFp 有量词消去（可定义集 = 代数集布尔组合）⟹ ACFp 完备、模型完备。</li>
+<li><strong>范畴性（Morley 1965）：</strong> 可数理论若在某个不可数基数上只有唯一模型（同构意义），则在一切不可数基数上都如此；并等价于理论在 ω₁ 上的稳定性（"总范畴性定理"）——现代稳定性理论的起点。</li>
+<li><strong>不可定义性刻画：</strong> "有限性、良序、连通性、可数性"均非一阶可定义（由紧致性/LS 证明）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\Gamma\vDash\varphi\iff\Gamma\vdash\varphi\qquad(\text{完备性})"></div>
+<div class="formula display" data-tex="\forall T_0\subseteq_{\text{有限}} T:\ T_0\text{ 有模型}\iff T\text{ 有模型}\qquad(\text{紧致性})"></div>
+<div class="formula display" data-tex="T\text{ 有无限模型}\ \Longrightarrow\ \forall\kappa\ \exists M\models T,\ |M|=\kappa\qquad(\text{Löwenheim–Skolem})"></div>
+<div class="formula display" data-tex="\text{ACF}_p\ \text{量词消去};\qquad \text{Morley: 可数理论不可数范畴性}\Rightarrow\ \text{一切不可数基数范畴}"></div>
+</section>
+
+<section>
+<h3>七、延伸——模型论的现代足迹</h3>
+<ul>
+<li><strong>代数几何与数论（Lefschetz / Ax）。</strong> 特征 0 代数闭域上的一阶性质由大特征 p 推出（代数几何的"转移原理"）；Ax（1968）用伪有限域的模型论证明可构造集上的选择定理类结果。</li>
+<li><strong>差分域与 Mordell–Lang（Hrushovski 1996）。</strong> 用差分域（带算子 σ 的域）的稳定性理论证明函数域上 Mordell–Lang 猜想——"模型论解决了数论猜想"的世纪名场面（当时数论家多年未解）。</li>
+<li><strong>o-极小区间与 Pila–Wilkie。</strong> 实数序上的 o-minimal 理论（Wilkie 1996：实数指数域 o-minimal）给出"可定义集都'规矩'"的理论；Pila–Wilkie（2006）计数定理把可定义集的整点计数用于数论（无理性、André–Oort 的部分证明）。</li>
+<li><strong>工程：SMT 求解器。</strong> 可满足性模理论（SMT）把 SAT（→ <a href="/pages/p-vs-np.html">P vs NP</a> 课）扩展到"等式 + 线性算术/位向量"等背景理论——现代程序验证、符号执行的引擎，本质是"找模型"的工业化。数据库的关系代数 = 一阶逻辑片段；模型论与计算机科学互哺了半个世纪。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"想当然"</h3>
+<p><strong>陷阱 1："紧致性造出非标准整数 = 矛盾"？</strong> 不矛盾。它只说明"标准"不是一阶可定义的。非标准模型与标准模型满足<strong>完全相同</strong>的一阶句子——矛盾需要二阶语言（那里的确唯一，但那是另一门逻辑）。</p>
+<p><strong>陷阱 2："完备性定理 = 哥德尔第二不完备性定理的否定"？</strong> 恰恰相反：完备性关乎<strong>一阶语义与证明的吻合</strong>；不完备性说<strong>皮亚诺算术的证明不能穷尽其真句</strong>。两者并存：Γ 内可证 ⟺ 所有模型成立（完备），但"该理论自身的无矛盾性"在可数模型世界里表达成了别的样子。→ <a href="/pages/godel.html">Gödel 不完备</a> 课。</p>
+<p><strong>陷阱 3："Skolem 悖论说明 ZFC 有问题"？</strong> 不。可数模型与"内部不可数集"共存，正是"模型相对性"的教科书案例。它提醒：集合论句子的真值总要在某个模型/元理论里谈。</p>
+<p><strong>陷阱 4："一阶逻辑能表达'连通'，因为我可以用路径"？</strong> 路径需要"存在长度 n 的链"——n 可变，而一阶公式长度固定。对每个固定的 n 有句子"存在长度 ≤n 的链"，但它们无限析取起来不是单个一阶句子。连通性（对可数图）表达需要二阶量化或无限公式。</p>
+<p><strong>陷阱 5："Löwenheim–Skolem 给出任意大模型，所以紧致性多余"？</strong> 两者互补：LS 管"模型的规模"（用初等子结构/扩张），紧致性管"公理集的一致性"（有限检验）。Morley 范畴性定理的证明更是把两者与稳定性揉在一起——现代模型论里它们从未单独工作。</p>
+</section>
+
+<section>
+<h3>九、当前状态——稳定性之后的模型论</h3>
+<ol>
+<li><strong>Shelah 分类纲领。</strong> 从稳定、超稳定、单纯理论，到 NIP（不具独立性质）与 o-minimal——按"可定义集的复杂度"给理论分层（"分类理论"）；每一层都有对应的维数论与秩论。</li>
+<li><strong>几何模型论。</strong> 强极小理论（强极小集上的几何）、Zilber 猜想（强极小集几何应"像代数几何"）——把模型论绑回几何的纲领；反例（Hrushovski 构造）与正例并存，仍是核心张力。</li>
+<li><strong>数论应用持续升温。</strong> Pila–Wilkie（无理数点计数）、ChatGPT 时代前的"模型论证明"传统（Hrushovski 差分域）；Mordell–Lang、André–Oort 的部分证明是近 20 年最响亮的回响。</li>
+<li><strong>抽象初等等价与无穷逻辑。</strong> 从一阶到 L_{ω1ω}（可数无穷长公式）、抽象模型论——"一阶定理还能走多远"仍是开放的总问题。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Löwenheim (1915)</strong>：可数模型定理——模型论第一定理。</li>
+<li><strong>Skolem (1920, 1922)</strong>：向上/向下推广 + Skolem 悖论（ZFC 的可数模型）。</li>
+<li><strong>Gödel (1929/30)</strong>：完备性定理（及紧致性的一阶形式）——语义与语法的重合。</li>
+<li><strong>Malcev (1936, 1941)</strong>：紧致性定理的一般形式与代数应用。</li>
+<li><strong>Morley (1965)</strong>：<em>"Categoricity in power"</em>——不可数范畴性定理，现代模型论（稳定性）的诞生。</li>
+<li><strong>Ax (1968)</strong>：伪有限域与可构造集——模型论进入代数几何/数论。</li>
+<li><strong>Shelah (1970s)</strong>：分类理论（Classification Theory, 1990 增订版）——稳定性的系统化。</li>
+<li><strong>Hrushovski (1996)</strong>：差分域证明 Mordell–Lang 函数域版本——模型论的最著名数论胜利。</li>
+<li><strong>Wilkie (1996) / Pila–Wilkie (2006)</strong>：实数指数域 o-minimal；可定义集整点计数与数论应用。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——构造、检验与消去</h3>
+<p><strong>题 1（非标准整数构造）。</strong> 用紧致性证明存在含"无限大"整数的模型（写出理论与有限可满足论证）。<strong>提示：</strong>见例题 1：T=Th(ℕ)∪{c&gt;n}，任意有限子集令 c=m+1 即可。</p>
+<p><strong>题 2（染色理论的一阶句）。</strong> 写出"每个顶点恰好 k 色之一、相邻异色"的一阶句子。<strong>提示：</strong>∀x ∨ᵢ Cᵢ(x)；∀x∧_{i&lt;j}¬(Cᵢx∧Cⱼx)；∀x∀y(E(x,y)→∧ᵢ¬(Cᵢx∧Cᵢy))。</p>
+<p><strong>题 3（连通不可定义）。</strong> 用超积/紧致性思路说明"两点连通"不可一阶定义。<strong>提示：</strong>若 φ(x,y) 定义连通，考虑路径图 P_n 的某个超积：两端的距离 n→∞，在超积中"距离"是非标准无限数，φ 应失败；但每个 P_n 都满足"这两点连通"（距离有限 n），超积也满足——矛盾。∎</p>
+<p><strong>题 4（一次量词消去）。</strong> 在域理论（乘法群）中"手消"一个量词：∃z(z≠0 ∧ zx=1) ⟺ x≠0。<strong>提示：</strong>左到右显然；右到左取 z=x⁻¹。这说明"可逆性"无需存在量词即可表达——量词消去的味道。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见例题 1 五步。∎</p>
+<p><strong>题 2</strong>：见提示三句。∎</p>
+<p><strong>题 3</strong>：超积论证见提示：路径长度趋于无限 ⟹ 超积中无有限路径却满足有限因子都满足的"连通"句子。∎</p>
+<p><strong>题 4</strong>：∃z(z≠0∧zx=1) ↔ x≠0 在整环/域上都是量词消去的样板。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布句子检查）。</strong> 自己搭一个小图并勾选句子：观察"存在三角形""每点度数≥1"等在何种图结构上为真。再切到"连通反例"预设：G1 是 5 点路径、G2 是两段分离路径——把"长度 ≤k 的路径"滑杆拉到任意有限 k，G1 在 k≥4 时满足而 G2 永不满足：这就是"连通需要无限长句子"的直观。</p>
+<p><strong>试试看 2（Skolem 悖论）。</strong> 阅读第七节并思考：ZFC 的可数模型里，"不可数集"的外延是模型内没有到 ℕ 的满射；从模型外看它可数。提示：区分"模型内存在函数"与"元理论存在函数"。</p>
+<p><strong>试试看 3（SMT 现实）。</strong> 想一个程序验证场景（如数组越界检查），把它化成一阶句的可满足性问题；体会"找模型"即"找反例"。提示：现代 SMT 求解器（Z3 等）每天在工业界做这件事。</p>
+<p><strong>试试看 4（回到群）。</strong> 群公理的模型有无穷多种"大小"（LS）；但"有限群"不是一阶性质——所以群论里"有限生成"等概念必须二阶或带参数谈。提示：这就是为什么模型论家爱谈"伪有限结构"（无限却满足一切有限结构满足的句子）。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>D. Marker, Model Theory: An Introduction</strong>（现代标准教材）</p>
+<p>&rarr; <strong>W. Hodges, A Shorter Model Theory</strong>（友好而全面）</p>
+<p>&rarr; <strong>K. Tent, M. Ziegler, A Course in Model Theory</strong>（精炼）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.19（模型论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/godel.html">Gödel 不完备</a>、<a href="/pages/proof-theory.html">证明论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/godel.html">📜 Gödel 不完备</a>：完备性定理的姊妹篇，语义/语法的另一半。</p>
+<p>&rarr; <a href="/pages/proof-theory.html">🗂️ 证明论</a>：语法侧的对应：证明系统与紧致性。</p>
+<p>&rarr; <a href="/pages/set-theory.html">📐 集合论</a>：模型是集合；ZFC 的模型与 Skolem 悖论。</p>
+<p>&rarr; <a href="/pages/p-vs-np.html">⏳ P vs NP</a>：SAT/SMT = 找模型的工程化。</p>
+<p>&rarr; <a href="/pages/graph-theory.html">🕸️ 图论与网络</a>：de Bruijn–Erdős：k-着色的有限→无限。</p>
+<p>&rarr; <a href="/pages/group-action.html">♟️ 群作用</a>：群公理 = 一阶理论，群 = 它的模型。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/model-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

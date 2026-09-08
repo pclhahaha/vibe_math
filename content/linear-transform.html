@@ -1,0 +1,249 @@
+<section>
+<h3>〇、具体动机：把单位正方形拉成什么？</h3>
+<p>先不看抽象定义，先看一个带数字的具体问题。取矩阵</p>
+<div class="formula display" data-tex="A=\begin{pmatrix}2&0\\0&1\end{pmatrix}"></div>
+<p>盯着平面上的<strong>单位正方形</strong>——四个顶点是 (0,0)、(1,0)、(0,1)、(1,1)，面积是 1。矩阵 A 会把它变成什么？把每个顶点送进 A 算一下：</p>
+<div class="formula display" data-tex="(1,0)\mapsto(2,0),\qquad (0,1)\mapsto(0,1),\qquad (1,1)\mapsto(2,1)"></div>
+<p>四个顶点落到了 (0,0)、(2,0)、(0,1)、(2,1)——原来的正方形被<strong>沿水平方向拉宽了两倍</strong>，变成 2×1 的矩形，面积 2。一个矩阵，就是一张"怎么变形"的说明书：它告诉平面上的每个点被搬到哪。</p>
+<p>再看两个例子，体会"矩阵 = 变形"。取</p>
+<div class="formula display" data-tex="B=\begin{pmatrix}0&1\\1&0\end{pmatrix}\;\Longrightarrow\; (1,0)\mapsto(0,1),\ (0,1)\mapsto(1,0)"></div>
+<p>B 把两个坐标互换——整张平面沿直线 y=x 翻了个面（反射）。又取</p>
+<div class="formula display" data-tex="C=\begin{pmatrix}1&1\\0&1\end{pmatrix}\;\Longrightarrow\; (x,y)\mapsto(x+y,y)"></div>
+<p>C 是"剪切"：把每一层横条往右推 y 个单位，越高推得越远，正方形被推歪成平行四边形，但面积不变。</p>
+<div class="key-insight">核心洞察：一个矩阵只要告诉我们"两个基向量被搬去了哪里"，就能决定整张平面怎么变形。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、向量：平面上的箭头</h3>
+<p>要读矩阵这张说明书，先得把"被搬的东西"说清楚。平面上的一个<strong>向量</strong>（vector）就是一根<strong>箭头</strong>：有长度、有方向。我们把箭头起点放在原点，于是箭头完全由末端位置决定，写成 <strong>v=(x,y)</strong>——比如 v=(2,3) 表示"从原点出发向右 2 格、再向上 3 格"。</p>
+<p>箭头之间有两种基本运算，后面处处要用：</p>
+<p><strong>加法</strong>：一箭接一箭，终点是两箭之和，分量分别相加：(1,0)+(0,1)=(1,1)。</p>
+<p><strong>数乘</strong>：把箭头拉长或缩短若干倍，分量同乘一个数：2·(1,2)=(2,4)。</p>
+<p>注意这两条运算的共同点：它们都"一格一格"地作用在分量上。下一节会看到，矩阵×向量做的也正是"乘一乘、加一加"——只是组合得更复杂。</p>
+</section>
+
+<section>
+<h3>二、矩阵 × 向量：手算一步步</h3>
+<p>矩阵 A 是"变换的说明书"，向量 v 是"一根箭头"。<strong>Av</strong> 问的就是：这份说明书把这根箭头变成了哪根新箭头？</p>
+<p>算法只有一条，先记住：<strong>新箭头的每个分量 = 矩阵对应那一行，与 v 的分量逐项相乘、再全部相加</strong>。公式写成：</p>
+<div class="formula display" data-tex="\begin{pmatrix}a&b\\c&d\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}ax+by\\cx+dy\end{pmatrix}"></div>
+<p><strong>例 1（手算）。</strong>取 A=[[3,1],[0,2]]，v=(1,2)：</p>
+<p>算第一个分量：看矩阵第一行 (3,1)，与 v 的分量 (1,2) 配对相乘再相加——<strong>3×1 + 1×2 = 3 + 2 = 5</strong>。</p>
+<p>算第二个分量：看矩阵第二行 (0,2)，同样处理——<strong>0×1 + 2×2 = 0 + 4 = 4</strong>。</p>
+<div class="formula display" data-tex="\begin{pmatrix}3&1\\0&2\end{pmatrix}\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}3\cdot1+1\cdot2\\0\cdot1+2\cdot2\end{pmatrix}=\begin{pmatrix}5\\4\end{pmatrix}"></div>
+<p>直观理解：横坐标 1 被贡献了 3 份、又搭上纵坐标 2 的 1 份；纵坐标 2 被放大了 2 倍。</p>
+<p><strong>例 2（手算）。</strong>换一根箭头 v=(1,0)（水平向右），再用同一矩阵：</p>
+<div class="formula display" data-tex="\begin{pmatrix}3&1\\0&2\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}=\begin{pmatrix}3\cdot1+1\cdot0\\0\cdot1+2\cdot0\end{pmatrix}=\begin{pmatrix}3\\0\end{pmatrix}=3\begin{pmatrix}1\\0\end{pmatrix}"></div>
+<p>结果仍是水平向右，只是长了 3 倍。记住这个例子——到《特征向量》课它会成为主角。</p>
+<p><strong>例 3（手算）。</strong>再用矩阵 A=[[2,0],[0,1]] 对 v=(1,3)：</p>
+<div class="formula display" data-tex="\begin{pmatrix}2&0\\0&1\end{pmatrix}\begin{pmatrix}1\\3\end{pmatrix}=\begin{pmatrix}2\cdot1+0\cdot3\\0\cdot1+1\cdot3\end{pmatrix}=\begin{pmatrix}2\\3\end{pmatrix}"></div>
+<p>横坐标被放大 2 倍、纵坐标不动——正是〇节"沿水平方向拉宽"的那份说明书。</p>
+</section>
+
+<section>
+<h3>三、变换：矩阵把整张平面搬去哪</h3>
+<p>既然每个向量 Av 都能算，那我们把平面上<strong>无穷多个</strong>向量都算一遍，就看到了整张平面的变形。这种"给每个向量一个去向"的规则，叫<strong>变换</strong>（transformation），记作 T(v)=Av：输入一个点，输出一个点。</p>
+<p>怎么"看"整张平面在动？最好的观察对象是一个完整的图形，而不是单个点。把单位正方形交给 A=[[2,0],[0,1]]，四个顶点 (0,0),(1,0),(0,1),(1,1) 变成 (0,0),(2,0),(0,1),(2,1)——整块正方形被均匀拉宽。把<strong>单位圆</strong>（所有满足 x²+y²=1 的点）交给它呢？每个点 (x,y) 变成 (2x,y)，圆被拉成一块长轴在 x 方向的<strong>椭圆</strong>（第九、十节会详细讲）。</p>
+<p>现在问题来了：点有无数个，难道要一个一个算它们搬到哪吗？——不用。下一节是整门课的钥匙：只要知道两个基向量去哪，所有点的去向就全定了。</p>
+</section>
+
+<section>
+<h3>四、为什么矩阵的列告诉基向量去哪——完整推演</h3>
+<p>平面上的任何点 (x,y)，都可以由两个<strong>标准点</strong>拼出来。这两个标准点叫<strong>基向量</strong>：</p>
+<p>e₁=(1,0)：从原点出发向右一步的点；e₂=(0,1)：从原点出发向上一步的点。</p>
+<p>任意点 (x,y) = "向右 x 步、向上 y 步"，即</p>
+<div class="formula display" data-tex="(x,y)=x\cdot e_1+y\cdot e_2"></div>
+<p>现在把 A 作用上去。第二节的手算演示过：矩阵×向量是一行一行"拆开算"的，加法和数乘都被线性地传递。于是</p>
+<div class="formula display" data-tex="A(x\cdot e_1+y\cdot e_2)=x\cdot A(e_1)+y\cdot A(e_2)"></div>
+<p>用大白话说：<strong>先拼再搬 = 先搬再拼</strong>。这句话的威力在于：只要知道 <strong>A(e₁)</strong> 和 <strong>A(e₂)</strong> 这两个去向，任何点 (x,y) 的去向就是"x 倍 A(e₁) 加 y 倍 A(e₂)"——不需要一个一个算。</p>
+<p>那 A(e₁)、A(e₂) 到底是多少？直接手算：</p>
+<div class="formula display" data-tex="Ae_1=\begin{pmatrix}a&b\\c&d\end{pmatrix}\begin{pmatrix}1\\0\end{pmatrix}=\begin{pmatrix}a\\c\end{pmatrix},\qquad Ae_2=\begin{pmatrix}a&b\\c&d\end{pmatrix}\begin{pmatrix}0\\1\end{pmatrix}=\begin{pmatrix}b\\d\end{pmatrix}"></div>
+<p>看出来了——<strong>A(e₁) 恰好是矩阵的第一列，A(e₂) 恰好是第二列</strong>。这就是"矩阵的列 = 基向量去哪了"这句话的出处：它不是约定，是手算的必然结果。</p>
+<p>用带数字的例子核对一遍。A=[[3,1],[0,2]]：第一列 (3,0) 就是 Ae₁，第二列 (1,2) 就是 Ae₂。那么点 (1,2)=1·e₁+2·e₂ 应该被送到</p>
+<div class="formula display" data-tex="1\cdot Ae_1+2\cdot Ae_2=1\begin{pmatrix}3\\0\end{pmatrix}+2\begin{pmatrix}1\\2\end{pmatrix}=\begin{pmatrix}5\\4\end{pmatrix}"></div>
+<p>和第二节例 1 手算的结果 (5,4) 完全一致。✓ 两条路，同一个答案。</p>
+<div class="key-insight"><strong>为什么矩阵的列是关键？</strong> 因为任何点都是基向量的线性组合，而线性变换把它"线性"地拆开：去向 = x·(第一列) + y·(第二列)。所以矩阵的两列就编码了整张平面的全部变形信息。</div>
+</section>
+
+<section>
+<h3>五、求一个变换的矩阵：旋转、反射、剪切</h3>
+<p>把第四节的钥匙反过来用：如果一句话描述了变换"把平面怎么变形"，那么只要算出两个基向量各自去哪，把去向排成两列，就得到这个变换的矩阵。下面是三个完整例题。</p>
+<p><strong>例 1：逆时针旋转 90°。</strong></p>
+<p>e₁=(1,0) 逆时针转 90° 落在 (0,1)；e₂=(0,1) 逆时针转 90° 落在 (−1,0)。把去向排成两列：</p>
+<div class="formula display" data-tex="A=\begin{pmatrix}0&-1\\1&0\end{pmatrix}\qquad(\text{旋转}90^\circ)"></div>
+<p>验证：v=(1,1) 代入，Av=(0·1−1·1, 1·1+0·1)=(−1,1)。从 (1,1) 逆时针转 90° 确实是 (−1,1) ✓。</p>
+<p><strong>例 2：关于 x 轴反射（翻面）。</strong></p>
+<p>e₁=(1,0) 在 x 轴上，反射后不动：(1,0)；e₂=(0,1) 反射后倒扣：(0,−1)。</p>
+<div class="formula display" data-tex="A=\begin{pmatrix}1&0\\0&-1\end{pmatrix}\qquad(\text{关于}x\text{轴反射})"></div>
+<p>验证：v=(3,2) 代入，Av=(3,−2)——镜面上下翻转 ✓。</p>
+<p><strong>例 3：水平剪切。</strong></p>
+<p>规则是 (x,y) ↦ (x+ky,y)（把每一层往右推 ky 个单位）。e₁=(1,0) ↦ (1,0)；e₂=(0,1) ↦ (k,1)。取 k=1：</p>
+<div class="formula display" data-tex="A=\begin{pmatrix}1&1\\0&1\end{pmatrix}\qquad(\text{剪切})"></div>
+<p>验证：v=(1,2) 代入，Av=(1+2,2)=(3,2)——(1,2) 被往右推了 2 个单位 ✓。</p>
+<p>这三个例题说明同一件事：<strong>知道基向量去哪 → 排成列 → 矩阵到手</strong>。</p>
+</section>
+
+<section>
+<h3>六、什么是"线性"？——从三个条件到正式定义</h3>
+<p>第四节能推出"矩阵列 = 基向量去向"，第五节能反推矩阵，都依赖一个隐含前提：变换对"拼"和"拉"是配合的——这正是"线性"的含义。用肉眼可检验的三条标准来说：</p>
+<p>① <strong>原点不动</strong>：原点 (0,0) 被搬去的地方还是 (0,0)。</p>
+<p>② <strong>先拼再搬 = 先搬再拼</strong>：T(u+v)=T(u)+T(v)。</p>
+<p>③ <strong>先拉再搬 = 先搬再拉</strong>：T(cv)=c·T(v)。</p>
+<p>用一个具体矩阵核对。A=[[2,0],[0,1]]：原点 (0,0) ↦ (0,0) ✓；取 u=(1,2)、v=(3,1)，T(u)=(2,4)、T(v)=(6,1)、T(u+v)=T(4,3)=(8,3)=T(u)+T(v) ✓；T(2u)=T(2,4)=(4,8)=2T(u) ✓。三条全过。</p>
+<p>而平移 T(x,y)=(x+1,y) 呢？T(0,0)=(1,0)≠(0,0)——第一条就破了，所以平移不是线性变换。</p>
+<p>这三条精确地写下来，就是<strong>线性变换的正式定义</strong>：</p>
+<div class="key-insight"><strong>定义。</strong> 设 T 把平面上的向量送到平面上的向量。若对任意向量 u,v 和任意数 c，都有 T(u+v)=T(u)+T(v) 且 T(cv)=c·T(v)，则称 T 是<strong>线性变换</strong>。矩阵 A 与变换 T(v)=Av 一一对应——每个矩阵给出一个线性变换，每个线性变换对应一个矩阵。</div>
+</section>
+
+<section>
+<h3>七、怎么判断一个变换是不是线性——完整例题</h3>
+<p>有了定义，就能动手检验。三个例题，一个过、两个不过，看看区别在哪。</p>
+<p><strong>例 1：T(x,y)=(2x,3y) 是线性的。</strong></p>
+<p>验证 ① T(0)=T(0,0)=(0,0) ✓。验证 ②：取 u=(x₁,y₁)、v=(x₂,y₂)，</p>
+<div class="formula display" data-tex="T(u+v)=(2(x_1+x_2),\,3(y_1+y_2))=(2x_1,3y_1)+(2x_2,3y_2)=T(u)+T(v)\ \checkmark"></div>
+<p>验证 ③：T(cv)=(2cx,3cy)=c(2x,3y)=cT(v) ✓。三条全过，线性。它的矩阵？e₁=(1,0) ↦ (2,0)、e₂=(0,1) ↦ (0,3)，排成列得 A=[[2,0],[0,3]]。</p>
+<p><strong>例 2：平移 T(x,y)=(x+1,y) 不是线性的。</strong></p>
+<p>T(0,0)=(1,0)≠(0,0)，违反 ①。也可以直接看出 ② 失败：T((1,0)+(1,0))=T(2,0)=(3,0)，而 T(1,0)+T(1,0)=(2,0)+(2,0)=(4,0)，不相等。平移是<strong>仿射</strong>变换——它保持直线和平行性，但原点跑了。</p>
+<p><strong>例 3：T(x,y)=(x²,y) 不是线性的。</strong></p>
+<p>T(0,0)=(0,0)，① 过了！但 ③ 失败：取 v=(1,0)、c=2，T(2v)=T(2,0)=(4,0)，而 2T(v)=2(1,0)=(2,0)，不等。教训：<strong>只满足 T(0)=0 远远不够</strong>，三条必须同时成立。</p>
+</section>
+
+<section>
+<h3>八、为什么 T(0)=0 是必要条件</h3>
+<p>定义里有 T(u+v)=T(u)+T(v)，为什么一定推出 T(0)=0？甚至不用"线性"这个名词，纯代数就看出来：</p>
+<div class="formula display" data-tex="T(0)=T(0+0)=T(0)+T(0)\quad\Longrightarrow\quad T(0)=0"></div>
+<p>因为 0 可以写成自己加自己，加性把"T(0) = T(0)+T(0)"逼出来，两边同时减去 T(0) 就得到 T(0)=0。所以这是<strong>必要条件</strong>：任何线性变换都必须满足它。</p>
+<p>几何上也直观：线性变换不搬动原点。第七节例 3 的 (x²,y) 是反面教材：T(0)=0 它做到了，却依然不线性。所以 T(0)=0 是"入场券"，不是"通行证"——验证线性时必须三条都查。</p>
+</section>
+
+<section>
+<h3>九、直觉：矩阵在变形空间——单位圆变成椭圆</h3>
+<p>单个点看不出全貌，用完整的图形最好。把<strong>蓝色单位圆</strong>（所有满足 x²+y²=1 的点）输入矩阵 A，A 把每个点 (x,y) 送到 (ax+by, cx+dy)。所有这些像点组成<strong>红色椭圆</strong>。</p>
+<div class="key-insight">矩阵 A 的第 1 列 = 基向量 (1,0) 被送到哪里；第 2 列 = (0,1) 被送到哪里。<strong>矩阵的列就是新坐标系的基向量。</strong>整个空间以这两个新基向量为"骨架"被均匀拉伸和旋转。</div>
+<p>试一个小实验：把 a 拖到 0、b 拖到 1、c 拖到 1、d 拖到 0，A=[[0,1],[1,0]]。这是<strong>反射</strong>——(1,0) 和 (0,1) 互换了。det=−1（det 就是行列式，一个代表"面积放大倍数"的数，负号表示把图形翻了个面；行列式另有专门一课，这里先混个眼熟）。</p>
+</section>
+
+<section>
+<h3>十、几何：圆为什么一定变成椭圆</h3>
+<p>单位圆上的点满足 <strong>x²+y²=1</strong>。经过 A 变换后，像点 (u,v)=(ax+by, cx+dy)。如果 A 可逆，我们可以反解出 (x,y) 用 (u,v) 表示，代入 x²+y²=1，得到关于 u,v 的<strong>二次型方程</strong>——它定义一条<strong>圆锥曲线</strong>。</p>
+<p>因为 A 可逆时原点映到原点、有界闭曲线映到有界闭曲线，所以这条圆锥曲线一定是<strong>椭圆</strong>，不可能是双曲线或抛物线。</p>
+<div class="key-insight">为什么是椭圆而非圆？因为 A 一般不是正交矩阵——它不会同等拉伸所有方向。某些方向被拉伸得更多（长轴），某些更少（短轴）。</div>
+<p><strong>椭圆半轴方向</strong> = A 的左奇异向量；<strong>半轴长度</strong> = A 的奇异值 σ₁,σ₂，来自 AᵀA 的特征值：σᵢ=√λᵢ(AᵀA)。（奇异值、特征值分属《SVD》和《特征值与特征向量》两课，这里先预告椭圆长在哪个方向。）</p>
+</section>
+
+<div class="mini-viz" data-demo="det-zero"></div>
+<section>
+<h3>十一、秩亏损：当椭圆被压扁</h3>
+<p>慢慢把 a 从 3 拖到 0，观察 det = ad−bc 的变化。当 det → 0，椭圆越来越扁——最终变成<strong>一条线段</strong>。</p>
+<p>这意味着什么？A 把整个二维平面压缩到了一维子空间（一条过原点的直线）上。无穷多个不同的输入映射到同一个输出——<strong>信息丢失，A 不再可逆。</strong>这就是为什么 det=0 等价于"矩阵不可逆"：你无法从一条线段恢复出原来的二维圆。</p>
+<p>det=0 的矩阵叫<strong>奇异矩阵</strong>；det≠0 叫<strong>非奇异</strong>。|det| 恰好等于椭圆的面积除以单位圆的面积（π）——正是<strong>面积放大倍数</strong>。</p>
+</section>
+
+<section>
+<h3>十二、关键公式</h3>
+<div class="formula display" data-tex="T(\mathbf{v}) = A\mathbf{v},\quad A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}"></div>
+<div class="formula display" data-tex="T(e_1) = \begin{pmatrix} a \\ c \end{pmatrix},\quad T(e_2) = \begin{pmatrix} b \\ d \end{pmatrix}"></div>
+<div class="formula display" data-tex="\det(A) = ad - bc\quad\text{(面积放大倍数)}"></div>
+<div class="formula display" data-tex="A = U\Sigma V^T\quad\text{(SVD分解)}"></div>
+<div class="formula display" data-tex="\ker(A) = \{\mathbf{v}: A\mathbf{v}=0\}\quad\mathrm{im}(A) = \{A\mathbf{v}: \mathbf{v}\in\mathbb{R}^2\}"></div>
+</section>
+
+<section>
+<h3>十三、完整推导：圆→椭圆的代数证明</h3>
+<p>单位圆：x²+y²=1。线性变换：(u,v)=(ax+by, cx+dy)。若 det≠0，反解：x=(du−bv)/det，y=(−cu+av)/det。代入 x²+y²=1：</p>
+<p><strong>(d²+c²)u² − 2(bd+ac)uv + (b²+a²)v² = (det)²</strong></p>
+<p>这是关于 u,v 的二次型。判别式 Δ=(bd+ac)²−(d²+c²)(b²+a²)=−(ad−bc)²=−(det)²&lt;0（当 det≠0）。Δ&lt;0 → <strong>椭圆</strong>。半轴长度 = AᵀA 的特征值的平方根 = 奇异值 σ₁,σ₂。</p>
+</section>
+
+<section>
+<h3>十四、历史注记</h3>
+<p>线性代数的现代形式诞生于19世纪末到20世纪初。Cayley(1858)引入矩阵乘法；Sylvester(1850)命名"矩阵"；Peano(1888)第一个给出抽象向量空间的公理化定义。但线性变换的几何直觉——"空间在变形"——直到计算机图形学时代才真正可交互地展示出来。</p>
+<p>3Blue1Brown的"线性代数的本质"系列(2016)用动画将线性变换的几何直觉带给了千万人。你现在看到的这个交互式可视化正是沿着这个传统。</p>
+</section>
+
+<section>
+<h3>十五、常见误解澄清</h3>
+<p>❌ "矩阵就是数字的表格"——矩阵是<strong>线性变换的坐标表示</strong>。同一变换在不同基下有不同矩阵。</p>
+<p>❌ "行列式就是ad−bc的计算公式"——行列式是<strong>体积放大倍数</strong>。2×2中ad−bc恰好等于面积比。</p>
+<p>❌ "线性变换一定是旋转+拉伸"——不一定。剪切(如A=[[1,1],[0,1]])是线性变换但不能分解为纯旋转+纯拉伸(需要SVD才能分解为旋转→拉伸→旋转)。</p>
+<p>❌ "椭圆一定以坐标轴为对称轴"——只有对角矩阵产生的椭圆才如此。一般矩阵产生的椭圆可以<strong>倾斜</strong>。</p>
+</section>
+
+<section>
+<h3>十六、试试看（带提示）</h3>
+<p>1. 设 b=c=0、a=2、d=3。椭圆半轴和坐标轴重合吗？半轴长度分别是多少？<br><em>提示：此时矩阵是对角矩阵，A 只沿两个坐标轴拉伸。把 e₁、e₂ 的去向写出来，再对照第十节"半轴 = 奇异值"。</em></p>
+<p>2. 设 a=b=c=d=1。det 是多少？椭圆是什么形状？这个矩阵为什么"危险"？<br><em>提示：det=ad−bc=0 → 压扁。两列 (1,1)、(1,1) 同向，张不成面积。</em></p>
+<p>3. 找一个矩阵使椭圆是<strong>圆</strong>。<br><em>提示：要求所有方向被同等拉伸——A 必须是正交矩阵的标量倍。试试 k·[[0,−1],[1,0]]。</em></p>
+<p>4. 设 a=cosθ、b=−sinθ、c=sinθ、d=cosθ——纯旋转。椭圆和原来的圆有什么不同？det 是多少？<br><em>提示：旋转保持所有方向长度不变，圆仍是圆；det=cos²θ+sin²θ=1。</em></p>
+<p>5. 用第十三节的代数推导验证：A=[[3,1],[0.5,2]] 对应的椭圆方程是什么？<br><em>提示：把 a=3,b=1,c=0.5,d=2 代入 (d²+c²)u²−2(bd+ac)uv+(b²+a²)v²=(det)²，注意先算 det=ad−bc=5.5。</em></p>
+<p>6. 判断 T(x,y)=(2x+y, x−y) 是否线性。若线性，写出它的矩阵。<br><em>提示：三条条件逐条验；矩阵用第五节的方法：e₁↦(2,1)、e₂↦(1,−1)，排成列。</em></p>
+</section>
+
+<section>
+<h3>十七、关联科目</h3>
+<p>→ <strong>行列式</strong>：det(A)=椭圆的面积÷单位圆的面积。下一课用正方形展示这个关系。</p>
+<p>→ <strong>特征值与特征向量</strong>：椭圆长轴方向 = 最大特征值的特征向量。特征向量是"在变换下不改变方向"的特殊方向。</p>
+<p>→ <strong>SVD</strong>：A = UΣVᵀ 将这个变换拆成三步：旋转(Vᵀ) → 沿轴拉伸(Σ) → 旋转(U)。</p>
+<p>→ <strong>量子力学</strong>：量子态空间中的线性变换 = 量子门。Bloch 球上的旋转都是酉矩阵。</p>
+<p>→ <strong>微分几何</strong>：流形在每点的切空间是向量空间。切映射是线性变换。</p>
+<p>→ <strong>数据科学</strong>：PCA=找到数据方差最大方向的特征向量。SVD=把数据矩阵分解为最重要的模式。推荐系统=矩阵分解。</p>
+<p>→ <strong>计算机图形学</strong>：所有3D变换(旋转、缩放、投影、透视)都是4×4矩阵。GPU每秒做数十亿次矩阵乘法。</p>
+</section>
+<section><h3>前沿：矩阵乘法复杂度的突破</h3><p>Strassen(1969)用分块法将矩阵乘法降到O(n^2.81)。当前最优:O(n^2.371552)(Williams-Xu-Xu-Zhou 2024,Duan-Wu-Zhou 2023用AI辅助搜索)。<strong>AlphaTensor</strong>(DeepMind 2022)用强化学习发现新的低秩分解——AI首次改进了几十年前的矩阵乘法算法。仍开放:omega=2(the "ultimate" bound)是否可达？</p></section>
+<section>
+<h3>证明一：秩-零化度定理（维数定理）</h3>
+<p>设 V 是有限维向量空间，T: V → W 是线性映射。定理断言：</p>
+<div class="formula display" data-tex="\dim V = \dim\ker T + \dim\operatorname{im} T"></div>
+<p><strong>证明。</strong> 记 k = dim ker T，n = dim V。取 ker T 的一组基 {v₁,…,vₖ}，将其扩充为 V 的一组基 {v₁,…,vₖ, vₖ₊₁,…,vₙ}。我们证明 {T(vₖ₊₁),…,T(vₙ)} 是 im T 的一组基。</p>
+<p><strong>① 张成性。</strong> 对任意 w ∈ im T，存在 v ∈ V 使 w = T(v)。将 v 按基展开：v = Σᵢ₌₁ⁿ aᵢvᵢ。由线性性，w = T(v) = Σᵢ₌₁ⁿ aᵢT(vᵢ) = Σᵢ₌ₖ₊₁ⁿ aᵢT(vᵢ)，因为 v₁,…,vₖ ∈ ker T，T(vᵢ) = 0。故 w 由 {T(vₖ₊₁),…,T(vₙ)} 张成。</p>
+<p><strong>② 线性无关。</strong> 设 Σᵢ₌ₖ₊₁ⁿ cᵢT(vᵢ) = 0。由线性性 T(Σᵢ₌ₖ₊₁ⁿ cᵢvᵢ) = 0，即 Σᵢ₌ₖ₊₁ⁿ cᵢvᵢ ∈ ker T。于是该向量可被 ker T 的基 {v₁,…,vₖ} 表示：Σᵢ₌ₖ₊₁ⁿ cᵢvᵢ = Σⱼ₌₁ᵏ bⱼvⱼ。整理得 Σⱼ₌₁ᵏ bⱼvⱼ − Σᵢ₌ₖ₊₁ⁿ cᵢvᵢ = 0。由于 {v₁,…,vₙ} 是 V 的基（线性无关），所有系数为 0，特别 cₖ₊₁ = … = cₙ = 0。∎</p>
+<p>故 dim im T = n − k，于是 dim V = k + (n−k) = dim ker T + dim im T。</p>
+<p><strong>推论。</strong> ① T 单射 ⟺ ker T = {0} ⟺ dim im T = dim V。② 当 V = W 时，T 可逆 ⟺ rank T = dim V（满秩）。③ 从 V 到更小维数空间的线性映射必不是单射。</p>
+</section>
+
+<section>
+<h3>证明二：矩阵表示的唯一性</h3>
+<p>设 β = {v₁,…,vₙ} 是 V 的有序基，γ = {w₁,…,wₘ} 是 W 的有序基。定理：映射 Φ: L(V,W) → M<sub>m×n</sub>(F)，T ↦ [T]<sub>β</sub><sup>γ</sup> 是一一对应（线性同构）。</p>
+<p><strong>证明。</strong> 由于 γ 是基，每个 T(vⱼ) 有唯一的展开 T(vⱼ) = Σᵢ₌₁ᵐ aᵢⱼwᵢ，系数 aᵢⱼ 由向量在基下坐标的唯一性确定。定义矩阵 [T]<sub>β</sub><sup>γ</sup> = (aᵢⱼ)。</p>
+<p><strong>单射。</strong> 若 [T]<sub>β</sub><sup>γ</sup> = [S]<sub>β</sub><sup>γ</sup>，则对所有 j，T(vⱼ) 与 S(vⱼ) 在基 γ 下坐标相同，故 T(vⱼ) = S(vⱼ) 对每个基向量成立；由线性性 T 与 S 在任意向量上一致，故 T = S。</p>
+<p><strong>满射。</strong> 任给 m×n 矩阵 A = (aᵢⱼ)，定义映射 T: V → W 为：先令 T(vⱼ) = Σᵢ aᵢⱼwᵢ，再线性延拓——对任意 v = Σⱼ cⱼvⱼ，令 T(v) = Σⱼ cⱼT(vⱼ)。易验证 T 是线性映射（加法与数乘都通过坐标线性地传递），且 [T]<sub>β</sub><sup>γ</sup> = A。</p>
+<p>故 Φ 是双射。由此 L(V,W) ≅ M<sub>m×n</sub>(F)，维数均为 mn——线性变换的全体与矩阵的全体"同构"，这就是我们总用矩阵研究线性变换的合法性基础。</p>
+</section>
+
+<section>
+<h3>反例：线性与非线性之别</h3>
+<p><strong>平移 T(x) = x + b（b ≠ 0）不是线性的。</strong> 验证：T(0) = b ≠ 0，违反线性条件 ① T(0) = 0。也可直接验证加性失败：T(u+v) = u+v+b ≠ T(u)+T(v) = u+v+2b。平移是<strong>仿射</strong>变换——它把直线映成直线、保持平行性与比例，但原点移动了，故不是线性变换。</p>
+<p><strong>T(x) = x² 不是线性的。</strong> 尽管 T(0) = 0，但 T(2v) = 4v² ≠ 2T(v) = 2v²，违反齐次性 ③。满足 T(0)=0 和加性仍可能不线性。</p>
+<p><strong>T(x) = |x| 不是线性的。</strong> T(−1) = 1 ≠ −T(1) = −1。加性也失败：|1+(−1)| = 0 ≠ |1|+|−1| = 2。</p>
+<p><strong>T(x) = ‖x‖ 不是线性的。</strong> 对 v ≠ 0，T(2v) = 2‖v‖ = 2T(v) 看似通过，但 T(−v) = ‖v‖ ≠ −‖v‖。齐次性必须对<strong>所有</strong>标量成立，一个负号就足以证伪。</p>
+<p>教训：<strong>"保持直线的变换" ≠ "线性变换"</strong>。线性要求三条同时成立：T(0)=0、T(u+v)=T(u)+T(v)、T(cv)=cT(v)。三者缺一不可——总可构造满足任意两条而不满足第三条的反例。</p>
+</section>
+
+<section>
+<h3>工作题：核、像与秩-零化度定理</h3>
+<p><strong>题1。</strong> 设 A = [[1, 2], [2, 4]]。求 ker A、im A 及它们的维数，并用秩-零化度定理验证。</p>
+<details><summary>显示解答</summary><p>解方程组 A(x,y)ᵀ = 0：x + 2y = 0 且 2x + 4y = 0——两方程等价，故 y 自由。ker A = {(x,y) : x = −2y} = span{(−2, 1)}，dim ker A = 1。列空间 im A = span{(1,2), (2,4)} = span{(1,2)}（第二列是第一列的 2 倍），dim im A = 1。验证：dim ker + dim im = 1 + 1 = 2 = dim ℝ²。✓</p></details>
+
+<p><strong>题2。</strong> 设 A = [[1,1,1],[1,1,1]] : ℝ³ → ℝ²。求 rank、nullity，判断 A 是否单射、是否满射。</p>
+<details><summary>显示解答</summary><p>im A = span{(1,1)}，rank = 1。由秩-零化度定理：nullity = dim ker A = 3 − 1 = 2。因 nullity = 2 ≠ 0，A 不单射——例如 v = (1,−1,0) 非零但 Av = 0。因 rank = 1 < 2 = dim ℝ²，A 不满射。直观：A 把 ℝ³ 压缩到一条直线，丢失了信息。</p></details>
+
+<p><strong>题3。</strong> 设 T: ℝ² → ℝ²，T(x, y) = (2x + y, x − y)。写出矩阵，求核与像，判断 T 是否可逆。</p>
+<details><summary>显示解答</summary><p>矩阵 A = [[2,1],[1,−1]]。det A = 2·(−1) − 1·1 = −3 ≠ 0，故 A 可逆，T 是双射。于是 ker T = {0}（仅零向量），im T = ℝ²（全空间）。秩-零化度验证：dim ker + dim im = 0 + 2 = 2 = dim ℝ²。✓ 逆矩阵 A⁻¹ = (1/(−3))[[−1,−1],[−1,2]] = (1/3)[[1,1],[1,−2]]。</p></details>
+
+<p><strong>题4。</strong> 用秩-零化度定理回答：是否存在从 ℝ⁵ 到 ℝ³ 的单射线性映射？是否存在从 ℝ³ 到 ℝ⁵ 的满射线性映射？</p>
+<details><summary>显示解答</summary><p>对 T: ℝ⁵ → ℝ³，dim im T ≤ 3，故 nullity = 5 − rank ≥ 5 − 3 = 2 > 0。单射要求 ker = {0}（nullity = 0），矛盾，故不存在单射。对 T: ℝ³ → ℝ⁵，满射要求 rank = 5，但 rank ≤ dim ℝ³ = 3 < 5，故不存在满射。一般结论：线性映射不能把信息压缩后无损失地恢复——单射需要目标空间足够"大"，满射需要目标空间足够"小"，这正是维数这一不变量在起作用。</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Axler, Linear Algebra Done Right (4th ed.)</strong></p>
+<p>&rarr; <strong>K. Hoffman & R. Kunze, Linear Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <strong>行列式</strong>：det(A)=椭圆的面积÷单位圆的面积——行列式是线性变换的体积放大倍数，下一课用正方形展示这个几何关系。</p>
+<p>&rarr; <strong>特征向量</strong>：椭圆长轴方向=A的最大特征值对应的特征向量——在变换下方向不变的"自然坐标轴"。</p>
+<p>&rarr; <strong>SVD</strong>：A=UΣV<sup>T</sup>将线性变换拆为三步：旋转(V<sup>T</sup>)→沿轴拉伸(Σ)→再旋转(U)——奇异值就是椭圆半轴长度。</p>
+<p>&rarr; <strong>谱定理</strong>：对称矩阵可以被特征向量正交对角化——此时椭圆半轴和坐标轴重合，线性变换退化为沿正交方向的独立缩放。</p>
+</section>

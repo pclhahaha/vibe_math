@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Noether环、素理想、Krull维数" />
+  <meta property="og:title" content="交换代数 — Vibe Math" />
+  <meta property="og:description" content="Noether环、素理想、Krull维数" />
+  <title>交换代数 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>💍 交换代数 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">Noether环、素理想、Krull维数</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='commutative-algebra',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/forcing-ch.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🌩️ 集合论 II：力迫与连续统假设</a>
+  <a href="/pages/symplectic-geometry.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌊 辛几何 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：两条曲线的交点，碰得"多狠"？</h3>
+<p>在坐标平面 k² 上（k 是某个域，比如实数域）看两条曲线：抛物线 y = x² 和 x 轴 y = 0。它们显然相交于原点 (0,0)：联立 y = x²、y = 0 得 x² = 0，唯一解 x = 0。</p>
+<p>但问题来了：这两条曲线在 (0,0) 处是<strong>轻轻擦过</strong>还是<strong>重重相撞</strong>？直觉上 y = x² 与 x 轴相切——切得"很重"。怎么把"碰得多狠"变成精确的数学？答案是<strong>理想</strong>（ideal）：</p>
+<div class="formula display" data-tex="I=(y-x^2)\subset k[x,y],\qquad J=(y)\subset k[x,y]"></div>
+<p>解集（零点集）只由理想决定：y = x² 的解集写作 V(I)，y = 0 的解集写作 V(J)。而"交点有多重"藏在商环里——后面（第六节例题 2）会算出 k[x,y]/(y, x²) ≅ k[x]/(x²)，它作为 k 上的向量空间维数为 2。这个"2"就是交点重数：两条曲线在此相切。</p>
+<p>再看另一个例子，纯代数的味道。整数多项式环 Z[x] 里有理想</p>
+<div class="formula display" data-tex="(2,x)\subset\mathbb Z[x]"></div>
+<p>它同时管着"素数 2"和"点 x = 0"：商环 Z[x]/(2,x) ≅ ℤ/2 是一个域，所以 (2,x) 是极大理想——对应"素数 2 与 x 轴原点 x=0 叠在一起的那个点"。素理想链 (0) ⊊ (2) ⊊ (2,x) 的长度就是环的"维数"，答案是 2。</p>
+<p>把这两根线并起来：<strong>交换代数研究的就是"方程的公共解组成怎样的形状"，而形状的全部信息都编码在理想里。</strong>解方程只是第一步，交换代数问的是更深的问题：解连成什么形状？有没有交点？交点碰得有多狠？碎成几块？</p>
+<div class="key-insight">一句话：交换代数 = 给"方程的解"画地图；地图的绘制语言是<strong>理想</strong>——解集的形状（连片、交点、重数、维数）全部藏在理想的结构里。只想理解核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/abstract-algebra.html">抽象代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、热身：为什么"解集"必须用理想、不能用"方程"？</h3>
+<p>一组方程 {f₁ = 0, …, fₙ = 0} 的解集，只用"这组方程"来记是不行的——同一组解集可以被完全不同的方程表出：</p>
+<div class="formula display" data-tex="\{x=0,\ y=0\}\ =\ \{x=0,\ y=0,\ x^2+y^2=0\}\ =\ \{x+y=0,\ x-y=0\}"></div>
+<p>（在特征非 2 的域上，x+y=0 与 x−y=0 的解都是 x=y=0。）所以解集真正依赖的是<strong>方程们张成的理想</strong>：</p>
+<div class="formula display" data-tex="V((f_1,\ldots,f_n))=\{P\in k^n:\ f_1(P)=\cdots=f_n(P)=0\}=\{\text{全体}\sum g_i f_i\text{ 都为零的点}\}"></div>
+<p>把 f₁,…,fₙ 随便加进任何组合 Σgᵢfᵢ（这是理想的定义：对加法封闭、被外乘吸收），解集一个点都不变。所以<strong>理想 = "方程的一切组合"的集合，它才是解集的真正身份证</strong>。</p>
+<p>还有一层更深刻的理由：在有些环里，<strong>元素</strong>的分解是坏的，<strong>理想</strong>的分解却是好的。经典例子 Z[√−5]：</p>
+<div class="formula display" data-tex="6=2\cdot3=(1+\sqrt{-5})(1-\sqrt{-5})"></div>
+<p>四种写法、互不等价——元素层面唯一分解失败。但把每个"数"换成它生成的<strong>主理想</strong>，理想层面却重新有了干净的结构（Dedekind 整环中理想唯一分解为素理想之积）。<strong>正是这一点让"理想"而非"元素"成为交换代数的核心对象</strong>（第十节准素分解是它在一般 Noether 环上的推广）。</p>
+</section>
+
+<section>
+<h3>二、理想运算与解集的词典</h3>
+<p>理想之间有三种基本运算，它们与零点集 V(·) 的几何操作一一对应。这是全课最常用的"字典"：</p>
+<div class="formula display" data-tex="V(I+J)=V(I)\cap V(J)\qquad(\text{和 }=\text{几何取交})"></div>
+<div class="formula display" data-tex="V(I\cap J)=V(I)\cup V(J)\qquad(\text{交 }=\text{几何取并})"></div>
+<div class="formula display" data-tex="V(IJ)=V(I)\cup V(J)\qquad(\text{积}\subseteq\text{交};\ I\cap J\subseteq IJ\ \text{一般不反向})"></div>
+<p>验证第一条的例子：k[x,y] 中 I = (y−x²)（抛物线）、J = (y)（x 轴），则 I + J = (y−x², y) = (y, x²)，V(I+J) = {(0,0)} = V(I) ∩ V(J) ✓（第六节例题 2 完整计算）。</p>
+<p><strong>为什么研究这些运算？</strong>因为它们把几何问题翻译成纯代数问题：想知道两条曲线在哪相交，不必画图，算理想的"和"；想知道并集，算"交"。代数世界里的加减乘除，精确镜像了几何世界里的并交与包含。</p>
+</section>
+
+<section>
+<h3>三、完整例题 1：ℤ/12ℤ 的所有理想、素理想、极大理想与 Krull 维数</h3>
+<p>从一个能从头算到尾的小环出发，把本课的核心概念全部串一遍。</p>
+<p><strong>第 1 步：列出所有理想。</strong>由对应定理，ℤ/12ℤ 的理想 ⟷ ℤ 中包含 (12) 的理想，即 (n) 其中 n | 12：</p>
+<div class="formula display" data-tex="(0),\ (2)=\{0,2,4,6,8,10\},\ (3)=\{0,3,6,9\},\ (4)=\{0,4,8\},\ (6)=\{0,6\},\ (1)=\mathbb Z/12\mathbb Z"></div>
+<p>共 6 个理想。逐个核对（比如 (2) 对加法封闭、被任意元素乘后仍在其中）。</p>
+<p><strong>第 2 步：判别素理想与极大理想。</strong>方法：理想 P 素 ⟺ 商环 R/P 是整环（无零因子）；理想 M 极大 ⟺ 商环 R/M 是域。逐个算商：</p>
+<div class="formula display" data-tex="\mathbb Z/12/(2)\cong\mathbb Z/2\ \text{域}\quad\Rightarrow\quad (2)\ \text{素且极大}"></div>
+<div class="formula display" data-tex="\mathbb Z/12/(3)\cong\mathbb Z/3\ \text{域}\quad\Rightarrow\quad (3)\ \text{素且极大}"></div>
+<p>其余呢？ℤ/12/(4) ≅ ℤ/4 有零因子（2·2 = 0 而 2 ≠ 0），不是整环，故 (4) 非素、非极大；ℤ/12/(6) ≅ ℤ/6 也不是整环，故 (6) 非素；ℤ/12/(0) ≅ ℤ/12 非整环，故 (0) 非素。结论：</p>
+<div class="formula display" data-tex="\text{素理想}=\{(2),(3)\}=\text{极大理想}"></div>
+<p><strong>第 3 步：求 Krull 维数。</strong>维数 = 最长严格素理想链的长度。(2)、(3) 互不包含，任何素理想链最多只有一项，故</p>
+<div class="formula display" data-tex="\dim_{\mathrm{Krull}}\mathbb Z/12\mathbb Z=0"></div>
+<p><strong>第 4 步：解释为什么"素=极大"。</strong>对一般环，极大理想必素，但反之不成立（例：ℤ 中 (0) 素但非极大）。ℤ/12ℤ 的素理想全是极大，是因为它有有限多个素理想且两两不可比——一个"矮胖"的 0 维环。∎</p>
+<p>这道题的方法（列出理想 → 算商环 → 判素/极大 → 数链长）可以原样搬到 k[x,y] 与 Z[x]（第六、九节例题），是交换代数的"标准起手式"。</p>
+</section>
+
+<section>
+<h3>四、为什么理想是交换代数的核心对象？——素理想、极大理想与"地图"</h3>
+<p>综合前面：① 解集只依赖理想（第一节）；② 理想运算 = 几何运算（第二节）；③ 素理想/极大理想精确对应几何里的"不可约对象/点"（第三节）。这三条合起来，构成交换代数的核心信念：</p>
+<div class="key-insight"><strong>环 ↔ 空间的对偶。</strong>一个交换环 R 的所有素理想构成它的<strong>素谱</strong> Spec(R)——这是"R 编码的空间"的全部"点"。极大理想是"通常的点"，素理想是"不可约的整块子簇"。Grothendieck 把这一对应写成：<strong>环 R ⟷ 仿射概形 Spec(R)，素理想 ⟷ 子簇，极大理想 ⟷ 点，整闭包 ⟷ 正规簇</strong>。交换代数＝代数几何的"计算器"：EGA/SGA 用交换代数重写了代数几何的整个基础。</div>
+<p>更直观的"为什么"：<strong>商环 R/I 就是"限制在解集 V(I) 上的函数环"</strong>——两个函数若在 V(I) 上取值相同就看成同一个。于是理想越"大"，剩下的函数越少，对应的"空间"越小；极大理想商出来只剩"一个点上的常数"，所以是域。理想就是这把"收缩地图"的开关。</p>
+</section>
+
+<section>
+<h3>五、Noether 环与 Hilbert 基定理——"有限"为何如此珍贵</h3>
+<p>代数几何里最常见的环（多项式环、代数簇的坐标环）都有一个共性：<strong>每个理想都有限生成</strong>。这叫 Noether 条件（ACC，升链条件）——用无限语言说，任何理想的升链 I₁ ⊆ I₂ ⊆ … 最终稳定。直观含义：<strong>代数簇由有限个方程定义，不会出现"越加越多的方程永远停不下来"。</strong></p>
+<div class="formula display" data-tex="R\ \text{Noether}\iff \text{每个理想有限生成}\iff \text{满足 ACC}\iff \text{每个非空理想族有极大元}"></div>
+<p><strong>为什么"有限"珍贵？</strong>无穷生成的理想无法拿来计算，也无法逐项验证性质；有限生成意味着"给出一份清单就能算"。而保持 Noether 性的最重要工具就是 Hilbert 基定理：</p>
+<div class="formula display" data-tex="\text{Hilbert 基定理：}\ R\ \text{Noether}\ \Rightarrow\ R[x]\ \text{Noether}\ \Rightarrow\ R[x_1,\ldots,x_n]\ \text{Noether}"></div>
+<p>推论：有限生成 R-代数（当 R Noether）是 Noether 的——代数簇的坐标环有限生成，从而由有限个方程定义。完整证明在第十二节，那里会展示"首项系数理想 + 降次"的标准手法。</p>
+<p>直观理解：R[x] 里任一理想 I，先看所有多项式的<strong>首项系数</strong>——它们在 R 里张成一个理想（有限生成），再用这些有限多个首项系数对应的多项式，逐步消去高次项，最终把 I 整个"降次"到有限步内生成。这是"有限性从系数传递到多项式"的典型机制。</p>
+</section>
+<section>
+<h3>六、完整例题 2：k[x,y] 中 (y−x²) 与 (y) 的和、交、积与交点重数</h3>
+<p>回到〇节的几何问题，把所有断言一步步算到底。</p>
+<p><strong>第 1 步：确认两个理想。</strong>I = (y−x²)（抛物线 y = x² 的方程），J = (y)（x 轴）。V(I) 是抛物线，V(J) 是 x 轴，二者在原点相切。</p>
+<p><strong>第 2 步：算和 I + J，并读出交点。</strong></p>
+<div class="formula display" data-tex="I+J=(y-x^2,\,y)=(y,\,x^2)\qquad(\text{在模 }y\text{ 下 }y-x^2\equiv -x^2)"></div>
+<div class="formula display" data-tex="k[x,y]/(y,\,x^2)\cong k[x]/(x^2),\qquad \dim_k k[x]/(x^2)=2\quad(\text{基 }1,\ x)"></div>
+<p>几何：V(I+J) = V(y, x²) = {(x,y) : y = 0, x² = 0} = {(0,0)} = V(I) ∩ V(J)。商环维数 2 就是<strong>交点重数</strong>：两条曲线在原点<strong>相切</strong>，交得"两重"。（若换成两条横穿直线，比如 (y) 与 (x)，则 k[x,y]/(x,y) ≅ k 维数 1——普通交点只重 1。）</p>
+<p><strong>第 3 步：算交 I ∩ J。</strong>k[x,y] 是 UFD，(y−x²)、(y) 都不可约且互不整除（y−x² 不含 y 的因子），故 lcm = 乘积：</p>
+<div class="formula display" data-tex="I\cap J=(y(y-x^2))=(y^3-x^2y),\qquad V(I\cap J)=V(I)\cup V(J)\ \text{（抛物线 }\cup\ \text{x 轴）}"></div>
+<p>核对 V(I∩J) = V(y(y−x²))：乘积为零 ⟺ 至少一个因子为零 ⟺ 落在 y = 0 或 y = x² 上——正是并集。✓ 这正是字典"交 = 几何取并"。</p>
+<p><strong>第 4 步：算积 IJ 并与交对照。</strong>IJ = (y(y−x²)) = I ∩ J（因两理想"互素"）。一般情形积 ⊊ 交，例如 k[x,y] 中 (x) ∩ (x²) = (x²) 而 (x)(x²) = (x³)——差就差在"共享的因子只算一遍"。</p>
+<p><strong>第 5 步：用局部化量"局部重数"。</strong>在原点处聚焦：取局部环 k[x,y]_(x,y)（见第七节），其中的理想 (y−x², y) = (y, x²) 仍是那个"两重切点"的代数化身。商 k[x,y]/(y,x²) 维数 2 不随视角改变——重数是个局部不变量。∎</p>
+</section>
+
+<section>
+<h3>七、局部化——"在某点附近聚焦"</h3>
+<p>取环 R 和乘法闭子集 S（乘法闭＝含 1、对乘法封闭，如"分母不含某素理想"）。局部化</p>
+<div class="formula display" data-tex="S^{-1}R=\left\{\frac{r}{s}: r\in R,\ s\in S\right\}\Big/\sim\qquad(\text{允许除以 }S\text{ 中元素})"></div>
+<p>是"允许除以 S 中元素"的环。特例：取 S = R − p（p 为素理想），得到 R_p——在素理想 p 处聚焦的环，它有唯一极大理想 pR_p，是<strong>局部环</strong>。</p>
+<div class="key-insight"><strong>为什么局部化？</strong>几何上，代数簇在某点附近长什么样，只取决于"包含该点的所有开邻域"上的函数——这就是"茎"（stalk）。局部环 R_p 正是茎的代数版：<strong>局部环的 Krull 维数 = 簇在该点的局部维数；正则局部环 ⟺ 非奇异点。</strong>这是代数簇"奇异性"的代数刻画。</div>
+<p>例：k[x] 在 (x) 处局部化得 k[x]_(x) = {f/g : g(0) ≠ 0}，极大理想 (x)，商为 k。它精确编码"x = 0 附近的一切函数"。素理想对应的严格定理在第十三节。</p>
+</section>
+
+<section>
+<h3>八、Krull 维数——素理想链的长度</h3>
+<p><strong>Krull 维数</strong> = 最长严格素理想链的长度：</p>
+<div class="formula display" data-tex="\dim R=\max\{n: \mathfrak p_0\subsetneq\mathfrak p_1\subsetneq\cdots\subsetneq\mathfrak p_n\ \text{全为素理想}\}"></div>
+<p>它的几何意义正是代数簇的维数：</p>
+<div class="formula display" data-tex="\dim V = \dim_{\mathrm{Krull}} A(V)\qquad(A(V)=\text{坐标环})"></div>
+<p>例子（完整计算见第三、九节例题）：ℤ 的素理想 (0) ⊊ (p)，dim ℤ = 1；ℤ/12ℤ 的素理想互不可比，dim = 0；ℤ[x] 有链 (0) ⊊ (2) ⊊ (2,x)，dim ℤ[x] = 2；k[x,y] 有链 (0) ⊊ (x) ⊊ (x,y)，dim = 2。</p>
+<p><strong>为什么链长 = 维数？</strong>直觉：一个点（极大理想）"坐"在一条曲线上（高度 1 的素理想），曲线"坐"在平面上（高度 2 的素理想）——每多一层"包裹"，就多一个自由度，这正是维数的意思。Non-Noether 环甚至可以有无限链（见第十四节反例），那时 dim = ∞。</p>
+</section>
+
+<section>
+<h3>九、完整例题 3：Z[x] 的理想结构与 Krull 维数</h3>
+<p>Z[x] 是"数论 + 几何"的交汇点：它既携带素数的算术（来自 ℤ），又携带 x 的几何（来自多项式）。</p>
+<p><strong>第 1 步：证明 (2,x) 是极大理想。</strong></p>
+<div class="formula display" data-tex="\mathbb Z[x]/(2,x)\cong\mathbb F_2[x]/(x)\cong\mathbb F_2\qquad(\text{域})"></div>
+<p>（第一步：模 2 把系数打回 ℤ/2；第二步：模 x 把多项式打回常数。）商环是域 ⟹ (2,x) 极大。几何含义：点 (2 的模算术, x = 0) 是 Spec(ℤ[x]) 上的一个"点"。</p>
+<p><strong>第 2 步：证明 (2,x) 不是主理想（不能由一个元素生成）。</strong>反设 (2,x) = (f)。则 f | 2 且 f | x。ℤ[x] 中整除 2 者只有 ±1、±2；整除 x 者只有 ±1、±x。共同者只有 ±1，于是 (f) = (1) = ℤ[x] ≠ (2,x)，矛盾。故需要两个生成元——这也是"ℤ[x] 是 UFD 但不是 PID"的直接证据（PID 的极大理想必主，而 (2,x) 是极大且非主）。</p>
+<p><strong>第 3 步：搭素理想链，确定维数。</strong></p>
+<div class="formula display" data-tex="(0)\subsetneq(x)\subsetneq(2,x),\qquad (0)\subsetneq(2)\subsetneq(2,x)"></div>
+<p>逐一确认素性：(0) 素（ℤ[x] 整环）；(x) 素（ℤ[x]/(x) ≅ ℤ 整环）；(2) 素（ℤ[x]/(2) ≅ 𝔽₂[x] 整环）；(2,x) 极大故素。链长 2，故 dim ℤ[x] ≥ 2；由一般定理 dim R[x] = dim R + 1（R Noether）得精确值：</p>
+<div class="formula display" data-tex="\dim_{\mathrm{Krull}}\mathbb Z[x]=\dim\mathbb Z+1=1+1=2"></div>
+<p><strong>第 4 步：读出"几何"。</strong>素理想 (p) 对应"素数 p 处的整条竖直线"（高度 1）；(p, f)（f 在 𝔽_p[x] 中不可约）对应"该线上 x 的一个点"。Spec(ℤ[x]) 被想成一条"以素数打底、x 轴横贯"的算术曲面——这正是算术几何的基本图景。∎</p>
+</section>
+
+<section>
+<h3>十、准素分解——"因子分解"的代数版</h3>
+<p>在 Noether 环中，每个理想 I 可写成准素理想的交：</p>
+<div class="formula display" data-tex="I=\bigcap Q_i\qquad(Q_i\text{ 为准素理想，}\sqrt{Q_i}\text{ 为素理想})"></div>
+<p>这是整数因子分解 (n) = ∏ p_i^{e_i} 的推广。几何上：代数簇分解为不可约分量的并（允许"嵌入分量"）。对 (6) ⊂ ℤ：(6) = (2) ∩ (3) 已是准素分解；对 (4) ⊂ ℤ：(4) 自身是准素（√(4) = (2)）。</p>
+<p><strong>为什么需要"准素"而不是"素"？</strong>因为一般理想没有素分解（(4) 不能写成素理想的交），准素理想（根为素、且"幂次都吞进去"）是离素理想最近的可分解对象——正如 (2)² = (4) 在整数里对应"素数 2 的二次方"。</p>
+</section>
+
+<section>
+<h3>十一、深度与 Cohen–Macaulay 环</h3>
+<p>局部环 (R, m) 的深度 depth(R) = 最长的 R-正则序列长度（正则序列＝一个元素列，其中每个元素都不是前面积分环上的零因子）。</p>
+<div class="formula display" data-tex="\operatorname{depth}R\le\dim R\qquad(\text{等号成立} \iff R\ \text{是 Cohen–Macaulay 环})"></div>
+<p>CM 环在代数几何中对应"无嵌入分量"的簇——所有不可约分量都有正确的维数。Serre 的 (S_n) 条件：在高度 ≤ n 的素理想 P 处，depth(R_P) ≥ min(n, dim R_P)。这些是代数簇"正常性"与"奇异性"的精确代数刻画。</p>
+</section>
+<section>
+<h3>十二、证明——Hilbert 基定理：R Noether ⟹ R[x] Noether</h3>
+<p><strong>定理</strong> 设 R 为 Noether 环，则多项式环 R[x] 也是 Noether 环。</p>
+<p><strong>证明（标准证明的严格概要）。</strong></p>
+<p><strong>第一步：定义首项系数理想。</strong> 设 I⊴R[x]。对每个 n，令 Lₙ={a∈R : a=0 或 a 是 I 中某多项式 f（deg f=n）的首项系数}。每个 Lₙ 是 R 的理想，且</p>
+<div class="formula display" data-tex="L_0\subseteq L_1\subseteq L_2\subseteq\cdots"></div>
+<p>是 R 中理想的升链。</p>
+<p><strong>第二步：链稳定。</strong> R Noether ⟹ R 满足 ACC（升链条件），故存在 N 使 L_N=L_{N+1}=⋯。</p>
+<p><strong>第三步：逐阶有限生成。</strong> 对每个 n≤N，Lₙ 是 R 的有限生成理想，取生成元 {a_{n,i}}，再选 I 中首项系数恰为 a_{n,i} 的多项式 f_{n,i}。令 S={f_{n,i} : 0≤n≤N, i}。</p>
+<p><strong>第四步：S 生成 I（首项消去 / 降次论证）。</strong> 任取 f∈I，设首项系数为 a=lc(f)∈L_d。若 d≤N，则 a∈L_d=⟨a_{d,i}⟩；若 d&gt;N，则 L_d=L_N=⟨a_{N,i}⟩。总之 a=Σcᵢa_{e,i}（e=min(d,N)），故 f−Σcᵢ x^{d−deg f_{e,i}} f_{e,i} 的首项被消去，次数严格下降。重复此过程有限次，f 被化为次数 ≤N 的多项式，最终属于 ⟨S⟩。故 I=(S) 有限生成。∎</p>
+<div class="formula display" data-tex="R\text{ Noether} \Longrightarrow R[x]\text{ Noether} \Longrightarrow R[x_1,\dots,x_n]\text{ Noether}"></div>
+<p>推论：有限生成 R-代数（当 R Noether）是 Noether 的——代数簇的坐标环有限生成，从而由有限个方程定义。</p>
+</section>
+
+<section>
+<h3>十三、证明——局部化与素理想对应</h3>
+<p><strong>定理（素理想对应）。</strong> 设 R 为环，S⊆R 为乘法闭子集。则映射</p>
+<div class="formula display" data-tex="\{\mathfrak p\lhd R : \mathfrak p\cap S=\varnothing\} \longleftrightarrow \{\mathfrak q\lhd S^{-1}R\},\qquad \mathfrak p\mapsto S^{-1}\mathfrak p,\ \ \mathfrak q\mapsto \mathfrak q\cap R"></div>
+<p>是双射（一个是另一个的逆）。</p>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：S⁻¹p 是素理想。</strong> 对乘法闭集 S，S⁻¹p={p/s : p∈p, s∈S} 是 S⁻¹R 的理想；因 p∩S=∅，S⁻¹p 是真理想（若 1=p/s，则存在 t∈S 使 t(s−p)=0，即 ts=tp∈p；因 t∉p 且 p 素，得 s∈p∩S，矛盾）。素性：若 (a/s)(b/t)=ab/st∈S⁻¹p，则存在 u∈S 使 uab∈p；因 u∉p 且 p 素，得 a∈p 或 b∈p，故 a/s∈S⁻¹p 或 b/t∈S⁻¹p。</p>
+<p><strong>第二步：q∩R 是素理想且避 S。</strong> 设 q⊂S⁻¹R 素。则 p=q∩R 是 R 的素理想（素性沿包含映射传递）。若 s∈p∩S，则 s/1∈q；但 s/1 是单位（逆为 1/s），单位属于真理想 ⟹ q=S⁻¹R，矛盾。故 p∩S=∅。</p>
+<p><strong>第三步：互逆性。</strong> 由 s∉q 可证 S⁻¹(q∩R)=q（S⁻¹R 的元素在素理想 q 中都能写成 q∩R 中元素的商）；由 p∩S=∅ 可证 S⁻¹p∩R=p。两方向复合为恒等，故为双射。∎</p>
+<p>特例：取 S=R−p（p 素理想）得局部化 R_p，其素理想对应 R 中包含于 p 的素理想，p 本身成为唯一极大理想——R_p 是局部环。这是代数几何"在点 p 处聚焦，茎=局部环"的代数根据。</p>
+</section>
+
+<section>
+<h3>十四、反例——非 Noether 环与素理想链</h3>
+<p><strong>反例 1：非 Noether 环。</strong> R=k[x₁,x₂,x₃,…]（域 k 上无穷多变量的多项式环）。理想</p>
+<div class="formula display" data-tex="I_n=(x_1,\dots,x_n)\subsetneq I_{n+1}"></div>
+<p>构成不终止的严格升链，R 不满足 ACC，故非 Noether。另一个经典例子：k[x, x^{1/2}, x^{1/3}, …]，其理想 (x^{1/2})⊊(x^{1/3})⊊⋯ 严格升。</p>
+<p><strong>反例 2：素理想链的有限性。</strong> ℤ 的素理想为 (0)⊊(p)，最大链长 1，故 dim ℤ=1。ℤ[x] 有素理想链 (0)⊊(x)⊊(2,x)，dim ℤ[x]=2。非 Noether 环甚至可有无限长素理想链：k[x₁,x₂,…] 中 (x₁)⊊(x₁,x₂)⊊⋯ 无限，其 Krull 维数为无穷。</p>
+<p><strong>反例 3：Noether 但维数 &gt;1。</strong> k[x,y] Noether（Hilbert 基定理）但 dim=2，链 (0)⊊(x)⊊(x,y)。这提醒：Noether ⟺ ACC，与 Krull 维数无直接对应。</p>
+</section>
+
+<section>
+<h3>十五、关键公式</h3>
+<div class="formula display" data-tex="V(I+J)=V(I)\cap V(J),\qquad V(I\cap J)=V(I)\cup V(J)"></div>
+<div class="formula display" data-tex="R\text{ Noether} \Rightarrow R[x]\text{ Noether}\quad\text{(Hilbert 基定理)}"></div>
+<div class="formula display" data-tex="\dim V = \dim_{\mathrm{Krull}} A(V),\qquad \dim\mathbb Z=1,\ \dim\mathbb Z[x]=2,\ \dim k[x,y]=2,\ \dim(\mathbb Z/12)=0"></div>
+<div class="formula display" data-tex="\text{素理想}\ \longleftrightarrow\ \text{不可约子簇},\qquad \text{极大理想}\ \longleftrightarrow\ \text{点},\qquad \operatorname{depth}R\le\dim R\ (=\text{当且仅当 CM})"></div>
+</section>
+
+<section>
+<h3>十六、前沿：Hochster 的直和猜想及其解决</h3>
+<p>Hochster (1970s) 提出<strong>直和分量猜想</strong>：正则局部环 R 的任何模有限扩张环 S（R⊂S 且 S 是有限 R-模）都以 R 为直和项——即嵌入 R↪S 作为 R-模可裂。André (2016) 用 perfectoid 空间（Scholze）证明了这个猜想！这是交换代数中最大的突破之一——perfectoid 方法从算术几何流入交换代数。</p>
+</section>
+
+<section>
+<h3>十七、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 列出 ℤ/8ℤ 的所有理想，并指出其中哪些是素理想、哪些是极大理想。</p>
+<p><em>提示：ℤ/8 的理想 ⟷ ℤ 中包含 (8) 的理想，即 (0),(2),(4),(8)=(0)……只有 (0),(2),(4)。算商环：(4) 的商 ℤ/4 有零因子，非素；(2) 的商是域，素且极大；(0) 的商 ℤ/8 非整环。</em></p>
+<p><strong>2.</strong> 在 k[x,y] 中证明 (x,y) 是极大理想，并求 k[x,y]/(x,y) 的维数（作为 k 上的向量空间）。</p>
+<p><em>提示：k[x,y]/(x,y) ≅ k，域，故 (x,y) 极大；商环作为 k-向量空间维数 1（只有常数 1 一个基）。</em></p>
+<p><strong>3.</strong> 求出 (x) ∩ (x²) 与 (x)(x²) 在 k[x] 中的结果，说明为何二者不同。</p>
+<p><em>提示：(x) ∩ (x²) = (x²)（因为 (x²) ⊂ (x)），而 (x)(x²) = (x³)。差在"共享因子只算一遍"——这正是为什么交与积一般不等（第六节第 4 步）。</em></p>
+<p><strong>4.</strong> 证明 Z[x] 中的理想 (2, x) 不能由单一元素生成（用整除性论证）。</p>
+<p><em>提示：若 (2,x) = (f)，则 f 整除 2 也整除 x；Z[x] 中整除 2 者只能是 ±1, ±2，整除 x 者只能是 ±1, ±x，共同者只有 ±1，故 (f) = (1)，矛盾。</em></p>
+<p><strong>5.</strong> 求局部环 k[x]_(x) 的极大理想和 Krull 维数。</p>
+<p><em>提示：k[x]_(x) = {f/g : g(0) ≠ 0}；唯一极大理想是 (x)；链 (0) ⊊ (x) 长 1，dim = 1。这与"x=0 附近是一维曲线"吻合。</em></p>
+<p><strong>6.</strong> 用 Hilbert 基定理说明：为什么代数簇（有限个多项式方程的公共零点集）总是能被有限个方程定义？</p>
+<p><em>提示：坐标环 A = k[x₁,…,xₙ]/I 是有限生成 k-代数，由 Hilbert 基定理（k Noether ⟹ k[x₁,…,xₙ] Noether）知它是 Noether 环，故其每个理想（包括 I 及与之相关的定义理想）有限生成——即由有限个方程定义。</em></p>
+</section>
+
+<section>
+<h3>十八、附：工作题——求环的理想与判断 Noether</h3>
+<p><strong>工作题 1（求理想）。</strong> 对环 R=ℤ/12ℤ：(a) 列出 R 的所有理想；(b) 指出素理想与极大理想；(c) 求 Krull 维数。</p>
+<details><summary>显示解答</summary><p>
+理想：ℤ/12ℤ 的理想对应 ℤ 中包含 (12) 的理想（对应定理），即 ⟨2⟩={0,2,4,6,8,10}, ⟨3⟩={0,3,6,9}, ⟨4⟩={0,4,8}, ⟨6⟩={0,6}, 0, 及全环。<br>
+素理想：对应 ℤ 中包含 12 的素理想 (2),(3)，故素理想恰为 ⟨2⟩ 与 ⟨3⟩。<br>
+极大理想：商 ℤ/12/⟨2⟩≅ℤ/2ℤ 为域，商 ℤ/12/⟨3⟩≅ℤ/3ℤ 为域（第三同构定理），故 ⟨2⟩,⟨3⟩ 均为极大理想；且素理想=极大理想。<br>
+(c) 最长素理想链为单点链（⟨2⟩,⟨3⟩ 互不包含），故 dim Krull ℤ/12ℤ=0。</p></details>
+<p><strong>工作题 2（判断 Noether）。</strong> 判断下列环是否 Noether：(a) ℤ；(b) ℚ[x]；(c) ℚ[x₁,x₂,…]；(d) M₂(ℝ)。</p>
+<details><summary>显示解答</summary><p>
+(a) 是。ℤ 是 PID，PID 的理想全部主理想且满足 ACC。<br>
+(b) 是。ℚ[x] 是 PID 因而 Noether；也可由 Hilbert 基定理（ℚ Noether ⟹ ℚ[x] Noether）。<br>
+(c) 否。链 (x₁)⊊(x₁,x₂)⊊⋯ 严格升不终止。<br>
+(d) 是。M₂(ℝ) 是 ℝ 上 4 维向量空间，左理想都是 ℝ 子空间，任意升链在至多 4 步后稳定。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Lang, Algebra</strong></p>
+<p>&rarr; <strong>M. Artin, Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/abstract-algebra.html">抽象代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：同一学科分类「代数」。</p>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：同一学科分类「代数」。</p>
+<p>&rarr; <a href="/pages/universal-algebra.html">🧱 泛代数</a>：同一学科分类「代数」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/commutative-algebra.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

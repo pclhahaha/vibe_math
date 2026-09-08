@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="四个方程统一电与磁——狭义相对论的前夜" />
+  <meta property="og:title" content="电磁学与 Maxwell 方程组 — Vibe Math" />
+  <meta property="og:description" content="四个方程统一电与磁——狭义相对论的前夜" />
+  <title>电磁学与 Maxwell 方程组 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⚡ 电磁学与 Maxwell 方程组 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">四个方程统一电与磁——狭义相对论的前夜</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='electromagnetism',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/nuclear-physics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⚛️ 核物理</a>
+  <a href="/pages/goldbach.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">👬 哥德巴赫猜想 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——电和磁原来是同一件事</h3>
+<p>电和磁看起来是两回事：摩擦起电、指南针。但把它们放在一起看——电流能产生磁场（电磁铁），变化的磁场能产生电场（发电机的原理）——原来它们是同一对"兄弟"，互相转化。</p>
+<p>电磁学为什么存在？因为把这对关系写成一套方程组（Maxwell方程组），就同时解释了电、磁、光（光就是电磁波），是所有电子设备、通信技术的物理基础。</p>
+<div class="key-insight">电与磁是一对会互相转化的兄弟——Maxwell方程组把电、磁、光统一成一套故事。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/gradient.html">梯度与方向导数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、电荷和电场——两个电荷之间，隔着真空的力怎么传？</h3>
+<p>把梳子在头发上蹭几下，再去碰小纸屑，纸屑会被吸起来——这就是摩擦起电。两个电荷之间，要么相互吸引（正和负），要么相互排斥（同号相斥）。可问题来了：两个电荷中间隔着真空，谁也不碰谁，这个力是怎么"隔空"传过去的？</p>
+<p>物理学家给了一个很实用的解释：每个电荷周围都"弥漫"着一层看不见的东西，叫<strong>电场</strong>（electric field）。电荷不需要直接去推另一个电荷，它只做一件事——<strong>在自己周围"布置"一个电场；别的电荷感受到这个电场，就被推了</strong>。电场就是电荷之间传话的"中间人"。</p>
+<p>想象磁铁靠近一堆铁屑：你看不见磁场，但铁屑会沿着一条条弯曲的线排开，那些线就是磁感线——"中间人"留下的脚印。电场也一样，可以想象成布满空间的箭头，每个箭头告诉你：放在这里的电荷会被往哪个方向推、推得多用力。箭头越密越强，越远越弱（所以距离越远，电荷间的力越小）。</p>
+<p>现在用数字感受这个"中间人"的力气。库仑定律是这一切的起点：</p>
+<div class="formula display" data-tex="F=\frac{1}{4\pi\varepsilon_0}\frac{q_1q_2}{r^2},\qquad \frac{1}{4\pi\varepsilon_0}\approx8.99\times10^9\,\mathrm{N\cdot m^2/C^2}"></div>
+<p><strong>完整例题 1：两个点电荷之间的斥力。</strong>两个各带 q₁ = q₂ = 1.0×10⁻⁶ C（1 微库）的电荷，相距 r = 0.30 m。它们之间的力有多大？</p>
+<div class="formula display" data-tex="F=8.99\times10^9\times\frac{(1.0\times10^{-6})^2}{(0.30)^2}=8.99\times10^9\times\frac{10^{-12}}{9\times10^{-2}}\approx0.10\,\mathrm{N}"></div>
+<p>0.10 N 大约是一枚 10 g 硬币所受的重力——两个微库电荷隔着 30 cm 就能互相推着玩。再看电场强度：q = 1.0×10⁻⁶ C 在 r = 0.30 m 处产生的电场是</p>
+<div class="formula display" data-tex="E=\frac{1}{4\pi\varepsilon_0}\frac{q}{r^2}=8.99\times10^9\times\frac{10^{-6}}{9\times10^{-2}}\approx1.0\times10^5\,\mathrm{N/C}"></div>
+<p>于是第二个电荷受到的力 F = qE = 1.0×10⁻⁶ × 1.0×10⁵ = 0.10 N——两条路给出同一个数字：<strong>"场"和"电荷直接互算"只是两种记账，但场能回答"这一点的力从哪来"，而且信息逐点、局域地传播</strong>，这正是后面把库仑定律升级为微分方程的关键。</p>
+<p><strong>试一试</strong>：把距离从 0.30 m 缩到 0.15 m（一半），两电荷间的力变成原来的几倍？不用计算器，靠"平方反比"先猜再验。</p>
+<details><summary>提示</summary>
+<p>力与 1/r² 成正比。距离减半则 r² 变成原来的 1/4，取倒数，力变成原来的 4 倍，即约 0.40 N。</p>
+</details>
+<p>记住这一句就够了：<strong>电荷不是隔空"发功"，而是通过弥漫在空间的电场来互相推挤</strong>。把力想成"场"，是理解整个电磁学甚至现代物理的第一步。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>二、电和磁是一家——电流产生磁场、磁场变化产生电场</h3>
+<p>电和磁看起来是两门手艺：静电让头发炸毛，指南针找南北极。但 19 世纪的实验发现，它们其实是<strong>一家人</strong>，而且会<strong>互相生</strong>出对方。</p>
+<p>第一件事：<strong>电流能产生磁场</strong>。把一根导线通上电，周围的指南针会转动——电流像一个"磁铁制造机"。这就是电磁铁的原理，也是电冰箱门上那条封条的原理。第二件事：<strong>变化的磁场能产生电场</strong>。磁铁在导线附近来回抽动，导线里就会产生电流（叫<strong>电磁感应</strong>），发电机、充电器全靠这一手。</p>
+<p>所以两个方向都通了：电流「生」出磁场，变化着的磁场又「生」出电流（电场）。它们不是各管各的，而是<strong>互生关系</strong>——一个变，另一个就跟着动。注意关键词是"<strong>变化</strong>"：静止不动的磁铁不会持续发电，非要磁铁动起来（让磁场变化）才行。这种"一方的变化推动另一方"的默契，正是后面 Maxwell 方程组里的核心剧情。</p>
+<p>把"电流会产生磁场"这个方向用数字落地。<strong>完整例题 2：通电导线在磁场中受力。</strong>一根长 l = 0.20 m 的直导线通有 I = 3.0 A 电流，水平放在竖直向上的匀强磁场 B = 0.50 T 中，导线与磁场垂直。它受到的磁力为</p>
+<div class="formula display" data-tex="F=IlB\sin\theta=3.0\times0.20\times0.50\times\sin90^\circ=0.30\,\mathrm{N}"></div>
+<p>方向由叉积 F = Il × B 决定（电流指向 x、磁场指向 y，力就指向 z）。0.30 N 足够让一根轻导线明显弯一下——这是电动机"通电线圈转起来"的原始版。注意两点：电流与磁场平行时（θ = 0）受力为零；磁力始终垂直于电流方向，因此<strong>不做功</strong>。真正让磁"生"电的，不是这个力本身，而是磁场随时间的变化。</p>
+<p><strong>试一试</strong>：把导线改成与磁场成 30° 角，其他条件不变，新磁力是多少？</p>
+<details><summary>提示</summary>
+<p>F = IlB·sin30° = 0.30 × 1/2 = 0.15 N。因为 sin30° = 1/2，正好是垂直情形（0.30 N）的一半。</p>
+</details>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>三、Maxwell 做了什么——用 4 个方程把电和磁统一，还预言了光</h3>
+<p>到了 Maxwell（麦克斯韦）手上，前人攒下的零零碎碎规律——电荷生电场、电流生磁场、变化磁场生电场——被他整理成了<strong>一套共 4 个方程的方程组</strong>，这就是 Maxwell 方程组。它相当于给电和磁立了"宪法"：所有电磁现象，都逃不过这 4 条。</p>
+<p>把 4 个方程想成 4 条规矩：<strong>①</strong> 电荷是电场的"源头"（有电荷才有电场线的出发地）；<strong>②</strong> 磁感线永远闭合，没有"磁单极"这种只有南极或只有北极的怪物；<strong>③</strong> 变化的磁场会产生电场（法拉第那一手）；<strong>④</strong> 电流、以及变化的电场，会产生磁场。前两条管"电和磁各自的形状"，后两条管"电和磁互相生"。就凭这 4 条，把之前看起来毫不相关的电学、磁学<strong>统一</strong>成了同一个故事。</p>
+<p>最惊人的是 Maxwell 自己算出来的结论：把第③④条合起来推演，电磁场可以在真空中"你生我、我生你"地<strong>向前传播</strong>——这就是<strong>电磁波</strong>。他算了一下传播速度，发现正好等于光速（约 30 万公里每秒）！于是他大胆断言：<strong>光，就是电磁波</strong>。后来赫兹用实验真的造出了电磁波，证实了这个预言。你手机的天线、微波炉、卫星通信，全是这套方程在幕后工作。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>四、从库仑定律到 Maxwell 方程组</h3>
+<p>静电学由库仑定律 F = (1/4πε₀)q₁q₂r̂/r² 出发，静磁学由 Biot–Savart 定律出发。二者最初是"作用力"定律；通过 Faraday–Gauss–Ampère 的流形视角，麦克斯韦将其改写为场的<strong>局域微分方程</strong>——当场源给定，场处处满足一组偏微分方程。电磁学的完整微分形式（国际单位制，真空）：</p>
+<div class="formula display" data-tex="\nabla\cdot\mathbf{E}=\frac{\rho}{\varepsilon_0},\qquad \nabla\cdot\mathbf{B}=0"></div>
+<div class="formula display" data-tex="\nabla\times\mathbf{E}=-\frac{\partial\mathbf{B}}{\partial t},\qquad \nabla\times\mathbf{B}=\mu_0\mathbf{J}+\mu_0\varepsilon_0\frac{\partial\mathbf{E}}{\partial t}"></div>
+<p><strong>为什么要把作用力定律改写成微分方程？</strong>作用力定律是"超距"的：两点之间仿佛瞬间互相知道对方。但实验和后来的相对论都表明，信息传播有上限（光速），电磁作用不会瞬间到达。场的微分方程是<strong>局域</strong>的：每一点的场只由这一点的源（ρ、J）和场本身的空间变化（散度、旋度）决定，扰动以光速一圈圈向外传播。散度与旋度恰好把"源的形状"与"场的形状"压缩进一组一阶偏微分方程——这就是麦克斯韦的整理。</p>
+<p><strong>完整例题 3：一个具体的场积分——点电荷的电场通量。</strong>点电荷 q = 2.0×10⁻⁹ C（2 纳库）放在球心，取半径 R = 0.50 m 的球面，计算电场通量 ∮E·dS。库仑定律保证球面上处处 E 沿径向、大小相等：</p>
+<div class="formula display" data-tex="\oint\mathbf{E}\cdot d\mathbf{S}=E\oint dS=\frac{q}{4\pi\varepsilon_0 R^2}\times4\pi R^2=\frac{q}{\varepsilon_0}=\frac{2.0\times10^{-9}}{8.85\times10^{-12}}\approx226\,\mathrm{N\cdot m^2/C}"></div>
+<p>注意通量与半径 R 无关——把 R 换成 0.10 m、0.50 m 或 10 m，答案都是 226。这就是 Gauss 定律的积分形式：<strong>穿过任何闭合面的总通量，只数里面装了多少电荷</strong>。用散度定理 ∮E·dS = ∫∇·E dV 把它压到每一点，就得到微分形式 ∇·E = ρ/ε₀：电场线从正电荷出发，在负电荷终止，密度由电荷密度决定。</p>
+<div class="key-insight">四个方程的物理分工：Gauss 定律（电场源为电荷）、无磁单极子定律（磁感线闭合）、Faraday 定律（变化的磁场产生涡旋电场）、Ampère–Maxwell 定律（电流与位移电流产生磁场）。前两个是<strong>约束条件</strong>（对初始数据的限制），后两个是<strong>演化方程</strong>。麦克斯韦的历史性洞见是把电磁定律整理成这个自洽的方程组——由此一举导出电磁波。</div>
+</section>
+
+<section>
+<h3>五、位移电流——从自洽性到物理预测</h3>
+<p><strong>为什么 Maxwell 必须给 Ampère 定律补一项？</strong>因为原来的 Ampère 定律与"电荷守恒"这一物理铁律打架。看矛盾在哪：原 Ampère 定律 ∇×B = μ₀J，两边取散度，左边恒为零（旋度的散度恒为零），右边要求 ∇·J = 0——即"任何地方都不能积累电荷"。但充电的电容器里，电荷分明在源源不断流向极板、在极板上堆积：∇·J ≠ 0。等式两边一个是恒等式、一个是物理事实，只能由方程让步。</p>
+<p>麦克斯韦修正：加入<strong>位移电流</strong>项，使安培定律与电荷守恒自动相容。</p>
+<div class="formula display" data-tex="\nabla\times\mathbf{B}=\mu_0\mathbf{J}+\mu_0\varepsilon_0\frac{\partial\mathbf{E}}{\partial t}"></div>
+<p>验证：取散度，利用 Gauss 定律 ∇·E = ρ/ε₀：</p>
+<div class="formula display" data-tex="0=\nabla\cdot(\nabla\times\mathbf{B})=\mu_0\nabla\cdot\mathbf{J}+\mu_0\varepsilon_0\frac{\partial}{\partial t}(\nabla\cdot\mathbf{E})=\mu_0\left(\nabla\cdot\mathbf{J}+\frac{\partial\rho}{\partial t}\right)"></div>
+<p>这正是电荷守恒——数学自洽性要求迫使方程取该形式。其物理后果在放电电容器中直接可验：板间"真空位移电流"产生的磁场由 ∫B·dl = μ₀ε₀ dΦ_E/dt 给出，与传导电流等效。这里体现了理论物理的典型模式：<strong>数学自洽性（无矛盾）→ 新的物理预测</strong>。位移电流不是假设的"附加"，而是从 Maxwell 方程组 + 电荷守恒推断出的必然项，也是电磁波存在的先决条件。</p>
+<p><strong>试一试</strong>：一个圆板电容器以恒定电流 I = 2.0 A 充电，板半径 R = 5.0 cm、板间真空。用 Ampère–Maxwell 定律求距轴线 r = 2.0 cm 处的磁场 B(r)。</p>
+<details><summary>提示</summary>
+<p>板间无传导电流，磁场来自位移电流 ε₀∂E/∂t。取半径 r 的圆形环路 ∮B·dl = μ₀ε₀ dΦ_E/dt，其中 dΦ_E/dt = πr²·dE/dt，dE/dt = I/(ε₀A)。解得 B(r) = μ₀Ir/(2πR²) = (4π×10⁻⁷ × 2.0 × 0.020)/(2π × 0.050²) ≈ 3.2×10⁻⁶ T（约 3.2 微特斯拉）。</p>
+</details>
+</section>
+
+<section>
+<h3>六、规范理论——电磁学的势表述</h3>
+<p>由 ∇·B = 0 与 ∇×E = −∂B/∂t，场的自由度可约化为一个矢势 A 和一个标势 φ：</p>
+<div class="formula display" data-tex="\mathbf{B}=\nabla\times\mathbf{A},\qquad \mathbf{E}=-\nabla\varphi-\frac{\partial\mathbf{A}}{\partial t}"></div>
+<p>势 (φ, A) 对物理场 (E, B) 的表述不是唯一的——<strong>规范自由度</strong>：</p>
+<div class="formula display" data-tex="\mathbf{A}\to\mathbf{A}+\nabla\chi,\qquad \varphi\to\varphi-\frac{\partial\chi}{\partial t}"></div>
+<p>该变换不改变 E 与 B，因 ∇×(∇χ)=0 且 ∇(∂χ/∂t)=∂(∇χ)/∂t。故物理观测量须在规范变换下不变——这正是<strong>U(1) 规范不变性</strong>。现代视角（Weyl–London–Yang–Mills）：拉格朗日量在局域 U(1) 相位变换 ψ→e^{iα(x)}ψ 下不变，要求引入联络（即势 A_μ），并构造协变导数 D_μ = ∂_μ + iqA_μ；势就是规范群的<strong>联络</strong>，场强张量 F_μν 是联络的曲率。Maxwell 理论由此成为最简的 Abel 规范理论（结构群 U(1)），而弱力 SU(2) 与非 Abel 规范场（Yang–Mills）正是其非交换推广。</p>
+<div class="key-insight">为什么 Maxwell 是 U(1) 规范理论：场方程由拉格朗日量 L = −¼F_μνF^μν + J^μA_μ 变分得到，其中 A_μ 是 U(1) 规范群的联络。规范对称性是"数学冗余"（A→A+∇χ 不改物理），但正是这种冗余结构决定了相互作用形式——最小耦合原则使电荷成为守恒的规范荷。</div>
+</section>
+
+<section>
+<h3>七、电磁波——从方程到光</h3>
+<p><strong>为什么真空里能"凭空"长出电磁波？</strong>看第③④条方程的合作：电场一变，就旋出一个磁场；这个磁场一变，又旋出一个电场……两个方程交替喂给对方"变化"，电磁场就以有限速度自己往前跑，不需要介质，也不需要源。把它们联立消元，就得到波动方程。真空（ρ=0, J=0）中，对 Faraday 定律取旋度，并代入 Ampère–Maxwell 定律与 Gauss 定律，消去 B 得到场的波动方程：</p>
+<div class="formula display" data-tex="\nabla^2\mathbf{E}=\mu_0\varepsilon_0\frac{\partial^2\mathbf{E}}{\partial t^2},\qquad \nabla^2\mathbf{B}=\mu_0\varepsilon_0\frac{\partial^2\mathbf{B}}{\partial t^2}"></div>
+<p>与标准波动方程 ∇²u = (1/v²)∂²u/∂t² 对照，得传播速度 v = 1/√(μ₀ε₀)。用当时已知的 μ₀、ε₀ 数值，麦克斯韦算出 v ≈ 3×10⁸ m/s，与光速惊人吻合——他 1865 年预言"光就是电磁波"。横波性质：E、B 互相垂直且垂直于传播方向，且 |E| = c|B|，两者同相。</p>
+<div class="formula display" data-tex="c=\frac{1}{\sqrt{\mu_0\varepsilon_0}}\approx 2.998\times10^8\ \mathrm{m/s}"></div>
+<p>Hertz 1887 年用火花放电实验产生并探测到无线电波，验证了麦克斯韦的预言（还附带发现了光电效应）。这确立了"光是电磁现象"的统一图景，也把真空常数 ε₀、μ₀ 从静电/静磁单位提升为光速的定义来源——今天 c 被定义为一个精确常数，ε₀ = 1/(μ₀c²) 由 μ₀ 与 c 导出（2019 年 SI 重新定义后 μ₀ = 4π×10⁻⁷ 不再是精确值，须经精细结构常数 α 确定）。</p>
+<p><strong>试一试</strong>：FM 广播用的频率约 f = 100 MHz（10⁸ Hz）。它的电磁波在真空中的波长 λ 是多少？这个波长和你的收音机天线尺寸对得上吗？</p>
+<details><summary>提示</summary>
+<p>λ = c/f = 3×10⁸ / 10⁸ = 3 m。收音机天线常做成长度约为 λ/4（约 0.75 m）的杆——长度凑成波长的一部分，才能高效接收。</p>
+</details>
+</section>
+
+<section>
+<h3>八、与狭义相对论的统一——4-势与场强张量</h3>
+<p>Maxwell 方程组在 Lorentz 变换下形式不变，而在 Galilei 变换下不协变——这是狭义相对论的第一个物理信号。用四维语言，电磁势合并为<strong>4-势</strong> A^μ = (φ/c, A)，协变导数 D_μ = ∂_μ + iqA_μ；场强为联络的曲率：</p>
+<div class="formula display" data-tex="A^\mu=\left(\frac{\varphi}{c},\mathbf{A}\right),\qquad F_{\mu\nu}=\partial_\mu A_\nu-\partial_\nu A_\mu=\begin{pmatrix} 0 & E_x/c & E_y/c & E_z/c \\ -E_x/c & 0 & -B_z & B_y \\ -E_y/c & B_z & 0 & -B_x \\ -E_z/c & -B_y & B_x & 0 \end{pmatrix}"></div>
+<p>Maxwell 方程缩并为两条张量方程（这是"数学自洽性强制物理"的又一例证）：</p>
+<div class="formula display" data-tex="\partial_\mu F^{\mu\nu}=\mu_0 J^\nu,\qquad \partial_\mu \tilde{F}^{\mu\nu}=0,\quad \tilde{F}^{\mu\nu}:=\tfrac12\varepsilon^{\mu\nu\rho\sigma}F_{\rho\sigma}"></div>
+<p>第一式含 4-电流 J^μ = (cρ, J) 且自动蕴含电荷守恒；第二式（无磁单极子）蕴含 F_μν = ∂_μA_ν − ∂_νA_μ。爱因斯坦 1905 年《论运动物体的电动力学》从 Maxwell 方程出发，要求光速在所有惯性系中不变，从而推导出 Lorentz 变换——电磁学"强制"了相对论时空。E、B 在不同惯性系间混合（F_μν 按张量变换），说明电与磁是同一个电磁场在不同参考系下的不同投影。</p>
+</section>
+
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="\nabla\cdot\mathbf{E}=\frac{\rho}{\varepsilon_0},\ \ \nabla\cdot\mathbf{B}=0,\ \ \nabla\times\mathbf{E}=-\frac{\partial\mathbf{B}}{\partial t},\ \ \nabla\times\mathbf{B}=\mu_0\mathbf{J}+\mu_0\varepsilon_0\frac{\partial\mathbf{E}}{\partial t}"></div>
+<div class="formula display" data-tex="\nabla^2\mathbf{E}=\mu_0\varepsilon_0\frac{\partial^2\mathbf{E}}{\partial t^2},\qquad c=\frac{1}{\sqrt{\mu_0\varepsilon_0}}"></div>
+<div class="formula display" data-tex="F_{\mu\nu}=\partial_\mu A_\nu-\partial_\nu A_\mu,\qquad \partial_\mu F^{\mu\nu}=\mu_0 J^\nu"></div>
+</section>
+
+<section>
+<h3>十、关键论文</h3>
+<ul>
+  <li>Faraday, M. (1831). <em>Experimental Researches in Electricity.</em> Phil. Trans. R. Soc. Lond. —— 电磁感应定律的实验奠基；场观念（力线）的引入。</li>
+  <li>Maxwell, J. C. (1865). <em>A Dynamical Theory of the Electromagnetic Field.</em> Phil. Trans. R. Soc. Lond. 155, 459–512. —— Maxwell 方程组的完整陈述与"光是电磁波"的预言。</li>
+  <li>Hertz, H. (1887). <em>Über sehr schnelle elektrische Schwingungen.</em> Ann. Phys. 267, 421–448. —— 无线电波实验验证麦克斯韦理论；同时观测到光电效应（为量子论铺路）。</li>
+  <li>Lorentz, H. A. (1895). <em>Versuch einer Theorie der electrischen und optischen Erscheinungen in bewegten Körpern.</em> —— Lorentz 力 F = q(E + v×B) 与 Lorentz 变换的雏形，电磁学与相对论的桥。</li>
+</ul>
+</section>
+
+<section>
+<h3>十一、前沿：规范场论、电磁与弱力统一、QED</h3>
+<p><strong>量子电动力学（QED）：</strong>Maxwell 理论的量子化给出光子——U(1) 规范场的量子。Feynman–Schwinger–Tomonaga 用重整化得到与实验符合到 10⁻¹² 的电子反常磁矩预言（g−2）。QED 是所有量子场论"如何做计算"的原型：费曼图、传播子、环路与重整化群。</p>
+<p><strong>电磁与弱力统一（Weinberg–Salam 1967）：</strong>基于 U(1)_Y × SU(2)_L 规范群，通过 Higgs 机制自发破缺到 U(1)_em，统一了电磁与弱相互作用。预言 W±、Z⁰ 玻色子（1983 年于 CERN 发现）与中性流。这是 20 世纪粒子物理最伟大的成就之一（1979 年诺贝尔奖）。</p>
+<p><strong>非 Abel 规范场论与现代发展：</strong>Yang–Mills 理论把规范思想推广到 SU(N)；量子色动力学（QCD，SU(3)）描述强相互作用，渐近自由（Gross–Wilczek–Politzer 1973）解释了夸克禁闭。仍开放的世纪难题：Yang–Mills 质量间隙问题（千禧年问题之一）。Maxwell 理论作为最简规范理论，是整个规范场论大厦的基石。</p>
+</section>
+
+<section>
+<h3>十二、工作题</h3>
+<p><strong>工作题 1：从库仑定律验证 Gauss 定理。</strong>点电荷 q 位于球心，由库仑定律 E(r) = (q/4πε₀)r̂/r² 出发，计算 E 通过半径 R 的球面的通量，验证 ∮E·dS = q/ε₀。</p>
+<details><summary>显示解答</summary>
+<p>球面上 E ∥ dS（均沿径向 r̂），|E| = q/4πε₀R² 为常数：</p>
+<div class="formula display" data-tex="\oint\mathbf{E}\cdot d\mathbf{S}=\oint \frac{q}{4\pi\varepsilon_0 R^2}\hat{r}\cdot\hat{r}\,dS=\frac{q}{4\pi\varepsilon_0 R^2}\oint dS=\frac{q}{4\pi\varepsilon_0 R^2}\cdot 4\pi R^2=\frac{q}{\varepsilon_0}"></div>
+<p>通量与 R 无关，仅由包围电荷决定。由散度定理 ∮E·dS = ∫∇·E dV 及电荷密度 ρ 的任意分布（点电荷为 ρ=qδ³(r)），即得 Gauss 定律的微分形式 ∇·E = ρ/ε₀。Gauss 定理是库仑定律平方反比律的直接积分表述。</p>
+</details>
+
+<p><strong>工作题 2：计算平行板电容器电场。</strong>面积为 A 的两平行导体板相距 d，带电荷 ±Q。用 Gauss 定理求板间电场 E 与电压 V，并给出电容 C = Q/V。</p>
+<details><summary>显示解答</summary>
+<p>取跨过正极板的小 Gauss 盒（两底面平行于板面、面积为 S），盒内电荷 Q_enc = σS，σ = Q/A。板间电场垂直于板面且只穿出远离板的一侧底面：</p>
+<div class="formula display" data-tex="\oint\mathbf{E}\cdot d\mathbf{S}=E S=\frac{Q_{enc}}{\varepsilon_0}=\frac{\sigma S}{\varepsilon_0}\ \Rightarrow\ E=\frac{\sigma}{\varepsilon_0}=\frac{Q}{\varepsilon_0 A}"></div>
+<p>板间均匀电场 E 与 d 无关（忽略边缘效应）。电压与电容：</p>
+<div class="formula display" data-tex="V=Ed=\frac{Qd}{\varepsilon_0 A}\ \Rightarrow\ C=\frac{Q}{V}=\frac{\varepsilon_0 A}{d}"></div>
+<p>这是平行板电容器电容的经典公式——Gauss 定理把表面电荷直接转化为均匀场 E = σ/ε₀。</p>
+</details>
+
+<p><strong>工作题 3：验证 Maxwell 位移电流。</strong>半径为 R、间距 d 的圆板电容器以恒定电流 I 充电，板间为真空。用 Ampère–Maxwell 定律求板间半径 r 处的磁场 B(r)（取环路在板间、平行于板面），并与传导电流给出的结果对照。</p>
+<details><summary>显示解答</summary>
+<p>对 Ampère–Maxwell 定律 ∮B·dl = μ₀(I_enc + ε₀ dΦ_E/dt) 取圆形环路（半径 r < R）。板间无传导电流，I_enc=0，但电场均匀 E=σ/ε₀、随时间增大，通量变化率为</p>
+<div class="formula display" data-tex="\frac{d\Phi_E}{dt}=\frac{d}{dt}(E\cdot\pi r^2)=\pi r^2\frac{dE}{dt},\qquad \frac{dE}{dt}=\frac{1}{\varepsilon_0}\frac{d\sigma}{dt}=\frac{I}{\varepsilon_0 A},\ A=\pi R^2"></div>
+<p>由对称性 B 沿环路切向且模恒定，2πr·B = μ₀ε₀·πr²·I/(ε₀πR²)：</p>
+<div class="formula display" data-tex="B(r)=\frac{\mu_0 I}{2\pi R^2}\,r\qquad (r&lt;R)"></div>
+<p>与均匀载流导体内磁场 B = μ₀I r/2πR² 同形——位移电流 ε₀∂E/∂t 与传导电流在产生磁场上完全等价。若无位移电流项，板间磁场为零而实测非零，故该项是必需而非假设。</p>
+</details>
+
+<p><strong>工作题 4：平面电磁波验证波动方程。</strong>真空中的平面波 E = E₀ e^{i(kz−ωt)}x̂（E₀ 为复常数）。验证 E 满足波动方程 ∇²E = μ₀ε₀∂²E/∂t²，并由 ω 与 k 的关系求出相速 v。</p>
+<details><summary>显示解答</summary>
+<p>对 E = E₀x̂e^{i(kz−ωt)}：二阶空间导数为 ∂²E/∂z² = −k²E（其余方向为零），二阶时间导数为 ∂²E/∂t² = −ω²E。代入波动方程：</p>
+<div class="formula display" data-tex="-k^2\mathbf{E}=-\mu_0\varepsilon_0\,\omega^2\mathbf{E}\ \Rightarrow\ \omega^2=\mu_0\varepsilon_0 k^2\ \Rightarrow\ \omega=ck,\quad c=\frac{\omega}{k}=\frac{1}{\sqrt{\mu_0\varepsilon_0}}"></div>
+<p>由于 E 非零，色散关系 ω=ck 必须成立，故相速为常数 c = 1/√(μ₀ε₀)。这同时解释了为何真空电磁波无色散，并给出光速 ≈ 3×10⁸ m/s——平面波解正是 Maxwell 方程预言电磁波传播的直接验证。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Jackson, Classical Electrodynamics</strong></p>
+<p>&rarr; <strong>D. Griffiths, Introduction to Electrodynamics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/gradient.html">梯度与方向导数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/light-cone.html">💫 光锥与时空</a>：电磁波以光速传播，决定因果结构——光锥是闵可夫斯基时空的因果边界。</p>
+<p>&rarr; <a href="/pages/lorentz-transform.html">🚀 Lorentz 变换</a>：Maxwell 方程在 Lorentz 变换下协变，直接引出狭义相对论。</p>
+<p>&rarr; <a href="/pages/feynman-diagram.html">✴️ 费曼图</a>：量子电动力学的散射振幅——光子作为 U(1) 规范玻色子传播。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：SU(3)×SU(2)×U(1) 规范对称性——Maxwell 的 U(1) 是其中一环。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/electromagnetism.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

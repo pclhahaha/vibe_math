@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Birkhoff HSP定理——所有代数结构的共同骨架" />
+  <meta property="og:title" content="泛代数 — Vibe Math" />
+  <meta property="og:description" content="Birkhoff HSP定理——所有代数结构的共同骨架" />
+  <title>泛代数 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🧱 泛代数 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Birkhoff HSP定理——所有代数结构的共同骨架</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='universal-algebra',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/several-complex-variables.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🪞 多复变</a>
+  <a href="/pages/optics.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">💡 光学 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——研究所有代数结构共用的"语法规则"</h3>
+<p>英语、汉语、日语各不相同，但它们共用同一套"语法骨架"：主语、谓语、宾语怎么排列。泛代数做的正是这件事——加法、乘法、群、环这些代数结构各有各的"词汇"，但它们背后的"语法规则"其实只有一套。</p>
+<p>它把五花八门的代数结构放到同一个放大镜下观察，找出它们共有的规律，再把某一种结构上发现的结论推广到所有结构上——省去了每个结构都要重新证明一遍的麻烦。</p>
+<div class="key-insight">泛代数研究所有代数结构共同的那套"语法规则"，一个结论到处通用。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/abstract-algebra.html">抽象代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体问题先行——三大同构定理，为什么处处长得一样？</h3>
+<p>翻开任何一本代数书，你会发现：<strong>群</strong>有第一、第二、第三同构定理，<strong>环</strong>有（对理想），<strong>模</strong>有（对子模），<strong>向量空间</strong>有（对子空间）。每个定理的证明几乎一字不差，只是把"正规子群"换成"理想"再换成"子模"。</p>
+<p>这就引出一个教科书式的问题：</p>
+<div class="key-insight">能不能只证明一次，然后自动适用到群、环、模、格、布尔代数……全部？如果能，到底是什么"通用语法"在背后起作用？</div>
+<p>泛代数就是为回答这个问题而生的学科。它先问：这些结构共同的"骨架"是什么？——答案是一个签名（运算符号的清单）加一组等式公理。有了骨架，同构定理、同余理论、自由对象，全都可以"一次证明，到处通用"。</p>
+</section>
+
+<section>
+<h3>二、签名、代数、同态——把"结构"翻译成形式语言</h3>
+<p><strong>逐步铺垫。</strong> 先忘掉"群是带性质的集合"这一印象，只看它的"运算说明书"：群的运算是一个二元运算 m（乘法）、一个一元运算 i（取逆）、一个常元 e（单位元）。把这一套写下来：</p>
+<p><strong>定义（签名）。</strong> 一个<strong>签名</strong> Σ 是运算符号的清单，每个符号带一个"元数"（arity）：零元（常元）、一元、二元、……。一个 <strong>Σ-代数</strong> 是集合 A 连同每个符号 σ 的运算 σ^A: A^{arity(σ)} → A。</p>
+<p><strong>定义（同态）。</strong> 两个 Σ-代数 A、B 之间的<strong>同态</strong> f: A→B 是保持所有运算的函数：f(σ^A(a₁,…,aₙ)) = σ^B(f(a₁),…,f(aₙ))，对常元 f(e^A) = e^B。</p>
+<p><strong>为什么这样定义就够？</strong> "结构"无非是"元素 + 元素之间的运算"，而"保持结构"无非是"保运算"。至于这些运算满足什么公理（结合律？交换律？），那是后话——公理是<strong>等式</strong>（如 m(m(x,y),z) = m(x,m(y,z))），而"等式"在两个代数之间天然可传：同态保运算 ⟹ 保等式。泛代数的全部力量就在于把"结构"压到最薄的"签名 + 等式"上。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 1 —— 群是一个"签名 + 等式"的代数。</strong><br>
+<strong>第 1 步（定签名）</strong>：Σ_Grp = {m: 2元, i: 1元, e: 0元}。<br>
+<strong>第 2 步（写等式）</strong>：群公理全部可写成等式——结合律 m(m(x,y),z)=m(x,m(y,z))；单位律 m(x,e)=x、m(e,x)=x；逆律 m(x,i(x))=e、m(i(x),x)=e。<br>
+<strong>第 3 步（验证两个具体代数）</strong>：(ℤ,+,−,0) 与 (ℤ/2,+,−,0) 都是 Σ_Grp-代数（把 m 读作 +，i 读作 −，e 读作 0），且都满足全部等式，故都是群。<br>
+<strong>第 4 步（造同态并验保运算）</strong>：f: ℤ → ℤ/2，f(n) = n mod 2。逐一检查：f(m(x,y)) = f(x+y) = (x+y) mod 2 = f(x)+f(y) = m(f(x),f(y)) ✓；f(i(x)) = −(x mod 2) = −f(x) = i(f(x)) ✓；f(e) = f(0) = 0 = e ✓。于是 f 是同态。<br>
+<strong>第 5 步（对照"域"）</strong>：域有二元 +、· 和一元 −、常元 0、1，但"非零元可逆"（x ≠ 0 ⟹ x·x⁻¹ = 1）里带着 <strong>x ≠ 0</strong>——它<strong>不是</strong>等式，而是不等式条件。这一句话的分量，等到 §五 的 Birkhoff 定理会见分晓。∎</div>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 1.</strong> 给"环"和"格"各写一个签名与一组等式公理；再说明"向量空间"为什么不能只靠内部运算签名写出来（提示：标量乘法需要外部域）。<br><em>提示：</em>环用 Σ = {+:2, ·:2, −:1, 0:0, 1:0}，等式含分配律 m(x,+(y,z)) = +(m(x,y),m(x,z))；格用 Σ = {∧:2, ∨:2}，含幂等、交换、结合、吸收律。向量空间的 + 与标量乘 ×_k 之间需要"每个标量一个一元运算"，故签名依赖域 k。</div>
+</section>
+
+<section>
+<h3>三、同余与商代数——为什么不用"正规子群 / 理想"？</h3>
+<p><strong>关键问题。</strong> 群有正规子群、环有理想、模有子模。泛代数能否只用一个概念统一它们？答案是：<strong>同余关系</strong>。</p>
+<p><strong>定义（同余）。</strong> Σ-代数 A 上的<strong>同余关系</strong> θ ⊆ A×A 是满足"兼容所有运算"的等价关系：对每个 n 元符号 σ，若 a₁ θ b₁, …, aₙ θ bₙ，则 σ^A(a₁,…,aₙ) θ σ^A(b₁,…,bₙ)。等价类 A/θ 带上诱导运算成为<strong>商代数</strong>。</p>
+<p><strong>为什么同余就是"商结构成立"的判据？</strong> 给定等价关系，要让它成为商代数 A/θ，唯一需要检查的就是运算在等价类上良定——这正是"兼容所有运算"（即同余）条件的翻译。群的情形里，同余 ⟺ 由某个正规子群 N 给出的"模 N 同余"；环的情形 ⟺ 由理想给出；模的情形 ⟺ 由子模给出。可见<strong>正规子群/理想/子模只是同余关系在不同签名下的"代言人"</strong>——同余才是一视同仁的原始概念。</p>
+<p><strong>同余格。</strong> A 上所有同余按包含关系构成格 Con(A)，它完整分类 A 的所有商（θ ↦ A/θ）。格论上 Con(A) 越有规律，A 的"可分解性"越好（见 §七）。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 2 —— 列出 ℤ/6ℤ 的同余格 Con(ℤ/6)。</strong><br>
+<strong>舞台</strong>：A = ℤ/6ℤ（加法群，即 Σ_Grp-代数）。加法群的同余 ⟺ 由正规子群给出，加法群皆正规。<br>
+<strong>第 1 步（找正规子群）</strong>：ℤ/6 的子群由 kℤ/6 给出，其中 k | 6：k=6（{0}）、k=3（{0,3}≅ℤ/2）、k=2（{0,2,4}≅ℤ/3）、k=1（全体 ℤ/6）。共 4 个。<br>
+<strong>第 2 步（转成同余）</strong>：同余"模 k 相等"。4 个同余：Δ = {0}（精细，a≡b ⟺ a=b）；θ₃（a≡b mod 3，3 个类 {0,3},{1,4},{2,5}）；θ₂（a≡b mod 2，2 个类 {0,2,4},{1,3,5}）；∇ = 全部（粗糙）。<br>
+<strong>第 3 步（画格）</strong>：包含关系是 Δ ⊂ θ₂, θ₃ ⊂ ∇，而 θ₂ 与 θ₃ 不可比。于是 Con(ℤ/6) 是菱形格 M₃：底 Δ、顶 ∇、中间两个 θ₂、θ₃。<br>
+<strong>第 4 步（验证与商的一一对应）</strong>：ℤ/6 → ℤ/6（商 ∇ 对应平凡群）、→ ℤ/3（商 θ₂ 对应，因为 ℤ/6 /(2ℤ/6) = ℤ/2…等等，要对应清楚）——更正：子群 {0,2,4}（ℤ/3 拷贝）给出商 ℤ/6 / {0,2,4} ≅ ℤ/2，而同余 θ₃ 给出的商是 ℤ/3（三个类）。逐一核对：θ₃ 的商 = 3 个类 = ℤ/3 ✓；θ₂ 的商 = 2 个类 = ℤ/2 ✓。所以 θ 与商、子群与同余完全对齐，格结构一模一样。∎<br>
+<strong>第 5 步（观察）</strong>：M₃ 不是分配格（0,1 只有两个中间元却构成五元素菱形）——这个格论性质决定了 ℤ/6 的商结构，而它完全由同余格读出。</div>
+<p>这个例子说明：<strong>只要把同余格画出来，该代数的所有商（及其偏序）就一览无余</strong>。</p>
+</section>
+
+<section>
+<h3>四、证明——三个同构定理，一次证明</h3>
+<p>下面用同余语言统一证明三大同构定理。记号：A 是 Σ-代数，f: A→B 是同态。</p>
+<p><strong>第一同构定理（同态定理）。</strong> 同态 f 的核 ker f := {(a,a′) : f(a)=f(a′)} 是同余；诱导出的 f̄: A/ker f → im f 是良定同构。特别地 A/ker f ≅ im f。</p>
+<p><strong>证明。</strong> <strong>第 1 步（核是同余）</strong>：ker f 显然是等价关系；若 aᵢ (ker f) a′ᵢ，则 f(σ(a₁,…,aₙ)) = σ(f(a₁),…) = σ(f(a′₁),…) = f(σ(a′₁,…))，故 σ(a…) (ker f) σ(a′…)——兼容所有运算。∎ <strong>第 2 步（良定与单性）</strong>：定义 f̄([a]) = f(a)。若 [a] = [a′] 即 (a,a′) ∈ ker f，则 f(a) = f(a′)，良定；f̄ 单射由 ker f 的定义；满射到 im f 显然。∎</p>
+<p><strong>第二同构定理。</strong> 若 B 是 A 的子代数、θ 是同余，则 (B θ)/θ ≅ B/(θ ∩ (B×B))——其中 Bθ 是 B 的 θ-饱和。证明：用第一同构定理对"限制同态 B → A/θ 的核 = θ∩(B×B)"。∎</p>
+<p><strong>第三同构定理。</strong> 若 θ ⊆ φ 是两个同余，则 (A/θ)/(φ/θ) ≅ A/φ。证明：对投影 A/θ → A/φ 用第一同构定理，其核恰为 φ/θ。∎</p>
+<div class="key-insight">三大同构定理（群、环、模、向量空间都有各自的版本）在泛代数中得到统一：<strong>任何代数簇都满足这些定理</strong>。这不是巧合——是签名 + 等式框架的必然结果：证明里从未用到"群"特有的任何性质。</div>
+</section>
+
+<section>
+<h3>五、Birkhoff 定理（HSP）——等式类 ⟺ 簇</h3>
+<p><strong>定义（簇）。</strong> 称一族 Σ-代数 V 是<strong>簇</strong>，若存在一组等式（同签名）使得 V 恰好是满足这些等式的全体代数。三大操作：<strong>H</strong>（同态像）、<strong>S</strong>（子代数）、<strong>P</strong>（直积）。</p>
+<p><strong>定理（Birkhoff, 1935）。</strong> V 是簇 ⟺ V = HSP(V)（即 V 在 H、S、P 下封闭）。</p>
+<p><strong>为什么这是"结构理论"的王冠定理？</strong> 因为它把"用等式定义"这种<strong>语法</strong>条件，等价翻译成"对同态像、子代数、直积封闭"这种<strong>语义</strong>条件。语法世界与构造世界从此可互相翻译。</p>
+<p><strong>证明概要（⟹ 方向，等式的保持性）。</strong> <strong>第 1 步（S）</strong>：子代数里每个等式仍成立（运算限制回子集）。<strong>第 2 步（P）</strong>：直积中每个等式逐分量成立（运算逐分量做）。<strong>第 3 步（H）</strong>：同态像里，等式通过"同态保运算、把等式两边送过去"仍然成立。于是等式类对 H、S、P 封闭。</p>
+<p><strong>证明概要（⟸ 方向，语义 ⟹ 语法）。</strong> 设 V 对 H、S、P 封闭。要找到一组等式定义 V。令 V 中每个代数满足的全体等式为 Σ_V（"V 的等式理论"），设 W = 满足 Σ_V 的全体代数。显然 V ⊆ W。反过来：任取 A ∈ W，可证 A 是 V 中一族代数（"有限生成自由的 V-代数"）的某种极限（syntactic 构造：A 的每段有限数据都可由某个 V-代数的直积覆盖），再用 P 与 H 拉回 A。标准的完整证明用"V-等式理论 + 自由代数 + P、S、H 封闭性"（见 Burris-Sankappanavar §II.11）。∎</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 3 —— 用直积反例证明：域不是簇。</strong><br>
+<strong>任务</strong>：证明"域"类（域签名 {+:2,·:2,−:1,0:0,1:0}）不能用等式定义。<br>
+<strong>第 1 步（观察等式类的直积封闭性）</strong>：若某类由等式定义，Birkhoff 定理（⟹ 方向）保证它对直积封闭：等式在直积上逐点成立。<br>
+<strong>第 2 步（取具体反例）</strong>：考虑直积 ℚ × ℚ（两个域）。它是不是域？取元素 u = (1, 0)、v = (0, 1)，都不为零，但 u·v = (1·0, 0·1) = (0, 0) = 零元——有零因子，不是整环，更不是域。<br>
+<strong>第 3 步（矛盾）</strong>：域类不封闭直积，却"封闭直积"是一切等式类的必要条件。故域类不是簇。∎<br>
+<strong>第 4 步（追根溯源）</strong>：回到例题 1 第 5 步——"非零元可逆"里的 <strong>x ≠ 0</strong> 正是无法写成等式的原因；而"不能写成等式"在 Birkhoff 定理下就等价于"不封闭直积"。这一反例把语法（非等式）与语义（直积破裂）完美对上了。</div>
+<p>群、环、模、向量空间、格、布尔代数都是代数簇。<strong>域不是</strong>——"非零元素有逆"不能纯用等式表达。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 2.</strong> 逐条验证"群类"对 H、S、P 的封闭性：给出一个群 G 的子群（S）、同态像（H）、两个群的直积（P）的具体例子。<br><em>提示：</em>S：ℤ 的子群 nℤ；H：ℤ → ℤ/2 的像；P：ℤ/2 × ℤ/3（≅ ℤ/6，元素 (a,b) 逐点运算）。每例都检查群公理仍然成立——它们成立正是因为等式逐点/限制后保持。</div>
+</section>
+
+<section>
+<h3>六、同余格与 Maltsev 条件</h3>
+<p>泛代数中同余关系 = 能在商代数中"相等"的等价关系。同余格 Con(A) 分类 A 的所有商。Maltsev（1954）发现：代数簇有"良"的同余格 ⟺ 存在三元项 p 使 p(x,x,y) = y 和 p(x,y,y) = x。这种"Maltsev 条件"刻画了一大类代数（群、环、模）的共同行为。</p>
+<p><strong>为什么两条恒等式 p(x,x,y)=y、p(x,y,y)=x 会"抓住"同余格的规律？</strong> 直觉：p 像一把"三明治切刀"，能把一个同余 θ 中的三条关系 (x,y) 重新组装，证明 θ 之间可以"交换"——这正是同余格要满足各种格论恒等式（如模律、分配律）的引擎。</p>
+<p><strong>具体验证。</strong> 群有 Maltsev 项 p(x,y,z) = x·y⁻¹·z：p(x,x,z) = x·x⁻¹·z = z ✓，p(x,z,z) = x·z⁻¹·z = x ✓。环、模同样有 p(x,y,z) = x − y + z。而半格（meet）没有 Maltsev 项——这是 Maltsev 条件的经典反方向。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 3.</strong> 证明半格 (L, ∧) 上没有 Maltsev 项。给出一个"反证"路线的开头：假设存在项 p 满足两条恒等式，考虑两个不同元素 x < y。<br><em>提示：</em>项由 ∧ 拼成，值只能取自某两个变量 ∧ 的某种组合；代入 x,x,y 与 x,y,y 两条恒等式会同时要求 p = y 与 p = x，矛盾。试着把项化简（∧ 幂等、交换、结合、吸收律）观察其只依赖"较小的变量"。</div>
+</section>
+
+<section>
+<h3>七、同余模格与交换子理论</h3>
+<p>泛代数中同余关系分类所有商。同余格 Con(A) 的结构决定了代数 A 的"可分解性"。直积分解 ⟺ Con(A) 中的补元素。Smith（1976）的交换子理论将群论中"导子群"的概念推广到所有 Maltsev 代数族。</p>
+<p><strong>逐步铺垫。</strong> 群的直积分解 G ≅ H × K ⟺ 存在两个正规子群 H、K 使 G = HK、H ∩ K = 1——用同余语言，即 Con(G) 中存在两个互补元素（θ_H 与 θ_K，交为 Δ、并为 ∇）。交换子理论把"导子群 [H,K]"推广为两个同余 θ、φ 的<strong>交换子</strong> [θ, φ]，从而在任意 Maltsev 簇里重建"可解性""幂零性"的层层结构——群论的方法论第一次被整体搬上泛代数的舞台。</p>
+</section>
+
+<section>
+<h3>八、Stone 对偶——逻辑、代数、拓扑的三位一体</h3>
+<p>布尔代数^op = 完全不连通紧致 Hausdorff 空间（Stone 空间）。这是 Gelfand-Naimark（交换 C*-代数 = 紧致空间）和 Galois 对应（域扩张 = 子群）的代数原型。空间、代数、逻辑——同一个对偶结构的三个体现。格论 → Heyting 代数 → 直觉主义逻辑：选择不同的代数结构 ⟹ 不同的逻辑规则——逻辑规则不是绝对的，可以由代数基础选择。</p>
+</section>
+
+<section>
+<h3>九、反例——"结构"的边界在哪里</h3>
+<p><strong>反例 1（域不是簇，直积破裂）。</strong> 已在例题 3 完整算过：ℚ × ℚ 有零因子。这是等式类必须直积封闭的天然反例。</p>
+<p><strong>反例 2（同余 ≠ 子代数）。</strong> 在 A = ℤ/6ℤ 中，正规子群 {0,3} 作为子代数是 2 个元素；但对应的同余 θ₃ 是等价关系，含 3² = 9 个对（所有 (a,b) 满足 a≡b mod 3）。同余是 <strong>A×A 的子集</strong>，子代数/正规子群是 <strong>A 的子集</strong>——两者维度不同，只是群的特殊性让它们一一对应。</p>
+<p><strong>反例 3（任意子集不是子代数）。</strong> 同态像必是子代数，但反之不对。例如群 ℤ 的乘法下…（ℤ 加法群没有乘法）。换一个：环 ℤ/6 → ℤ/3 的同态像 {0,1,2} 是子环，但取任意子集如 {0,2}：2+2=4 ∉ {0,2}，不是子代数。S 封闭性只对"真正的子代数"有保障。</p>
+</section>
+
+<section>
+<h3>十、工作题——算同余、查等式</h3>
+<p><strong>工作题 1（同余格与商）。</strong> 列出 ℤ/12ℤ（加法群）的全部同余，画出同余格，并指出它是否是分配格。</p>
+<details><summary>显示解答</summary>
+<p>同余由正规子群 kℤ/12 给出，k | 12：k = 12（{0}）、6（{0,6}）、4（{0,4,8}）、3（{0,3,6,9}）、2（{0,2,4,6,8,10}）、1（全体）。6 个同余，对应格元素 Δ、θ₆、θ₄、θ₃、θ₂、∇。覆盖关系：Δ ⊂ θ₆ ⊂ θ₂ ⊂ ∇（因 12→6→2→1 整除链），θ₄ ⊂ θ₂，θ₃ ⊂ θ₂，θ₆ ⊂ θ₃。合并后格非分配（θ₄ 与 θ₃ 在 θ₆ 之上、θ₂ 之下形成菱形）。∎</p></details>
+<p><strong>工作题 2（等式的直积保持）。</strong> 对布尔代数 {0,1}（签名 {∧,∨,¬,0,1}），验证 {0,1}×{0,1} 仍是布尔代数，并写出它满足的 5 组布尔等式各一个具体例子的验证。</p>
+<details><summary>显示解答</summary>
+<p>逐点定义：¬(a,b) = (¬a,¬b)，∧、∨ 逐点。四个元素 (0,0),(0,1),(1,0),(1,1)。例如补元律 ¬(a,b)∨(a,b) = (¬a∨a, ¬b∨b) = (1,1) ✓；分配律逐点从 {0,1} 继承 ✓。每一条等式因"等式 = 逐点真"自动成立。∎</p></details>
+<p><strong>工作题 3（Maltsev 项的存在性）。</strong> 验证格（meet∧ 与 join∨）上的项 p(x,y,z) = (x∧z)∨(y∧z) 不满足 Maltsev 条件；再说明为何"分配格"即使有良好同余格也没有 Maltsev 项。</p>
+<details><summary>显示解答</summary>
+<p>代入 (x,x,z)：p(x,x,z) = (x∧z)∨(x∧z) = x∧z，要求等于 z，仅在 x∧z = z（即 z≤x）时成立——不是恒等式。代入 (x,z,z) 得 x∨z 要求等于 x，同样失败。故不满足。分配格无 Maltsev 项（见试试看 3 的反证思路：任何项在格中化简后只依赖"交/并中的较小者"，无法同时消去中间变量）。这正说明"同余格良"≠"存在 Maltsev 项"。∎</p></details>
+</section>
+
+<section>
+<h3>十一、前沿：约束满足问题的代数方法</h3>
+<p>Bulatov（2017）和 Zhuk（2017）独立证明了 CSP 二分定理——任何约束满足问题的模板要么在 P 中，要么 NP 完全。证明的核心用了泛代数的"Taylor 操作"理论。仍开放：量子 CSP 的二分定理。</p>
+<p><strong>为什么泛代数在这里突然成为主角？</strong> 约束满足问题 CSP(𝔸) 的复杂性与模板代数 𝔸 的多态（polymorphisms）完全绑定；而"多态"正是 𝔸 的某项（term）作用在幂上保持的关系。泛代数几十年积累的"项与恒等式"分类（Taylor、Maltsev、edge 等条件）恰好就是判定二分性的机器——这是本课所有概念（项、恒等式、簇）一次性兑换成真金白银的舞台。</p>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Burris &amp; H.P. Sankappanavar, A Course in Universal Algebra</strong></p>
+<p>&rarr; <strong>G. Grätzer, Universal Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/abstract-algebra.html">抽象代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：同一学科分类「代数」。</p>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：同一学科分类「代数」。</p>
+<p>&rarr; <a href="/pages/commutative-algebra.html">💍 交换代数</a>：同一学科分类「代数」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/universal-algebra.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

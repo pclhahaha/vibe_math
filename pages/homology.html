@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="链复形、正合序列、Tor与Ext——代数拓扑的代数引擎" />
+  <meta property="og:title" content="同调代数 — Vibe Math" />
+  <meta property="og:description" content="链复形、正合序列、Tor与Ext——代数拓扑的代数引擎" />
+  <title>同调代数 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⛓️ 同调代数 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">链复形、正合序列、Tor与Ext——代数拓扑的代数引擎</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='homology',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/operator-algebras.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔮 算子代数</a>
+  <a href="/pages/spectral-sequences.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🛰️ 谱序列与同伦论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——像对账一样检查数学对象的"缺口"</h3>
+<p>会计对账时，算下来账平了（每笔都有来有回），就说明没有漏洞。同调代数也是这么干的：把数学对象拆成一步步的"流水账"，每一步的出口必须对上一步的入口，对不上的部分就是"洞"。</p>
+<p>它是数学里的"通用工具箱"，帮各种领域（几何、代数、物理）检查它们的对象"缺了哪些信息、哪里没对严"。</p>
+<div class="key-insight">一句话：用"每一步都查得严"的流水账，找出数学对象里的缺口和洞。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/algebraic-topology-homology.html">同调论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——0 → ℤ →² ℤ → ℤ/2ℤ → 0 的"流水账"哪里没对严？</h3>
+<p>看这条序列：0 → ℤ --×2--> ℤ --quotient--> ℤ/2ℤ → 0。每一步都"有来有回"吗？出口：第一个 ℤ 乘以 2 进第二个 ℤ，得到偶数子群 2ℤ；入口：从第二个 ℤ 投射到 ℤ/2ℤ 的核，恰好也是 2ℤ（那些被整除的整数）。出口 = 入口，账平了——这正是"正合序列"的定义。</p>
+<p>现在把出口换掉：0 → ℤ --×2--> ℤ → 0（不再有 ℤ/2ℤ 这个"缓冲层"）。出口 2ℤ 不等于入口 ℤ，账不平了。差多少？商 ℤ/2ℤ 就是"缺口"：<strong>同调度量的正是这个缺口</strong>。</p>
+<p><strong>为什么我们关心"对不上"？</strong> 因为数学对象常以"一个变换套着另一个变换"的形式出现（几何空间的边界、代数结构之间的映射、物理中的守恒量）。如果每一步都严丝合缝（正合），说明对象"自洽无洞"；只要有一步对不上，那多出来的部分往往就是隐藏的拓扑信息——几何里的洞、代数里的扭、分析中的障碍，全部以"缺口"的面目登场。</p>
+<p><strong>先记住两个具体答案。</strong> ① 复形 0→ℤ→²ℤ→0 在位置 0 的同调是 ℤ/2ℤ（缺口大小 = 2 造成的商）；② 若复形处处正合，则所有同调为零。第一条告诉我们"同调为何不平凡"，第二条告诉我们"同调在度量什么"。</p>
+</section>
+
+<section>
+<h3>二、定义——链复形与正合列：为什么偏偏是 d²=0</h3>
+<p><strong>定义 1（链复形）。</strong> 链复形是 R-模族 (C_n)_{n∈ℤ} 与微分 d_n: C_n→C_{n-1}（满足 d_{n-1}∘d_n=0）的全体，记作 (C_*, d)：</p>
+<div class="formula display" data-tex="\cdots\to C_{n+1}\xrightarrow{d_{n+1}} C_n\xrightarrow{d_n} C_{n-1}\to\cdots,\qquad d_{n-1}\circ d_n=0"></div>
+<p><strong>为什么要求 d²=0？</strong> 在几何里，d 是"取边界"，而"边界的边界是零"（一条曲线的边界是端点，端点的边界是空集）。在代数里，我们人为规定 d²=0，正是为了让"能补上的部分" im d_{n+1} 一定含于"封口的条件" ker d_n——于是可以取商。由 d²=0 得 im d_{n+1}⊆ker d_n，于是可定义 <strong>n 次同调</strong></p>
+<div class="formula display" data-tex="H_n(C_*)=\ker d_n/\operatorname{im} d_{n+1}"></div>
+<p>同调度量"d²=0 造成的未闭合部分"。<strong>解读这个分数：</strong> ker d_n 是"该封口而没漏的"（n 维闭链），im d_{n+1} 是"确实由更低维拼出来的"（n 维边界）；两者之商 = "封了口的闭链里，哪些不是真边界"——这就是洞。</p>
+<p><strong>定义 2（正合性）。</strong> 复形在位置 n <strong>正合</strong>，若 im d_{n+1}=ker d_n（等价地 H_n=0）。整个复形正合 ⟺ 所有同调为零。短正合列</p>
+<div class="formula display" data-tex="0\to A\to B\to C\to 0"></div>
+<p>即三个 R-模满足 ker(B→C)=im(A→B)、A→B 单、B→C 满。</p>
+<p><strong>定义 3（链映射与链同伦）。</strong> 链映射 f: C_*→D_* 是族 f_n 满足 f_{n-1}∘d_n=d'_n∘f_n，它诱导 f_*: H_n(C_*)→H_n(D_*)。两链映射 f,g 链同伦（f≃g），若存在 h_n: C_n→D_{n+1} 使 f−g=d'_{n+1}h_n+h_{n-1}d_n；此时 f_*=g_*。拟同构指 f_* 为同构的链映射——导出范畴把所有拟同构视为同构。</p>
+<p><strong>为什么"完备处理"要强调这三件事？</strong> 正合性依赖精确相等 im=ker（差一点都不算）；链同伦给出"两个构造结果相同"的弱等价判据（比逐点相等弱、却足以保证同调相同）；短正合列是所有长正合序列技术的起点。这三件套是整套同调代数的引擎。</p>
+</section>
+
+<section>
+<h3>三、关键公式</h3>
+<div class="formula display" data-tex="H_n(C_*)=\ker d_n/\operatorname{im} d_{n+1},\qquad d^2=0"></div>
+<div class="formula display" data-tex="\operatorname{Tor}_1^{\mathbb Z}(\mathbb Z/m,\mathbb Z/n)=\mathbb Z/\gcd(m,n)"></div>
+<div class="formula display" data-tex="\operatorname{Ext}^1_G(\mathbb Z,M)=H^1(G,M)"></div>
+</section>
+
+<section>
+<h3>四、例题 1——三角形（=圆 S¹ 的三角剖分）的同调群（一步步算完）</h3>
+<p><strong>题目。</strong> 取三角形的三条边组成的一维复形 X（顶点 v₀,v₁,v₂，边 e₀=[v₀v₁], e₁=[v₁v₂], e₂=[v₂v₀]）。求它的同调群 H₀(X)、H₁(X)、H₂(X)。</p>
+<p><strong>第一步：写链群。</strong> C₂ = 0（没有 2 维单形）；C₁ = ℤ³，由 e₀,e₁,e₂ 生成；C₀ = ℤ³，由 v₀,v₁,v₂ 生成。</p>
+<p><strong>第二步：写边界算子。</strong> ∂₁(e₀)=v₁−v₀，∂₁(e₁)=v₂−v₁，∂₁(e₂)=v₀−v₂。</p>
+<p><strong>第三步：算 H₁ = ker ∂₁。</strong> 设 c = a·e₀ + b·e₁ + c·e₂ ∈ C₁，则 ∂₁c = a(v₁−v₀)+b(v₂−v₁)+c(v₀−v₂) = (c−a)v₀ + (a−b)v₁ + (b−c)v₂。要求 ∂₁c=0 即三个系数 c−a=a−b=b−c=0，等价于 a=b=c。故 ker ∂₁ = { a(e₀+e₁+e₂) } ≅ ℤ，由唯一的"整圈"e₀+e₁+e₂ 生成。<strong>H₁(X) ≅ ℤ。</strong></p>
+<p><strong>第四步：算 H₀ = ker ∂₀ / im ∂₁。</strong> ∂₀=0（点没有边界），ker ∂₀ = C₀ = ℤ³；im ∂₁ 由 v₁−v₀、v₂−v₁、v₀−v₂ 生成，即所有"两个顶点的差"。商空间里 v₀ ≡ v₁ ≡ v₂，故 <strong>H₀(X) ≅ ℤ</strong>（生成元 [v₀]，连通分量数 = 1）。</p>
+<p><strong>第五步：H₂。</strong> C₂=0，故 ker ∂₂=0，<strong>H₂(X)=0</strong>。</p>
+<p><strong>结论与验证。</strong> H₀=ℤ、H₁=ℤ、H₂=0——正是圆 S¹ 的同调群。这是"最简单地复形"的同调完全计算：H₁ 由"绕一圈的闭链"生成，H₀ 反映连通性，H₂=0 因为图形是 1 维的。∎</p>
+<p><strong>这套方法为什么能推广？</strong> 我们只用了线性代数：写链群、写边界、解 ker、取商。任意有限单纯复形都按同一流程算——只是维度更高、表格更大。同调论的第一课就是：<strong>把几何翻译成线性代数，然后机械地算</strong>。</p>
+</section>
+
+<section>
+<h3>五、证明——蛇形引理</h3>
+<p><strong>定理（蛇形引理）。</strong> 设阿贝尔群（或模）的交换图两行正合：</p>
+<div class="formula display" data-tex="\begin{CD} 0@&gt;&gt;&gt;A@&gt;i&gt;&gt;B@&gt;p&gt;&gt;C@&gt;&gt;&gt;0\\ @.@V\alpha VV@V\beta VV@V\gamma VV@.\\ 0@&gt;&gt;&gt;A'@&gt;i'&gt;&gt;B'@&gt;p'&gt;&gt;C'@&gt;&gt;&gt;0 \end{CD}"></div>
+<p>则存在正合列</p>
+<div class="formula display" data-tex="\ker\alpha \xrightarrow{i_*}\ker\beta \xrightarrow{p_*}\ker\gamma \xrightarrow{\delta}\operatorname{coker}\alpha \xrightarrow{i'_*}\operatorname{coker}\beta \xrightarrow{p'_*}\operatorname{coker}\gamma"></div>
+<p>δ 称为连接同态。</p>
+<p><strong>证明（图解追法）。</strong></p>
+<p><strong>第一步：两端自然性。</strong> i,p 限制到核、诱导到余核，且由交换性 im i_*⊆ker p_*、im i'_*⊆ker p'_*；由行正合（"像-核-像"标准论证）可得两处均为等号。</p>
+<p><strong>第二步：构造 δ。</strong> 任取 c∈ker γ⊆C。因 p 满，选 b∈B 使 p(b)=c。由交换性 p'(β(b))=γ(p(b))=γ(c)=0，故 β(b)∈ker p'=im i'，存在唯一 a'∈A' 使 i'(a')=β(b)。定义 δ(c)=a'+im α。</p>
+<p><strong>第三步：良定义。</strong> 若另选 b̃ 使 p(b̃)=c，则 b−b̃=i(a)（a∈A）。对应的 ã' 满足 i'(ã')=β(b̃)=β(b)−βi(a)=i'(a')−i'α(a)，i' 单 ⟹ ã'=a'−α(a)，故 ã'+im α=a'+im α。δ 是良定义同态。</p>
+<p><strong>第四步：正合性。</strong> 逐点验证 im p_*=ker δ 与 im δ=ker i'_*（标准图解追法练习）。∎</p>
+<p><strong>为什么蛇形引理是"引理"却如此重要？</strong> 它说明"两正合行之间的同态如何必然产生连接同态"，是长正合序列存在的唯一原因。后面的长正合序列、Mayer-Vietoris、各种上同调理论的长序列，全部是蛇在爬。</p>
+</section>
+
+<section>
+<h3>六、证明——长正合序列的构造</h3>
+<p><strong>定理。</strong> 对链复形短正合列 0→A_*→B_*→C_*→0，存在长正合序列</p>
+<div class="formula display" data-tex="\cdots\to H_n(A_*)\to H_n(B_*)\to H_n(C_*)\xrightarrow{\partial}H_{n-1}(A_*)\to H_{n-1}(B_*)\to\cdots"></div>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：摊平成交换图。</strong> 因 f,g 是链映射，图</p>
+<div class="formula display" data-tex="\begin{CD} 0@&gt;&gt;&gt;A_n@&gt;&gt;&gt;B_n@&gt;&gt;&gt;C_n@&gt;&gt;&gt;0\\ @.@VVV@VVV@VVV@.\\ 0@&gt;&gt;&gt;A_{n-1}@&gt;&gt;&gt;B_{n-1}@&gt;&gt;&gt;C_{n-1}@&gt;&gt;&gt;0 \end{CD}"></div>
+<p>交换且两行正合——正是蛇形引理的形状。</p>
+<p><strong>第二步：逐层蛇。</strong> 对每个 n 把 d^A_n,d^B_n,d^C_n 作为行间同态应用蛇形引理，得"三层"之间的连接序列；再把相邻两层的结果拼接（像-核-像配对），得到连贯长序列。</p>
+<p><strong>第三步：连接同态来自蛇。</strong> 长序列中连接 H_n(C_*)→H_{n-1}(A_*) 的 ∂ 正是蛇形引理对第 n 层微分图给出的 δ 在商核/余核上的诱导——因为 H_n(C)=ker d^C_n/im d^C_{n+1} 且 δ 保持核-余核结构。</p>
+<p><strong>第四步：正合性与自然性。</strong> 正合性由蛇形引理在每一层的正合性拼接；对链映射的函子行为（自然性）由交换图传递。∎</p>
+<p>几何意义：长正合序列是"局部→整体"信息的精确转移器，群上同调、层上同调、拓扑同调的长正合序列全部由此统一得出。</p>
+</section>
+
+<section>
+<h3>七、同调代数的武器——Tor、Ext 与导出函子</h3>
+<p>链复形与正合序列只是语法；真正的内容是<strong>导出函子</strong>：张量积 ⊗ 与 Hom 都是"半正合"的——把短正合列喂进去，正合性会在端点破裂。Tor 和 Ext 就是用来测量"破得有多严重"的工具。</p>
+<p><strong>Tor 度量张量积的非正合性：</strong> 对短正合列 0→A'→A→A''→0 取 ⊗B 后，形如</p>
+<div class="formula display" data-tex="\cdots\to \operatorname{Tor}_1(A'',B)\to A'\otimes B\to A\otimes B\to A''\otimes B\to 0"></div>
+<p>多出来的 Tor₁ 项正是"本应保住的单射性丢掉了多少"。</p>
+<p><strong>Ext 度量 Hom 的非正合性，且分类扩张：</strong> Ext¹ 的元素与短正合列 0→A→E→B→0（"A 被 B 扩张成 E"）的等价类一一对应——<strong>Ext¹ 分类扩张</strong>。这是导出函子最直观的胜利：一个看似抽象的同调群，答案竟然是"有哪些扩张方式"。</p>
+<p><strong>更宏观的框架。</strong> 导出范畴：拟同构变成真正同构——把所有"同调相同"的复形视为同一个对象，复杂的代数对象被重新组织成几何式的可操作空间。</p>
+<div class="key-insight">同调代数是代数拓扑、代数几何、表示论的共同语言。Grothendieck的Tôhoku论文(1957)用导出函子统一了层上同调。Ext¹_G(ℤ,M)=H¹(G,M)——群扩张由群上同调分类。</div>
+</section>
+
+<section>
+<h3>八、例题 2——Tor 的计算：自由预解一步步走（一步步算完）</h3>
+<p><strong>题目。</strong> 计算 Tor₁^ℤ(ℤ/2ℤ, ℤ/2ℤ) 与 Tor₁^ℤ(ℤ/2ℤ, ℤ/3ℤ)。</p>
+<p><strong>第一步：取自由预解。</strong> ℤ/2ℤ 有自由预解 0 → ℤ --×2--> ℤ → ℤ/2ℤ → 0（第一个 ℤ 由生成元 1 发出，×2 后到第二个 ℤ，再降到 ℤ/2ℤ）。</p>
+<p><strong>第二步：张量 ⊗ℤ/2ℤ。</strong> 预解中每一项张上 ℤ/2ℤ：</p>
+<div class="formula display" data-tex="0\to \mathbb Z/2\xrightarrow{\times 2}\mathbb Z/2\to \mathbb Z/2\to 0"></div>
+<p>在 ℤ/2ℤ 上乘以 2 就是零映射 0: ℤ/2→ℤ/2。</p>
+<p><strong>第三步：取同调。</strong> Tor₁ = ker(×2 后的映射在位置 1) = ker(0: ℤ/2→ℤ/2) = ℤ/2。故 <strong>Tor₁^ℤ(ℤ/2ℤ, ℤ/2ℤ) = ℤ/2</strong>。</p>
+<p><strong>第四步：换成张 ℤ/3ℤ。</strong> 同样预解张上 ℤ/3ℤ：</p>
+<div class="formula display" data-tex="0\to \mathbb Z/3\xrightarrow{\times 2}\mathbb Z/3\to \mathbb Z/3\to 0"></div>
+<p>注意 ×2 在 ℤ/3ℤ 上是<strong>双射</strong>（2·0=0, 2·1=2, 2·2=1 排列整个群）。Tor₁ = ker(×2) = {0}。故 <strong>Tor₁^ℤ(ℤ/2ℤ, ℤ/3ℤ) = 0</strong>。</p>
+<p><strong>第五步：核对一般公式。</strong> 一般地</p>
+<div class="formula display" data-tex="\operatorname{Tor}_1^{\mathbb Z}(\mathbb Z/m,\mathbb Z/n)=\mathbb Z/\gcd(m,n)"></div>
+<p>代入：gcd(2,2)=2 ⟹ ℤ/2 ✓；gcd(2,3)=1 ⟹ 0 ✓。Tor 度量"张量积破坏正合"的程度：m 与 n 共享一个素因子 p，就多出一个 ℤ/p 的扭。∎</p>
+</section>
+
+<section>
+<h3>九、例题 3——Ext 与扩张分类：两种扩张长得不一样（一步步算完）</h3>
+<p><strong>题目。</strong> 计算 Ext¹_ℤ(ℤ/2ℤ, ℤ)，并列出它分类的全部扩张 0 → ℤ → E → ℤ/2ℤ → 0。</p>
+<p><strong>第一步：取自由预解并对 Hom(−,ℤ) 求值。</strong> 预解 0 → ℤ --×2--> ℤ → ℤ/2ℤ → 0。应用 Hom(−,ℤ)：</p>
+<div class="formula display" data-tex="0\to \operatorname{Hom}(\mathbb Z/2,\mathbb Z)\to \operatorname{Hom}(\mathbb Z,\mathbb Z)\xrightarrow{\times 2}\operatorname{Hom}(\mathbb Z,\mathbb Z)\to 0\to\cdots"></div>
+<p>Hom(ℤ/2,ℤ)=0（ℤ/2 的任一像被 2 整除只能是 0），Hom(ℤ,ℤ) ≅ ℤ。</p>
+<p><strong>第二步：取同调。</strong> Ext¹ = ker(下一个) / im(×2) = 0 / 2ℤ = ℤ/2ℤ。故 <strong>Ext¹_ℤ(ℤ/2ℤ, ℤ) = ℤ/2ℤ</strong>——两个元素。</p>
+<p><strong>第三步：两个元素 = 两种扩张。</strong> 元素 0 对应<strong>分裂扩张</strong> E = ℤ ⊕ ℤ/2ℤ（映法：ℤ 直接嵌入第一分量）；元素 1 对应<strong>非分裂扩张</strong> E = ℤ，其中 ℤ 通过 n ↦ 2n 嵌入（商是 ℤ/2ℤ）。</p>
+<p><strong>第四步：为什么非分裂扩张是"真的不分裂"？</strong> 若 0→ℤ→²ℤ→ℤ/2→0 分裂，则存在同态 s: ℤ/2→ℤ 使投射∘s = id_{ℤ/2}。但 ℤ/2 中 1+1=0，故 s(1)+s(1)=s(0)=0，即 2s(1)=0；而 ℤ 中满足 2n=0 的只有 n=0，故 s(1)=0，于是投射∘s(1)=0≠1——矛盾。所以 E=ℤ 的扩张必不分裂。非分裂扩张说明短正合列不必分裂——这是 Ext¹ 非平凡的标准例证。∎</p>
+</section>
+
+<section>
+<h3>十、反例——非正合链复形与 Tor/Ext 计算</h3>
+<p><strong>反例 1：d²=0 但非正合。</strong> 复形 0→ℤ→² ℤ→0（d₁(x)=2x）。d²=0 平凡满足，但 im d₁=2ℤ≠ker d₀=ℤ，故 H₀=ℤ/2ℤ≠0。这说明 d²=0 只是"同调可非零"的必要条件，同调正度量"偏离正合的程度"。</p>
+<p><strong>反例 2：Tor 计算。</strong> 求 Tor₁^ℤ(ℤ/2ℤ, ℤ/3ℤ)。取 ℤ/2ℤ 的自由预解 0→ℤ→² ℤ→ℤ/2ℤ→0，张量 ⊗ℤ/3ℤ 得 0→ℤ/3ℤ→² ℤ/3ℤ→ℤ/3ℤ→0（×2 在 ℤ/3ℤ 上双射），故 Tor₁=ker(×2)=0。一般地</p>
+<div class="formula display" data-tex="\operatorname{Tor}_1^{\mathbb Z}(\mathbb Z/m,\mathbb Z/n)=\mathbb Z/\gcd(m,n)"></div>
+<p>Tor 度量"张量积破坏正合"的程度。</p>
+<p><strong>反例 3：Ext 与扩张分类。</strong> Ext¹_ℤ(ℤ/2ℤ,ℤ)=ℤ/2ℤ，两个元素对应两个扩张 0→ℤ→E→ℤ/2ℤ→0：一个分裂（E≅ℤ⊕ℤ/2ℤ），一个非分裂（E≅ℤ，通过 n↦2n 给出）。非分裂扩张说明短正合列不必分裂——这是 Ext¹ 非平凡的标准例证。</p>
+<p><strong>反例 4（重要区别）。</strong> Tor₁(ℚ,ℤ/2ℤ)=0（ℚ 平坦 ⟹ 张上它保持单射性）而 Tor₁(ℤ/2ℤ,ℤ/2ℤ)=ℤ/2≠0；类似地 Ext¹(ℤ/2ℤ,ℚ)=0（ℚ 可除 ⟹ 内射）而 Ext¹(ℤ/2ℤ,ℤ/2ℤ)=ℤ/2≠0。同一个"非正合"问题，张量一侧由<strong>平坦性</strong>消除、Hom 一侧由<strong>内射性</strong>消除——张量与 Hom 的非正合性是两种不同的现象。</p>
+</section>
+
+<section>
+<h3>十一、群上同调——分类群扩张</h3>
+<p>H^2(G,A)分类G通过A的扩张——0->A->E->G->1。H^1(G,A)=交叉同态/主同态。H^0(G,A)=A^G(G-不变子群)。Schur-Zassenhaus定理:当|G|和|A|互素时任何扩张分裂。群上同调在代数拓扑(空间的同调)、代数数论(Galois上同调)和表示论中有广泛应用。</p>
+<p><strong>为什么"交叉同态"会出现？</strong> H¹(G,A) 由函数 f: G→A 满足 f(gh) = f(g) + g·f(h)（交叉性）模掉"主同态"构成——f 可以看成一个"几乎同态"，它测度的是 G 作用在 A 上时"差一点是同态"的偏差。而 H²(G,A) 直接回答"G 可以被 A 扩张成哪些 E"，这正是例题 3 中 Ext 分类的群论版本：<strong>扩张问题在群论里叫"群上同调"，在模论里叫 Ext，同一个数学故事的两种方言。</strong></p>
+</section>
+
+<section>
+<h3>十二、谱序列——同调代数的"瑞士军刀"</h3>
+<p>谱序列用逐层逼近计算同调:第一页E^1=同调的直接近似,第二页E^2=更好的近似...,收敛到目标同调。Leray-Serre谱序列从纤维丛的基空间和纤维的同调计算全空间的同调。Grothendieck谱序列从函子的导出函子复合计算复合导出函子。</p>
+<p><strong>为什么需要"逐层逼近"而非一步到位？</strong> 许多同调对象（纤维丛的全空间、复合函子的导出）没法直接算——但"粗略近似 → 修正 → 再修正"的谱序列套路总能进行。打个比方：给一张高分辨率照片，先看缩略图（E¹），再逐级放大（E²、E³…），每一级都在上一级的基础上精化；最后一级的极限就是真答案。收敛性（E_∞ 页 = 目标同调的伴随分级）保证了这套逼近不会失真。</p>
+</section>
+
+<section>
+<h3>十三、Hochschild同调——代数的循环同调</h3>
+<p>代数A的Hochschild同调HH_n(A)分类A的"非交换微分形式"。HH_0=A/[A,A]。HH_1=微分形式的"迹"。循环同调HC_n是Hochschild同调的S^1-等变版本——Connes用它定义了非交换空间的de Rham上同调。</p>
+<p><strong>为什么非交换代数也需要"微分形式"？</strong> 交换代数 A 的 Kähler 微分 Ω¹ 承载微分运算 d；Hochschild 同调把"微分"推广到非交换代数——HH₁ 里的元素就像"dx"，"迹"取出来测度换位。而循环同调更进一步，它把 S¹ 的旋转对称性考虑进来，得到真正配得上"de Rham 上同调"称号的不变量。这是非交换几何（Connes 纲领）的一块基石。</p>
+</section>
+
+<section><h3>前沿：persistent同调与拓扑数据分析</h3>
+<p>Carlsson-Zomorodian(2005)将同调引入数据分析——从点云数据构建持续同调(persistent homology)——检测数据的"拓扑特征"。在生物(蛋白质折叠)和材料科学中有广泛应用。仍开放:持续同调的统计推断和噪声稳定性。</p>
+<p><strong>这个前沿到底在解决什么具体问题？</strong> 给你几千个散布的点（比如蛋白质原子的位置、传感器网络的节点），没有流形、没有方程——拓扑从何谈起？persistent 同调的答案：以每个点为球心以半径 r 画球，让 r 从 0 增长，圆球并出的"洞"在某个 r 区间里出现又消失；把每个洞的"寿命区间 [b,d]"画成条形码，<strong>长的条是真拓扑特征，短的条是噪声</strong>。于是"数洞"变成"给洞排序"，噪声容忍性也随之而来。</p></section>
+
+<section>
+<h3>工作题——短正合列诱导的长序列</h3>
+<p><strong>工作题 1（显式长序列）。</strong> 把短正合列 0→ℤ→² ℤ→ℤ/2ℤ→0 看作集中在 0 度的链复形，写出它诱导的长正合序列并验证正合性。<strong>提示：</strong>三个复形都集中在 0 度，其余度数为零；长序列只在 H₀ 处有非零项。</p>
+<p><strong>工作题 2（非平凡连接同态）。</strong> 对空间对 (X,A)=(D²,S¹)，用长正合序列 0→C_*(S¹)→C_*(D²)→C_*(D²,S¹)→0 计算相对同调 H_n(D²,S¹)，并说明连接同态 ∂: H₂(D²,S¹)→H₁(S¹)。<strong>提示：</strong>已知 H_n(S¹)=ℤ(n=0,1)、H_n(D²)=ℤ(n=0)；把 n=2,1,0 三段写成显式长序列，用正合性逐个推出。</p>
+<p><strong>工作题 3（正合性判断与 Tor）。</strong> 判断 0→ℤ→³ ℤ→ℤ/3ℤ→0 是否正合，并求 Tor₁^ℤ(ℤ/3ℤ, ℤ/3ℤ)。<strong>提示：</strong>正合性看 ker(ℤ→ℤ/3ℤ) 是否等于 3ℤ；Tor 用预解 0→ℤ→³ℤ→ℤ/3ℤ→0 张 ⊗ℤ/3ℤ，注意 ×3 在 ℤ/3ℤ 上是零映射。</p>
+<details><summary>显示解答</summary><p>
+<strong>工作题 1：</strong> 三个复形集中在度数 0，故所有 H_n（n≠0）为 0，长序列化为<br>
+⋯→0→H₀(ℤ)→H₀(ℤ)→H₀(ℤ/2ℤ)→0→⋯<br>
+即 ⋯→0→ℤ→² ℤ→ℤ/2ℤ→0→⋯。<br>
+验证：×2 单射，ℤ→ℤ/2ℤ 满射，ker(ℤ→ℤ/2ℤ)=2ℤ=im(×2)，处处正合。连接同态 ∂: H₀(ℤ/2ℤ)→H_{-1}(ℤ) 是零映射（因两侧为 0）。</p>
+<p><strong>工作题 2：</strong> 已知 H_n(S¹)=ℤ（n=0,1），H_n(D²)=ℤ（n=0，其余 0）。长序列（n=2 至 0）：<br>
+H₂(S¹)=0→H₂(D²)=0→H₂(D²,S¹)→∂ H₁(S¹)=ℤ→H₁(D²)=0→H₁(D²,S¹)→H₀(S¹)=ℤ→H₀(D²)=ℤ→H₀(D²,S¹)→0。<br>
+由正合性：H₂(D²,S¹)→ℤ 单且满（因两侧为 0），故 H₂(D²,S¹)≅ℤ 且 ∂ 是<strong>同构</strong>——这是非平凡连接同态的标准例子。H₁(D²,S¹)=0（其前有 ℤ→0，其后有 0→ℤ）。H₀(D²,S¹)=0（因 H₀(S¹)→H₀(D²) 是同构）。</p>
+<p><strong>工作题 3：</strong> ×3 在 ℤ 上单射，ker(ℤ→ℤ/3ℤ)=3ℤ=im(×3)，故正合。<br>
+Tor：取 ℤ/3ℤ 的自由预解 0→ℤ→³ ℤ→ℤ/3ℤ→0，张量 ⊗ℤ/3ℤ：0→ℤ/3ℤ→³ ℤ/3ℤ→ℤ/3ℤ→0，×3 在 ℤ/3ℤ 上是零映射，故 Tor₁=ker(×3)=ℤ/3ℤ。与一般公式 Tor₁^ℤ(ℤ/m,ℤ/n)=ℤ/gcd(m,n) 一致（gcd(3,3)=3）。</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（换个模再算 H₀）。</strong> 计算复形 0 → ℤ --×3--> ℤ → 0 在位置 0 的同调。<strong>提示：</strong>ker d₀ = ℤ，im d₁ = 3ℤ，商 = ℤ/3ℤ——对比正合列里"账平"的情形。</p>
+<p><strong>试试看 2（正方形的边界）。</strong> 取正方形四条边组成的一维复形（四个顶点 v₀…v₃，四条边首尾相接成环），用例题 1 的流程算 H₀ 与 H₁。<strong>提示：</strong>四条边对应的 ker ∂₁ 满足 a=b=c=d（四个系数全相等），所以 H₁≅ℤ；H₀ 中所有顶点被粘成一个。</p>
+<p><strong>试试看 3（Tor 的 gcd 公式）。</strong> 计算 Tor₁^ℤ(ℤ/4ℤ, ℤ/6ℤ)。<strong>提示：</strong>直接套公式 ℤ/gcd(4,6) = ℤ/2；或用预解 0→ℤ→⁴ℤ→ℤ/4→0 张 ⊗ℤ/6 手算验证——×4 在 ℤ/6 上的核是什么？</p>
+<p><strong>试试看 4（Ext 的对称性小探）。</strong> 计算 Ext¹_ℤ(ℤ/3ℤ, ℤ) 并描述对应扩张。<strong>提示：</strong>预解 0→ℤ→³ℤ→ℤ/3→0 对 Hom(−,ℤ) 求值，Ext¹ = coker(×3: ℤ→ℤ) = ℤ/3；非分裂扩张是 0→ℤ→³ℤ→ℤ/3→0。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>C. A. Weibel, An Introduction to Homological Algebra</strong></p>
+<p>&rarr; <strong>S. Mac Lane, Homology</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/algebraic-topology-homology.html">同调论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/algebraic-topology-homology.html">🕳️ 同调论</a>：同一学科分类「代数拓扑」。</p>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/commutative-algebra.html">💍 交换代数</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：代数核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/homology.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

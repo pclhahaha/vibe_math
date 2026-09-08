@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖截止频率：看频域乘法如何变成空间域滤波" />
+  <meta property="og:title" content="傅里叶变换与卷积 — Vibe Math" />
+  <meta property="og:description" content="拖截止频率：看频域乘法如何变成空间域滤波" />
+  <title>傅里叶变换与卷积 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎚️ 傅里叶变换与卷积 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">拖截止频率：看频域乘法如何变成空间域滤波</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='fourier-transform',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/fourier-series.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🎵 傅里叶级数</a>
+  <a href="/pages/pde.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌡️ 偏微分方程：热与波 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把一段音乐翻译成"频率的乐谱"，再把滤波变成一次乘法</h3>
+<p>傅里叶级数（<a href="/pages/fourier-series.html">傅里叶级数</a> 课）告诉我们：周期信号是正弦波的叠加。但生活里的信号几乎从不周期——一个音符敲下去就衰减，一张照片是一堆毫无规律的明暗。要处理它们，需要把"级数求和"升级为"积分变换"：</p>
+<div class="formula display" data-tex="\hat f(\xi)=\int_{-\infty}^{\infty}f(x)\,e^{-2\pi i x\xi}\,dx\qquad(\text{傅里叶变换})"></div>
+<p>它把时间信号 f(x) 翻译成频率谱 f̂(ξ)：每个频率 ξ 有多少能量。反过来，反演公式把谱还原成信号——这组"翻译 + 还原"就是傅里叶变换。</p>
+<p>这个翻译为什么无价？因为许多在"时间域"里很复杂的操作，在"频率域"里简单得惊人。<strong>卷积</strong>就是最好的例子：给照片加模糊 = 把照片与一个模糊核"滑动相乘求和"（卷积）；而卷积定理说</p>
+<div class="formula display" data-tex="\widehat{f\ast g}(\xi)=\hat f(\xi)\,\hat g(\xi)\qquad(\text{时域卷积}\ =\ \text{频域乘法})"></div>
+<p>模糊在时域是积分操作，在频域只是<strong>把频谱乘上一个窗口</strong>——"低通滤波"因此只是"把高频乘 0"。配上 1965 年 Cooley–Tukey 的快速傅里叶变换（FFT，把 n² 步降到 n log n 步），卷积的乘法化让数字信号处理、图像压缩（JPEG）、MRI、5G、乃至求解偏微分方程全部成为可能。<strong>你手机里每一张照片的滤镜，都是这条定理的化身。</strong></p>
+<div class="key-insight">洞察：傅里叶变换的本质是<strong>换一个角度看函数</strong>——把"随位置/时间变化"换成"随频率变化"。卷积定理是这个视角的奖赏：时域的滑动积分变成频域的一次逐点乘法。热方程的"模糊"、滤波器的"锐化"、量子力学的"不确定关系"，全是同一枚硬币的两面。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/fourier-series.html">傅里叶级数</a>（级数版先行）、<a href="/pages/riemann-integral.html">黎曼积分</a>、<a href="/pages/complex-plane.html">复平面</a>（e^{ix} 的旋转视角）。本课是 <a href="/pages/pde.html">热方程</a>、<a href="/pages/uncertainty.html">不确定性</a>、<a href="/pages/kakeya.html">Kakeya</a> 的前置。</p></div>
+
+<section>
+<h3>一、一个具体问题——从周期到非周期：让周期趋于无穷</h3>
+<p>对周期 T 的函数，傅里叶级数把频谱写成离散的谐波 k/T。现在让 T→∞：基频 1/T 趋于 0，离散的谱线越靠越近，最后融合成连续的谱 f̂(ξ)。极限过程把"求和 Σ_k"变成"积分 ∫dξ"，系数公式变成变换公式。这就是傅里叶变换的出身——它<strong>不是新的魔法，而是级数在周期无穷大时的极限</strong>。</p>
+<p><strong>为什么用复指数 e^{−2πixξ}？</strong> 因为它是"以频率 ξ 旋转的单位圆运动"，比一对 sin/cos 更紧凑；变换的实部/虚部对应 cos/sin 分量。约定不同（2π 放指数里还是放外面）只差缩放，不影响理论。</p>
+<p><strong>三座里程碑。</strong> (1) Fourier 1822 提出思想（当时的"任意函数"争论直接催生了实分析的严格化）；(2) Plancherel 1910 把变换建成 L² 上的酉算子——能量守恒 Parseval；(3) Carleson 1966 证明 L² 函数傅里叶级数的几乎处处收敛（及其与变换的深刻联系）。严格化花了整整一个世纪——这正是 <a href="/pages/pde.html">PDE</a> 与 <a href="/pages/measure-theory.html">测度论</a> 两门课里的同一个故事。</p>
+<p><strong>本课要建立的"性质表"</strong>（第五节）：线性、平移↔乘相位、伸缩↔反伸缩、微分↔乘 iξ、卷积定理、Parseval。有了这张表，绝大多数计算都能"查表 + 组合"完成，像代数一样机械。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——卷积为什么"到处出现"</h3>
+<p>卷积的定义：</p>
+<div class="formula display" data-tex="(f\ast g)(x)=\int_{-\infty}^{\infty}f(t)\,g(x-t)\,dt"></div>
+<p>把 g 翻转（g(x−t)）再滑动（x 变）与 f 逐点相乘求和。直觉：<strong>每个输出点都是"输入乘以核、再按核的形状加权求和"</strong>。三个典型场景：</p>
+<ul>
+<li><strong>模糊：</strong> f=图像，g=高斯核 → 每个像素被邻域加权平均 → 模糊（低通）。</li>
+<li><strong>系统响应：</strong> f=输入信号，g=系统的冲激响应 → 输出 = f*g（线性时不变系统的唯一结构）。</li>
+<li><strong>概率：</strong> f、g 是独立随机变量的密度 → f*g 是和的密度（下一门 <a href="/pages/clt.html">中心极限定理</a> 课的伏笔：和越加越高斯！）。</li>
+</ul>
+<p><strong>卷积定理的证明只有一行。</strong> 把 (f*g) 的变换写成二重积分，用 Fubini 换序：f̂(ξ)ĝ(ξ) 的乘积积分 = ∬f(t)g(u)e^{−2πiξ(t+u)}dtdu，令 x=t+u 换元即得。∎ 反过来，频域乘法 = 时域卷积，所以"滤波"永远有两个等价实现——工程上哪个便宜用哪个（FFT 让频域实现通常更快）。</p>
+</section>
+
+<section>
+<h3>三、例题 1——两个必算的变换：盒函数与高斯（一步步算完）</h3>
+<p><strong>题目 (a)。</strong> 计算矩形脉冲 f(x)=1_{[−1/2,1/2]}(x)（盒函数，面积 1）的傅里叶变换。</p>
+<p><strong>第一步：写积分。</strong> f̂(ξ)=∫_{−1/2}^{1/2} e^{−2πixξ} dx。</p>
+<p><strong>第二步：积分。</strong> 原函数是 e^{−2πixξ}/(−2πiξ)，代入端点：</p>
+<div class="formula display" data-tex="\hat f(\xi)=\frac{e^{-\pi i\xi}-e^{\pi i\xi}}{-2\pi i\xi}=\frac{\sin(\pi\xi)}{\pi\xi}=:\operatorname{sinc}\xi"></div>
+<p><strong>第三步：核对特殊值。</strong> ξ=0 处用连续性（或 l'Hôpital）得 f̂(0)=1=∫f（总面积）；零点在 ξ=±1,±2,…（整数处）。∎</p>
+<p><strong>第四步：读出含义。</strong> 盒函数（越"尖锐"）的谱是 sinc（在频率轴上"拖长尾"）。<strong>时域越窄 ⟹ 频域越宽</strong>——不确定性原理的第一印象（→ <a href="/pages/uncertainty.html">不确定性</a> 课）。</p>
+<p><strong>题目 (b)。</strong> 计算高斯 f(x)=e^{−πx²} 的变换。</p>
+<p><strong>第一步：凑平方。</strong> 指数里 −πx²−2πixξ = −π(x+iξ)²−πξ²。</p>
+<p><strong>第二步：平移围道 / 用已知高斯积分。</strong> ∫e^{−π(x+iξ)²}dx = ∫e^{−πx²}dx = 1（复平移由柯西定理保证，或直接引用标准结果）：</p>
+<div class="formula display" data-tex="\hat f(\xi)=e^{-\pi\xi^{2}}\int_{-\infty}^{\infty}e^{-\pi(x+i\xi)^2}dx=e^{-\pi\xi^{2}}\qquad\blacksquare"></div>
+<p><strong>第三步：读出含义。</strong> 高斯变换到高斯——<strong>自对偶</strong>（e^{−πx²} 是变换的不动点）。这是"最优集中"的体现：高斯在时频两域同时达到不确定性下界。热方程的解核就是高斯（→ <a href="/pages/pde.html">热方程</a> 课），所以热扩散在频域只是乘 e^{−4π²αξ²t}。</p>
+</section>
+
+<section>
+<h3>四、例题 2——卷积定理实操：盒卷积盒 = 三角（一步步算完）</h3>
+<p><strong>题目。</strong> 两个单位盒函数（宽度 1）卷积，得到什么？用频域再验证一次。</p>
+<p><strong>第一步：时域直接算。</strong> h(x)=(1_{[−1/2,1/2]}∗1_{[−1/2,1/2]})(x) = ∫_{−1/2}^{1/2}1_{[−1/2,1/2]}(x−t)dt。重叠区间长度 = ∫1_{[x−1/2,x+1/2]∩[−1/2,1/2]}dt。对 0≤x≤1 是 1−x；对称地：</p>
+<div class="formula display" data-tex="h(x)=\max(0,\,1-|x|)\qquad(\text{三角形，高度 }1\text{、支撑宽度 }2)"></div>
+<p><strong>第二步：频域验证。</strong> 卷积定理：ĥ(ξ) = sinc²ξ。反过来直接变换三角函数也得到 sinc²（可查表核对）。∎</p>
+<p><strong>第三步：数学上的"免费午餐"。</strong> 卷积让函数"变胖且变光滑"：盒不连续，两个盒卷积的三角连续；再多卷积几次（盒∗盒∗盒 = 分段二次）越来越光滑——这正是中心极限定理的雏形：<strong>反复卷积收敛到高斯</strong>（→ <a href="/pages/clt.html">CLT</a> 课）。</p>
+<p><strong>第四步：一个漂亮的守恒。</strong> 用 Parseval：∫sinc²ξ dξ = ∫|1_{[−1/2,1/2]}(x)|²dx = 1。频域里"拖尾"的 sinc² 总能量恰为 1——能量不因换域而增减。</p>
+<div class="formula display" data-tex="\int_{-\infty}^{\infty}\operatorname{sinc}^{2}\xi\,d\xi=\int_{-\infty}^{\infty}|\hat f(\xi)|^2\,d\xi=\int_{-\infty}^{\infty}|f(x)|^2\,dx=1\qquad(\text{Parseval})"></div>
+</section>
+
+<section>
+<h3>五、严格陈述——变换的"查表与规则"</h3>
+<p>约定 f̂(ξ)=∫f(x)e^{−2πixξ}dx。核心事实（L¹/L² 框架下）：</p>
+<ul>
+<li><strong>反演：</strong> 若 f、f̂ 都绝对可积，则 f(x)=∫f̂(ξ)e^{2πixξ}dξ（几乎处处）。L² 上变换是希尔伯特空间等距（Plancherel），反演即共轭转置。</li>
+<li><strong>Parseval：</strong> ∫|f|²=∫|f̂|²；一般化 ⟨f,g⟩=⟨f̂,ĝ⟩。</li>
+<li><strong>运算表：</strong> 平移 f(x−a) ↔ e^{−2πiaξ}f̂；调制 e^{2πiax}f(x) ↔ f̂(ξ−a)；伸缩 f(ax) ↔ (1/|a|)f̂(ξ/a)；微分 f′ ↔ 2πiξf̂（可迭代到 n 阶）；乘 x 多项式 ↔ 求导 f̂。</li>
+<li><strong>卷积定理：</strong> (f∗g)^ = f̂·ĝ；乘法对偶 (fg)^ = f̂∗ĝ。</li>
+<li><strong>δ 与常数：</strong> δ 变换到常数 1（脉冲的谱全平）；常数 1 变换到 δ（直流只在零频）。盒↔sinc、高斯↔高斯、洛伦兹↔指数衰减，构成常用对偶表。</li>
+<li><strong>采样定理（Nyquist–Shannon）：</strong> 带限信号（谱在 [−W,W] 外为零）可由间隔 ≤1/(2W) 的采样完全重建——采样率必须 ≥ 两倍最高频率，否则<strong>混叠（aliasing）</strong>把高频伪装成低频（陷阱 2 的主角）。</li>
+<li><strong>FFT（Cooley–Tukey 1965）：</strong> n 点离散傅里叶变换从 O(n²) 降到 O(n log n)——按奇偶分裂 + 单位根对称性递归。它是"卷积定理变得可用"的工程前提。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\hat f(\xi)=\int f(x)e^{-2\pi i x\xi}dx\qquad f(x)=\int \hat f(\xi)e^{2\pi i x\xi}d\xi"></div>
+<div class="formula display" data-tex="(f\ast g)(x)=\int f(t)g(x-t)dt\qquad \widehat{f\ast g}=\hat f\,\hat g"></div>
+<div class="formula display" data-tex="\int|f|^{2}dx=\int|\hat f|^{2}d\xi;\qquad f'\leftrightarrow 2\pi i\xi\,\hat f(\xi)"></div>
+<div class="formula display" data-tex="\mathbf{1}_{[-1/2,1/2]}\leftrightarrow \operatorname{sinc}\xi=\frac{\sin\pi\xi}{\pi\xi};\qquad e^{-\pi x^{2}}\leftrightarrow e^{-\pi\xi^{2}};\qquad \delta\leftrightarrow 1"></div>
+<div class="formula display" data-tex="\mathbf{1}_{[-1/2,1/2]}\ast\mathbf{1}_{[-1/2,1/2]}=(1-|x|)_{+}\leftrightarrow \operatorname{sinc}^{2}\xi"></div>
+</section>
+
+<section>
+<h3>七、延伸——变换的四通八达</h3>
+<ul>
+<li><strong>偏微分方程。</strong> 热方程 ∂u/∂t=α∂²u/∂x² 在频域变成常微分 dû/dt=−4π²αξ²û——解是初值谱乘 e^{−4π²αξ²t}，即初值与高斯核卷积。<strong>"扩散 = 低通滤波"不只是比喻，是等式。</strong> → <a href="/pages/pde.html">PDE：热与波</a> 课。</li>
+<li><strong>量子力学与不确定性。</strong> 位置与动量的波函数互为傅里叶变换；Δx·Δp ≥ ħ/2 是"时域窄 ⟹ 频域宽"的物理化身（例题 1 的 sinc 直觉）。→ <a href="/pages/uncertainty.html">不确定性原理</a> 课。</li>
+<li><strong>群视角。</strong> 离散傅里叶变换 = 循环群 Cₙ 的表示分解（→ <a href="/pages/representation-theory.html">群表示论</a> 课例题 2）；傅里叶变换本身是"平移群 ℝ 的表示论"——把整个变换理论纳入表示论的统一框架，是 Weyl 的洞见。</li>
+<li><strong>数论。</strong> Poisson 求和公式 Σf(n)=Σf̂(n) 把模形式与 ζ 函数连起来：ζ 的函数方程由此而来。→ <a href="/pages/zeta.html">黎曼 ζ 函数</a> 课。</li>
+<li><strong>压缩与感知。</strong> JPEG 用离散余弦变换（DCT 的实版本）丢弃人眼看不见的高频；MP3 同理。压缩感知（Candès–Tao 2006）更进一步：稀疏信号的欠采样也能精确重建——"少采多知"的数学。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个易错点</h3>
+<p><strong>陷阱 1："变换把一个函数变成一个数"？</strong> 不是。f̂ 是<strong>函数</strong>（频率 ξ 的函数）——谱是一整条曲线，不是标量。只有一个数的地方是 f̂(0)=∫f（直流分量/总面积）。</p>
+<p><strong>陷阱 2："多采样总是更好"。</strong> 采样率不足时（<2×最高频率），高频分量<strong>混叠</strong>成假低频——不是"信息变少"而是"信息被污染"。经典例子：车轮在视频里倒转（轮辐频率超过帧率的一半）。抗混叠要先低通再采样。</p>
+<p><strong>陷阱 3："卷积定理只对周期函数成立"？</strong> 对 L¹（或合适的广义函数框架）的一切函数成立——周期与否无关。级数版（周期）与积分版（非周期）是同一定理的两个写法。</p>
+<p><strong>陷阱 4："FFT 是近似算法"？</strong> 不。FFT 精确计算离散傅里叶变换，只是利用了对称性把步数从 n² 减到 n log n；误差只来自浮点。它"快"不是因为近似，而是因为去掉了重复计算。</p>
+<p><strong>陷阱 5："方波就是它的傅里叶部分和"？</strong> 吉布斯现象（→ 级数课）：在跳跃点附近，部分和有过冲约 9%，且不随项数消失（只变窄）。低通滤波方波后看到的"振铃"正是吉布斯现象的频域版本——不是数值 bug，是数学事实（本课画布滤波方波时你会看到它）。</p>
+</section>
+
+<section>
+<h3>九、当前状态——变换理论的现代前沿</h3>
+<ol>
+<li><strong>收敛性理论的完成与继续。</strong> Carleson（1966）证明 L² 级数几乎处处收敛；Hunt 推广到 L^p（p&gt;1）。"变换的收敛在哪个函数空间成立"仍是调和分析的试金石。</li>
+<li><strong>稀疏与压缩感知。</strong> 欠采样重建、相位恢复（只知道 |f̂| 能否找回 f？）——稀疏傅里叶变换追求亚线性时间，是信号处理与调和分析的新前线。</li>
+<li><strong>不确定性原理的定量化。</strong> Donoho–Stark 的支撑版本、Donoho–Logan 原理——"时频不能同时集中"从不等式变成工程工具。</li>
+<li><strong>与 Kakeya/限制性问题的纠缠。</strong> 傅里叶限制性估计（球面上的变换限制）是调和分析三大难题之一（→ <a href="/pages/kakeya.html">Kakeya</a> 课第七节）——同一个变换，在"应用完成"与"核心未解"之间并存，正是它的魅力。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Fourier (1822)</strong>：<em>Théorie analytique de la chaleur</em>——傅里叶级数与变换思想的诞生（热方程！）。</li>
+<li><strong>Plancherel (1910)</strong>：L² 上的酉理论——变换成为希尔伯特空间工具。</li>
+<li><strong>Nyquist (1928) / Shannon (1949)</strong>：采样定理——通信工程的数学基石。</li>
+<li><strong>Cooley–Tukey (1965)</strong>：<em>"An algorithm for the machine calculation of complex Fourier series"</em>, <em>Math. Comp.</em> 19——FFT，让变换进入工程日常。</li>
+<li><strong>Carleson (1966)</strong>：<em>"On convergence and growth of partial sums of Fourier series"</em>, <em>Acta Math.</em>——L² 几乎处处收敛，二十世纪分析学的名篇。</li>
+<li><strong>Candès–Romberg–Tao (2006)</strong>：压缩感知的精确重建定理——稀疏性带来采样革命。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——查表、算积分、验证定理</h3>
+<p><strong>题 1（盒函数全步骤）。</strong> 不查表，从 ∫_{−1/2}^{1/2}e^{−2πixξ}dx 出发完整推出 sinc ξ，并说明 ξ=0 处的值。<strong>提示：</strong>见例题 1(a)；ξ=0 时被积函数恒 1，积分 =1（或用 l'Hôpital）。</p>
+<p><strong>题 2（平移性质）。</strong> 利用"平移 ↔ 乘相位"，写出中心在 a、宽度 1 的盒函数（在 [a−½,a+½] 上为 1）的变换。<strong>提示：</strong>f(x)=1_{[−½,½]}(x−a)，故 f̂(ξ)=e^{−2πiaξ}sinc ξ；模长 |f̂| 与位置无关——平移不改能量谱，只改相位。</p>
+<p><strong>题 3（Parseval 用起来）。</strong> 用 Parseval 计算 ∫sinc²(ξ)dξ。<strong>提示：</strong>∫sinc²=∫|1_{[−½,½]}|²=1（例题 2 第四步）。</p>
+<p><strong>题 4（卷积的峰值）。</strong> 宽度 w 与 w′ 的两个盒卷积，在 x=0 处的值是多少？<strong>提示：</strong>重叠区间长度 = min(w,w′)——两盒都盖住原点的长度是较窄者的宽度；峰高 = min(w,w′)。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见例题 1(a)。∎</p>
+<p><strong>题 2</strong>：f̂(ξ)=e^{−2πiaξ}sinc ξ。∎</p>
+<p><strong>题 3</strong>：1。∎</p>
+<p><strong>题 4</strong>：(f∗g)(0)=∫1_{[−w/2,w/2]}1_{[−w′/2,w′/2]}dt=min(w,w′)。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布滤波）。</strong> 选"正弦+高频噪声"信号，把截止频率滑到噪声峰之下：噪声消失，正弦保留——频域乘法（乘法 mask）完成的滤波，肉眼可鉴。再把信号换成方波低通：边缘出现振铃（吉布斯），不是 bug。</p>
+<p><strong>试试看 2（卷积 = 模糊）。</strong> 在 <a href="/pages/pde.html">PDE：热与波</a> 课画布上，热方程演化 = 初值与高斯核卷积 = 乘 e^{−4π²αξ²t}。回来对比：本课的"低通"就是热的"扩散"，同一件事的两个视图。</p>
+<p><strong>试试看 3（盒↔sinc 对偶）。</strong> 画出盒函数与 sinc 的草图，标出 sinc 的零点（整数处）与 f̂(0)=面积。然后想象盒变窄一倍：谱拉宽一倍（伸缩规则）——体会"窄 ↔ 宽"的对偶。</p>
+<p><strong>试试看 4（CLT 伏笔）。</strong> 把盒函数与自己卷积两次、三次，观察形状如何趋近高斯（试试看 2 的画布思路）。提示：卷积的卷积 = 频域乘 sinc 三次；sinc³ 的主瓣近似高斯——"反复卷积 → 高斯"就是中心极限定理的胚胎。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>E. Stein, R. Shakarchi, Fourier Analysis: An Introduction</strong>（Princeton Lectures in Analysis I，普林斯顿风格的严格与优美）</p>
+<p>&rarr; <strong>T. Körner, Fourier Analysis</strong>（历史、应用与直觉的盛宴）</p>
+<p>&rarr; <strong>B. Osgood, The Fourier Transform and its Applications</strong>（斯坦福 EE261 讲义，工程与数学兼修）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.13（傅里叶分析）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/fourier-series.html">傅里叶级数</a>、<a href="/pages/riemann-integral.html">黎曼积分</a>、<a href="/pages/complex-plane.html">复平面</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fourier-series.html">🎼 傅里叶级数</a>：级数版先行，变换是它的周期→∞极限。</p>
+<p>&rarr; <a href="/pages/pde.html">🌡️ 偏微分方程：热与波</a>：热扩散 = 高斯核卷积 = 低通滤波。</p>
+<p>&rarr; <a href="/pages/uncertainty.html">🔬 不确定性原理</a>：位置-动量互为变换对，ΔxΔp 的下界。</p>
+<p>&rarr; <a href="/pages/representation-theory.html">🎭 群表示论</a>：DFT = 循环群表示分解，变换 = 平移群表示论。</p>
+<p>&rarr; <a href="/pages/kakeya.html">🪡 Kakeya 猜想</a>：傅里叶限制性是调和分析的未解核心。</p>
+<p>&rarr; <a href="/pages/zeta.html">♾️ 黎曼 ζ 函数</a>：Poisson 求和与 ζ 函数方程同源。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/fourier-transform.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

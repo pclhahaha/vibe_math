@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="随机游走——扩散的微观起源" />
+  <meta property="og:title" content="布朗运动 — Vibe Math" />
+  <meta property="og:description" content="随机游走——扩散的微观起源" />
+  <title>布朗运动 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌊 布朗运动 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">随机游走——扩散的微观起源</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='brownian-motion',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/entropy.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📉 熵与信息</a>
+  <a href="/pages/light-cone.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">💫 光锥与时空 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——一颗花粉每秒被撞 10²¹ 次，怎么"平均"出确定的规律？</h3>
+<p>先用具体数字感受这个现象。1827 年 Brown 观察到：水中一颗半径约 r≈10⁻⁶ m（1 微米）的花粉，在显微镜下<strong>永远不停</strong>地乱动。它每秒被周围的水分子撞大约 10²¹ 次——每个水分子都在以每秒几百米的热速度乱撞。单次撞击几乎推不动花粉（那么多人从各个方向推，相互抵消）。</p>
+<p>关键的问题来了：<strong>平均位移显然是 0</strong>（四面八方对称，撞哪边都一样多）。可如果平均位移是 0，花粉不就该原地不动吗？它为什么还在乱动？</p>
+<p>答案是：花粉在乎的不是"位移"，而是<strong>位移的平方</strong>。Einstein 1905 年的惊人结论是：</p>
+<div class="formula display" data-tex="\langle x^2\rangle=2Dt,\qquad D=\frac{kT}{6\pi\eta r}."></div>
+<p>代入真实数字：水温 T=300 K，水的黏度 η≈10⁻³ Pa·s，花粉半径 r=10⁻⁶ m，k=1.38×10⁻²³ J/K：</p>
+<div class="formula display" data-tex="D=\frac{1.38\times10^{-23}\cdot300}{6\pi\cdot10^{-3}\cdot10^{-6}}\approx 2.2\times10^{-13}\ \text{m}^2/\text{s}."></div>
+<p>于是 √⟨x²⟩ = √(2Dt)：1 秒后约 √(4.4×10⁻¹³) ≈ 6.6×10⁻⁷ m ≈ <strong>0.7 微米</strong>；100 秒后 ≈ 6.6 微米；10⁴ 秒后 ≈ 66 微米。注意到：<strong>时间放大 100 倍，位移只放大 10 倍</strong>——这就是"扩散长度 ∝ √t"定律，它是本课一切内容的起点。</p>
+<div class="key-insight">核心思想：花粉乱动不是因为"被推得远"，而是因为"走的路程平方平均地增长"：⟨x²⟩=2Dt。随机性让位移平方与时间成正比，于是"√t 扩散定律"成为原子的实验证据。只想懂核心思想，看到这里即可；想懂"为什么是 √t、为什么系数是 2D"，请跟着一、二节一步步算。</div>
+</section>
+
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/measure-theory.html">测度论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、开场问题」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、随机游走：把"乱撞"写成数学，一步步算 ⟨x²⟩=Na²</h3>
+<p>把"无数次杂乱撞击"抽象成最简单的模型——<strong>一维随机游走</strong>。先造一个更直观的例子（记住它，后面的花粉就是它的放大版）：</p>
+<p><strong>青蛙模型。</strong>一只青蛙站在原点，每一步跳距离 a=1 cm，方向完全随机：向左或向右，概率各 1/2，且每步彼此独立。跳 N 步后，青蛙离起点多远？</p>
+<p>设第 i 步的位移是 εᵢa，其中 εᵢ = +1（向右）或 −1（向左），各概率 1/2，独立。总位移 X_N = a(ε₁+ε₂+⋯+ε_N)。</p>
+<p><strong>例 1（一步步算：⟨x²⟩ = Na²）。</strong></p>
+<p>① <strong>平均位移 = 0：</strong>E[εᵢ] = (1/2)(+1) + (1/2)(−1) = 0，故 E[X_N] = a·ΣE[εᵢ] = 0。← 这就是"平均位移 0"的数学：青蛙平均下来原地不动。</p>
+<p>② <strong>位移平方：</strong>展开 X_N² = a²(Σᵢεᵢ)² = a²(Σᵢεᵢ² + Σ_{i≠j}εᵢεⱼ)。</p>
+<p>③ <strong>逐项取平均：</strong>εᵢ² = 1 恒成立（±1 的平方都是 1），所以 E[εᵢ²]=1；而对 i≠j，由独立性 E[εᵢεⱼ] = E[εᵢ]·E[εⱼ] = 0·0 = 0，交叉项全部消失。</p>
+<p>④ <strong>结果：</strong></p>
+<div class="formula display" data-tex="\langle X_N^2\rangle=a^2\sum_{i=1}^{N}1=N a^2."></div>
+<p>⑤ <strong>直觉核对：</strong>N=100 步、每步 1 cm，⟨x²⟩=100 cm²，所以"典型"位移 ≈ √100 = 10 cm——<strong>不是 100 cm，是 10 cm。</strong>随机游走走了 100 步，平均却只"走出" 10 cm：路径在自我抵消，这就是 √N 定律。∎</p>
+<p>⑥ <strong>变成连续时间：</strong>若每步耗时 τ，则 N = t/τ，⟨x²⟩ = (a²/τ)t。与 Einstein 公式 ⟨x²⟩=2Dt 对照，得到关键联系：</p>
+<div class="formula display" data-tex="2D=\frac{a^2}{\tau}\quad\Longleftrightarrow\quad D=\frac{a^2}{2\tau}."></div>
+<p>扩散系数 D 是"步长平方 ÷ 步时"的化身：<strong>步越快、步越远，扩散越凶。</strong>花粉每秒被撞 10²¹ 次（τ 极小），但每次推不远（a 极小），两者相抵后 D≈2.2×10⁻¹³ m²/s——很小的数，但要的就是这个量级。</p>
+</section>
+
+<section>
+<h3>二、Einstein 的推导——为什么 ⟨x²⟩=2Dt 证明原子存在</h3>
+<p>1905 年，Einstein 用统计力学框架（和 Boltzmann 相同的思路）严格推出布朗运动的 ⟨x²⟩=2Dt，把<strong>微观的随机性（温度 T）</strong>和<strong>宏观的粘滞（黏度 η）</strong>之间的那座桥精确地搭起来：</p>
+<div class="formula display" data-tex="D=\frac{kT}{6\pi\eta r}\qquad(\text{Stokes-Einstein 公式})."></div>
+<p>推导的核心是两条物理的平衡：<strong>① 力学平衡</strong>（Stokes 阻力 −γv 与随机力 ξ 的平均效应相抵，γ=6πηr）；<strong>② 热力学平衡</strong>（宏观扩散流 D·∇c 与粒子在势场中的漂移流 μ·F·c 平衡，μ=D/(kT)——这是爱因斯坦关系）。两条一拼，就把"每步多少"的微观细节全部消掉，只留下温度、黏度、半径这三个可测的量。</p>
+<p><strong>为什么这个公式能证明"原子存在"？</strong>因为 D 是<strong>可测量</strong>的：Perrin 1908 年在显微镜下跟踪单个花粉、记录均方位移 √⟨x²⟩=√(2Dt)，实测 D 与 Einstein 公式预言吻合。而公式里含 k——玻尔兹曼常数——它的存在本身就意味着"物质由离散粒子构成"。Perrin 由此获 1926 年诺贝尔奖。<strong>Einstein 1905"奇迹年"四篇论文中最接地气的一篇——实验设备只需一台显微镜。</strong></p>
+<p><strong>例 2（一步步算：用 Stokes-Einstein 公式把数字代到底）。</strong></p>
+<p>花粉 r=10⁻⁶ m，水在 300 K 下 η≈10⁻³ Pa·s，k=1.38×10⁻²³ J/K。</p>
+<p>① <strong>算 D：</strong></p>
+<div class="formula display" data-tex="D=\frac{1.38\times10^{-23}\times300}{6\pi\times10^{-3}\times10^{-6}}=\frac{4.14\times10^{-21}}{1.885\times10^{-8}}\approx2.2\times10^{-13}\ \text{m}^2/\text{s}."></div>
+<p>② <strong>算 1 秒的均方位移：</strong>⟨x²⟩=2Dt=4.4×10⁻¹³ m²，√⟨x²⟩≈6.6×10⁻⁷ m≈0.7 μm。</p>
+<p>③ <strong>算 100 秒：</strong>⟨x²⟩=4.4×10⁻¹¹ m²，√⟨x²⟩≈6.6×10⁻⁶ m≈6.6 μm——时间×100，位移×10。∎</p>
+<p>④ <strong>验证 √t 定律的实验意义：</strong>Perrin 只要记录花粉在不同时刻的均方位移，画出 ⟨x²⟩ 对 t 的直线，斜率 2D 就直接给出 k 的数值。一个"乱动"的现象，测出的却是宇宙最深处"原子尺度"的常数——这就是布朗运动作为<strong>原子的证明</strong>的完整逻辑。</p>
+</section>
+
+<section>
+<h3>三、Langevin 方程——单个粒子的随机动力学</h3>
+<p>Einstein 用的是"许多粒子的分布"（扩散方程），Langevin 1908 年换了视角：<strong>盯着一个粒子，写下它的牛顿第二定律</strong>。牛顿第二定律 m·dv/dt = 合力，这里的合力有两股：</p>
+<div class="formula display" data-tex="m\frac{dv}{dt}=-\gamma v+\xi(t)."></div>
+<p>−γv 是 Stokes 黏性阻力（方向与速度相反，γ=6πηr）；ξ(t) 是随机力——水分子在任意时刻的随机撞击，本身无规，只知道它的统计性质：</p>
+<div class="formula display" data-tex="\langle\xi(t)\rangle=0,\qquad \langle\xi(t)\xi(t')\rangle=2\gamma kT\,\delta(t-t')."></div>
+<p>第一条：随机力平均为 0；第二条：随机力在不同时刻互不相关（白噪声），其强度由 <strong>2γkT</strong> 钉死。这个"随机力的强度 = 黏性 × 温度"的关系就是<strong>涨落-耗散定理</strong>：<strong>让粒子乱动的力（涨落）和让粒子慢下来的力（耗散），来自同一个来源、强度由温度锁定</strong>——没有耗散就没有涨落，反之亦然。</p>
+<p><strong>从 Langevin 方程导出 ⟨x²⟩=2Dt（框架）。</strong>把方程乘 x 再取平均，利用 ⟨x·d²x/dt²⟩ = (1/2)d²⟨x²⟩/dt² − ⟨v²⟩，以及动能均分 ⟨v²⟩=kT/m（热平衡），整理得：</p>
+<div class="formula display" data-tex="\frac12\frac{d^2\langle x^2\rangle}{dt^2}+\frac{\gamma}{2m}\frac{d\langle x^2\rangle}{dt}=\frac{kT}{m}."></div>
+<p>令 u = d⟨x²⟩/dt，解一阶线性方程：u 趋于定常解 2kT/γ。积分两次，长时间极限正是 ⟨x²⟩ = 2Dt，D=kT/γ=kT/(6πηr)。<strong>注意：不需要知道每个水分子的轨迹，只需要知道随机力的统计性质</strong>（⟨ξ⟩=0 与 ⟨ξξ⟩=2γkTδ），以及热平衡的均分定理。这就是 Langevin 路线胜过"逐分子追踪"之处。</p>
+</section>
+
+<section>
+<h3>四、Wiener 过程——布朗运动的严格数学：为什么连续但不可微？</h3>
+<p>Einstein-Langevin 给出的是"均方位移"等统计量。真正严格的数学对象由 Wiener 1923 年确立。要回答的问题：<strong>随机游走的连续时间极限是什么？</strong>答案是：一个叫 Wiener 过程 W(t) 的随机过程，它满足三条公理：</p>
+<ul>
+<li><strong>W(0)=0</strong>（从原点出发）；</li>
+<li><strong>独立增量</strong>：对 s&lt;t，W(t)−W(s) 与已走过的 W(s) 独立，且 W(t)−W(s) ~ N(0, t−s)（正态分布，方差等于时间差）；</li>
+<li><strong>连续样本路径</strong>：t ↦ W(t) 是连续函数（a.s.）。</li>
+</ul>
+<p>第二条是随机游走的连续版：独立增量继承了 εᵢ 的独立，方差正比于时间差继承了 ⟨x²⟩=2Dt。Wiener(1923) 在测度论框架下证明这样的过程<strong>存在且路径连续</strong>——它的存在由 Kolmogorov 延拓定理保证（见 <a href="/pages/measure-theory.html">测度论</a> 第七节），把"花粉乱动"提升为数学上无可指摘的对象。</p>
+<p><strong>例 3（一步步算：Var(W(t))=t 与协方差 min(s,t)）。</strong></p>
+<p>① <strong>均值：</strong>E[W(t)]=E[W(t)−W(0)]=0（正态分布均值 0）。</p>
+<p>② <strong>方差 = t：</strong>Var(W(t)) = t−0 = t（由方差 = 时间差）。← 这就是连续时间版的 ⟨x²⟩=2Dt·(1/2)·2...：直接对照，把随机游走 ⟨x²⟩=Na² 写成 ⟨x²⟩=2Dt，其中 D=a²/2τ，那么"标准"Wiener 过程对应 D=1/2，即 ⟨W(t)²⟩=t。</p>
+<p>③ <strong>协方差 = min(s,t)：</strong>设 s&lt;t。把 W(t) 拆成 W(s)+(W(t)−W(s))，两段独立：</p>
+<div class="formula display" data-tex="\mathrm{Cov}(W(s),W(t))=E\big[W(s)(W(t)-W(s)+W(s))\big]=E[W(s)(W(t)-W(s))]+E[W(s)^2]=0+s=s=\min(s,t)."></div>
+<p>独立增量吃掉了交叉项（E[W(s)(W(t)−W(s))]=0），剩下的 E[W(s)²]=s。∎ 一个公式 min(s,t) 浓缩了整条过程的"时间记忆结构"——它是 Brownian 一切自相关计算的原点。</p>
+<p><strong>为什么 W(t) 连续却几乎处处不可微？</strong>这是本课最"反直觉"的定理，答案藏在<strong>二次变差</strong>里。把 [0,t] 切成 n 段，每段 Δ=t/n，算增量平方和：</p>
+<div class="formula display" data-tex="\sum_{k=1}^{n}\big(W(k\Delta)-W((k-1)\Delta)\big)^2\ \xrightarrow{\ L^2\ }\ t\qquad(n\to\infty)."></div>
+<p>（每项期望 Δ，方差 2Δ²，总期望 t、总方差 ~2tΔ→0，所以平方和"几乎确定"地收敛到 t。）但如果 f 是可微函数，它的二次变差必为 0：</p>
+<div class="formula display" data-tex="\sum(\Delta f)^2\le(\sup|f'|)^2\cdot n\cdot(\tfrac{t}{n})^2=O(1/n)\to0."></div>
+<p>两条结论撞车：可微函数二次变差为 0，而 W 的二次变差为 t≠0。<strong>所以 W 处处不可微。</strong>更深一层：正因为路径"抖"到二次变差不消失，Itô 积分（∫f dW）不能按普通微积分的"路径求极限"来定义——它必须以"非预期"的方式（前取点、马氏）定义，这正是 Black-Scholes 期权定价等随机分析的地基。<strong>布朗粒子的轨迹是分形：连续、处处不可微、二次变差 = t。</strong></p>
+</section>
+
+<section>
+<h3>五、Donsker 不变原理——随机游走到布朗运动</h3>
+<p>Wiener 过程是不是"随便某一种"模型？不——它是<strong>万有的</strong>。Donsker（1951）证明：<strong>任何</strong>独立同分布、均值为 0、方差有限的随机游走，只要适当地伸缩，整个路径的分布就收敛于 Wiener 测度。这正是中心极限定理的"过程版"：</p>
+<div class="formula display" data-tex="\frac{S_{nt}}{\sigma\sqrt{n}}\ \xrightarrow{\ \text{弱收敛}\ }\ W(t)."></div>
+<p>不仅是单点分布收敛，<strong>整条路径的分布收敛</strong>——随机游走图形"放大 √n 倍、时间压密"后，形状越来越像布朗运动的轨迹。这正是"花粉乱动"能被任何种类的微观随机机制驱动却得到同一宏观规律的根本原因：<strong>细节（每步多大、什么分布）会被 √n 的伸缩抹平，只剩下 Wiener 过程这个普适极限。</strong></p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\langle x^2\rangle = 2Dt,\qquad D = \frac{kT}{6\pi\eta r}"></div>
+<div class="formula display" data-tex="m\frac{dv}{dt} = -\gamma v + \xi(t),\quad \langle\xi(t)\xi(t')\rangle = 2\gamma kT\delta(t-t')"></div>
+<div class="formula display" data-tex="W(t)-W(s)\sim N(0,t-s),\qquad \mathrm{Var}(W(t))=t,\qquad \mathrm{Cov}(W(s),W(t))=\min(s,t)"></div>
+<div class="formula display" data-tex="\sum\big(\Delta W\big)^2\to t\ \Rightarrow\ W\text{ 连续但几乎处处不可微}"></div>
+</section>
+
+<section>
+<h3>七、试试看（每题附提示）</h3>
+<p><strong>1. 有偏的随机游走。</strong>若每步向右概率 p&gt;1/2、向左概率 1−p，算 E[X_N] 与 ⟨(X_N)²⟩。</p>
+<p><em>提示：E[εᵢ]=p−(1−p)=2p−1，故 E[X_N]=a(2p−1)N（线性漂移）；而 ⟨(X_N)²⟩=N a² + a²(2p−1)²N(N−1)——方差部分仍是 N a²·4p(1−p)。有偏 = 漂移项 t 线性增长，涨落项仍按 √t。</em></p>
+<p><strong>2. Wiener 过程的四阶矩。</strong>用独立增量算 E[W(t)⁴] 与 Var(W(t)²)。</p>
+<p><em>提示：对 W(t)~N(0,t)，利用正态分布四阶矩 E[W⁴]=3t²（或由 E[W⁴]=E[(t^{1/2}Z)⁴]=t²·E[Z⁴]=3t²，Z~N(0,1)）。于是 Var(W(t)²)=E[W⁴]−(E[W²])²=3t²−t²=2t²。</em></p>
+<p><strong>3. 扩散距离的直觉核对。</strong>用 D=2.2×10⁻¹³ m²/s 计算 √⟨x²⟩ 在 t=1 s、60 s、3600 s 三个时刻的值，并说明为什么"时间×3600，位移只×60"。</p>
+<p><em>提示：√⟨x²⟩=√(2Dt)：t=1→6.6×10⁻⁷ m；t=60→5.1×10⁻⁶ m；t=3600→4.0×10⁻⁵ m。根号把时间放大了 3600 倍就只剩下 60 倍——√t 定律。</em></p>
+<p><strong>4. 二次变差的手算。</strong>对 W 在 [0,1] 上等分 4 段（Δ=1/4），写出平方和公式并算出其期望，解释为什么它"收敛到 1"而不是 0。</p>
+<p><em>提示：Σ(ΔW)² 的每项期望都是 Δ，四项期望总和 = 4·(1/4)=1=t。每项方差 O(Δ²)，总和方差 O(Δ)→0，故平方和"几乎确定"=1。对比可微函数（二次变差 O(1/n)→0），差异即"不可微"的机制。</em></p>
+<p><strong>5. 为什么 W(s) 与 W(t)−W(s) 独立？</strong>用公理和"增量的独立性"说明，并解释为什么这个性质让"布朗桥 W(t)−tW(1)"的计算变简单。</p>
+<p><em>提示：独立增量公理直接给出 W(t)−W(s) 与任何早于 s 的信息（含 W(s)）独立。对布朗桥：E[B(t)]=0，Cov(B(s),B(t))=min(s,t)−st——用 W 的协方差 min(s,t) 展开即得。</em></p>
+<p><strong>6. 涨落-耗散的直觉。</strong>为什么"随机力强度 2γkT"必须与黏性 γ 成正比？如果随机力太强或太弱会发生什么？</p>
+<p><em>提示：热平衡要求涨落与耗散平衡——随机力太强粒子越撞越热（温度上飘），太弱粒子耗散到静止（温度下掉）。2γkT 正是唯一让系统维持在温度 T 的强度，这就是涨落-耗散定理的"平衡即锁定"。</em></p>
+</section>
+
+<section><h3>前沿：随机Loewner演化(SLE)与2D布朗边界</h3><p>2D布朗运动的边界由SLE_6描述——这是Schramm(2000)最著名的发现。SLE统一了Ising模型(SLE_3)、渗流(SLE_6)和自避随机游走(SLE_{8/3})的标度极限。仍开放:SLE的3D推广和量子Loewner演化。</p></section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Kardar, Statistical Physics of Particles</strong></p>
+<p>&rarr; <strong>K. Huang, Statistical Mechanics</strong></p>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/measure-theory.html">测度论</a>。</p>
+</section>
+
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/entropy.html">熵与信息</a>：布朗运动的均方位移⟨x²⟩=2Dt直接连接微观随机碰撞和宏观扩散——涨落-耗散定理⟨ξ(t)ξ(t')⟩=2γkTδ(t−t')是熵产生在非平衡态的动力学表达。</p>
+<p>&rarr; <a href="/pages/boltzmann.html">Boltzmann方程</a>：Einstein推导布朗运动时采用了和Boltzmann相同的统计力学框架——涨落-耗散关系是H-定理的自然延伸，两者共享微观可逆→宏观不可逆的核心难题。</p>
+<p>&rarr; <a href="/pages/navier-stokes.html">Navier-Stokes 流场</a>：布朗粒子与水分子之间通过Stokes阻力−γv耦合——Navier-Stokes方程描述的就是流体中速度场的宏观动力学，两者在水的介观行为中交汇。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/brownian-motion.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

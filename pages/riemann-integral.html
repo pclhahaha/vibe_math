@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="矩形条逼近曲线下面积" />
+  <meta property="og:title" content="黎曼积分 — Vibe Math" />
+  <meta property="og:description" content="矩形条逼近曲线下面积" />
+  <title>黎曼积分 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📊 黎曼积分 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★</span></h2>
+    <p class="subtitle">矩形条逼近曲线下面积</p>
+    <span class="cat-tag">Part 1: 基础</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='riemann-integral',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/gradient.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🧭 梯度与方向导数</a>
+  <a href="/pages/epsilon-delta.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔍 ε-δ 语言 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、从一个具体问题开始——"数方格"算出抛物线下的面积</h3>
+<p>先忘掉所有公式，只看一个问题：<strong>有一块地，左边是直线 x=0，右边是直线 x=1，下面是 x 轴，上面是抛物线 y=x²。这块地的面积是多少？</strong>没有现成的"抛物线面积公式"，长方形、三角形的公式都不认识这条弯曲的边界。</p>
+<p>但我们有个笨而可靠的办法：<strong>数方格</strong>。把 x 轴从 0 到 1 切成 10 根等宽的细条（每根宽 0.1），每根细条上方立一个长方形，高度取函数在这根条上的某个代表值，然后把 10 个长方形的面积加在一起。</p>
+<ul>
+<li>取每根条<strong>左端点</strong>当高度（估得偏小）：面积 ≈ 0.285；</li>
+<li>取每根条<strong>右端点</strong>当高度（估得偏大）：面积 ≈ 0.385。</li>
+</ul>
+<p>真实的面积被夹在这两个数之间，夹缝宽 0.100。把条数加到 100（每根宽 0.01）：左端点估 ≈ 0.32835，右端点估 ≈ 0.33835，夹缝缩到 0.010。再加到 1000 根（每根宽 0.001）：面积被夹在 0.3328335 与 0.3338335 之间，夹缝只有 0.001。</p>
+<div class="formula display" data-tex="\begin{array}{c|c|c|c}\text{条数 }n &amp; \text{左端点估} &amp; \text{右端点估} &amp; \text{夹缝宽}\\ \hline 10 &amp; 0.285 &amp; 0.385 &amp; 0.100\\ 100 &amp; 0.32835 &amp; 0.33835 &amp; 0.010\\ 1000 &amp; 0.3328335 &amp; 0.3338335 &amp; 0.001 \end{array}"></div>
+<p>看到规律了吗？每加密十倍，夹缝就缩窄十倍，而且从上面和从下面估的两个数都在朝同一个目标挤：0.3333…，也就是 1/3。我们几乎可以确信，这块地的面积就是 <strong>1/3</strong>。</p>
+<p>这一整章要做的事情，就是把"切得更细 → 估得更准 → 极限就是精确面积"这套动作用严格的语言写下来。那个极限——在细条无限变细时，所有长方形面积和收敛到的数——就叫<strong>黎曼积分</strong>。</p>
+<div class="key-insight">核心洞察：积分 ＝ 把图形切成无数细条，每条用长方形近似，再把它们全部加起来。条切得越细，答案越准；让细条无限变细，长方形面积和的极限就是精确面积。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、我们唯一的精确武器——长方形面积</h3>
+<p>在面积理论里，我们手里只有一件精确的工具：<strong>长方形的面积 ＝ 宽 × 高</strong>。三角形的面积可以把它补成一个长方形再除以 2 得到；多边形的面积可以剖分成若干个三角形得到。这些例子说明一个原则：<strong>任何"规整"图形的面积，最终都能化成长方形的面积之和</strong>。</p>
+<p>但抛物线下方的区域不是"规整"图形——它的边界是弯的，不能剖分成有限个长方形，我们不可能用"有限步操作"得到它的面积。于是我们改走另一条路：<strong>用无限多个越来越窄的长方形去逼近它，再对"逼近值"取极限</strong>。</p>
+<p>这个想法有更深的背景。设 f 非负连续，记 A(x) 为 [a,x] 上曲线下方的面积。A(x) 满足两条显然的性质：</p>
+<p>（1）A 随 x 单调不减；（2）区间可加：A(x₂)−A(x₁)＝[x₁,x₂] 上曲线下方的面积。</p>
+<p>第二条"区间可加性"是积分的灵魂——它说明"面积"是一种随区间累积的量。这也解释了为什么许多"总量"本质上都是面积：<strong>速度曲线下的面积＝走过的路程，功率曲线下的面积＝消耗的能量</strong>。它们都没有简单公式，唯一的通用算法就是"切碎、近似、取极限"。</p>
+</section>
+
+<section>
+<h3>二、分割——把"下刀的位置"记下来</h3>
+<p>要让"切细条"可以讨论，先要有一个严格的"刀法"。第一步是选定切多少刀、从哪里下刀。我们把区间 [a,b] 用有限个分点切开：</p>
+<div class="formula display" data-tex="P:\quad a=x_0 &lt; x_1 &lt; x_2 &lt; \cdots &lt; x_n=b"></div>
+<p>这样的 P 称为 [a,b] 的一个<strong>分划</strong>（partition）。它把 [a,b] 切成 n 个小区间 [xᵢ₋₁,xᵢ]（i=1,…,n），第 i 段的宽度记作 Δxᵢ＝xᵢ−xᵢ₋₁。显然 Σᵢ Δxᵢ＝b−a：各段宽度加起来正好是总长度。</p>
+<p>只有一个数值得专门命名。分划的<strong>细度</strong>（norm，或 mesh）‖P‖ 定义为最宽那段子区间的长度：</p>
+<div class="formula display" data-tex="\|P\|=\max_{1\le i\le n}\Delta x_i"></div>
+<p>细度才是"切得够不够细"的正确度量。请特别注意它与"段数 n"的区别：n 很大并不保证每段都细——分点可以全都挤在 a 附近，留下一根几乎覆盖整个区间的大段。反过来，只要细度趋于 0，就保证<strong>每一段</strong>都无限变细。所以后面严格定义里，我们让 ‖P‖→0，而不是简单地 n→∞。</p>
+<p>等分是分划里最常用的特例：n 等分时 Δxᵢ＝(b−a)/n 全部相等。初学者可以从等分入手，但头脑里要清楚：<strong>等分只是特权，一般分划才是规则</strong>——因为"面积"这个概念本身绝不应该依赖我们恰好选了哪种刀法。</p>
+</section>
+
+<section>
+<h3>三、黎曼和——在每一段上挑一个代表高度</h3>
+<p>有了分划，切条就完成了。现在每根细条都要配一个"高度"。我们的做法是：在第 i 段 [xᵢ₋₁,xᵢ] 内<strong>任意</strong>挑一个点 xᵢ*，把它当作这一段的代表，立一个高为 f(xᵢ*)、宽为 Δxᵢ 的长方形。把所有 n 个长方形加起来：</p>
+<div class="formula display" data-tex="S(f,P,\{x_i^*\})=\sum_{i=1}^n f(x_i^*)\,\Delta x_i"></div>
+<p>这个和就叫分划 P 与取样 {xᵢ*} 对应的<strong>黎曼和</strong>（Riemann sum）。注意三个要点：</p>
+<ul>
+<li>xᵢ* 可以取段内任何一点——左端点、右端点、中点、随便哪个点都行；</li>
+<li>不同的取法得到不同的黎曼和，但它们都是"面积的可信近似"；</li>
+<li>分划可以不是等分——每段宽度 Δxᵢ 一般互不相同。</li>
+</ul>
+<p>为什么"样本点可以随便取"如此重要？因为<strong>面积概念本身不该依赖于我们碰巧看了哪个点</strong>。如果换一种取法就换一个答案，那我们测的就不是同一个东西。黎曼的洞见恰恰是：把"极限与样本点无关"写进定义，就能同时排除这类病态。</p>
+<p>先算一个具体的黎曼和，体会一下"近似"。取 f(x)=x²，区间 [0,1]，均分 4 段（Δx=0.25），每段取中点 xᵢ*＝0.125, 0.375, 0.625, 0.875：</p>
+<div class="formula display" data-tex="S=0.25\big(0.125^2+0.375^2+0.625^2+0.875^2\big)=0.25\times 1.3125=0.328125"></div>
+<p>它离真值 1/3≈0.3333 只差约 0.005。而如果取左端点，同样 4 段给出 0.21875；取右端点给出 0.46875——三种取法在粗分划下差得很远。可一旦把段数加到 100、1000，三种取法就都挤到 1/3 附近了（见开篇的表格）。</p>
+<p>于是整件事归结为一个问题：<strong>当分划无限变细，这些黎曼和是否都挤向同一个数？</strong>答案是否定的，这个函数就"测不出面积"；答案是肯定的，这个公共极限就是积分。下一节我们引入一把精确的"卡尺"来测量黎曼和之间的分歧。</p>
+<div class="key-insight">黎曼和＝"切条—取高—求和"这一套动作算出的近似数。它允许在每段里任意取样，因此同一个分划可以对应很多个黎曼和。可积性要回答的正是：这些和是否在细度趋于 0 时汇聚到同一个极限。</div>
+</section>
+
+<section>
+<h3>四、上和与下和——一把度量误差的卡尺</h3>
+<p>黎曼和太多、太"随意"，不方便直接讨论极限。Darboux 的妙计是：只看两个极端的黎曼和。设 f 在 [a,b] 上有界，在每个小区间 [xᵢ₋₁,xᵢ] 上记</p>
+<div class="formula display" data-tex="m_i=\inf_{[x_{i-1},x_i]} f,\qquad M_i=\sup_{[x_{i-1},x_i]} f"></div>
+<p>（f 连续时，mᵢ、Mᵢ 就是最小值和最大值。）定义<strong>下和</strong>与<strong>上和</strong>：</p>
+<div class="formula display" data-tex="L(f,P)=\sum_{i=1}^n m_i\,\Delta x_i,\qquad U(f,P)=\sum_{i=1}^n M_i\,\Delta x_i"></div>
+<p>下和用每段的"最低高度"立长方形，从下面估；上和用每段的"最高高度"立长方形，从上面估。关键在于下面这条不变量：</p>
+<div class="formula display" data-tex="L(f,P)\le S(f,P,\{x_i^*\})\le U(f,P)"></div>
+<p>因为每一段里 mᵢ≤f(xᵢ*)≤Mᵢ，乘上正的 Δxᵢ 再求和即得。<strong>任何黎曼和都被夹在上下和之间。</strong></p>
+<p><strong>为什么"上和减下和"能衡量误差？</strong>正因为上面这条夹逼。真实的积分值（若存在）也落在 [L,U] 之内，所以上下和把"所有可能的答案"关进了一条窄带：</p>
+<div class="formula display" data-tex="\Big|\,S(f,P,\{x_i^*\})-\int_a^b f\,\Big|\le U(f,P)-L(f,P)"></div>
+<p>误差带 U−L 就是那把卡尺：它同时量出了"从上面估"与"从下面估"的分歧有多大。只要把 U−L 压到任意小，任何黎曼和（不管样本点怎么取）都被逼向同一个数。</p>
+<p>接下来回答"为什么分割越细越准"。先看一条引理——<strong>加细只会让夹缝更窄，绝不更宽</strong>。</p>
+<p><strong>引理（加细单调性）。</strong>若分划 P′ 在 P 的基础上再切了几刀（P′ ⊇ P），则</p>
+<div class="formula display" data-tex="L(f,P)\le L(f,P')\le U(f,P')\le U(f,P)"></div>
+<p><strong>证明。</strong>只需处理"多切一刀"的情形，其余由归纳即得。设 P 的分点为 x₀&lt;x₁&lt;…&lt;xₙ，P′ 在 [x_{k−1},x_k] 内插入了一点 c。切开前，这一格对下和的贡献是 m_k(x_k−x_{k−1})；切开后两格的 inf 都在更小的集合上取值，只能 ≥ m_k，所以这一格对下和的贡献不减少。对称地，两格的 sup 都 ≤ M_k，对上和的贡献不增加。其它格子原样未动，故 L 不减、U 不增。∎</p>
+<p>这条引理就是"分割越细越准"的严格版本：加刀越多，下和只升不降、上和只降不升，误差带只会被收紧。但请注意：引理只保证"不恶化"，并不保证 U−L 一定能压到 0——那是可积性要回答的问题。</p>
+</section>
+
+<section>
+<h3>五、正式定义——黎曼积分</h3>
+<p>加细把所有下和堆成一个单调上升的"台阶"，把所有上和堆成一个单调下降的"台阶"。于是所有下和有一个上确界，所有上和有一个下确界，分别称为<strong>下积分</strong>与<strong>上积分</strong>：</p>
+<div class="formula display" data-tex="\underline{\int}_{a}^{b} f\,dx=\sup_{P} L(f,P),\qquad \overline{\int}_{a}^{b} f\,dx=\inf_{P} U(f,P)"></div>
+<p>常识告诉我们，下积分不可能超过上积分（任何下和都不超过任何上和，取 sup/inf 后大小关系保持）。当它们相等时，上下两把卡尺完全咬合，被夹在中间的那个唯一的数就是面积。这正是定义：</p>
+<p><strong>定义（黎曼可积）。</strong>有界函数 f 在 [a,b] 上<strong>黎曼可积</strong>，若下积分等于上积分；这个公共值记作</p>
+<div class="formula display" data-tex="\int_a^b f(x)\,dx=\sup_P L(f,P)=\inf_P U(f,P)"></div>
+<p>并称为 f 在 [a,b] 上的<strong>黎曼积分</strong>。</p>
+<p>与它等价的判定法（Darboux 判据）更常用：</p>
+<div class="formula display" data-tex="f\ \text{黎曼可积}\iff\forall\,\varepsilon&gt;0\ \exists P:\ U(f,P)-L(f,P)&lt;\varepsilon"></div>
+<p>意思是：能找到一个分划，让上下和之间的夹缝比任何给定的正数还窄。这与原始定义等价，因为夹缝被压到任意小，正说明下积分与上积分被同一个数夹住；反过来，若二者相等为 A，则存在分划让 L(P)、U(P) 都落在 A 的 ε/2 邻域内，夹缝即小于 ε。</p>
+<p>黎曼最初的表述（也是开篇"数方格"故事的严格版）则强调黎曼和本身：若对<strong>任意</strong>取样与<strong>任意</strong>分划，只要细度 ‖P‖→0，黎曼和就趋于同一个极限，这个极限就是积分。三种说法讲的是同一件事，区别只是从哪个角度量误差——用上/下和这把卡尺（Darboux），还是直接看黎曼和（Riemann）。</p>
+<div class="key-insight">在左侧画布拖动滑块：n=4 时矩形和是粗糙的近似，n=50 时几乎看不出和曲线的差别。黎曼可积的要义是——夹缝 U−L 能被压到任意小，从而所有黎曼和收敛到同一个数，且与分划、样本点的取法无关。</div>
+<p><strong>如果你想理解核心思想，看到这里就够了。</strong></p>
+</section>
+<section>
+<h3>六、完整例题——从定义计算积分</h3>
+<p>定义如果不拿来用，就是一句空话。下面三个例题都<strong>完全从定义出发</strong>走完四步：分割 → 定上下值 → 求和 → 取极限。做完你会发现，微积分基本定理（第九节）里"找原函数"的偷懒办法并没有藏在定义里，而是被这些求和极限<strong>证明</strong>出来的。</p>
+<p><strong>例 1. 计算 ∫₀¹ x dx。</strong>几何直觉早已告诉我们答案：这是直线 y=x 与坐标轴围成的三角形，面积 1/2。但我们要从定义把它推出来。</p>
+<p><strong>第 1 步（分割）。</strong>取 n 等分 Pₙ：xᵢ＝i/n，Δxᵢ＝1/n（i＝1,…,n）。</p>
+<p><strong>第 2 步（上下值）。</strong>f(x)＝x 单调递增，所以每段的最小值在左端点、最大值在右端点：</p>
+<div class="formula display" data-tex="m_i=f(x_{i-1})=\frac{i-1}{n},\qquad M_i=f(x_i)=\frac{i}{n}"></div>
+<p><strong>第 3 步（求和）。</strong>代入上和、下和的定义，并用求和公式 Σᵢ₌₁ⁿ i＝n(n+1)/2：</p>
+<div class="formula display" data-tex="L(f,P_n)=\sum_{i=1}^n\frac{i-1}{n}\cdot\frac{1}{n}=\frac{1}{n^2}\sum_{i=1}^n(i-1)=\frac{1}{n^2}\cdot\frac{n(n-1)}{2}=\frac{n-1}{2n}"></div>
+<div class="formula display" data-tex="U(f,P_n)=\sum_{i=1}^n\frac{i}{n}\cdot\frac{1}{n}=\frac{1}{n^2}\sum_{i=1}^n i=\frac{1}{n^2}\cdot\frac{n(n+1)}{2}=\frac{n+1}{2n}"></div>
+<p><strong>第 4 步（取极限）。</strong>先看夹缝：</p>
+<div class="formula display" data-tex="U(f,P_n)-L(f,P_n)=\frac{n+1}{2n}-\frac{n-1}{2n}=\frac{1}{n}\to 0\qquad(n\to\infty)"></div>
+<p>由 Darboux 判据，f 可积。而且上下和各自收敛到同一个值：</p>
+<div class="formula display" data-tex="\lim_{n\to\infty}\frac{n-1}{2n}=\lim_{n\to\infty}\frac{n+1}{2n}=\frac{1}{2}\ \Longrightarrow\ \int_0^1 x\,dx=\frac{1}{2}"></div>
+<p>最后检查"样本点无关性"：取右端点，黎曼和等于 U(Pₙ)→1/2；取左端点，等于 L(Pₙ)→1/2；取中点 xᵢ*＝(i−1/2)/n，甚至每个 n 都精确给出：</p>
+<div class="formula display" data-tex="S_{\text{mid}}=\sum_{i=1}^n\frac{i-1/2}{n}\cdot\frac{1}{n}=\frac{1}{n^2}\Big(\frac{n(n+1)}{2}-\frac n2\Big)=\frac12"></div>
+<p>三种取法殊途同归。∎ 这个例子的价值在于：它展示了一条<strong>可复制的套路</strong>——先找每个小区间上的最大最小值，套用求和公式，再取极限。下面的例子只是把同样的套路用在更硬的求和公式上。</p>
+<p><strong>例 2. 计算 ∫₀² x² dx。</strong>（还没有微积分基本定理，我们用定义硬算。）</p>
+<p><strong>第 1 步（分割）。</strong>取 n 等分 [0,2]：xᵢ＝2i/n，Δxᵢ＝2/n。</p>
+<p><strong>第 2 步（上下值）。</strong>f(x)＝x² 单调递增，故 mᵢ＝(2(i−1)/n)²，Mᵢ＝(2i/n)²。</p>
+<p><strong>第 3 步（求和）。</strong>用公式 Σᵢ₌₁ⁿ i²＝n(n+1)(2n+1)/6（以及 Σᵢ₌₁ⁿ(i−1)²＝(n−1)n(2n−1)/6）：</p>
+<div class="formula display" data-tex="L(f,P_n)=\sum_{i=1}^n\Big(\frac{2(i-1)}{n}\Big)^2\frac{2}{n}=\frac{8}{n^3}\sum_{i=1}^n(i-1)^2=\frac{8}{6}\Big(1-\frac1n\Big)\Big(2-\frac1n\Big)"></div>
+<div class="formula display" data-tex="U(f,P_n)=\sum_{i=1}^n\Big(\frac{2i}{n}\Big)^2\frac{2}{n}=\frac{8}{n^3}\sum_{i=1}^n i^2=\frac{8}{6}\Big(1+\frac1n\Big)\Big(2+\frac1n\Big)"></div>
+<p><strong>第 4 步（取极限）。</strong>夹缝宽度</p>
+<div class="formula display" data-tex="U-L=\frac{8}{6}\Big[\Big(1+\tfrac1n\Big)\Big(2+\tfrac1n\Big)-\Big(1-\tfrac1n\Big)\Big(2-\tfrac1n\Big)\Big]=\frac{8}{n}\to 0"></div>
+<p>故可积，且上下和都收敛：</p>
+<div class="formula display" data-tex="\int_0^2 x^2\,dx=\lim_{n\to\infty}\frac{8}{6}\Big(1\pm\frac1n\Big)\Big(2\pm\frac1n\Big)=\frac{8}{6}\cdot 2=\frac{8}{3}"></div>
+<p>用原函数核对：x³/3 在 0 到 2 上取值 8/3，完全一致。注意我们还没学微积分基本定理，这个核对只是"事后验算"；而到了第九节，它将成为偷懒的理由。∎</p>
+<p><strong>例 3. 常数函数 ∫ₐᵇ c dx。</strong>这是最平凡也最要紧的一例。取任意分划 P，每个小区间上 mᵢ＝Mᵢ＝c，因此</p>
+<div class="formula display" data-tex="L(f,P)=U(f,P)=\sum_{i=1}^n c\,\Delta x_i=c\sum_{i=1}^n\Delta x_i=c(b-a)"></div>
+<p>上下和永远相等，故 c 可积，且</p>
+<div class="formula display" data-tex="\int_a^b c\,dx=c(b-a)"></div>
+<p>长方形的面积公式（宽×高）被作为特例包含进来了。它同时也解释了记号 dx：在求和 Σf(xᵢ*)Δxᵢ 里 Δxᵢ 是"第 i 段的宽度"，取极限后宽度趋于 0，记号上写成 dx——<strong>dx 不是"无穷小量"，而是"细度趋于 0 时 Δx 留下的极限记号"</strong>。∎</p>
+</section>
+
+<section>
+<h3>七、为什么分割越细越准——把直觉钉死</h3>
+<p>前面的例题已经在算，但"为什么细度→0 能把夹缝压到任意小"还不完整。这一节把机制讲透，分两层。</p>
+<p><strong>第一层：加细只会收紧夹缝。</strong>这是第四节引理的内容：多切一刀，下和不降、上和不增，误差带 U−L 绝不加宽。所以"越细越准"在"不恶化"的意义上是铁的。但光靠加细还不够——它不保证最终能压到零。</p>
+<p><strong>第二层：为什么对连续函数，细度→0 就能把夹缝压到零。</strong>关键在一致连续性（Heine–Cantor 定理：闭区间上的连续函数必一致连续）。直觉上：一条连续的曲线，在任何一个很短的小区间里几乎是平的，最高点与最低点差不了多少。用 ε-δ 说，对任意 ε&gt;0，存在 δ&gt;0 使整个区间内任意两点相距小于 δ 时，函数值之差小于 ε/(b−a)。取细度 ‖P‖&lt;δ 的分划，每个小区间上</p>
+<div class="formula display" data-tex="M_i-m_i&lt;\frac{\varepsilon}{b-a}\qquad(\text{因为小区间宽度 }&lt;\delta)"></div>
+<p>于是夹缝</p>
+<div class="formula display" data-tex="U(f,P)-L(f,P)=\sum_{i=1}^n(M_i-m_i)\Delta x_i&lt;\frac{\varepsilon}{b-a}\sum_{i=1}^n\Delta x_i=\varepsilon"></div>
+<p>这就把夹缝压到了任意小（完整的严格证明见"证明一"）。<strong>机制一目了然：细度变细 → 每个小区间上函数"起伏幅度"Mᵢ−mᵢ 变小 → 上和与下和的差距变小。</strong>一致连续性保证了"起伏幅度"能被统一地控制住，不会在某个角落偷偷作祟。</p>
+<p>反过来，如果函数在某个点附近震荡得比任何小区间都剧烈，那么无论怎么切，那一格内的 Mᵢ−mᵢ 都压不下去，夹缝就永远合不拢——这就是不可积性的来源，Dirichlet 函数是它的极端形态（见反例一节）。</p>
+</section>
+
+<section>
+<h3>八、哪些函数黎曼可积？</h3>
+<p>把第七节的机制盘点一遍，可以得到三条逐渐放宽的可积性结论。</p>
+<p><strong>结论一（连续即可积）。</strong>f 在闭区间 [a,b] 上连续 ⟹ f 黎曼可积。这正是第七节证明的内容，核心工具是 Heine–Cantor 一致连续性 + Darboux 判据。连续函数是最重要的一族可积函数。</p>
+<p><strong>结论二（单调即可积）。</strong>f 在 [a,b] 上单调 ⟹ f 黎曼可积。证明见工作题 4。有趣的是，单调函数的跳跃点可以稠密地分布（例如跳跃函数 Σ2⁻ⁿ 型），却仍然可积——"可积"远比"连续"或"有限个间断点"宽容。</p>
+<p><strong>结论三（Lebesgue 判据）。</strong>有界函数 f:[a,b]→ℝ 黎曼可积 <strong>当且仅当</strong> f 的不连续点集有 Lebesgue 测度 0（1904，Lebesgue）。用大白话说：可积 ⟺ 函数"几乎处处连续"。这是黎曼可积性的完整刻画，也是通往 Lebesgue 积分的桥梁。</p>
+<p>但黎曼框架仍有天花板。两个著名的病态例子预告在后面：一个（Dirichlet 函数）处处震荡、一个（Volterra 函数）导数处处存在却不可积，它们共同说明"可积"与"处处连续"之间隔着一道不可逾越的鸿沟——这正是 Lebesgue 积分登场的动机。</p>
+</section>
+
+<section>
+<h3>九、微积分基本定理——把面积与斜率焊在一起</h3>
+<p>回想第一节的累积函数 A(x)。它随 x 累积面积，它的"斜率"是什么？</p>
+<p>设 F(x)＝∫ₐˣ f(t)dt。从 x 到 x+h，面积增加了 ∫ₓˣ⁺ʰ f，那是一根宽 h、高约为 f(x) 的细条，所以 F(x+h)−F(x) ≈ f(x)·h。取 h→0：</p>
+<div class="formula display" data-tex="F'(x)=\lim_{h\to0}\frac{F(x+h)-F(x)}{h}=f(x)\qquad(\text{若 }f\text{ 在 }x\text{ 连续})"></div>
+<p>这就是<strong>微积分基本定理第一部分</strong>：面积累积函数的导数回到被积函数本身。<strong>求面积（积分）和求变化率（微分）是互逆运算</strong>。它把看似无关的两件事——"量出这块地多大"和"找出曲线每一点的坡度"——绑在了一起，是分析学中最重要的单一定理。</p>
+<p>第一部分立刻给出第二部分的偷懒大法：若 F 可微且 F′ 黎曼可积，则</p>
+<div class="formula display" data-tex="\int_a^b F'(x)\,dx=F(b)-F(a)"></div>
+<p><strong>微积分基本定理第二部分</strong>。例 2 里 x³/3 正是 x² 的原函数，所以 ∫₀²x²dx＝8/3，与定义的硬算殊途同归。以后凡是能找到原函数的积分，都不必再走求和极限的苦路。</p>
+<p>但注意那个括号里的"连续"二字，它是两个部分共同的命门。若 f 在 x 处有跳跃，F(x)＝∫ₐˣf 在 x 仍是连续的，可 F′ 却不存在（或与 f(x) 不符）——"连续"不是技术细节，而是让斜率真正"看见"面积的保障。严格的证明与反例见"证明二"与反例一节。</p>
+</section>
+
+<section>
+<h3>十、为什么需要 Lebesgue 积分？</h3>
+<p>黎曼积分有两个结构性弱点，迫使数学在 1902 年后换了一种"切法"。</p>
+<p><strong>弱点一：极限与积分不能随便交换。</strong>存在一列黎曼可积函数 fₙ 逐点收敛到 f，却成立 lim ∫fₙ ≠ ∫lim fₙ。极限符号不能自由穿过积分号，这对概率论、傅里叶分析和物理都是灾难。</p>
+<p><strong>弱点二：可积的门槛既苛刻又错位。</strong>Dirichlet 函数 D(x)＝1（x 有理数）、0（x 无理数）在黎曼框架下不可积——它在每个小区间里都取到 1 和 0，上下和永远差 1；可它实在"应该"积分为 0（有理数在 [0,1] 里"几乎没有"）。</p>
+<p><strong>Lebesgue 积分</strong>的治疗方案是改变切法：黎曼"竖切"定义域（按 x 分划），Lebesgue"横切"函数值（按函数值分划，再用量集合"大小"的测度替代长度）。由此 Dirichlet 函数变得可积且积分为 0，极限与积分在控制收敛定理（DCT，dominated convergence theorem，当一列函数都被同一个可积函数"罩住"时极限与积分可以交换的定理）下可以交换——代价是需要一套完整的测度论（见关联课程）。</p>
+<p>更精确地说，Lebesgue 积分<strong>包含了所有黎曼可积函数，并且更多</strong>：凡是黎曼可积的（有界且几乎处处连续），Lebesgue 都可积且值相同；反过来 Lebesgue 还能处理黎曼完全无能为力的病态函数。积分理论的世界，从此换了一副底盘。</p>
+</section>
+
+<section>
+<h3>十一、关键公式</h3>
+<div class="formula display" data-tex="S(f,P,\{x_i^*\})=\sum_{i=1}^n f(x_i^*)\Delta x_i,\qquad \int_a^b f(x)\,dx=\lim_{\|P\|\to0}\sum_{i=1}^n f(x_i^*)\Delta x_i"></div>
+<div class="formula display" data-tex="f\ \text{可积}\iff\forall\varepsilon&gt;0\ \exists P:\ U(f,P)-L(f,P)&lt;\varepsilon"></div>
+<div class="formula display" data-tex="\frac{d}{dx}\int_a^x f(t)\,dt=f(x)\quad(\text{微积分基本定理 I}),\qquad \int_a^b F'(x)\,dx=F(b)-F(a)\quad(\text{II})"></div>
+</section>
+
+<section>
+<h3>试试看——带着提示动笔</h3>
+<p><strong>题 1.</strong> 用定义计算 ∫₀¹ x² dx。<br>提示：完全模仿例 2，只是区间换成 [0,1]（分点 xᵢ＝i/n）。你应当得到 ∫₀¹x²dx＝1/3——正是开篇"数方格"表格里夹缝挤向的那个数。</p>
+<p><strong>题 2.</strong> 用定义计算 ∫₀ᵇ x dx（b&gt;0）。<br>提示：这是例 1 的等比放大。把 [0,b] 分成 n 段，Δx＝b/n，样本取右端点，和应为 b²(n+1)/(2n)，极限 b²/2。这也验证了例 1 中"b＝1 得 1/2"。</p>
+<p><strong>题 3.</strong> 设 f 在 [0,1] 上黎曼可积且 0≤f(x)≤1。证明 0≤∫₀¹f≤1。<br>提示：对任意分划，mᵢ≥0 且 Mᵢ≤1，所以 0≤L(f,P)≤∫₀¹f≤U(f,P)≤1。这条"保序性"是积分的看家性质，后面处处要用。</p>
+<p><strong>题 4.</strong> 对 f(x)＝x² 在 [0,1] 上取 4 等分，分别用左端点、中点、右端点算黎曼和，观察三个数如何夹住 1/3；再把段数加到 10、20，看它们如何聚拢。<br>提示：这正是开篇表格与第三节手算的续篇。手算时列一张表，体会"样本点越乱、细度越细、答案越齐"。</p>
+<p><strong>题 5.</strong> 为什么可积定义必须要求极限"与样本点的取法无关"？<br>提示：若不同取法给出不同极限，面积就不唯一。想一个函数，在不同取样下黎曼和趋于不同的数——提示：让 f 在每段内既有 0 又有 1（想想 Dirichlet 函数的局部行为）。</p>
+</section>
+
+<section><h3>前沿：路径积分与Feynman-Kac</h3><p>Feynman路径积分至今没有严格数学定义——但Feynman-Kac公式将Schrodinger方程的解表示为Brownian运动的泛函积分。这是将"物理直觉"严格化的最成功案例。仍开放:非微扰QFT的路径积分严格定义(Yang-Mills千禧年问题)。</p></section>
+<section><h3>严格定义——上/下和、Darboux判据与Lebesgue判据</h3><p>设分划P: a=x₀&lt;x₁&lt;…&lt;x_n=b。上Darboux和U(f,P)=ΣM_iΔx_i,下Darboux和L(f,P)=Σm_iΔx_i。Darboux判据: f可积 ⟺ ∀ε&gt;0,∃P使U(f,P)−L(f,P)&lt;ε。Lebesgue的Riemann可积性判据(1904): 有界函数f:[a,b]→ℝ是Riemann可积的 <strong>当且仅当</strong> f的不连续点集有Lebesgue测度0。这给出了从Riemann积分到Lebesgue积分过渡的最优雅桥梁——可积性恰由f"几乎处处连续"刻画。</p></section>
+<section><h3>微积分基本定理——严格表述与反例</h3><p>第一部分: F(x)=∫_a^x f(t)dt,若f在x₀连续,则F'(x₀)=f(x₀)。第二部分: 若F在[a,b]上可微,且F'是Riemann可积的,则∫_a^b F'=F(b)−F(a)。<strong>Volterra反例(1881)</strong>: 构造了一个处处可微、导数有界却<strong>非Riemann可积</strong>的函数——可见微积分基本定理第二部分在Riemann框架下不是"全自动的"。这给出了推广积分概念的动机之一→Lebesgue积分解决了此缺陷: 若F绝对连续,则F'必Lebesgue可积。</p></section>
+<section><h3>广义Riemann积分——条件收敛与绝对收敛</h3><p>无穷限广义积分: ∫_a^∞ f = lim_{b→∞}∫_a^b f。无界函数的广义积分: ∫_a^b f(t)/(t−a)^α。Dirichlet积分∫_0^∞ sin(x)/x dx = π/2 (围道积分计算)——是<strong>条件收敛</strong>的: ∫_0^∞ |sin(x)/x|dx = ∞ 发散。条件收敛与绝对收敛的区别在Riemann框架下意义明确: 条件收敛时重排级数可改变极限值(Riemann重排定理的积分版本)。</p></section>
+<section><h3>与测度的桥梁——测度零的不连续点集</h3><p>Riemann可积⇔不连续点集有零Lebesgue测度。Cantor集(零测度、不可数、完全不连通)上的特征函数1_C是Riemann可积的(不连续点在C上,测度=0)→说明可积性比"有限个不连续点"宽得多。注意: 在测度论中, Riemann可积函数⇔<strong>有界且a.e.连续</strong>。这之后所有基本定理(可积性和代数性质、微积分基本定理的条件)都有了透明解释。</p></section>
+<section><h3>历史文献</h3><p>Cauchy(1823, "Résumé des leçons sur le calcul infinitésimal"——连续函数积分的第一个严格定义)。Riemann(1854, Habilitationsschrift "Über die Darstellbarkeit einer Function…"——扩展到具有稠密不连续点的函数)。Riemann给出的经典示例: f(x)=Σn⁻² B(nx),其中B(t)=t−⌊t⌋当t非整数,否则0——该函数在任意区间内有无穷多个不连续点,而仍然是Riemann可积的。</p></section>
+<section>
+<h3>证明一：连续函数在闭区间上黎曼可积</h3>
+<p>定理：若 f: [a,b] → ℝ 连续，则 f 黎曼可积。用一致连续性 + Darboux 判据证明。</p>
+<p><strong>一致连续性。</strong> f 在紧集 [a,b] 上连续，由 Heine–Cantor 定理，f 一致连续：对任意 ε &gt; 0，存在 δ &gt; 0，使得 |x − y| &lt; δ 时 |f(x) − f(y)| &lt; ε/(b−a)。（这里取 ε/(b−a) 是有意为之，稍后见分晓。）</p>
+<p><strong>构造分划。</strong> 取细度（最大子区间长）&lt; δ 的分划 P：a = x₀ &lt; x₁ &lt; … &lt; xₙ = b。在每个子区间 [xᵢ₋₁, xᵢ] 上，因 f 连续，可达到最大最小值：Mᵢ = max f，mᵢ = min f。由于区间长度 Δxᵢ &lt; δ，区间内任意两点 x, y 满足 |x−y| &lt; δ，故 Mᵢ − mᵢ &lt; ε/(b−a)。</p>
+<p><strong>上减下。</strong></p>
+<div class="formula display" data-tex="U(f,P) - L(f,P) = \sum_{i=1}^n (M_i - m_i)\Delta x_i &lt; \frac{\varepsilon}{b-a}\sum_{i=1}^n \Delta x_i = \frac{\varepsilon}{b-a}(b-a) = \varepsilon"></div>
+<p>对任意 ε &gt; 0 存在分划使 U − L &lt; ε，由 Darboux 判据 f 黎曼可积。∎</p>
+<p>关键洞察：一致连续性把"函数局部变化"控制得与区间长度成比例，从而上下和的差可被任意压小。若只假设逐点连续，函数可能在某个点附近震荡得足够剧烈而破坏可积性；但闭区间紧致性恰好保证了这种控制的均匀性。</p>
+</section>
+
+<section>
+<h3>证明二：微积分基本定理第一部分</h3>
+<p>定理：设 f 黎曼可积，F(x) = ∫<sub>a</sub><sup>x</sup> f(t)dt。若 f 在 x₀ 连续，则 F'(x₀) = f(x₀)。</p>
+<p><strong>证明。</strong> 先处理 h &gt; 0（h &lt; 0 对称）。由积分区间的可加性：</p>
+<div class="formula display" data-tex="\frac{F(x_0+h)-F(x_0)}{h} - f(x_0) = \frac{1}{h}\int_{x_0}^{x_0+h}\big[f(t) - f(x_0)\big]\,dt"></div>
+<p>由 f 在 x₀ 连续，对任意 ε &gt; 0 存在 δ &gt; 0，使 |t − x₀| &lt; δ 时 |f(t) − f(x₀)| &lt; ε。取 0 &lt; h &lt; δ，用基本估计（被积函数绝对值的积分 ≤ 区间长度 × 上界）：</p>
+<div class="formula display" data-tex="\left|\frac{1}{h}\int_{x_0}^{x_0+h}\big[f(t)-f(x_0)\big]dt\right| \le \frac{1}{h}\int_{x_0}^{x_0+h}|f(t)-f(x_0)|dt &lt; \frac{1}{h}\cdot\varepsilon h = \varepsilon"></div>
+<p>故差商与 f(x₀) 之差可任意小，极限等于 f(x₀)。h &lt; 0 时把积分写为 ∫<sub>x₀+h</sub><sup>x₀</sup>（注意符号）同理。∎</p>
+<p>直观：F 度量"累积面积"。在 x₀ 附近 f ≈ f(x₀)，新加的窄条面积 ≈ f(x₀)·h，故 F 的增长速率 ≈ f(x₀)。<strong>连续性条件至关重要</strong>：若 f 在 x₀ 跳跃，F 在 x₀ 仍连续，但 F' 可能不存在或与 f(x₀) 不符。</p>
+</section>
+
+<section>
+<h3>反例：Dirichlet 函数与 Volterra 函数</h3>
+<p><strong>Dirichlet 函数 D(x) = 1（x 有理数），0（x 无理数）在 [0,1] 上黎曼不可积。</strong></p>
+<p>证明：取任意分划 P。每个子区间 [xᵢ₋₁,xᵢ] 内既有有理数又有无理数（稠密性），故 Mᵢ = 1（取有理数点可达上确界）、mᵢ = 0（取无理数点）。于是对<strong>任意</strong>分划：</p>
+<div class="formula display" data-tex="U(D,P) = \sum 1\cdot \Delta x_i = 1,\qquad L(D,P) = \sum 0\cdot \Delta x_i = 0"></div>
+<p>故下积分 sup<sub>P</sub> L = 0 ≠ 1 = inf<sub>P</sub> U = 上积分，上下积分不等，黎曼不可积。对比：Lebesgue 积分下 ∫D = 0，因有理数集测度为零。这直观展示了黎曼积分对"处处病态震荡"的无能为力。</p>
+<p><strong>Volterra 函数（1881）。</strong> Volterra 构造了一个处处可微、导数有界但导数<strong>不黎曼可积</strong>的函数 F。方法：对 Smith–Volterra–Cantor 集（"胖 Cantor 集"：正测度、无处稠密）构造一个处处可微的"平滑化"函数，使 F' 在一个正测度集合上不连续。由 Lebesgue 判据（Riemann 可积 ⟺ 不连续点集测度为零），F' 不可积。因此微积分基本定理第二部分的假设（F' 可积）绝非自动满足——这正催生了 Lebesgue 积分：若 F 绝对连续，则 F' 必 Lebesgue 可积。</p>
+</section>
+
+<section>
+<h3>工作题：Darboux 上下和与可积性判断</h3>
+<p><strong>题1。</strong> 用 Darboux 上下和计算 ∫<sub>0</sub><sup>1</sup> x dx。</p>
+<details><summary>显示解答</summary><p>f(x) = x 单调递增，故每个子区间上 Mᵢ = 右端点值、mᵢ = 左端点值。取均匀分划 Δx = 1/n，xᵢ = i/n：U = Σᵢ₌₁ⁿ (i/n)(1/n) = (n+1)/(2n)，L = Σᵢ₌₀ⁿ⁻¹ (i/n)(1/n) = (n−1)/(2n)。n → ∞ 时 U → 1/2、L → 1/2，且 U − L = 1/n → 0，故积分存在且 ∫₀¹ x dx = 1/2。</p></details>
+
+<p><strong>题2。</strong> 用黎曼和计算 ∫<sub>0</sub><sup>2</sup> x² dx。</p>
+<details><summary>显示解答</summary><p>取均匀分划 xᵢ = 2i/n、Δx = 2/n，样本取右端点 f(xᵢ) = (2i/n)²。黎曼和 = Σᵢ₌₁ⁿ (4i²/n²)(2/n) = (8/n³)Σᵢ₌₁ⁿ i² = (8/n³)·n(n+1)(2n+1)/6 = (8/6)(1+1/n)(2+1/n) → 8/3。故 ∫₀² x² dx = 8/3。核对原函数法：x³/3 在 0 到 2 上取值 8/3。✓</p></details>
+
+<p><strong>题3。</strong> 判断下列函数在 [0,1] 上是否黎曼可积：(a) f(x) = sin(1/x)（x &gt; 0），f(0) = 0；(b) f(x) = 1/x（x &gt; 0），f(0) = 0；(c) f(x) = 1 若 x 属于 Cantor 集，否则 0。</p>
+<details><summary>显示解答</summary><p>(a) 可积。f 有界（|f| ≤ 1），不连续点只有 x = 0（单点集，测度为零），由 Lebesgue 判据可积。(b) 不可积：f 在 [0,1] 上无界，任何分划中靠近 0 的子区间上 f 无上界，上 Darboux 和 = ∞。作为广义积分 ∫₀¹(1/x)dx 也发散；有界截断则不属于经典黎曼可积范畴。(c) 可积：f 的间断点集 ⊆ Cantor 集，测度为零，由 Lebesgue 判据可积，且 ∫ = 0（在稠密的补集上 f = 0）。</p></details>
+
+<p><strong>题4。</strong> 证明：单调函数在 [a,b] 上黎曼可积。</p>
+<details><summary>显示解答</summary><p>设 f 单调递增（递减同理）。给定 ε &gt; 0，取均匀分划 Δx = (b−a)/n，n 足够大使 Δx &lt; ε/(f(b)−f(a)+1)（若 f 为常数则 trivially 可积）。因单调，Mᵢ = f(xᵢ)、mᵢ = f(xᵢ₋₁)。于是 U − L = Σ[f(xᵢ) − f(xᵢ₋₁)]Δxᵢ = Δx·(f(b) − f(a)) &lt; ε。由 Darboux 判据可积。注意：单调函数可有稠密分布的跳跃点（如跳跃函数 Σ2⁻ⁿ），仍可积——比"连续"或"有限个间断点"宽得多。</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Spivak, Calculus</strong></p>
+<p>&rarr; <strong>W. Rudin, Principles of Mathematical Analysis</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/derivative.html">导数与切线</a>、<a href="/pages/epsilon-delta.html">ε-δ 语言</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/derivative.html">导数</a>：微积分基本定理F'(x)=f(x)将微分和积分绑定为互逆运算——这是分析学最重要的单一桥梁，在每一步都依赖黎曼积分的定义。</p>
+<p>&rarr; <a href="/pages/epsilon-delta.html">ε-δ语言</a>：黎曼可积的严格定义——对任意ε&gt;0存在δ&gt;0使任何细度&lt;δ的分划的黎曼和与积分值之差&lt;ε——完全依赖ε-δ语言对极限的精确刻画。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">实分析</a>：黎曼积分的两大缺陷——极限与积分不可随便交换、Dirichlet函数不可积——直接推动了实分析的严格化和Lebesgue积分的诞生。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">测度论</a>：Lebesgue积分用"纵切"（按函数值分划）替代黎曼积分的"横切"（按定义域分划），以测度替代长度——由此克服了黎曼积分在收敛性上的所有不足。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/riemann-integral.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

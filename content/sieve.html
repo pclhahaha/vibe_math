@@ -1,0 +1,188 @@
+<section>
+<h3>〇、具体动机——100 以内到底有几个素数？一张 2000 年前的"筛子"给出答案</h3>
+<p>先看一个带数字的具体问题。<strong>100 以内有多少个素数？</strong>把数字表从 2 写到 100，从 2 开始：划掉 2 的所有倍数，再划掉下一个没被划掉的数（3）的所有倍数，再划掉 5 的倍数，再划掉 7 的倍数……一路划下去。最后没被划掉的数是：</p>
+<div class="formula display" data-tex="2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97"></div>
+<p>数一数：<strong>正好 25 个</strong>。这个两千多年前的"划数法"就叫<strong>埃拉托斯特尼筛法</strong>——它是人类发明的最古老的算法之一，至今仍是生成素数表的最佳方法。</p>
+<p>筛法的意义远不止数数。哥德巴赫猜想问：每个大于 2 的偶数是不是都能写成两个素数之和？先看小例子：</p>
+<div class="formula display" data-tex="4=2+2,\quad 6=3+3,\quad 8=3+5,\quad 10=5+5=3+7,\quad 12=5+7,\quad 14=7+7=3+11"></div>
+<p>甚至连 100 都有一大堆写法：100 = 97+3 = 89+11 = 53+47。<strong>但要确认"这些数确实是素数"、要统计"这样的表示有多少种"，就离不开筛法。</strong>这就是本课的入口：一把筛子，从数素数，到筛出哥德巴赫的原料。</p>
+<div class="key-insight">一句话：筛法 = 把合数一个个划掉，剩下的自然全是素数；它也是数论研究的基本功。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、埃拉托斯特尼筛法——把 100 以内的素数一个个筛出来（完整例题）</h3>
+<p>规则只有三条：</p>
+<ul>
+<li>从 2 开始，划掉 2 的所有倍数（4,6,8,…）；</li>
+<li>找下一个没被划掉的数（3），划掉它的所有倍数（6,9,12,…）；</li>
+<li>重复，直到下一个没被划掉的数超过 √100 = 10（即轮到 11 时停手）。</li>
+</ul>
+<p><strong>为什么到 11 就停？</strong>因为任何合数 n ≤ 100 必有素因子 ≤ √n ≤ 10（见下一节证明）。划掉 2、3、5、7 的倍数，等于把所有 ≤100 的合数都打上了标记，剩下的全是素数。</p>
+<p>我们一步步做，用"划掉的个数"来核对。数表 2 到 100 共 99 个数：</p>
+<ul>
+<li>划掉 2 的倍数：49 个偶数（2 本身保留），剩 50 个奇数；</li>
+<li>划掉 3 的倍数：100÷3≈33 个中除去 6 的倍数已划掉，本轮新增 16 个（9,15,21,…）；</li>
+<li>划掉 5 的倍数：新增 7 个（25,35,55,65,85,95 等）；</li>
+<li>划掉 7 的倍数：新增 3 个（49,77,91）。</li>
+</ul>
+<p>三类新增共 16+7+3 = 26 个，加 49 个偶数 = 75 个合数，99 − 75 = 24——但这是"奇数里的素数个数"加 1（把 2 算回来）：剩下的 25 个数恰好是上面那一串素数。</p>
+<div class="formula display" data-tex="\pi(100)=25\qquad(\text{其中小于}\ \sqrt{100}=10\ \text{的素数}\ 2,3,5,7\ \text{也在})"></div>
+<p>计数核对：划掉 2 的倍数后剩 50 个奇数；再划 3、5、7 的倍数共新增 26 个，剩 24 个奇数；加上素数 2，共 25。✓</p>
+<div class="key-insight">埃拉托斯特尼筛法从 2 开始，划掉每个小素数的倍数；筛到 √n 就停，剩下的全是素数。π(100)=25 是第一份战利品。</div>
+</section>
+
+<section>
+<h3>二、为什么筛到 √n 就够了——合数必有 ≤√n 的素因子（证明）</h3>
+<p><strong>为什么只要筛到 √n？</strong>这是筛法正确性的基石，值得写一个完整证明。</p>
+<p><strong>引理：</strong>若 n 是合数，则 n 有一个素因子 ≤ √n。</p>
+<p><strong>证明：</strong>n 合数 ⟹ n = ab 且 2 ≤ a ≤ b（取 a ≤ b）。则 a² ≤ ab = n，故 a ≤ √n。把 a 分解成素数之积，其中每个素因子 p ≤ a ≤ √n——于是 p ≤ √n 是 n 的素因子。∎</p>
+<p>所以筛数 1 到 n 时，只要划掉所有 ≤√n 的素数的倍数，每一个合数都至少被划掉一次，剩余的全是素数。</p>
+<p><strong>复杂度：为什么筛法接近线性？</strong>划掉 p 的倍数要做 n/p 次标记，总共约</p>
+<div class="formula display" data-tex="n\left(\frac12+\frac13+\frac15+\frac17+\cdots\right)\approx n\log\log n\qquad(O(n\log\log n))"></div>
+<p>（倒数在素数上的和约等于 log log n，这是 Euler 1737 的结果，见 ζ 课第五节提示。）所以复杂度 <strong>O(n log log n)</strong>——接近线性。一个公元前 3 世纪的算法，至今仍是生成素数表的最佳方法之一。</p>
+<div class="key-insight">筛到 √n 就够，因为每个合数都含有一个 ≤√n 的素因子；复杂度 O(n log log n) 接近线性。这是筛法"又快又对"的根据。</div>
+</section>
+
+<section>
+<h3>三、包含-排除原理——为什么筛法要容斥（直觉 → 严格）</h3>
+<p>想把"划掉倍数"变成一个能<strong>计算</strong>的公式。直觉上，≤x 的素数个数 ≈ x 减去被 2 整除的，再减去被 3 整除的……但这里有个坑：<strong>同一个数会被划掉好几次</strong>。</p>
+<p>看一个具体例子：1 到 30 里，既不被 2 整除、又不被 3 整除、又不被 5 整除的数有多少个？（这些就是与 30 互素的数。）直接减会出错：30 个数，减 2 的倍数 15 个，减 3 的倍数 10 个，减 5 的倍数 6 个，得 30−15−10−6 = −1——荒唐。问题在于 6、10、15、30 这些数被减了不止一次。<strong>这就是为什么筛法必须容斥</strong>：</p>
+<div class="formula display" data-tex="|A\cup B\cup C|=|A|+|B|+|C|-|A\cap B|-|A\cap C|-|B\cap C|+|A\cap B\cap C|"></div>
+<p>代入 A={2 的倍数}，B={3 的倍数}，C={5 的倍数}：</p>
+<div class="formula display" data-tex="15+10+6-5-3-2+1=22\ \text{个被划掉的}\ \Longrightarrow\ 30-22=8\ \text{个幸存者}"></div>
+<p>这 8 个是 {1,7,11,13,17,19,23,29}——正是与 30 互素的数。✓</p>
+<p>把容斥写紧：引入<strong>Möbius 函数</strong> μ(d)（d 有平方因子则 μ(d)=0；d 为 k 个不同素数之积则 μ(d)=(−1)<sup>k</sup>）。则"不被任何 ≤√x 的素数整除"的指示函数为</p>
+<div class="formula display" data-tex="\mathbf{1}_{(n,P)=1}=\sum_{d\mid P}\mu(d),\qquad P=\prod_{p\le\sqrt{x}}p"></div>
+<p>（见工作题第 3 题的证明。）把它代入并交换求和次序，就得到 <strong>Legendre 筛法公式</strong>：</p>
+<div class="formula display" data-tex="\pi(x)-\pi(\sqrt{x})+1=\sum_{d\mid P}\mu(d)\left\lfloor\frac{x}{d}\right\rfloor,\qquad P=\prod_{p\le\sqrt{x}}p"></div>
+<p>左边：与 P 互素（即素因子全大于 √x）的数，在 1 到 x 中就是素数本身（大于 √x 的），再加上"1"这个空集计数。右边：把"被谁整除"用容斥精确拆开。</p>
+<div class="key-insight">筛法的数学核心是包含-排除（容斥）原理：直接"减倍数"会重复计数，必须用 Σμ(d)⌊x/d⌋ 交替加减。Legendre 公式把"划数"变成了精确公式。</div>
+</section>
+
+<section>
+<h3>四、完整例题——用 Legendre 公式手算 π(30)</h3>
+<p>把公式一步步用起来。目标：π(30)。</p>
+<p><strong>第一步：确定 P。</strong>√30 ≈ 5.48，所以 P = 2·3·5 = 30。</p>
+<p><strong>第二步：列出 P 的所有无平方因子除数 d 与 μ(d)⌊30/d⌋。</strong></p>
+<div class="formula display" data-tex="\begin{array}{c|cccccccc}d&amp;1&amp;2&amp;3&amp;5&amp;6&amp;10&amp;15&amp;30\\\hline \mu(d)&amp;1&amp;-1&amp;-1&amp;-1&amp;1&amp;1&amp;1&amp;-1\\ \lfloor30/d\rfloor&amp;30&amp;15&amp;10&amp;6&amp;5&amp;3&amp;2&amp;1\end{array}"></div>
+<p><strong>第三步：交替求和。</strong></p>
+<div class="formula display" data-tex="\sum_{d\mid30}\mu(d)\left\lfloor\frac{30}{d}\right\rfloor=30-15-10-6+5+3+2-1=8"></div>
+<p><strong>第四步：还原 π(30)。</strong>公式说 Σ = π(30) − π(√30) + 1 = π(30) − π(5) + 1。而 π(5) = 3（素数 2,3,5），故</p>
+<div class="formula display" data-tex="\pi(30)=8+\pi(5)-1=8+3-1=10"></div>
+<p><strong>第五步：核对。</strong>30 以内的素数：2,3,5,7,11,13,17,19,23,29——正好 10 个。✓ 注意那个 8 = "大于 √30 的素数个数"（7,11,…,29 共 7 个）加上"数 1"，而 1 到 30 里与 30 互素的正是 {1,7,11,13,17,19,23,29}。</p>
+<div class="key-insight">Legendre 公式 = 容斥 + Möbius 函数。π(30) 一题走完全流程：列 P → 枚举除数 → 交替求和 → 还原 → 核对。它把"筛"升级成了"算"。</div>
+</section>
+
+<section>
+<h3>五、Legendre 公式能走多远？——Mertens 定理与系统性误差</h3>
+<p>Legendre 公式漂亮，但它有个致命伤：主项是</p>
+<div class="formula display" data-tex="x\cdot\sum_{d\mid P}\frac{\mu(d)}{d}=x\prod_{p\le\sqrt{x}}\left(1-\frac1p\right)"></div>
+<p>这个乘积到底是多少？<strong>Mertens 定理（1874）</strong>给出了精确渐近：</p>
+<div class="formula display" data-tex="\sum_{p\le x}\frac{1}{p}=\log\log x+M+o(1)\qquad(M\ \text{为 Mertens 常数})"></div>
+<div class="formula display" data-tex="\prod_{p\le x}\left(1-\frac{1}{p}\right)=\frac{e^{-\gamma}}{\log x}\left(1+O\left(\frac{1}{\log x}\right)\right)"></div>
+<p>其中 γ ≈ 0.5772 是 Euler–Mascheroni 常数，e<sup>−γ</sup> ≈ 0.5615。于是 Legendre 主项 ≈ x·e<sup>−γ</sup>/log x，而真实答案是 π(x) ~ x/log x——<strong>差了常数因子 e<sup>−γ</sup> ≈ 0.5615</strong>。</p>
+<p>乘积形式的证明本质依赖 ζ(s) 在 s→1 的对数发散（简单极点），但<strong>不含素数定理</strong>——这是初等数论与解析数论之间一道著名的分水岭（Chebyshev 型估计 vs. 精确渐近）。</p>
+<p><strong>数值感受这个常数差：</strong>对 x=10<sup>6</sup>，真实值 π(10<sup>6</sup>)=78498，而 Legendre 主项 ≈ 10<sup>6</sup>·0.5615/13.816 ≈ 40640——差近一半。误差不是随机噪声，而是结构性的（见「标准反例」节）。</p>
+<div class="key-insight">Mertens 定理量化了 Legendre 主项：∏(1−1/p) ≈ e<sup>−γ</sup>/log x。这解释了两件事：为什么 Legendre 公式差一个常数因子，以及为什么这个误差是"系统性的"。</div>
+</section>
+
+<section>
+<h3>六、素数定理——筛法的最终目标（含证明思路）</h3>
+<p><strong>素数定理（Hadamard 与 de la Vallée Poussin，1896）</strong>：</p>
+<div class="formula display" data-tex="\pi(x)\sim\frac{x}{\log x}\qquad(x\to\infty)"></div>
+<p>等价形式（分部积分与对数和恒等式）：</p>
+<div class="formula display" data-tex="\pi(x)\sim\mathrm{Li}(x):=\int_2^x\frac{dt}{\log t},\qquad \theta(x):=\sum_{p\le x}\log p\sim x"></div>
+<p><strong>证明思路</strong>的核心是 Riemann 的洞察：π(x) 通过 Perron 公式与 ζ(s) 相连，而"ζ(s) 在 Re s=1 上无零点"⟹ π(x) ~ x/log x（完整的链见 ζ 课「证明：素数定理的思路」一节：取对数 → Perron 公式 → 越过 Re(s)=1 的零点禁区 → ζ(1+it)≠0）。若黎曼猜想成立，误差可改进为 π(x) = Li(x) + O(√x log x)。</p>
+<p><strong>与筛法的关系。</strong>素数定理是"最强形式的筛法结果"——精确统计全部素数；Legendre 公式等经典筛法只给出带误差的估计。现代筛法（Selberg 上界筛、大筛法）的重要功能是在<strong>不依赖零点信息</strong>的情况下重证/加强这类结果（如 Bombieri–Vinogradov 定理给出 π(x) 在模长平均意义下的一致分布）。</p>
+<div class="key-insight">筛法朝"精确统计素数"这个最终目标一步步逼近：Legendre 公式差常数因子 → Selberg 筛改进误差 → 素数定理给出终极答案。而 PNT 的钥匙在 ζ(1+it)≠0。</div>
+</section>
+
+<section>
+<h3>七、现代筛法 I——Selberg 上界筛（二次加权技巧）</h3>
+<p>经典 Legendre 筛法计数 n ∈ 𝒜（n≤x）且 (n, P(z)) = 1：</p>
+<div class="formula display" data-tex="S(\mathcal{A};z)=\sum_{n\in\mathcal{A}}\mathbf{1}_{(n,P(z))=1}=\sum_{d\mid P(z)}\mu(d)\,A_d,\quad A_d=\#\{n\in\mathcal{A}:d\mid n\},\ P(z)=\prod_{p&lt;z}p"></div>
+<p>交替求和的误差是灾难性的（项数达 2<sup>π(z)</sup>）。Selberg（1947）的关键思想：<strong>用平方压低指示函数</strong>。设实数 λ<sub>d</sub> 满足 λ₁=1，记 ρ(n)=Σ<sub>d|(n,P(z))</sub> λ<sub>d</sub>，则选取合适的 λ 使 |ρ(n)|² 近似等于指示函数 1<sub>(n,P(z))=1</sub>。计数变成</p>
+<div class="formula display" data-tex="S(\mathcal{A};z)\le\sum_{n\in\mathcal{A}}\rho(n)^2=\sum_{d_1,d_2\mid P(z)}\lambda_{d_1}\lambda_{d_2}\,\#\{n\in\mathcal{A}:\mathrm{lcm}(d_1,d_2)\mid n\}"></div>
+<p>主项用密度函数 ρ(d)=∏<sub>p|d</sub>(1−1/p)<sup>−1</sup>（算术级数情形为 1/φ(q)）近似：#\{n≤x: d|n\} = x·∏<sub>p|d</sub>(1−1/p) + O(1)。把 λ 看成自由变量，通过<strong>二次型最小化</strong>（解一个线性方程组）选择最优 λ——从而把 Legendre 的 e<sup>−γ</sup> 误差常数改进为精确的渐近常数，且误差项由 O(z²) 控制（z 受限于 √x/log x 量级）而非指数爆炸。这就是 <strong>Selberg 上界筛</strong>，误差显著优于经典包含-排除。</p>
+<p><strong>后续发展。</strong>Selberg 筛 → 陈景润"1+2"（奇偶筛 + 权函数）；GPY 筛（2005）在 Elliott–Halberstam 猜想下给出有界素数间隙；Zhang（2013）在部分 EH 条件下证明 7×10⁷ 的有界间隙；Bombieri–Vinogradov 大筛法给出模长平均意义下的素数一致分布。</p>
+<div class="key-insight">Selberg 的杀手锏：用"平方的二次型最小化"代替"交替求和"。Legendre 的指数级误差被压缩成 O(z²)，e<sup>−γ</sup> 常数被修正为精确渐近——这是现代筛法的第一块跳板。</div>
+</section>
+
+<section>
+<h3>八、现代筛法 II——GPY 筛法与 Zhang 的突破（前沿）</h3>
+<p>Goldston–Pintz–Yildirim（2005）提出了 GPY 筛法：通过选择巧妙的"权"函数，可以证明相邻素数的间隙相对于平均间距 log p 任意小</p>
+<div class="formula display" data-tex="\liminf_n\frac{p_{n+1}-p_n}{\log p_n}=0"></div>
+<p>——但在关键步骤需要一个未证明的猜想（Elliott–Halberstam）。Zhang（2013）绕过 EH：只用光滑模数的部分 EH——这些模数仅被小素数整除。这个技术上的"小改动"打开了整个领域，一举证明</p>
+<div class="formula display" data-tex="\liminf_n(p_{n+1}-p_n)\le 7\times 10^7\qquad(\text{Zhang 2013})"></div>
+<p>后续（Polymath、Maynard）把上界一路压到 246。Bombieri–Vinogradov 大筛法则给出模长平均意义下的素数一致分布——它把"对每个模都成立"放宽为"对模取平均成立"，这正是 GPY 需要而 Zhang 部分拿到的东西。</p>
+<div class="key-insight">GPY+Zhang 的故事是筛法的现代胜利：权函数设计 + 平均分布（EH/BV）。一把 2000 年的筛子，在 2013 年改写了孪生素数研究。</div>
+</section>
+
+<section>
+<h3>九、Atkin 筛法与奇偶障碍</h3>
+<p><strong>Atkin–Bernstein（2004）筛法</strong>用二次形式和模算术将复杂度降到 O(n/log log n)。它利用了"轮因数分解"——跳过所有 2,3,5 的倍数——和巧妙的二次型表示（对模 60 的 8 个剩余类分别用 4x²+y²、3x²+y²、3x²−y² 的平方数计数标记）。这是实际生成大素数表的最快方法之一。</p>
+<p><strong>奇偶障碍。</strong>筛法天然无法区分素因子个数为奇与为偶的数，这是筛法的根本障碍（Selberg）。陈景润用带权重的 Selberg 线性筛绕过部分障碍，证明"每个充分大的偶数可表为一个素数和一个素因子不超过两个的数之和"（"1+2"）——哥德巴赫猜想的最近似版本。</p>
+<div class="key-insight">Atkin 筛把"划倍数"升级为"二次型筛"；奇偶障碍则说明：纯筛法有天花板（分不清奇/偶个素因子），权函数是捅破天花板的第一根棍子。</div>
+</section>
+
+<section>
+<h3>十、标准反例——Legendre 公式的误差是"系统性"的</h3>
+<p><strong>反例 1（常数因子 e<sup>−γ</sup> 不可消除）。</strong>Legendre 筛法主项</p>
+<div class="formula display" data-tex="S(\{n\le x\};\sqrt{x})\approx x\prod_{p\le\sqrt{x}}\left(1-\frac1p\right)\sim e^{-\gamma}\frac{x}{\log x}"></div>
+<p>而真实答案是 π(x)−π(√x)+1 ~ x/log x。故<strong>相对误差收敛到非零常数 1−e<sup>−γ</sup> ≈ 0.44</strong>，不趋于 0。数值例：x=10<sup>6</sup> 时 π(10<sup>6</sup>)=78498，而 Legendre 主项 ≈ 10<sup>6</sup>·0.5615/13.816 ≈ 40640——差近一半。误差不是随机噪声而是结构性的（Möbius 和的振荡）。</p>
+<p><strong>反例 2（取整误差的累积失控）。</strong>Legendre 公式中 Σμ(d)⌊x/d⌋ 每项有 ≤1 舍入误差，项数 2<sup>π(√x)</sup>——虽然实际振荡抵消，但<strong>最坏情形误差达 O(2<sup>π(√x)</sup>)</strong>，完全失控。故实际计算 π(x) 不用 Legendre 公式（用 Meissel–Lehmer 或 Deleglise–Rivat 公式）。</p>
+<p><strong>反例 3（单个算术级数上的失败）。</strong>对 {n≡a mod q}，Legendre 式筛法的常数含 1/φ(q) 与额外误差；Bombieri–Vinogradov 只保证<strong>对 q≤Q 的均值</strong>一致——对单个大 q 未必成立。这是 Elliott–Halberstam 猜想的实质内容，也是 GPY 方法的关键缺口：无条件地只能对"多数模"取平均，而猜想要求"几乎全部模"。</p>
+<div class="key-insight">三个反例说明 Legendre 公式"不能当结论用"：常数因子差（结构性）、舍入项爆炸（指数级）、单模失效（均值 vs 逐点）。理解反例，才知道现代筛法改进的是哪几根骨头。</div>
+</section>
+
+<section>
+<h3>十一、工作题：用筛法估计素数个数</h3>
+<p><strong>题 1</strong>：用 Legendre 公式精确计算 π(30)（手枚举所有 d|P(√30) 的贡献），验证答案。</p>
+<p><strong>题 2</strong>：用 Mertens 定理估计 π(10<sup>8</sup>)。已知 ln(10<sup>8</sup>) ≈ 18.42，e<sup>−γ</sup> ≈ 0.5615，真实值 π(10<sup>8</sup>) = 5761455。比较 Legendre 主项与真实值并说明相对误差。</p>
+<p><strong>题 3</strong>：证明 Möbius 恒等式 Σ<sub>d|n</sub> μ(d) = 1 若 n=1，否则为 0，并说明它为何使指标函数 1<sub>(n,P)=1</sub> = Σ<sub>d|(n,P)</sub> μ(d) 成立（这是 Legendre 公式成立的根基）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：√30 ≈ 5.48，P = 2·3·5 = 30。π(30) = Σ<sub>n=1</sub><sup>30</sup> 1<sub>(n,30)=1</sub> + π(5) − 1。与 30 互素的数：1,7,11,13,17,19,23,29 共 8 个；π(5)=3。故 π(30) = 8 + 3 − 1 = 10，对应 {2,3,5,7,11,13,17,19,23,29}。∎</p>
+<p><strong>题 2</strong>：Legendre 主项 ≈ x·e<sup>−γ</sup>/ln x = 10<sup>8</sup>·0.5615/18.42 ≈ 3.05×10<sup>6</sup>。真实值 5761455。相对误差 = (5761455 − 3048000)/5761455 ≈ 0.471——验证结构性常数差 1−e<sup>−γ</sup> ≈ 0.4385（差异来自高阶项与 ln 的精细常数）。∎</p>
+<p><strong>题 3</strong>：对 n = ∏p<sup>a</sup>，Σ<sub>d|n</sub> μ(d) = Σ<sub>S⊆{素因子}</sub> μ(∏<sub>p∈S</sub> p) = Σ<sub>k=0</sub><sup>r</sup> (−1)^k C(r,k) = (1−1)^r。n=1（r=0）时为 1，n&gt;1 时为 0。于是 1<sub>(n,P)=1</sub> = Σ<sub>d|(n,P)</sub> μ(d)，代入求和并交换次序即得 Legendre 公式——包含-排除原理的解析化身。∎</p>
+</details>
+</section>
+
+<section>
+<h3>十二、试试看（带提示）</h3>
+<p>1. 用埃拉托斯特尼筛法数出 50 以内的素数。<br>提示：√50 ≈ 7.07，只需划掉 2,3,5,7 的倍数。剩下的素数共 15 个：2,3,5,7,11,13,17,19,23,29,31,37,41,43,47。</p>
+<p>2. 用 Legendre 公式手算 π(50)。<br>提示：√50≈7.07，P=2·3·5·7=210。枚举 d|210 求 Σμ(d)⌊50/d⌋ = 12，再还原 π(50) = 12 + π(7) − 1 = 12 + 4 − 1 = 15。核对上面 15 个素数。</p>
+<p>3. 用容斥数出 1 到 30 中与 30 互素的数的个数（不查表）。<br>提示：30−15−10−6+5+3+2−1 = 8，即 {1,7,11,13,17,19,23,29}。</p>
+<p>4. 手算 ∏<sub>p≤10</sub>(1−1/p) 并与 1/ln 10 ≈ 0.4343 比较，解释为什么差了那么多。<br>提示：∏ = (1/2)(2/3)(4/5)(6/7) = 8/35 ≈ 0.2286。而 Mertens 说的是 ∏ ≈ e<sup>−γ</sup>/ln x——e<sup>−γ</sup>≈0.5615 这个常数正是"缺掉"的那块，且 x 太小时渐近还不准。</p>
+<p>5. 用筛法确认"100 可写成两个素数之和"的所有方式：100 = 97+3 = 89+11 = 53+47 = …（提示：只需检查 100−p 是否为素数，p 遍历 2,3,5,…,97。共 6 种。）</p>
+<p>6. 想一想：为什么 Selberg 筛要"平方"指示函数？<br>提示：ρ(n) 有正有负（λ<sub>d</sub> 交替），直接求和会互相抵消误差；|ρ(n)|² 总是非负，二次型最小化能把"过计数"变成可控的上界。</p>
+</section>
+
+<section>
+<h3>十三、关键公式</h3>
+<div class="formula display" data-tex="\pi(x) \approx x\prod_{p\le\sqrt{x}}\left(1-\frac{1}{p}\right)\quad(\text{Legendre})"></div>
+<div class="formula display" data-tex="\pi(x)-\pi(\sqrt{x})+1=\sum_{d\mid P}\mu(d)\left\lfloor\frac{x}{d}\right\rfloor,\qquad P=\prod_{p\le\sqrt{x}}p"></div>
+<div class="formula display" data-tex="\sum_{d\mid n}\mu(d)=\begin{cases}1,&amp;n=1\\0,&amp;n&gt;1\end{cases}"></div>
+<div class="formula display" data-tex="\sum_{p\le x}\frac{1}{p}=\log\log x+M+o(1)"></div>
+<div class="formula display" data-tex="\prod_{p\le x}\left(1-\frac{1}{p}\right)=\frac{e^{-\gamma}}{\log x}\left(1+O\left(\frac{1}{\log x}\right)\right)\quad(\text{Mertens})"></div>
+<div class="formula display" data-tex="\pi(x)\sim\frac{x}{\log x}\sim\mathrm{Li}(x),\qquad \theta(x)=\sum_{p\le x}\log p\sim x\quad(\text{PNT})"></div>
+<div class="formula display" data-tex="S(\mathcal{A};z)\le\sum_{n\in\mathcal{A}}\Big(\sum_{d\mid(n,P(z))}\lambda_d\Big)^2\quad(\text{Selberg 上界筛})"></div>
+<div class="formula display" data-tex="\sum_{p\text{ twin}}\frac{1}{p} &lt; \infty\quad(\text{Brun 1919})"></div>
+<div class="formula display" data-tex="\liminf_n(p_{n+1}-p_n)\le 7\times10^7\quad(\text{Zhang 2013})"></div>
+</section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Hardy &amp; E. Wright, An Introduction to the Theory of Numbers</strong></p>
+<p>&rarr; <strong>K. Ireland &amp; M. Rosen, A Classical Introduction to Modern Number Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/zeta.html">〰️ 黎曼 ζ 函数</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎵 模形式</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/goldbach.html">👬 哥德巴赫猜想</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/twin-prime.html">👯 孪生素数猜想</a>：同一学科分类「数论」。</p>
+</section>

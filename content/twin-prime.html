@@ -1,0 +1,141 @@
+<section>
+<h3>〇、具体动机——先数一数 100 以内的"素数兄弟"</h3>
+<p>在素数表上划拉几笔：3 和 5、11 和 13、17 和 19——两个素数挨得极近，只差 2。这样的"孪生素数对"在数轴上一路找下去：</p>
+<div class="formula display" data-tex="(3,5),(5,7),(11,13),(17,19),(29,31),(41,43),(59,61),(71,73),(101,103),(107,109),(137,139),\ldots"></div>
+<p>100 以内共有 <strong>8 对</strong>（数到 100 时别漏了 (71,73)）。问题来了：这样的"兄弟俩"是<strong>永远找得到</strong>，还是找着找着就绝种了？也就是问：</p>
+<div class="formula display" data-tex="\text{是否存在无穷多对素数 }(p,p+2)?"></div>
+<p>这个问题 1846 年由法国数学家 <strong>de Polignac</strong> 正式提出，快 170 年了没有答案。直到 2013 年，一位当时已经 58 岁、在美国一所普通大学当讲师的中国数学家 <strong>张益唐</strong> 突然证明：无论走多远，总能找到一对靠得很近的素数兄弟（距离 ≤ 7000 万）。这是该猜想提出以来第一次实质性突破——本课就从"数到 8 对"出发，讲到这个突破为什么如此重要。</p>
+<div class="key-insight">"差 2 的素数兄弟"到底有没有无穷多？2013 年张益唐证明了间距有界，至今无人证到 2。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/sieve.html">素数筛</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、具体动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、相差 2 的素数——无穷多对吗？</h3>
+<p><strong>直觉先来。</strong>素数的"平均间隙"由素数定理给出：在 x 附近的素数密度约 1/log x，所以两个相邻素数平均隔 log x 远——随着 x 增大，log x 也在慢慢增大。可"孪生"问的是间隙<strong>恰好等于 2</strong>，也就是要问这个平均间隙分布的<em>最左端</em>（最小间隙）会不会永远出现 2。</p>
+<p><strong>严格化。</strong>记 p_n 为第 n 个素数。孪生素数猜想等价于</p>
+<div class="formula display" data-tex="\liminf_{n\to\infty}(p_{n+1}-p_n)=2"></div>
+<p>也就是说：存在无穷多个 n，使得 p_{n+1}−p_n=2。目前人类已经发现了数十万位的孪生素数对，但<strong>有限多还是无穷多——答案未知</strong>。这就是一个"看似小学三年级、实则登天"的问题。</p>
+<p><strong>为什么密度定理帮不上忙？</strong>π(x)~x/log x 只描述"平均数"。它告诉我们间隙的平均值 ~log x，却对"间隙恰好等于 2 出现多少次"完全无话可说——就像只知道一个国家人均年收入，却算不出"有多少对夫妇恰好同年同月同日生"。要处理间隙的极值尾部，需要全新的定量工具。</p>
+</section>
+
+<section>
+<h3>二、张益唐的突破与 Polymath 的压缩</h3>
+<p><strong>2013 年，张益唐</strong>在 Annals of Mathematics 发表了证明：</p>
+<div class="formula display" data-tex="\liminf_{n\to\infty}(p_{n+1}-p_n)\le 70{,}000{,}000"></div>
+<p><strong>核心创新</strong>分两层：</p>
+<p><strong>第一层：GPY 筛法</strong>（Goldston–Pintz–Yıldırım，2005）。GPY 的想法是：同时观察 k 个位置 n+h₁, n+h₂, …, n+h_k，数一数它们当中有几个是素数。如果能证明"平均来看 ≥ 2 个"，就说明存在两个素数靠得很近。但 GPY 的方法撞上一堵墙：它要求被观察的模数 q 在<strong>算术级数</strong>里"均匀分布"到 x^{1−ε}——而当时最好的 Bombieri–Vinogradov 定理只到 x^{1/2}。</p>
+<p><strong>第二层：光滑模数。</strong>张益唐发现：如果把筛法中的权改到"光滑模数"（只有小素因子的数）上，他就能在 Bombieri–Vinogradov 的框架内绕过 GPY 的致命障碍。这个看似技术性的选择，恰好踩在了"均匀性"与"光滑性"的交汇点上，是他论文最闪光的地方。</p>
+<p><strong>后续压缩。</strong>张益唐的 7×10⁷ 公布后，陶哲轩发起了 <strong>Polymath 8</strong> 全球网上协作；几乎同时 Maynard（独立工作）用更精细的多维权函数把界大幅压低。最终记录：</p>
+<div class="formula display" data-tex="70{,}000{,}000 \longrightarrow 4{,}680 \longrightarrow 246\quad(\text{Polymath 8b, 2014})"></div>
+<p><strong>如果 Elliott–Halberstam（EH）猜想成立</strong>（更强的算术级数均匀性），Maynard 方法可以压到 <strong>6</strong>。但到 2（孪生素数本身）还需要全新的想法——EH 只给 6，给不了 2。</p>
+</section>
+
+<section>
+<h3>三、筛法的极限——为什么卡在 246 而不是 2</h3>
+<p>当前最好的下界 246，是 <strong>Selberg 筛 + GPY + Maynard–Tao 多维权</strong>这套框架的极限。为什么这个框架到不了 2？</p>
+<p>直觉是这样：GPY 筛法擅长证明"<strong>存在</strong>两素数相距不太远"，但它的工具是<strong>密度</strong>——它把 k 个位置上的素数"平均地"数一遍，永远无法分辨"间隙正好是 2"这样精确到具体数值的事件。用极限的语言：这套方法只能给出"下界 ≤ 某个有限数"，而这个有限数被 k 的选择、模数的均匀性、权函数的形状共同卡住，压缩到 246 已是"在框架内做到极致"。</p>
+<p>要证明孪生素数猜想本身（下界 = 2），需要<strong>超越筛法</strong>的全新技术。可能的出路：</p>
+<ul>
+  <li>Elliott–Halberstam 猜想的<strong>更强形式</strong>（目前最多给 6，且 EH 本身也未证）；</li>
+  <li>自守形式的<strong>谱理论</strong>——把素数问题翻译成 L-函数与谱的信息；</li>
+  <li>某种尚未发现的<strong>素数结构</strong>。</li>
+</ul>
+<p>张益唐本人被问到"下一步怎么办"时回答：<strong>"我不知道。"</strong>这五个字是最好的注脚——这不是谦虚，是真实的技术状况。</p>
+</section>
+
+<section>
+<h3>四、为什么这不是"无聊的技术细节"</h3>
+<p>素数间隙问题触及数论最核心的谜题：<strong>素数到底有多"随机"？</strong></p>
+<p>Cramér 模型把素数当作"按概率 1/log x 随机出现的点"，它预测最大间隙 ~ log²x，且孪生素数无穷多。这个模型在宏观上非常准（素数定理就是它的"期望"），但在<strong>近距离</strong>的尺度上，我们连"间隙=2 是否无穷多次"都不知道。</p>
+<p>如果孪生素数有限——意味着素数在某些"微结构"上<strong>不随机</strong>：存在一个常数 C，使得一旦超过 C，任何两个素数都至少相隔 4。这会与 Cramér 模型严重冲突，说明素数藏着某种"近程排斥力"。</p>
+<p>如果无穷多——那么随机性在近距离仍然成立，而"246"只是一个还无法压缩到 2 的中间站。2013 年之后，学界几乎一致认为答案就是"无穷多"，但"几乎一致"不是证明。</p>
+</section>
+
+<section>
+<h3>五、完整例题——三个例子一步步算完</h3>
+<p><strong>例 1：列出并数出 100 以内的全部孪生素数对。</strong></p>
+<p>第一步，写出 100 以内全部素数：2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97。</p>
+<p>第二步，逐个检查相邻素数差是否为 2：(3,5)✓, (5,7)✓, (7,11)×, (11,13)✓, (13,17)×, (17,19)✓, (19,23)×, (23,29)×, (29,31)✓, (31,37)×, …, (59,61)✓, (61,67)×, (67,71)×, (71,73)✓, (73,79)×, (79,83)×, (83,89)×, (89,97)×。</p>
+<p>第三步，收集合格的 8 对：(3,5),(5,7),(11,13),(17,19),(29,31),(41,43),(59,61),(71,73)。注意 (5,7) 与 (3,5) 共享 5——孪生对可以"连锁"。(101,103) 是下一对。✓</p>
+
+<p><strong>例 2：部分和逼近 Brun 常数，并与"素数倒数和发散"对比。</strong></p>
+<p>第一步，把每对孪生素数的倒数相加：</p>
+<div class="formula display" data-tex="B=\sum_{(p,p+2)}\left(\frac1p+\frac1{p+2}\right)=\frac13+\frac15+\frac15+\frac17+\frac1{11}+\frac1{13}+\cdots"></div>
+<p>第二步，逐对代入并累计：</p>
+<div class="formula display" data-tex="\begin{array}{c|c|c}
+\text{对} & \text{本项} & \text{累计}\\
+(3,5)&0.5333&0.5333\\
+(5,7)&0.3429&0.8762\\
+(11,13)&0.1678&1.0440\\
+(17,19)&0.1114&1.1554\\
+(29,31)&0.0668&1.2222\\
+(41,43)&0.0477&1.2699\\
+(59,61)&0.0333&1.3032\\
+(71,73)&0.0278&1.3310\\
+(101,103)&0.0196&1.3506
+\end{array}"></div>
+<p>第三步，观察：累计增长越来越慢，极限是 Brun 常数 B≈1.90216（收敛！）。<strong>对比：</strong>全体素数的倒数和 Σ1/p 是<strong>发散的</strong>（Euler 1740）。孪生素数"稀到倒数和收敛"，却仍可能无穷多——收敛与无穷多并不矛盾（就像 1/n² 收敛但有无穷多项）。Brun 正是用这个收敛性（1919）说明：<em>如果</em>孪生素数有限，那是它太稀；但收敛本身不能回答无穷性问题。✓</p>
+
+<p><strong>例 3：可容许 k-元组——筛法能绕开的"障碍"与绕不开的"障碍"。</strong></p>
+<p>第一步，定义：一个 k 元整数集合 H={h₁,…,h_k} 称为<strong>可容许</strong>（admissible）的，如果对每个素数 p，H 不覆盖模 p 的全部剩余类。</p>
+<p>第二步，检验 {0,2}（孪生位置）：模 2 时 {0,2}≡{0,0}，只占剩余类 0，留下 1——通过；模 3 时 {0,2}，缺 1——通过。{0,2} 可容许。这解释了为什么"差 2"没有简单的整除障碍。</p>
+<p>第三步，检验 {0,2,4}（连续三胞胎位置）：模 3 时 0,2,4≡0,2,1——<strong>覆盖了全部三个剩余类</strong>！不可容许。事实：任意三个形如 n,n+2,n+4 的数中必有一个被 3 整除（n≡0 时是 n，n≡1 时是 n+2，n≡2 时是 n+4）。这就是为什么除了 (3,5,7) 之外没有"三胞胎"。✓</p>
+<p>第四步（进阶），检验 {0,2,6}：模 2 得 {0,0,0}，模 3 得 {0,2,0}，模 5 得 {0,2,1}，全部有缺项——可容许。事实上 n=5 给出 (5,7,11)，三者皆素数。✓</p>
+<p>这个例子的意义：<strong>可容许性 = 不存在固定整除障碍</strong>。Cramér 模型据此预测每个可容许 k-元组都产生无穷多个"全是素数"的位置——但把"预测"变成"证明"，就是筛法当前够不到的地方。</p>
+</section>
+
+<section>
+<h3>六、孪生素数和哥德巴赫——姊妹猜想</h3>
+<p>两个猜想共享核心技术：<strong>筛法 + 圆法</strong>。Chen（陈景润）用一个方法同时推进了两个方向：</p>
+<div class="formula display" data-tex="\text{存在无穷多素数 }p\text{ 使 }p+2\text{ 是至多两个素数之积}"></div>
+<p>以及（见<a href="/pages/goldbach.html">哥德巴赫猜想</a>）：</p>
+<div class="formula display" data-tex="\text{每个大偶数}=\text{素数}+P_2"></div>
+<p>同一个筛法，两个方向。两条战线都卡在同一堵墙前：需要突破"1+2"与"gap=246"的当前极限——而这两个极限背后是同一个奇偶性问题。</p>
+</section>
+
+<section>
+<h3>七、前沿：Elliott–Halberstam 猜想与素数间隙</h3>
+<p>如果 Elliott–Halberstam（EH）猜想成立——GPY 方法直接给出素数间隙 ≤ 6。但 EH 要求模数均匀分布到 x^{1−ε}，目前只到 x^{1/2}（Bombieri–Vinogradov）。突破 EH 的任何部分将直接压缩素数间隙。</p>
+<p>仍开放的问题：<strong>张益唐的光滑模数方法能否推到 1/2 以上？</strong>这是当前"逼近 2"的最短路线之一，也是 Polymath 8 留下的接力棒。需要指出：即便 EH 全成立，也只能到 6，到 2 仍需跨过奇偶性问题。</p>
+</section>
+
+<section>
+<h3>八、试试看（带提示）</h3>
+<p>1. 找出 200 以内的全部孪生素数对，并确认共有 15 对。<br>提示：先列出 200 以内素数，再查相邻差；(101,103),(107,109),(137,139),(149,151),(179,181),(191,193),(197,199) 都在范围内。</p>
+<p>2. 用 Cramér 模型给出"孪生素数无穷多"的启发式概率论证，并指出它为什么不是证明。<br>提示：p 与 p+2 同时为素的概率 ≈ (1/log p)²，Σ_p 1/log²p 发散；但"随机模型"假设素数完全独立地随机出现，这是无法证明的假设。</p>
+<p>3. 检验 {0,2,6,8} 的可容许性（这是著名的四胞胎位置）。<br>提示：逐素数检验；模 5 时 0,2,6,8≡0,2,1,3，缺 4——可容许。事实上 (5,7,11,13) 与 (11,13,17,19) 都是四胞胎。</p>
+<p>4. 为什么 Brun 级数收敛不能证明孪生素数有限？<br>提示：比较 Σ1/n²；级数收敛说明"足够稀"，但无穷多且稀薄是兼容的——收敛与否描述的是"密度衰减速度"，不是"是否无穷多项"。</p>
+<p>5.（进阶）解释为什么 EH 成立只能给到 6，而不是 2。<br>提示：EH 改进的是"算术级数中素数的均匀性"，它让 Maynard 的 k 可以取到 3（对应间隙 6），但间隙 2 需要 k=2 且两个位置同时为素——那已经越过奇偶性问题，筛法结构上够不到。</p>
+</section>
+
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="\text{孪生素数猜想}: \liminf_{n\to\infty}(p_{n+1}-p_n)=2"></div>
+<div class="formula display" data-tex="\liminf_{n\to\infty}(p_{n+1}-p_n)\le 246\quad(\text{Polymath 2014})"></div>
+<div class="formula display" data-tex="\text{EH 成立}\ \Rightarrow\ \liminf(p_{n+1}-p_n)\le 6"></div>
+<div class="formula display" data-tex="B=\sum_{(p,p+2)}\left(\frac1p+\frac1{p+2}\right)\approx 1.90216\quad(\text{Brun 常数，收敛})"></div>
+<div class="formula display" data-tex="\text{可容许}: \forall p,\ H\ \text{不覆盖}\ \mathbb{Z}/p\mathbb{Z}\ \text{的全部剩余类}"></div>
+</section>
+
+<section>
+<h3>证明：可容许性与素数定理的启发表</h3>
+<p>这里给出一条<strong>完整可证的</strong>命题，说明可容许性为什么是筛法的自然边界。</p>
+<p><strong>命题：</strong>若 k-元组 H 不可容许，则存在某个素数 p，使得 n+h 中至少一个被 p 整除，对一切 n 成立。从而"n+H 全为素数"只能发生有限多次。</p>
+<p><strong>证明：</strong>由不可容许性，存在素数 p 使 H 覆盖模 p 的全部剩余类。对任意整数 n，n mod p 落在某个剩余类 r 里；而该剩余类 r 被某个 h∈H 覆盖，即 h≡r (mod p)，故 p | (n+h)。因为每个 n 都被"抓住"至少一次，所以"n+H 中每一项都 ≠p"就不可能对无穷多 n 成立；而对素数的整除意味着该项就是 p 或非素数。这样的 n 至多有限多（每抓住一次就排除一批），故该命题成立。∎</p>
+<p><strong>对偶命题（未证，深）：</strong>若 H 可容许，Cramér 模型给出"n+H 全为素数"的次数 ~ (常数)×x/log^k x → ∞，故预测无穷多次。<strong>证明</strong>这一句是 Maynard–Green–Tao 型定理，而把 k 元组同时实现为素数（对一般的可容许 H）仍是 open——这就是"从 246 到 2"的距离。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Hardy & E. Wright, An Introduction to the Theory of Numbers</strong></p>
+<p>&rarr; <strong>K. Ireland & M. Rosen, A Classical Introduction to Modern Number Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/sieve.html">素数筛</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/goldbach.html">👬 哥德巴赫猜想</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/sieve.html">🔢 素数筛</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/zeta.html">〰️ 黎曼 ζ 函数</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎵 模形式</a>：同一学科分类「数论」。</p>
+</section>

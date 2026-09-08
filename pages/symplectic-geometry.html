@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="相空间的几何——Darboux定理与哈密顿力学" />
+  <meta property="og:title" content="辛几何 — Vibe Math" />
+  <meta property="og:description" content="相空间的几何——Darboux定理与哈密顿力学" />
+  <title>辛几何 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌊 辛几何 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">相空间的几何——Darboux定理与哈密顿力学</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='symplectic-geometry',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/commutative-algebra.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 💍 交换代数</a>
+  <a href="/pages/hyperbolic-geometry.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🥏 双曲几何与庞加莱圆盘 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——研究"位置加速度"这个整体空间的几何学</h3>
+<p>想象台球桌上的一颗球：光说"球在哪儿"还不够，还要知道它往哪个方向滚、滚多快，才算完整描述它的状态。辛几何就是研究这种"位置+速度"组合起来的空间的数学。</p>
+<p>它专门管一件事：这个空间里的东西是怎么"流动"的。物理学家早就发现，物体怎么动都逃不出这个空间的规矩——辛几何把这些规矩用数学严格地写了出来。</p>
+<div class="key-insight">辛几何是经典力学的数学舞台——它研究"位置和动量"这个整体空间，并保证了其中的流动像水一样不可压缩。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/parallel-transport.html">平行移动</a>、<a href="/pages/variational-calculus.html">变分法</a>、<a href="/pages/geodesic.html">测地线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——谐振子的相空间（例题 1：哈密顿方程与面积守恒）</h3>
+<p>先挑一个完全算得动的系统：<strong>谐振子</strong>（弹簧振子，质量与弹性系数都取 1）。它的状态用"位置 q 与动量 p"两个数描述，哈密顿函数是总能量：</p>
+<div class="formula display" data-tex="H(q,p)=\frac{p^2}{2}+\frac{q^2}{2}"></div>
+<p>"位置+动量"组成的二维平面 (q,p) 就叫<strong>相空间</strong>。辛形式取标准形 ω = dp∧dq（面积元）。</p>
+<p><strong>第一步：写哈密顿方程。</strong> 由 ω(X_H,·) = dH 定义哈密顿向量场 X_H；在 (q,p) 坐标下它就是</p>
+<div class="formula display" data-tex="\dot q=\frac{\partial H}{\partial p}=p,\qquad \dot p=-\frac{\partial H}{\partial q}=-q"></div>
+<p><strong>第二步：解方程。</strong> 这是线性系统，解为</p>
+<div class="formula display" data-tex="\begin{pmatrix}q(t)\\p(t)\end{pmatrix}=\begin{pmatrix}\cos t & \sin t\\ -\sin t & \cos t\end{pmatrix}\begin{pmatrix}q_0\\p_0\end{pmatrix}"></div>
+<p>（验证：q̇ = −q₀sin t + p₀cos t = p ✓；ṗ = −q₀cos t − p₀sin t = −q ✓。）相空间的流动 Φ_t 是绕原点的<strong>匀速旋转</strong>，轨迹是椭圆族。</p>
+<p><strong>第三步：看它"保什么"。</strong> 旋转矩阵的行列式 cos²t + sin²t = 1，故 Φ_t 保持面积；等价地 Φ_t*ω = ω。这就是 <strong>Liouville 定理</strong>的实例：<strong>哈密顿流保相空间体积</strong>（这里是面积）。<strong>为什么这件事重要？</strong> 它说明相空间里的流"不可压缩"——统计力学的整个框架（微正则系综、相体积守恒）都建立在这条性质上。</p>
+<p><strong>第四步：找守恒量。</strong> H 沿流不变：dH/dt = {H,H} = 0（能量守恒）。∎</p>
+<p><strong>为什么从谐振子开始？</strong> 它是能"完全算穿"的最小非平凡系统，却已经展现出辛几何的全部核心体验：<strong>哈密顿方程从辛形式诞生、流保辛形式、守恒量从对称性来</strong>。所有抽象定义都是这套计算的概括。</p>
+</section>
+
+<section>
+<h3>二、辛流形——相空间的抽象化</h3>
+<p>把上面"会算的平面"推广成任意流形。</p>
+<p><strong>定义（辛流形）。</strong> (M, ω) 其中 M 是 2n 维光滑流形，ω 是 2-形式，满足：</p>
+<ul>
+  <li><strong>闭性</strong>：dω = 0；</li>
+  <li><strong>非退化性</strong>：ω^n = ω∧…∧ω ≠ 0（处处成立，它定义一个体积形式）。</li>
+</ul>
+<p><strong>为什么要求"闭"？</strong> 闭性保证哈密顿动力学与微分形式理论相容：它让"哈密顿向量场存在且唯一"（因为 ω(v,·) 的映射是线丛同构）、让守恒量的泊松括号闭合、让 ω 的积分在同调下不变。非退化性则保证每个方向都有配对——相空间没有"死角"。</p>
+<p><strong>泊松括号。</strong> 对函数 f,g，定义 {f,g} = −ω(X_f, X_g)，其中 X_f 由 ω(X_f,·) = df 决定。<strong>符号约定说明：</strong>这个 − 号保证正则坐标满足 {q,p} = 1（与物理学家一致）；换用 {f,g} = ω(X_f,X_g) 只把每个括号整体变号，"是否为零"完全不受影响。它是反对称、满足 Leibniz 律与 Jacobi 恒等式的运算，把"函数"变成李代数。<strong>物理意义：</strong>沿哈密顿流的时间演化写为 ḟ = {H,f}，故 {H,f} = 0 恰表示 f 是守恒量。谐振子里能量守恒写为 {H,H}=0。</p>
+<p><strong>Liouville 定理。</strong> 对任何哈密顿函数 H，其流保 ω（进而保体积形式 ωⁿ/n!）。证明只需 Lie 导数：L_{X_H}ω = d(ι_{X_H}ω) = d(dH) = 0。这就是"相空间里的流不可压缩"的严格陈述——统计力学的数学基础。</p>
+</section>
+
+<section>
+<h3>三、Darboux 定理——局部全同 vs. 整体刚性</h3>
+<p><strong>Darboux 定理（1882）：</strong>设 (M^(2n), ω) 为辛流形。对任意 p ∈ M，存在局部坐标 (q₁,…,q_n, p₁,…,p_n) 使得 ω = Σ dp_i ∧ dq_i。这意味着<strong>所有同维辛流形局部不可区分</strong>——辛几何没有类似于 Riemann 几何中黎曼曲率的"局部不变量"。这与 Riemann 几何形成鲜明对比：Riemann 流形的截面曲率在每点变化，而辛流形在局部完全刚性。</p>
+<p><strong>为什么"局部全同"反而让辛几何难？</strong> 因为没有局部不变量，辛流形的差别只能出现在<strong>整体</strong>层面（如同调、嵌入、辛刚现象）。Riemann 几何靠"每一点的曲率"就能区分空间；辛几何必须发明整套整体工具（拟全纯曲线、Floer 同调）来"看见"差别。这就是为什么辛拓扑需要如此深刻的技术。</p>
+</section>
+
+<section>
+<h3>四、Darboux 定理的证明思路（Moser 技巧）</h3>
+<p><strong>定理。</strong>设 (M^{2n}, ω) 为辛流形。对任意 p ∈ M，存在以 p 为心的坐标卡 (q₁,…,qₙ, p₁,…,pₙ) 使 ω = Σᵢ dpᵢ ∧ dqᵢ。</p>
+<p><strong>证明思路。</strong>① <strong>线性化</strong>：ω_p 是 T_pM 上的非退化反对称双线性形式，线性代数（标准辛形式定理）保证存在线性坐标使 ω_p = Σ dpᵢ∧dqᵢ。于是问题化为：给定"常数形" ω₀ 与在 0 处与之重合的一般闭 2-形式 ω₁，求微分同胚 φ 使 φ*ω₁ = ω₀。② <strong>凸形变</strong>：设 ω_t = (1−t)ω₀ + tω₁（在 0 的某邻域上仍为辛形式）。若存在时间相关向量场 X_t 生成流 φ_t 满足 φ_t*ω_t = ω₀，则对 t 求导得 L_{X_t}ω_t + dω_t/dt = 0。③ <strong>Moser 方程</strong>：因 ω₁ − ω₀ 闭，由 Poincaré 引理局部 ω₁ − ω₀ = dα，故 dω_t/dt = dα_t，解</p>
+<div class="formula display" data-tex="\iota_{X_t}\omega_t + \frac{d\omega_t}{dt}=0\ \Longleftrightarrow\ \iota_{X_t}\omega_t=-d\alpha_t\ \Longrightarrow\ X_t=-\omega_t^{-1}(d\alpha_t)"></div>
+<p>非退化性保证 X_t 良定义且唯一；解 ODE 得流 φ_t，取 t=1 得 φ₁*ω₁ = ω₀。④ <strong>结论</strong>：(q,p) = φ₁⁻¹(线性坐标) 满足要求。∎</p>
+<p><strong>为什么 Moser 技巧是通用的？</strong> 它把"找坐标"化为"找微分同胚流"，把几何问题变成解 ODE，证明是构造性的。注意"ω₀ 与 ω₁ 在 0 点相重合"这个条件保证整个区间上 ω_t 都非退化——Moser 的同伦论证正是在这条"非退化走廊"里滑行。由此辛流形<strong>无局部不变量</strong>——没有曲率张量，与 Riemann 几何形成根本对照。</p>
+</section>
+
+<section>
+<h3>五、关键公式</h3>
+<div class="formula display" data-tex="\omega=\sum dp_i\wedge dq_i\quad(\text{Darboux 标准形})"></div>
+<div class="formula display" data-tex="\iota_{X_H}\omega=dH,\qquad L_{X_H}\omega=0\quad(\text{哈密顿流保 } \omega)"></div>
+<div class="formula display" data-tex="\langle d\mu(p)(v),\xi\rangle=\omega_p(X_\xi(p),v)\quad(\text{矩映射定义})"></div>
+</section>
+
+<section>
+<h3>六、例题 2——ℝ⁴ 上的辛形式：验证 Darboux 化与哈密顿向量场（一步步算完）</h3>
+<p><strong>题目。</strong> 在 ℝ⁴（坐标 (x₁,y₁,x₂,y₂)）上取 ω = dx₁∧dy₁ + dx₂∧dy₂。①验证它是辛形式；②求 H = x₁²+y₁² 的哈密顿向量场 X_H，并描述其流。</p>
+<p><strong>第一步：验证闭。</strong> 系数是常数，dω = 0 平凡成立。</p>
+<p><strong>第二步：验证非退化。</strong> 计算 ω² = ω∧ω = 2 dx₁∧dy₁∧dx₂∧dy₂（交叉项 (dx₁∧dy₁)∧(dx₂∧dy₂) 出现两次、系数 2）。这是 ℝ⁴ 的体积元乘 2，处处非零 ⟹ 非退化。</p>
+<p><strong>第三步：求 X_H。</strong> 要求 ω(X_H,·) = dH = 2x₁dx₁ + 2y₁dy₁。设 X_H 分量为 (a,b,c,d)。由 ω(v,·) = v_{x₁}dy₁ − v_{y₁}dx₁ + v_{x₂}dy₂ − v_{y₂}dx₂，得 a = 2y₁、b = −2x₁、c = 0、d = 0。故</p>
+<div class="formula display" data-tex="X_H=2y_1\frac{\partial}{\partial x_1}-2x_1\frac{\partial}{\partial y_1}"></div>
+<p><strong>第四步：读流。</strong> 这是 (x₁,y₁) 平面内以角速度 2 的旋转，(x₂,y₂) 保持不变，能量 x₁²+y₁² 守恒。</p>
+<p><strong>第五步：顺带验证泊松括号。</strong> 把 y₁ 视作"位置"、x₁ 视作"动量"，则正则坐标对 (y₁,x₁) 应满足 {y₁,x₁} = 1。确实：X_{y₁} = ∂/∂x₁、X_{x₁} = −∂/∂y₁，故 {y₁,x₁} = −ω(X_{y₁},X_{x₁}) = −ω(∂/∂x₁, −∂/∂y₁) = 1。这就是"正则坐标对泊松括号为 1"的实例（若把符号约定反过来，{y₁,x₁} = −1，只是整体变号）。∎</p>
+<p><strong>为什么这个例子有代表性？</strong> 它演示了辛形式的"体检流程"（闭 + 非退化）、哈密顿向量场的系统求法，以及 Darboux 坐标为什么平凡（这里本身就是标准形）。求 X_H 的"匹配系数"法，是后面所有辛计算的模板。</p>
+</section>
+
+<section>
+<h3>七、辛流形、近复结构与 Kähler 情形</h3>
+<p>设 (M, ω) 为辛流形。一个<strong>近复结构</strong> J 是端射 J: TM → TM 满足 J² = −id。<strong>相容性条件</strong>：g_J(v,w) = ω(v, Jw) 是正定 Riemann 度量，且 ω(Jv, Jw) = ω(v,w)。满足这些的 J 称为与 ω 相容的近复结构。</p>
+<p><strong>存在性。</strong>相容近复结构总存在（分两步：任取 Riemann 度量 g，用偏振与正交分解在每点构造 ω-相容 J——纯线性代数；整体性来自张量丛的连续性）。且相容 J 的全体构成<strong>可缩空间</strong>——故辛流形与"带 ω 相容的几乎 Kähler 结构"等价。相容性给出关键的<strong>面积控制</strong>：ω(v, Jv) = g_J(v,v) ≥ 0，于是 ω 限制在 J-全纯曲线的切方向上恰为面积形式——这是 Gromov 紧致性的几何来源。</p>
+<p><strong>可积性（Kähler 情形）。</strong> J 来自复结构（可积）当且仅当 Nijenhuis 张量 N_J = 0。此时 (M, ω, J, g_J) 是 <strong>Kähler 流形</strong>——辛几何与复几何的交汇点：Hodge 分解、Lefschetz 定理带来丰富拓扑结构。<strong>非 Kähler 的辛流形反例</strong>：Heisenberg nilmanifold × S¹（三维 Heisenberg 流形乘以圆）有辛形式但无 Kähler 结构——其第一 Betti 数 b₁ = 3 为奇数，违反 Kähler 流形的 Hodge 对称性 b₁ 必为偶数。</p>
+</section>
+
+<section>
+<h3>八、Gromov 非压缩定理——辛刚度的惊人体现</h3>
+<p>辛球 B^{2n}(r) 不能被辛嵌入到圆柱 B²(R) × ℝ^{2n−2} 中当 r &gt; R。你不能把辛球"挤"进更细的圆柱——<strong>即使在体积足够大的情况下</strong>！这和微分拓扑（任何嵌入都可能）完全相反。非压缩定理是辛拓扑作为独立学科诞生的标志（Gromov 1985）。</p>
+<p><strong>为什么"体积足够大"还是不行？</strong> ω 是 2-形式，它约束的是<strong>二维面积</strong>而非 2n 维体积。辛嵌入必须保持每一片二维子流形的 ω-面积，于是"球内部那片半径 r 的截面圆"的面积被辛刚性地锁定，没法被圆柱的"窄口径"塞下——这就是辛刚度的来源。</p>
+<p><strong>证明框架。</strong>① <strong>相容结构</strong>：取与 ω₀ 相容的近复结构 J，把圆柱视为 (ℂ × ℂ^{n−1}, J)，问题化为 J-全纯曲线存在性/面积矛盾。② <strong>J-全纯圆盘</strong>：考虑映射 u: D² → ℂ × ℂ^{n−1}，满足 CR 型方程 du∘j = J∘du，边界条件 u(∂D²) ⊂ ℂ × {0}（圆盘被"钉"在零阶切片）。Gromov 紧致性与无能量爆炸性保证：给定该边界条件，存在非平凡的 J-全纯圆盘。③ <strong>面积估计</strong>：J-全纯圆盘的 ω-面积 = ∫_D u*ω = ∫_D u*ω₀，而由 Stokes 与边界条件，此面积受限于边界在 B²(R) 内的半径：≤ πR²。④ <strong>矛盾</strong>：若 r &gt; R，则源球 B^{2n}(r) 内含一个截面圆，其 J-全纯像的 ω-面积恰为 πr² &gt; πR²，与第③步的界矛盾。∎</p>
+<p><strong>历史意义。</strong>证明的核心工具是<strong>拟全纯曲线</strong>——满足 Cauchy-Riemann 型偏微分方程的映射 u: (S², j) → (M, J)，其存在性和能量单调性给出了几何障碍。这一方法最终发展为整个辛拓扑和 Floer 理论的基石。</p>
+</section>
+
+<section>
+<h3>九、矩映射与辛约化——对称性的辛几何消除</h3>
+<p>设连通李群 G 以哈密顿方式作用于辛流形 (M, ω)（即存在矩映射）。<strong>矩映射 (moment map)</strong> 为光滑映射 μ: M → g*（g 为 G 的李代数，g* 为其对偶），满足：</p>
+<div class="formula display" data-tex="\langle d\mu(p)(v), \xi\rangle = \omega_p(X_\xi(p), v),\quad \forall v\in T_pM,\ \forall \xi\in\mathfrak{g}"></div>
+<p>其中 X_ξ 是 ξ ∈ g 诱导的基本向量场。矩映射是守恒量在辛几何中的统一表述：Noether 定理的本质——哈密顿函数 H 在 G 作用下不变 ⇒ μ 沿哈密顿流守恒 ⇒ d/dt μ(u_ξ(t)) = 0。<strong>为什么需要矩映射这个"额外结构"？</strong> 因为 G 作用本身可能不"哈密顿式"（不是每个对称性都来自一个哈密顿函数）；矩映射正是"给对称性补一个守恒量"的精确记账本。</p>
+<p><strong>Marsden-Weinstein-Meyer 辛约化定理（1974）：</strong>设 0 ∈ g* 是矩映射的正则值（即 dμ 在 μ^{-1}(0) 上满秩），且 G 在 μ^{-1}(0) 上的作用自由。则商空间：</p>
+<div class="formula display" data-tex="M/\!/G := \mu^{-1}(0)/G"></div>
+<p>具有自然辛结构，且 dim(M//G) = dim M − 2 dim G。这是<strong>消除对称性的标准几何操作</strong>——将对称约化后的系统降维到"动力学商空间"。</p>
+<p><strong>为什么辛约化是"消除对称性"？</strong> 相空间的对称性意味着"多余的变量"（如旋转对称下的整体角度）。矩映射的零水平集选出的正好是"取定守恒量的截面"，再模掉 G 轨道把对称方向本身也约掉——留下的空间只承载真正的动力学自由度。</p>
+<p><strong>几何意义：</strong>辛约化是以下构造的数学根源：</p>
+<ul>
+  <li><strong>规范理论：</strong>Yang-Mills 理论中的约束曲面（高斯定律）正是矩映射的零纤维，物理状态空间 = μ^{-1}(0)/G（规范轨道空间）。</li>
+  <li><strong>BRST 形式：</strong>在几何量子化框架中，矩映射的零纤维上同调（Cartan 等变上同调模型）给出 BRST 上同调——规范固定（gauge fixing）的几何起源。</li>
+  <li><strong>GIT 商：</strong>代数几何中 Mumford 的几何不变量理论 (GIT) 商 X//G 是辛约化的代数类比——两者在 Kähler 情形下精确对应（Kempf-Ness 定理）。</li>
+</ul>
+</section>
+
+<section>
+<h3>十、例题 3——S¹ 作用在 ℂ² 上的矩映射与约化（一步步算完）</h3>
+<p><strong>题目。</strong> S¹ 通过 ψ_t(z) = (e^{it}z₁, e^{−it}z₂) 作用在 (ℂ², ω₀ = (i/2)Σ dzⱼ∧dz̄ⱼ = Σ dxⱼ∧dyⱼ) 上。求矩映射 μ: ℂ² → ℝ，确定 μ^{-1}(0) 与商 μ^{-1}(0)/S¹。</p>
+<p><strong>第一步：写基本向量场。</strong> 取 ξ = 1 ∈ ℝ ≅ Lie(S¹)，</p>
+<div class="formula display" data-tex="X_\xi(z)=\left.\frac{d}{dt}\right|_{0}(e^{it}z_1,e^{-it}z_2)=(iz_1,-iz_2)"></div>
+<p>在实坐标 (x_j,y_j) 里，这是两个平面上的反向旋转。</p>
+<p><strong>第二步：猜矩映射并验证。</strong> 令 μ(z) = −(|z₁|²−|z₂|²)/2。它的微分</p>
+<div class="formula display" data-tex="d\mu=-x_1dx_1-y_1dy_1+x_2dx_2+y_2dy_2"></div>
+<p>而 ι_{X_ξ}ω₀（把 X_ξ 代入 ω₀ 的第一变量）逐项算得：dx₁(X_ξ) = −y₁、dy₁(X_ξ) = x₁、dx₂(X_ξ) = y₂、dy₂(X_ξ) = −x₂，故</p>
+<div class="formula display" data-tex="\iota_{X_\xi}\omega_0=-x_1dx_1-y_1dy_1+x_2dx_2+y_2dy_2=d\mu"></div>
+<p>验证通过，μ 是矩映射。∎</p>
+<p><strong>第三步：零水平集。</strong> μ^{-1}(0) = {|z₁|² = |z₂|²} = {|z₁| = |z₂|}（三维实曲面）。</p>
+<p><strong>第四步：约化。</strong> 轨道 (e^{it}z₁, e^{−it}z₂) 保持积 w = z₁z₂ 不变（因子 e^{it}e^{−it}=1）；反过来在 |z₁|=|z₂| 上，给定 w 就确定了整条轨道。故商</p>
+<div class="formula display" data-tex="\mu^{-1}(0)/S^1\cong\mathbb{C}\quad(\text{经 } w=z_1z_2),\qquad \dim(M/\!/G)=2=4-2\cdot1"></div>
+<p>即约化空间是复一维的 ℂ，维数公式 dim M − 2 dim G = 4 − 2 = 2 符合。这与 GIT 商 ℂ²//ℂ*_{(1,−1)} = Spec ℂ[z₁z₂] ≅ 𝔸¹ 一致（Kempf-Ness）。∎</p>
+<p><strong>这个例子的普适意义。</strong> 同样的计算模板可以移植到任意环面作用上：<strong>矩映射的零水平集 + 模轨道 = 把旋转对称性"约"成一个更小的辛空间</strong>。n=1 时（见工作题 2）约化给出单点——对称性被完全约掉。</p>
+</section>
+
+<section>
+<h3>十一、几何量子化——从经典到量子的数学桥梁</h3>
+<p>经典力学：辛流形 + 哈密顿函数 H → 哈密顿方程。量子力学：Hilbert 空间 + 自伴算子。几何量子化尝试在两者之间建立严格的数学对应：泊松括号 {f,g} → 对易子 (1/iℏ)[F,G]。</p>
+<p><strong>为什么这不只是"换记号"？</strong> 经典的量（函数）要变成量子算符，首先要选一个"极化的 Hilbert 空间"（如 L²-截面），还要处理预量子化线丛的曲率必须等于 ω——这些约束正是量子化"不能任意做"的数学体现。它把"从经典到量子"的物理跃迁，翻译成一个几何上可定义、可判定的问题。</p>
+</section>
+
+<section>
+<h3>十二、Floer 同调——无穷维 Morse 理论与辛拓扑的融合</h3>
+<p>Andreas Floer (1988–89) 将 Morse 同调推广到辛流形的<strong>无穷维环路空间</strong> L(M) = {光滑映射 S¹ → M}。关键创新：用<strong>辛作用量泛函</strong> A_H 代替 Morse 函数（其梯度流方程正好是 J-全纯曲线的 Floer 方程），从而在无穷维辛几何中定义同调不变量。</p>
+
+<h4>Hamiltonian Floer 同调 HF_*(M, ω)</h4>
+<p>对象：非退化哈密顿路径 φ_H 的不动点（即周期轨道）。链复形由不动点生成；边缘算子计数连接两条轨道的 <strong>J-全纯柱面</strong>（Floer 方程的解）。</p>
+<div class="formula display" data-tex="\partial x = \sum_{y} \#\mathcal{M}(x, y)\cdot y,\quad \mathcal{M}(x,y)=\{u:\mathbb{R}\times S^1\to M \mid \partial_s u+J_t(u)(\partial_t u-X_{H_t}(u))=0,\ u(+\infty)=x,\ u(-\infty)=y\}"></div>
+
+<h4>Lagrangian Floer 同调 HF(L₀, L₁)</h4>
+<p>对象：辛流形中两个拉格朗日子流形 L₀, L₁（满足 transversality 和单调性条件）。链复形由 L₀ ∩ L₁ 的交点生成；边缘算子计数连接两交点的 J-全纯条带（strip）。</p>
+<div class="formula display" data-tex="\partial x = \sum_{y\in L_0\cap L_1} \#\mathcal{M}(x, y)\cdot y,\quad u:\mathbb{R}\times[0,1]\to M,\ u(\mathbb{R},0)\subset L_0,\ u(\mathbb{R},1)\subset L_1,\ u(+\infty)=x,\ u(-\infty)=y"></div>
+
+<h4>Arnold 猜想与 Floer 的证明</h4>
+<p><strong>Arnold 猜想（1960年代）：</strong>非退化哈密顿微分同胚的不动点数 ≥ 闭辛流形 (M, ω) 的 Betti 数之和。</p>
+<div class="formula display" data-tex="\#\mathrm{Fix}(\varphi_H)\ge \sum_{i=0}^{2n} b_i(M)"></div>
+<p>Floer 证明：HF_*(M) ≅ H_*(M; Z₂)（Floer 同调与奇异同调同构）→ 复形的生成元个数 = 不动点数 ≥ 同调群的维数 = Betti 数之和。这就是 Arnold 猜想的证明——<strong>Floer 同调的存在意义</strong>。</p>
+<p>此后，Floer 同调系列（Heegaard Floer, Instanton Floer, Seiberg-Witten Floer, Symplectic Field Theory）成为低维拓扑和辛拓扑的核心工具。</p>
+</section>
+
+<section>
+<h3>十三、镜对称——Fukaya 范畴与凝聚层范畴的等价（含前沿）</h3>
+<p>镜对称起源于弦论（Greene-Plesser 1990）：Calabi-Yau 三流形对 (M, M^∨) 满足 h^{1,1}(M) = h^{2,1}(M^∨) 且其 Hodge 菱形互换。物理上，M 对应 Type IIA 弦论，M^∨ 对应 Type IIB 弦论——两者给出相同的物理。</p>
+
+<p><strong>Kontsevich 同调镜对称猜想 (1994 ICM 报告)：</strong>对 Calabi-Yau 流形 M 和镜对 M^∨，存在导出范畴的等价：</p>
+<div class="formula display" data-tex="D^b\mathrm{Fuk}(M,\omega) \cong D^b\mathrm{Coh}(M^\vee)"></div>
+<p><strong>A 模型（Fukaya 范畴 Fuk(M, ω)）：</strong>对象为 M 中满足某条件（如被分次 Lagrangians）的拉格朗日子流形；态射空间为 Lagrangian Floer 复形；乘法由 A_∞ 代数的 m₃ 运算给出（计数全纯三角形）。</p>
+<p><strong>B 模型（凝聚层范畴 Coh(M^∨)）：</strong>对象为复流形 M^∨ 上的凝聚层（Coherent sheaves）；态射为 Ext-群（层上同调）；乘法为层的乘法。</p>
+
+<p><strong>为什么"范畴等价"比"数值对称"强得多？</strong> 物理最初只是说两个理论的<strong>数</strong>（如 Gromov-Witten 不变量与 Hodge 数）相等；Kontsevich 断言两个<strong>范畴</strong>（连同全部态射、全部高次运算）三角等价——这是一整个结构的同构，远远超越了原始物理中的数值对称。</p>
+
+<p><strong>证明现状：</strong></p>
+<ul>
+  <li>四次曲面（quartic K3 曲面）的部分情形：Seidel (2000s) 构建了 Fukaya 范畴和镜的凝聚层范畴的对应。</li>
+  <li>环面簇（toric varieties）：A 模型 → SYZ 纤维化（Strominger-Yau-Zaslow 1996）→ 镜构造在组合几何层面已完整。</li>
+  <li>一般 Calabi-Yau 三流形：<strong>完整 HMS 证明仍开放</strong>——这是 21 世纪代数几何、辛几何和高能物理交汇的核心未解问题之一。</li>
+</ul>
+<p><strong>A_∞ 结构的意义：</strong>Fukaya 范畴携带 A_∞ 代数结构（高次乘法的组合）——其 mₖ 运算计数 k 边形的全纯多边形。Kontsevich-HMS 断言这个无穷范畴与镜上凝聚层范畴的导出范畴三角等价。</p>
+</section>
+
+<section>
+<h3>十四、标准反例——辛 vs 泊松</h3>
+<p><strong>反例 1（泊松但不辛——退化性）。</strong>泊松流形 (M, {·,·}) 要求 {·,·} 是 Lie 括号（反对称、双导子、满足 Jacobi），但<strong>不要求非退化</strong>。辛流形是"处处非退化"的泊松流形（其泊松括号由 ω 诱导：{f,g} = ±ω(X_f,X_g)，整体符号是约定，见第二节）。反例：ℝ³ 带 {f,g} = ∂f/∂x·∂g/∂y − ∂f/∂y·∂g/∂x 只依赖 x,y——第三维是 Casimir 方向，括号退化。泊松流形 = 辛叶状化（symplectic foliation）+ 横向结构；辛流形 = 只有一个叶子。</p>
+<p><strong>反例 2（体积嵌入 ≠ 辛嵌入）。</strong>Gromov 非压缩针对<strong>辛</strong>嵌入；若只要求保体积（保 ωⁿ 或任意体积形式），大球总能嵌入细圆柱（Whitney + 体积讨论）——<strong>辛刚性只对辛映射成立</strong>，这是"辛 vs 体积"最尖锐的对照。</p>
+<p><strong>反例 3（同一流形上的多种泊松结构）。</strong>辛流形 (M, ω) 上的泊松括号由 ω 唯一诱导；但<strong>存在与 ω 无关的泊松结构</strong>——零泊松结构 {f,g} ≡ 0 合法（退化但不矛盾）。关系图：辛 ⊂ 泊松 ⊂ 泊松代数流形；辛流形 ⊂ 几乎复流形 ⊄ Kähler（见 nilmanifold 反例）。</p>
+</section>
+
+<section>
+<h3>十五、关键论文</h3>
+<ul>
+  <li>Darboux, G. (1882). <em>Sur le problème de Pfaff.</em> Bull. Sci. Math., 6, 14–36, 49–68. （Darboux 定理的原始证明。）</li>
+  <li>Gromov, M. (1985). <em>Pseudo-holomorphic curves in symplectic manifolds.</em> Inventiones Mathematicae, 82, 307–347. （非压缩定理与拟全纯曲线理论的奠基性论文——辛拓扑作为独立学科的开端。）</li>
+  <li>Floer, A. (1988). <em>The unregularized gradient flow of the symplectic action.</em> Comm. Pure Appl. Math., 41(6), 775–813. —— (1989). <em>Morse theory for Lagrangian intersections.</em> J. Differential Geom., 28(3), 513–547. —— (1989). <em>Witten's complex and infinite dimensional Morse theory.</em> J. Differential Geom., 30(1), 207–221. （Floer 同调的三篇开创性论文——仅一年内发表。）</li>
+  <li>Kontsevich, M. (1994). <em>Homological Algebra of Mirror Symmetry.</em> Proceedings of the International Congress of Mathematicians (Zürich, 1994), Birkhäuser, 120–139. （同调镜对称猜想的首次公开提出。）</li>
+  <li>Fukaya, K. (1993). <em>Morse homotopy, A_∞-category, and Floer homologies.</em> Proceedings of GARC Workshop on Geometry and Topology '93 (Seoul), 1–102. （A_∞ 范畴结构的系统化——Fukaya 范畴的构造。）</li>
+  <li>Seidel, P. (2008). <em>Fukaya Categories and Picard-Lefschetz Theory.</em> Zürich Lectures in Advanced Mathematics, EMS. （Fukaya 范畴的系统性论述——用 Picard-Lefschetz 定理计算 Fukaya 范畴。）</li>
+  <li>Marsden, J. &amp; Weinstein, A. (1974). <em>Reduction of symplectic manifolds with symmetry.</em> Reports on Mathematical Physics, 5, 121–130. （辛约化定理的原始论文。）</li>
+</ul>
+</section>
+
+<section>
+<h3>十六、工作题</h3>
+<p><strong>题 1</strong>：设 G = S¹ 通过 ψ_t(z) = (e^{it}z₁, e^{−it}z₂) 作用在 (ℂ², ω₀ = (i/2)Σ dzⱼ∧dz̄ⱼ = Σ dxⱼ∧dyⱼ) 上。求矩映射 μ: ℂ² → ℝ，并确定 μ^{-1}(0) 与商 μ^{-1}(0)/S¹。（完整计算见例题 3。）</p>
+<p><strong>题 2</strong>：G = S¹ 通过 ψ_t(z) = e^{it}z 作用在 (ℂⁿ, ω₀) 上。求矩映射；对 n=1 做辛约化 μ^{-1}(0)/S¹，验证维数公式 dim(M//G) = dim M − 2 dim G。</p>
+<p><strong>题 3</strong>：证明在自由辛约化中，M//G = μ^{-1}(0)/G 携带唯一辛形式 ω_red 满足 π*ω_red = ι*ω（ι: μ^{-1}(0) → M 含入，π 商投影）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：ξ = 1 ∈ ℝ 的基本向量场 X_ξ(z) = dz/dt|₀ = (iz₁, −iz₂)。矩映射满足 ⟨dμ, v⟩ = ω(X_ξ, v)。取 μ(z) = −(|z₁|² − |z₂|²)/2 验证：dμ = −(z̄₁dz₁ + z₁dz̄₁)/2 + (z̄₂dz₂ + z₂dz̄₂)/2 = ι_{X_ξ}ω。故 μ(z) = −(|z₁|²−|z₂|²)/2。μ^{-1}(0) = {|z₁| = |z₂|}；商 e^{it}·(z₁,z₂) = (e^{it}z₁, e^{−it}z₂) 把轨道识别——商 μ^{-1}(0)/S¹ ≅ ℂ（光滑，复一维），与 GIT 商 ℂ²//ℂ*_{(1,−1)} = Spec ℂ[z₁z₂] ≅ 𝔸¹ 一致（Kempf-Ness）。∎</p>
+<p><strong>题 2</strong>：X_ξ(z) = iz，μ(z) = −|z|²/2。n=1：μ^{-1}(0) = {0}，商为单点，dim(M//G) = 0 = 2·1 − 2·1 ✓。几何含义：旋转对称性被约化后只剩不动点。∎</p>
+<p><strong>题 3</strong>：三步。① <strong>轨道方向退化</strong>：对 p ∈ μ^{-1}(0)，ι*ω 在 G 轨道方向为零（ι_{X_ξ}ω = d⟨μ,ξ⟩ = 0 于 μ=0 层）。② <strong>下降</strong>：定义 ω_red([v],[w]) = ω_p(v,w)，其中 v,w 为垂直于轨道的代表元；良定义由①保证。③ <strong>闭与非退化</strong>：闭性来自 ω 闭（拉回与商保持），非退化来自"垂直方向限制是辛形式"，维数 dim μ^{-1}(0) − dim G = dim M − 2 dim G。唯一性：π*ω_red = ι*ω 且 π 满射、核恰为轨道方向 ⟹ 唯一。∎</p>
+</details>
+</section>
+
+<section>
+<h3>十七、试试看（每题附提示）</h3>
+<p><strong>试试看 1（面积守恒的直接验证）。</strong> 对例题 1 的谐振子流 Φ_t，直接算其 Jacobi 行列式。<strong>提示：</strong>Φ_t 由矩阵 [[cos t, sin t],[−sin t, cos t]] 给出，det = cos²t + sin²t = 1——保面积，即保 ω。</p>
+<p><strong>试试看 2（正则坐标的泊松括号）。</strong> 在 (ℝ², ω=dp∧dq) 上验证 {q,p} = 1。<strong>提示：</strong>由 ω(X_q,·)=dq、ω(X_p,·)=dp 解出 X_q = ∂/∂p、X_p = −∂/∂q；于是 {q,p} = −ω(X_q, X_p) = −ω(∂/∂p, −∂/∂q) = −(−1) = 1。</p>
+<p><strong>试试看 3（S¹ 作用在 ℂⁿ 的矩映射）。</strong> 对 ψ_t(z) = e^{it}z 作用在 (ℂⁿ, ω₀) 上，验证 μ(z) = −|z|²/2。<strong>提示：</strong>X_ξ(z) = iz，逐项算 ι_{X_ξ}ω₀ = −x·dx − y·dy = −d(|z|²/2)。</p>
+<p><strong>试试看 4（辛形式非退化的矩阵判据）。</strong> 在 ℝ² 上把 ω=dp∧dq 写成矩阵（相对基 ∂/∂q, ∂/∂p），验证其可逆。<strong>提示：</strong>矩阵是 [[0,1],[−1,0]]（或 [[0,−1],[1,0]]，取决于约定），行列式为 1 ≠ 0。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>D. McDuff &amp; D. Salamon, Introduction to Symplectic Topology</strong></p>
+<p>&rarr; <strong>A. Cannas da Silva, Lectures on Symplectic Geometry</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/parallel-transport.html">平行移动</a>、<a href="/pages/variational-calculus.html">变分法</a>、<a href="/pages/geodesic.html">测地线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/convex-geometry.html">⬡ 凸几何</a>：同一学科分类「几何」。</p>
+<p>&rarr; <a href="/pages/soul-conjecture.html">👻 灵魂猜想</a>：几何核心链。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/symplectic-geometry.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

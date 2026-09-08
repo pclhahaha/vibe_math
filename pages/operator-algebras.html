@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="C*代数、von Neumann代数——量子力学的代数基础" />
+  <meta property="og:title" content="算子代数 — Vibe Math" />
+  <meta property="og:description" content="C*代数、von Neumann代数——量子力学的代数基础" />
+  <title>算子代数 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🔮 算子代数 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">C*代数、von Neumann代数——量子力学的代数基础</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='operator-algebras',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/functional-analysis.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📊 泛函分析</a>
+  <a href="/pages/homology.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⛓️ 同调代数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：自旋-1/2 的泡利矩阵——为什么"动作"不交换</h3>
+<p>研究一个具体的问题：一个电子（自旋-1/2）的"朝向"。要完整描述它的可观测状态，光说"朝上"或"朝下"不够——绕 x 轴的旋转、绕 y 轴的旋转可以复合，而复合的次序会改变结果。</p>
+<p>用泡利矩阵 σ_x、σ_y、σ_z（2×2 的复数矩阵）表示这些"动作"，直接算一次：</p>
+<div class="formula display" data-tex="\sigma_x\sigma_y=\begin{pmatrix}0&1\\1&0\end{pmatrix}\begin{pmatrix}0&-i\\i&0\end{pmatrix}=i\sigma_z,\qquad \sigma_y\sigma_x=-i\sigma_z,\qquad [\sigma_x,\sigma_y]=2i\sigma_z\neq 0"></div>
+<p>两个动作先 x 后 y ≠ 先 y 后 x。<strong>动作的代数不交换。</strong> 这正是量子力学的位置算符 X 与动量算符 P 满足 [X,P] = iħ 的雏形——可观测量的代数不是数的乘法，而是算子乘法。</p>
+<p>算子代数研究的正是这一类对象的完整理论：给"动作的集合"一个代数结构（加、乘、取共轭转置 *）、一个拓扑（逼近），然后问：这些代数长什么样？能分成几类？它们的"空间"是什么？</p>
+<div class="key-insight">一句话：把注意力从"对象"转向"动作"，动作的代数就是算子代数——它把"空间有多大"换成"能对它做哪些操作"。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/functional-analysis.html">泛函分析</a>、<a href="/pages/measure-theory.html">测度论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、热身：从"函数"到"矩阵"——交换性的丧失与 C* 恒等式</h3>
+<p>普通空间 X 上的连续函数构成交换代数 C(X)：f·g = g·f 永远成立，乘法就是逐点相乘。矩阵 M_n(ℂ) 则完全不同：</p>
+<div class="formula display" data-tex="\begin{pmatrix}0&1\\0&0\end{pmatrix}\begin{pmatrix}0&0\\1&0\end{pmatrix}=\begin{pmatrix}1&0\\0&0\end{pmatrix}\quad\neq\quad \begin{pmatrix}0&0\\0&1\end{pmatrix}=\begin{pmatrix}0&0\\1&0\end{pmatrix}\begin{pmatrix}0&1\\0&0\end{pmatrix}"></div>
+<p>乘法不可交换。但矩阵和函数共享三个结构：① <strong>对合</strong>（共轭转置，记为 a ↦ a*，满足 (ab)* = b*a*）；② <strong>范数</strong>（算子范数 ‖a‖ = sup‖x‖≤1‖ax‖）；③ 关键的一条——<strong>C* 恒等式</strong>：</p>
+<div class="formula display" data-tex="\|a^*a\|=\|a\|^2"></div>
+<p><strong>为什么这条等式如此重要？</strong> 它把"谱"与"范数"焊在一起：对自伴元 a = a*，谱半径 r(a) = ‖a‖。有了它，交换情形的谱理论（Gelfand 变换）才能做，非交换情形才能定义谱三元组式的几何。函数代数 C(X) 与矩阵代数 M_n 都满足它，但前者交换、后者不交换——<strong>C*-代数 = 满足 C* 恒等式的泛函结构，其中"交换"与"非交换"只是两种极端</strong>。</p>
+</section>
+
+<section>
+<h3>二、C*-代数与 Gelfand–Naimark 定理——"交换 C* 代数 = 空间"</h3>
+<p><strong>定义。</strong> C*-代数 A 是带对合 * 和范数 ‖·‖ 的 Banach 代数，满足 C* 恒等式 ‖a*a‖ = ‖a‖²。若 xy = yx 对一切 x,y 成立，称 A 交换。</p>
+<p><strong>Gelfand–Naimark 定理（1943）。</strong> 交换 C*-代数 A 同构于 C₀(Ω_A)：某个局部紧 Hausdorff 空间 Ω_A 上<strong>在无穷远处消失的连续函数</strong>的代数。这里</p>
+<div class="formula display" data-tex="\Omega_A=\{\chi:A\to\mathbb C\ \text{非零}*\text{-同态}\}\qquad\text{(A 的谱空间 / 极大理想空间)}"></div>
+<p>元素 a 的 Gelfand 变换是函数 â : Ω_A → ℂ，â(χ) = χ(a)。函子 A ↦ Ω_A 给出<strong>交换 C*-代数范畴 ≅ 局部紧 Hausdorff 空间范畴^op 的对偶等价</strong>——"空间"就是"函数的代数"，这是"非交换拓扑"的出发点。</p>
+<p><strong>为什么用极大理想空间？</strong> 对 A = C₀(X)，每个点 x ∈ X 给一个求值同态 ev_x(f) = f(x)，反之每个同态都来自某个点（Riesz 表示 + 谱理论）。所以"点" ⟷ "同态"，空间被函数代数完全重建。而一般 C*-代数（非交换）没有点可言，但我们仍称它是"非交换局部紧空间上的连续函数代数"。</p>
+<div class="key-insight">非交换拓扑词典：C*-代数 ⟷ "非交换空间"；闭理想 ⟷ 开子集；商代数 ⟷ 闭子空间；正合列 ⟷ 分解；C*-动力系统 (A, G, α) ⟷ 群作用的非交换空间；交叉积 A ⋊_α G ⟷ 商空间。</div>
+</section>
+
+<section>
+<h3>三、完整例题 1：C*(a) ≅ C({1,2})——Gelfand 变换的完整计算</h3>
+<p>取自伴矩阵 a = diag(1, 2) ∈ M₂(ℂ)，算它生成的 C*-代数，并显式跑一遍 Gelfand 变换。</p>
+<p><strong>第 1 步：确定 C*(a) 里的元素。</strong> C*(a) = {p(a) : p 多项式} 的闭包。因为 a 对角，p(a) = diag(p(1), p(2))，故 C*(a) ⊆ {diag(λ, μ) : λ, μ ∈ ℂ} ≅ ℂ²。</p>
+<p><strong>第 2 步：反向包含。</strong> 对任意 (λ, μ) ∈ ℂ²，取多项式 p 满足 p(1) = λ、p(2) = μ（拉格朗日插值：p(t) = λ·(t−2)/(1−2) + μ·(t−1)/(2−1)）。则 p(a) = diag(λ, μ)。故</p>
+<div class="formula display" data-tex="C^*(a)=\{\mathrm{diag}(\lambda,\mu)\}\cong\mathbb C^2\cong C(\{1,2\})"></div>
+<p><strong>第 3 步：找谱空间 Ω。</strong> ℂ² 的同态只有两个：ev₁(λ,μ) = λ 与 ev₂(λ,μ) = μ（也即"看第一个/第二个坐标"）。所以 Ω_{C*(a)} = {ev₁, ev₂} ≅ {1, 2}——两个点的空间。</p>
+<p><strong>第 4 步：Gelfand 变换。</strong> 对 â = (λ, μ)：â(ev₁) = λ、â(ev₂) = μ，即"取 a 的特征值"。于是谱 σ(a) = {1, 2} 精确等于 Gelfand 空间，â 就是特征值函数。</p>
+<p><strong>第 5 步：读出"为什么"。</strong> 一个自伴算子生成的 C*-代数 = "它谱上的连续函数"。Gelfand 变换在此退化为"取特征值"——但对一般（非有限维）交换 C* 代数，它把"抽象元"变成"具体函数"，让谱理论、函数演算全部有几何意义。∎</p>
+</section>
+
+<section>
+<h3>四、GNS 构造——把"期望值"变成内积</h3>
+<p><strong>动机。</strong> 量子力学里一个"态"给每个可观测量 a 一个期望值 ω(a)，要求 ω 是<strong>态</strong>：正线性泛函（a ≥ 0 ⟹ ω(a) ≥ 0），且 ω(1) = 1。问题：这个抽象的 ω 能"具体化"成某个 Hilbert 空间上的向量期望吗？</p>
+<p><strong>GNS 构造（Gelfand–Naimark–Segal）。</strong> 设 ω 为 C*-代数 A 上的态。用 ω 定义半内积 ⟨a, b⟩_ω = ω(b*a)，对零空间取商后完备化得 Hilbert 空间 H_ω；A 通过左乘表示在 H_ω 上：π_ω(a)(b) = ab；循环向量 ξ_ω = 1。则</p>
+<div class="formula display" data-tex="\omega(a)=\langle\xi_\omega,\ \pi_\omega(a)\,\xi_\omega\rangle"></div>
+<p>任何态都"长"成一个具体的表示——这是表示论的核心引擎。<strong>为什么它重要？</strong> 表示的存在使抽象的代数性质变成 Hilbert 空间上可计算的算子性质（谱、迹、范数），也让"态"获得物理意义（向量 = 量子态）。</p>
+<p><strong>配套技术。</strong> A 的<strong>万有表示</strong> π_U = 所有 GNS 表示的直接和，其弱闭包 A** ≅ π_U(A)'' 是 A 的<strong>包络 von Neumann 代数</strong>（Banach 双对偶结构）；态空间的凸分析靠 Kaplansky 密度定理与 Kadison 传递性定理支撑。</p>
+<p><strong>具体例子。</strong> A = M₂(ℂ)，态 ω(a) = ⟨e₁, a e₁⟩ = a₁₁（取第一个基向量的期望）。则 H_ω = ℂ²，ξ_ω = e₁，π_ω = 恒等表示，ω(a) = ⟨e₁, ae₁⟩ ✓。若换成混合态 ω(a) = (1/2)Tr(a)（均匀混合），则 H_ω = M₂ 带内积 ⟨x,y⟩ = (1/2)Tr(y*x)，ξ_ω = 1，表示仍为左乘——只是内积换了。可见 GNS 把"态"翻译成"内积的几何"，而表示保持不变。</p>
+</section>
+
+<section>
+<h3>五、von Neumann 代数——弱闭与双交换子定理</h3>
+<p><strong>定义。</strong> 设 H 为 Hilbert 空间。B(H) 的 <strong>弱算子拓扑</strong>闭（等价地，σ-弱闭）的 *-子代数 M 称为 von Neumann 代数。</p>
+<p><strong>为什么选"弱"而不是"强"或"范数"？</strong> 物理上：重复测量取平均，可观测量在"弱收敛"下逼近——弱闭对应"极限过程封闭"。范数闭（= C*-代数）太粗糙：C₀(ℝ) 是 C* 代数但毫无"平均极限"可言；弱闭则保证代数里装满了极限元，从而有丰富的投影和谱分解。</p>
+<p><strong>Von Neumann 双交换子定理（1929）。</strong> 对含单位元的 *-子代数 M ⊆ B(H)：</p>
+<div class="formula display" data-tex="M\text{ 弱闭} \iff M=M''\qquad M'=\{T\in B(H):\forall x\in M,\ Tx=xT\}</div>
+<p>其中 M' 是 M 的<strong>换位子</strong>。这是 von Neumann 代数理论的核心刻画：<strong>纯代数条件 M = M'' 等价于拓扑条件（弱闭）</strong>——"对称性/对易结构"完全决定了"闭性"，无需提及任何收敛。</p>
+<p><strong>例子。</strong> M = {diag(λ₁, λ₂) : λᵢ ∈ ℂ} ⊆ B(ℂ²)。与对角矩阵交换的是对角矩阵，故 M' = M，于是 M'' = M —— M 是 von Neumann 代数（也确实弱闭）。而若取 M = 有限个非对角元…… C* 代数 {p(a)}（例题 1 的 ℂ²）在 B(ℂ²) 中已经弱闭（有限维），其 M'' = ℂ² 不变。真正显示"弱闭 ≠ 范数闭"的差别要无穷维，见反例一节。</p>
+</section>
+
+<section>
+<h3>六、因子分类——Murray–von Neumann 的维度函数</h3>
+<p><strong>因子。</strong> 中心平凡的 von Neumann 代数称为<strong>因子</strong>（factor）：M ∩ M' = ℂ·1。<strong>为什么因子是基本对象？</strong> 一般 von Neumann 代数 = 因子的"积分"（中央分解），就像测度空间分解成不可约点——因子是不可约的"原子"。</p>
+<p>Murray 与 von Neumann（1936–1943，"Rings of Operators" 系列）用投影等价类引入维度函数 d: Proj(M) → [0,∞]，完成因子分类：</p>
+<ul>
+  <li><strong>Type I：</strong> 极小投影存在。I_n = M_n(ℂ)，I_∞ = B(H)。维度取离散值 {0,1,…,n} 或 {0,1,…,∞}。</li>
+  <li><strong>Type II₁：</strong> 无极小投影，有有限正规迹态 tr: M → ℂ，tr(1) = 1。维度取连续区间 [0,1]——"连续维数"概念由此而来。迹 tr 唯一且忠实正规。</li>
+  <li><strong>Type II_∞：</strong> 无极小投影，有半有限正规迹（可取 ∞），维度 ∈ [0,∞]。M ≅ N ⊗ B(H)，N ∈ II₁。</li>
+  <li><strong>Type III：</strong> 无极小投影且无半有限正规迹。维度只有 0 和 ∞。量子场论的局部代数最自然地属于 Type III（Araki, 1964）——因为 QFT 的真空是循环分离的，产生非平凡的模理论（见第八节）。</li>
+</ul>
+<p><strong>超有限 II₁ 因子 R。</strong></p>
+<div class="formula display" data-tex="R=\bigotimes_{n=1}^\infty \big(M_2(\mathbb C),\ \mathrm{tr}\big)^{\ \text{von Neumann 完备化}}"></div>
+<p><strong>Connes 定理（1976；1982 年获 Fields 奖）：</strong> R 是<strong>唯一的</strong>可顺从（amenable）II₁ 因子——任何可顺从 II₁ 因子均同构于 R。R 也超有限（hyperfinite）：可由有限维子代数的递增并逼近。这是 Connes 分类纲领的核心成果，Type II₁ 这一支被彻底搞清。</p>
+</section>
+
+<section>
+<h3>七、完整例题 2：超有限 II₁ 因子 R 的连续维数——造一个迹为 1/3 的投影</h3>
+<p>II₁ 因子最反直觉之处是"维数可以连续变化"。在 R 里亲手造一个迹为 1/3 的投影。</p>
+<p><strong>第 1 步：R 的迹。</strong> 记 trₙ 为 M₂(ℂ) 的归一化迹 trₙ(x) = (1/2)Tr(x)。则 R 有唯一忠实正规迹 τ = ⊗ trₙ，且 τ(1) = 1。</p>
+<p><strong>第 2 步：迹为 1/2 的投影。</strong> 令 P = e₁₁ ⊗ 1 ⊗ 1 ⊗ …，其中 e₁₁ = diag(1,0) ∈ M₂。则 P² = P、P = P*，且</p>
+<div class="formula display" data-tex="\tau(P)=\mathrm{tr}(e_{11})=\tfrac12\cdot(1+0)=\tfrac12"></div>
+<p><strong>第 3 步：关键——R 的"积木"不唯一。</strong> 张量积 ⊗ₙ (M₃(ℂ), tr₃)（tr₃ 为归一化迹）也是超有限 II₁ 因子，由 Connes 唯一性定理它同构于 R。所以可以在"R ≅ ⊗ₙ M₃"的坐标里取</p>
+<div class="formula display" data-tex="Q=E_{11}\otimes 1\otimes 1\otimes\cdots,\qquad E_{11}=\mathrm{diag}(1,0,0)\in M_3(\mathbb C)"></div>
+<p><strong>第 4 步：计算迹。</strong></p>
+<div class="formula display" data-tex="\tau(Q)=\mathrm{tr}_3(E_{11})=\tfrac13(1+0+0)=\tfrac13"></div>
+<p>得到一个迹为 1/3 的真投影 Q（不是平凡投影、也不等价于任何"整数维"投影）。</p>
+<p><strong>第 5 步：推广到任意维数。</strong> 对任意有理数 p/q ∈ [0,1]，取 ⊗ₙ M_q 的坐标，令投影为 diag(1,…,1,0,…,0)（p 个 1）⊗ 1 ⊗ …，其迹 = p/q。对无理数 t，取有理数序列 pₙ/qₙ → t，对应投影 Qₙ 的迹 → t；因 R 弱闭，子序列弱极限给出迹为 t 的投影（可补充对有限迹态的保序论证）。于是</p>
+<div class="formula display" data-tex="\{\tau(P):P\in\mathrm{Proj}(R)\}=[0,1]"></div>
+<p><strong>为什么这就是"连续维数"？</strong> Murray–von Neumann 等价 e ~ f（存在部分等距 u 使 e = u*u、f = uu*）下，维度函数 d(e) = τ(e) 是不变量且遍历 [0,1]——维度不再只能取整数。这就是 II₁ 与 Type I（整数维数）的本质区别。∎</p>
+</section>
+
+<section>
+<h3>八、Tomita–Takesaki 模理论——von Neumann 代数的"时间演化"</h3>
+<p><strong>设定。</strong> 设 M 为 von Neumann 代数，Ω ∈ H 对 M 循环且分离（MΩ 稠密、M'Ω 稠密）。定义反线性算子 S₀: MΩ → MΩ，S₀(xΩ) = x*Ω。<strong>为什么需要分离性？</strong> 保证 x*Ω 的定义良定、S₀ 可闭化——"循环且分离"正是模理论能开始的精确条件。</p>
+<p>S₀ 的闭包 S 作极分解：</p>
+<div class="formula display" data-tex="S=J\Delta^{1/2}"></div>
+<p>其中 Δ = S*S 为<strong>模算子</strong>（正、自伴、无界），J 为<strong>模共轭</strong>（反线性等距，J² = 1）。</p>
+<p><strong>Tomita 定理（1967）。</strong> JMJ = M'——模共轭把代数映到换位子。Takesaki（1970）：</p>
+<div class="formula display" data-tex="\sigma_t^\omega(x)=\Delta^{it}x\Delta^{-it}\qquad(t\in\mathbb R)"></div>
+<p>是 M 上的一族 <strong>模自同构</strong>，且不依赖代表向量 Ω 的选择（只依赖态 ω）。</p>
+<p><strong>有限维具体例（"热态"的时间演化）。</strong> 取 M = M₂，态 ω(a) = Tr(ρa)，ρ = diag(r₁, r₂)，r₁, r₂ &gt; 0，r₁ + r₂ = 1（rᵢ = e^{−βEᵢ}/Z 即 Gibbs 态）。GNS 空间 H_ω = M₂ 带内积 ⟨x,y⟩ = Tr(ρy*x)，Ω = 1。计算模自同构在矩阵单位上的作用：</p>
+<div class="formula display" data-tex="\sigma_t(e_{jk})=\rho^{it}e_{jk}\rho^{-it}=(r_j/r_k)^{it}\,e_{jk}=e^{it\log(r_j/r_k)}\,e_{jk}"></div>
+<p>所以 σ_t 把每个矩阵单位旋转一个相位——这正是量子力学里"以 H = −log ρ 为哈密顿量的时间演化 e^{itH}·e^{−itH}"。且 ω 满足 <strong>KMS 条件</strong>（ω(ab) = ω(σ_{−i}b·a) 的解析版本），物理上意味着：<strong>模自同构群 = 使态成为热平衡态的唯一时间演化</strong>。这个"从代数里长出时间"的现象在 QFT（Tomita 定理的局部代数版本）与统计力学中是根本性的。σ_t 由酉元内实现（内模自同构），故对有限维因子 Connes 的 S(M) 退化——它只在 Type III 才成为真正的分类不变量。</p>
+<p><strong>Connes 分类——Type III 的精细结构。</strong> 模自同构群的谱给出 Connes 的 S(M) 不变量：</p>
+<div class="formula display" data-tex="S(M)=\bigcap_\omega \operatorname{sp}(\Delta_\omega)\ \subseteq\ \mathbb R_+"></div>
+<ul>
+  <li><strong>Type III₀：</strong> S(M) = {0, 1}。</li>
+  <li><strong>Type III_λ (0 &lt; λ &lt; 1)：</strong> S(M) = {0} ∪ {λⁿ : n ∈ ℤ}，周期 T = −2π/log λ。</li>
+  <li><strong>Type III₁：</strong> S(M) = [0,∞)，模自同构群遍历。</li>
+</ul>
+<p><strong>核心结构定理（Connes, Ann. Sci. ENS, 1973）。</strong> Type III_λ 因子 ≅ Type II_∞ 因子通过模作用 θ 取交叉积：M ≅ N ⋊_θ ℤ，N ∈ II_∞。一切 III 型因子"由 II 型因子 + 一个 ℤ-作用组装而成"。</p>
+<p><strong>Haagerup 的 L^p 空间（1979）。</strong> 对任意 von Neumann 代数构造非交换 L^p 空间，使对偶 L¹(M)* ≅ M 成立——非交换测度论与模理论的自然融合，是 III 型因子上做分析的基础设施。</p>
+</section>
+
+<section>
+<h3>九、子因子理论与 Jones 指标</h3>
+<p><strong>基本构造。</strong> N ⊂ M 为 II₁ 因子的包含（子因子）。Jones（1983）的基本构造：在 L²(M)（迹内积）上让 N 通过右乘作用，取投影 e₁: L²(M) → L²(N)，则 {M, e₁} 生成的 von Neumann 代数 M₁ = ⟨M, e₁⟩ 是比 M 大的 II₁ 因子。迭代得到 <strong>Jones 塔</strong>：</p>
+<div class="formula display" data-tex="N\subset M\subset M_1\subset M_2\subset\cdots,\qquad e_{i+1}:L^2(M_i)\to L^2(M_{i-1})"></div>
+<p><strong>Jones 指标定理（1983；Fields 奖 1990）。</strong> 设 [M:N] = dim_N(L²(M)) 为 Jones 指标，则</p>
+<div class="formula display" data-tex="[M:N]\in\{4\cos^2(\pi/n):n=3,4,5,\ldots\}\cup[4,\infty]"></div>
+<p><strong>离散谱！</strong> 指标值被限制在一列特殊数 {1, 2, 3, 3+√5 相关…, 4cos²(π/7), …} 或 ≥ 4 的连续段。这个"非此即彼"的刚性是所有后续纽结理论、平面代数、拓扑量子计算之源头。</p>
+<p><strong>为什么会出现离散谱？（证明思路。）</strong> Jones 投影满足关系</p>
+<div class="formula display" data-tex="e_i e_{i\pm1} e_i=\tau e_i\quad(\tau=[M:N]^{-1}),\qquad e_ie_j=e_je_i\ (|i-j|\ge 2)"></div>
+<p>这些关系定义 <strong>Temperley–Lieb 代数</strong> TL_n(τ)。代数 {1, e₁, …, e_n} 的包含链上存在 Markov 迹，其存在性迫使 τ⁻¹ ∈ {4cos²(π/n)} ∪ [4,∞)。这一离散谱来自 Perron–Frobenius 理论：相关转移矩阵的最大特征值恰为 2cos(π/n)，而可分解性要求它与某矩阵谱匹配（Dynkin 图 A_n 的指标）。</p>
+<p><strong>平面代数（Planar Algebras）。</strong> Jones（1999）用平面缠结（tangle）编码子因子的标准不变量——指标受限的根本原因在平面代数框架下成为"阴影"（shadows）的模性质；推广为 Popa 的重整量子化 / 融合范畴框架。</p>
+<p><strong>纽结多项式。</strong> 给定 II₁ 因子 M 与辫子群表示 ρ: B_n → M（来自量子群 / 子因子理论），则</p>
+<div class="formula display" data-tex="V_L(t)=(-t^{1/2}-t^{-1/2})\cdot\operatorname{Tr}(\rho(b)),\qquad b\in B_n\quad(\text{Jones 多项式})"></div>
+<p>是纽结不变量——Jones 在构造子因子理论时"意外"发现了纽结多项式，这成为 von Neumann 代数与纽结理论共享的核心对象。</p>
+<p><strong>Popa 的形变/刚性理论（2000–）。</strong> 发展 II₁ 因子的超刚性与可计算分类：形变–刚性方法（与 Margulis/Mostow 刚性的类比）用于分类群 von Neumann 代数 L(G) 的 von Neumann 子代数。成果包括 Bernoulli 作用的超刚性、不可约子因子结构的 k-范畴化。</p>
+</section>
+
+<section>
+<h3>十、完整例题 3：Jones 基本构造的有限维玩具 + 指数 3 的交叉积</h3>
+<p>用两个能完整算完的实例，把第八节的指标机制落到实处。</p>
+<p><strong>第 1 步：有限维玩具 N = ℂ·1 ⊂ M = M₂(ℂ)。</strong> 取 L²(M) = M₂，内积 ⟨a, b⟩ = tr(b*a)（tr 归一化迹）。N 在 L²(M) 上右乘。Jones 投影 e₁ 是到 L²(N) = ℂ·1 的正交投影：</p>
+<div class="formula display" data-tex="e_1(x)=\langle x,1\rangle\cdot 1=\mathrm{tr}(x)\cdot 1\qquad\forall x\in M_2(\mathbb C)"></div>
+<p><strong>第 2 步：算 [M:N] 与基本构造。</strong> 作为 N-模，L²(M) 是右 N-模，dim_N(L²(M)) = dim_ℂ(M₂)/dim_ℂ(ℂ) = 4。故 [M:N] = 4——恰是离散谱的端点（4 以后进入连续段）。基本构造 ⟨M, e₁⟩ = span{ a e₁ b : a, b ∈ M } ⊆ B(L²(M)) ≅ M₄，且</p>
+<div class="formula display" data-tex="e_1 a e_1=\mathrm{tr}(a)\,e_1\qquad\forall a\in M\quad(\text{基本构造的基本关系})"></div>
+<p>验证：e₁ a e₁(x) = e₁(ax) = tr(ax)·1，是 ℂ·e₁ 中元素。这正是温度-李布关系 e₁ae₁ = tr(a)e₁ 的雏形。</p>
+<p><strong>第 3 步：指数 3 的真实例子。</strong> 取 R 的<strong>外自同构</strong> α（order 3），令 M = R，N = R^α = {x : α(x) = x}（不动点子因子）。则由交叉积 R = N ⋊_α ℤ/3（因为 R 唯一的可顺从 II₁ 因子，且 outer 作用的交叉积还是可顺从 II₁ 因子），故</p>
+<div class="formula display" data-tex="[M:N]=|\mathbb Z/3|=3=4\cos^2(\pi/6),\qquad \tau=[M:N]^{-1}=\tfrac13"></div>
+<p><strong>第 4 步：核对离散谱。</strong> 3 对应 n = 6：4cos²(π/6) = 4·(3/4) = 3 ✓。指数 2 = 4cos²(π/4) 对应 ℤ/2 外作用。而像"指数 4+ε"这种值在离散谱之外，只能落在 [4, ∞)——这正是 Jones 指标定理的强制结构。∎</p>
+</section>
+
+<section>
+<h3>十一、证明——von Neumann 双交换子定理（1929）</h3>
+<p><strong>定理。</strong> 设 M ⊆ B(H) 含单位元的 *-子代数。则 M 弱闭 ⟺ M = M''。</p>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：M'' 必弱闭。</strong> 对任意 S ⊆ B(H)，换位子 S' = {T : TS = ST ∀S} 是弱闭的（SOT 下 T ↦ TS − ST 连续，且每个条件定义弱闭集）。故 M'' 弱闭。</p>
+<p><strong>第二步：M ⊆ M'' 平凡。</strong> M 的元素与 M 的每个元素交换，故 M ⊆ M''（M' 的元素与 M 交换，而 M ⊆ M'' 的定义是 M'' = (M')'，即与 M' 交换的元素）。</p>
+<p><strong>第三步：M'' ⊆ 弱闭包。</strong> 设 T ∈ M''，固定向量 x₁,…,xₙ ∈ H 与 ε &gt; 0。令 K = [M x₁ ⊕ ⋯ ⊕ M xₙ] ⊂ H^n（对角 M 作用下的闭子空间），P 为到 K 的投影。因 K 被 M 不变，P 与 M 交换（对 m ∈ M，mP ⊂ P 且 P ⊂ …），即 P ∈ M'。故 T 与 P 交换，T(K) ⊆ K。特别地 (Tx₁, …, Txₙ) ∈ K。故存在 m ∈ M 使</p>
+<div class="formula display" data-tex="\|Tx_i-mx_i\|<\varepsilon\qquad(i=1,\ldots,n)"></div>
+<p>（用 K 中稠密子集 Mx₁⊕⋯⊕Mxₙ 逼近。）这正是"T 属于 M 的弱闭包"的定义。故 M'' ⊆ M̄^{wot}。</p>
+<p><strong>第四步：合拢。</strong> 由第一步、第二步、第三步：M 弱闭 ⟹ M = M''（M 弱闭则 M̄^{wot} = M，且 M'' ⊆ M ⊆ M''，夹逼得等）；反过来 M = M'' 则 M 弱闭。∎</p>
+<p>证明的妙处：<strong>全部是投影与对易的纯代数论证</strong>，未用任何"收敛"的拓扑技巧，却彻底刻画了弱闭性。这就是"代数条件 = 拓扑条件"的经典范本。</p>
+</section>
+
+<section>
+<h3>十二、反例——边界在哪里？</h3>
+<p><strong>反例 1：范数闭 ≠ 弱闭——C₀(ℝ)。</strong> C₀(ℝ) 是交换 C* 代数，但任何忠实现示下它都不是弱闭的（弱极限会造出有界可测函数，如指示函数 χ_{[0,1]}，不在 C₀(ℝ) 里）。所以 C*-代数与 von Neumann 代数确实是两个不同的层次：前者"连续"，后者"可测/含极限"。</p>
+<p><strong>反例 2：非超有限 II₁ 因子——L(F₂)。</strong> 自由群 F₂ 的群 von Neumann 代数 L(F₂) 是 II₁ 因子，但<strong>不超有限</strong>（Murray–von Neumann 早已证明）。它是 Connes 分类纲领无法"归入 R"的最小例子——也是"自由群因子问题"的主角。</p>
+<p><strong>反例 3：Type III 无迹——不可能是 II 型。</strong> 若 Type III 因子有半有限正规迹，则它其实是 II 型；Type III 的定义就是"无迹"。QFT 的局部代数是 III₁（模算子谱 = [0,∞)），若强行断言它是 II 型会得到荒谬的"零温度极限可迹"结论。</p>
+<p><strong>反例 4：Connes 嵌入猜想为假（2020）意味着什么。</strong> 若每个 II₁ 因子都能嵌入 R^ω（R 的超积），则一系列猜想成立；JNVWY 证明 MIP* = RE 与 Tsirelson 问题矛盾，故<strong>存在 II₁ 因子不在 R^ω 中</strong>——但显式构造仍未知（见第十四节）。</p>
+</section>
+
+<section>
+<h3>十三、前沿：Connes 嵌入猜想的否证（2020）——MIP* = RE</h3>
+<p><strong>Connes（1976）猜想：</strong> 每个 II₁ 因子都可以嵌入到超有限 II₁ 因子 R 的超积 R^ω 中。这个猜想表面纯算子代数，实际等价于许多看似无关的陈述：</p>
+<ul>
+  <li><strong>量子信息（Tsirelson 问题）：</strong> 量子纠缠相关函数的两种定义（张量积 vs 交换算子）是否一致；</li>
+  <li><strong>群论：</strong> 某些群迹的逼近性质；</li>
+  <li><strong>C*-代数（Kirchberg 猜想）：</strong> 某些 C* 代数的张量积半单性。</li>
+</ul>
+<p><strong>否证（Ji–Natarajan–Vidick–Wright–Yuen, 2020, arXiv:2001.04383）：</strong></p>
+<div class="formula display" data-tex="\text{MIP}^*=\text{RE}\qquad(\text{量子交互证明可以验证停机问题})"></div>
+<p>而 MIP* = RE 与 Connes 嵌入猜想的等价形式 Tsirelson 问题<strong>矛盾</strong>。因此 Connes 嵌入猜想为<strong>假</strong>。这是量子信息与算子代数交叉的最重要结果——一举否证了 40 多年的中心猜想，并迫使许多依赖它的结果（R^ω 超积理论、Popa 部分超刚性）重新审查。</p>
+</section>
+
+<section>
+<h3>十四、Key Papers 与开放问题</h3>
+<p><strong>奠基文献：</strong></p>
+<ul>
+  <li>Murray, F.J. &amp; von Neumann, J. (1936). "On rings of operators." <em>Annals of Mathematics</em> 37(1): 116-229.（因子分类的起源）</li>
+  <li>Murray, F.J. &amp; von Neumann, J. (1937). "On rings of operators, II." <em>Trans. AMS</em> 41: 208-248.</li>
+  <li>Murray, F.J. &amp; von Neumann, J. (1943). "On rings of operators, IV." <em>Annals of Mathematics</em> 44: 716-808.（无限张量积与超有限因子 R 的关键构造）</li>
+  <li>Gelfand, I. &amp; Naimark, M. (1943). "On the embedding of normed rings into the ring of operators in Hilbert space." <em>Mat. Sbornik</em> 12(54): 197-217.</li>
+  <li>Tomita, M. (1967). Standard forms of von Neumann algebras.（第五届泛函分析会议讲稿；正式发表延迟至 Takesaki 的整理）</li>
+  <li>Takesaki, M. (1970). <em>Tomita's Theory of Modular Hilbert Algebras and its Applications.</em> Lecture Notes in Math. 128, Springer.</li>
+  <li>Connes, A. (1976). "Classification of injective factors: Cases II_1, II_∞, III_λ, λ ≠ 1." <em>Annals of Mathematics</em> 104(1): 73-115.（可顺从因子的完整分类，Fields 奖）</li>
+  <li>Jones, V.F.R. (1983). "Index for subfactors." <em>Inventiones Mathematicae</em> 72: 1-25.（指标定理，Fields 奖 1990）</li>
+  <li>Haagerup, U. (1987). "Connes' bicentralizer problem and uniqueness of the injective factor of type III_1." <em>Acta Mathematica</em> 158: 95-148.</li>
+  <li>Popa, S. (1994). "Classification of subfactors and their endomorphisms." <em>CBMS</em> 86, AMS.（Popa 的核心成果）</li>
+</ul>
+<p><strong>重大开放问题：</strong></p>
+<ul>
+  <li><strong>自由群因子问题（F₂ × F₂ 猜想）。</strong> L(F_n) ≅ L(F_m) 是否对所有 n, m ≥ 2 都成立？已知 L(F_n) 都是 II₁ 因子且 McDuﬀ 性质相同，但同构性仍是悬案。若 L(F₂) ≇ L(F₃)，将建立第一个有根本区别的 II₁ 因子的分类不变量。Ozawa–Popa 和 Peterson 的工作给出了可能的区分路径。</li>
+  <li><strong>Connes 嵌入猜想（已否证，2020）。</strong> 等价问题：每个 II₁ 因子是否可嵌入 R^ω？Ji–Natarajan–Vidick–Wright–Yuen（2020, arXiv:2001.04383）证明 MIP* = RE，从而 Connes 嵌入猜想的等价形式 Tsirelson 问题为假 → Connes 嵌入猜想为<strong>假</strong>。这意味着存在 II₁ 因子不在 R^ω 中——但显式构造仍未知。许多依赖 Connes 嵌入猜想的结果需要重新审查。</li>
+  <li><strong>Pontryagin 对偶的非交换推广。</strong> Kac 代数 → 量子群 → 局部紧量子群的完整 von Neumann 代数理论（Woronowicz, Kustermans–Vaes）是否可推广到所有因子？</li>
+  <li><strong>子因子分类的完整 (2+ε)-维 TQFT 实现。</strong> Jones 的平面代数 / 融合范畴框架与 (2+1)-TQFT 的完整对应？</li>
+</ul>
+</section>
+
+<section>
+<h3>十五、关联预览——算子代数通向哪里？</h3>
+<p>算子代数不是孤岛，它与本课程体系里两门姊妹课直接相连：</p>
+<p><strong>代数K理论——向量丛的分类。</strong> K₀(R) = 射影模的 Grothendieck 群；K₀(ℤ) = ℤ；K₀(𝒪_K) = ℤ ⊕ Cl(K)（理想类群）。拓扑版本：Bott 周期性 K(X×S²) ≅ K(X)；Atiyah–Singer 指标定理：解析指标 = 拓扑指标。C*-代数的 K 理论（K₀(A)、K₁(A)）正是本课"非交换空间"的拓扑不变量。</p>
+<p><strong>非交换几何——Connes 的革命。</strong> 谱三元组 (A, H, D) = 代数 + Hilbert 空间 + Dirac 算子 = "非交换 Riemann 流形"；标准模型 = 谱三元组 → Higgs 从几何自动涌现；Connes 距离公式</p>
+<div class="formula display" data-tex="d(x,y)=\sup\{\,|f(x)-f(y)|:\|[D,f]\|\le 1\,\}"></div>
+<p>把"点之间的距离"从函数的代数性质（换位子范数）重新定义——正是本节谱三元组公理（有界换位子、维数谱）的物理用途。详见《非交换几何》与《代数K理论》两门课。</p>
+</section>
+
+<section>
+<h3>十六、关键公式</h3>
+<div class="formula display" data-tex="\|a^*a\|=\|a\|^2\qquad\text{(C* 恒等式)}"></div>
+<div class="formula display" data-tex="A_{\text{comm}}\cong C_0(\Omega_A)\qquad\text{(Gelfand–Naimark)}"></div>
+<div class="formula display" data-tex="\omega(a)=\langle\xi_\omega,\pi_\omega(a)\xi_\omega\rangle\qquad\text{(GNS)}"></div>
+<div class="formula display" data-tex="M=M''\qquad\text{(双交换子定理, von Neumann 1929)}"></div>
+<div class="formula display" data-tex="S=J\Delta^{1/2},\quad \sigma_t^\omega(x)=\Delta^{it}x\Delta^{-it},\quad JMJ=M',\quad S(M)=\bigcap_\omega\operatorname{sp}(\Delta_\omega)"></div>
+<div class="formula display" data-tex="[M:N]\in\{4\cos^2(\pi/n):n=3,4,\ldots\}\cup[4,\infty]\qquad\text{(Jones 指标)}"></div>
+</section>
+
+<section>
+<h3>十七、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 验证泡利矩阵满足 C* 恒等式 ‖σ_x*σ_x‖ = ‖σ_x‖²。</p>
+<p><em>提示：σ_x = σ_x*，σ_x² = I，故 σ_x*σ_x = I，‖σ_x‖ = 1（σ_x 是酉算子的实化，特征值 ±1），两边都是 1。</em></p>
+<p><strong>2.</strong> 证明交换 C*-代数 C*(diag(1,2,3)) ⊆ M₃(ℂ) 同构于 ℂ³，并指出谱空间。</p>
+<p><em>提示：像例题 1 一样用拉格朗日插值：p(a) = diag(p(1),p(2),p(3)) 覆盖全部 ℂ³；同态三个，谱空间是三点空间 {1,2,3}。</em></p>
+<p><strong>3.</strong> 在 R = ⊗ M₂ 里，构造投影使 τ(P) = 1/4，并解释为什么它与"1/2 的投影"在 Murray–von Neumann 意义下不等价。</p>
+<p><em>提示：取 M₄ 坐标 diag(1,0,0,0) ⊗ 1 ⊗ …，或把两个 M₂ 块凑成 M₄；迹 = 1/4。若等价则迹相同，故迹不等的投影必不等价。</em></p>
+<p><strong>4.</strong> 对 M = M₂ 与 Gibbs 态 ρ = diag(r₁, r₂)，验证模自同构 σ_t(e₁₂) = (r₁/r₂)^{it} e₁₂ 确为 *-自同构（σ_t(xy) = σ_t(x)σ_t(y)、σ_t(x*) = σ_t(x)*）。</p>
+<p><em>提示：直接展开 ρ^{it}xyρ^{-it} = ρ^{it}xρ^{-it}·ρ^{it}yρ^{-it}；对共轭用 ρ^{it} 正酉与 ρ^{-it} = ρ^{it*} 及 e₁₂* = e₂₁ 代入。</em></p>
+<p><strong>5.</strong> 说明为什么指数为 3 的子因子 [M:N] = 3 满足 Jones 离散谱而"指数 4.1"的严格介于 3 与 4 之间的值不存在。</p>
+<p><em>提示：3 = 4cos²(π/6) 在离散谱中；指标定理断言 (4,∞) 之外的区间全部不可达，故介于 3 与 4 之间的值（如 3.5）不存在。</em></p>
+<p><strong>6.</strong> 为什么 C₀(ℝ) 是 C* 代数但不是 von Neumann 代数？给出一个明确的"弱极限逃出代数"的元。</p>
+<p><em>提示：指示函数 χ_{[0,1]} 是 C₀(ℝ) 中函数的逐点弱极限（用连续逼近），但 χ_{[0,1]} ∉ C₀(ℝ)（不连续）。弱闭性被破坏。</em></p>
+</section>
+
+<section>
+<h3>十八、附：工作题——迹、因子类型与 Jones 指标</h3>
+<p><strong>工作题 1（因子类型判断）。</strong> 判断下列代数的类型：(a) M₂(ℂ)；(b) B(H)（H 无穷维）；(c) R = ⊗ M₂；(d) L(F₂)。</p>
+<details><summary>显示解答</summary><p>
+(a) I₂：有极小投影（一秩投影），维度取 {0,1,2}。<br>
+(b) I_∞：极小投影存在，维度取 {0,1,2,…,∞}。<br>
+(c) II₁：无极小投影（任何非零投影在迹意义下可继续"切分"），有归一化迹 τ = ⊗ tr。<br>
+(d) II₁：有迹（群迹 τ(a) = ⟨δ_e, aδ_e⟩），无极小投影。</p></details>
+<p><strong>工作题 2（双交换子定理验证）。</strong> 对 M = {diag(λ,μ,λ,μ)} ⊆ B(ℂ⁴)，求 M' 与 M''，验证 M = M''。</p>
+<details><summary>显示解答</summary><p>
+M 的对角形式 diag(λ,μ,λ,μ) 视作 (ℂ²)^{⊕2} 上的标量作用。与 M 交换的算子是逐块对角的 2×2 分块：M' ≅ {diag(A,B):A,B ∈ M₂(ℂ)}（要求与 diag(λI, μI) 交换，即 A、B 任意）。再取换位子：与所有 diag(A,B) 交换的算子只能是 diag(λI, μI) = M。故 M'' = M ✓。</p></details>
+<p><strong>工作题 3（模理论有限维计算）。</strong> 取 M = M₂、ρ = diag(1/3, 2/3)，求 S₀、J、Δ 作用在 GNS 空间上的具体矩阵形式。</p>
+<details><summary>显示解答</summary><p>
+GNS 空间 H_ω = M₂，内积 ⟨x,y⟩ = Tr(ρy*x)，Ω = 1。S₀(xΩ) = x*Ω，即 S₀(x) = x*（在 M₂ 自身上）。标准形式给出 Δ(x) = ρ x ρ^{-1}（对 x ∈ M₂，右乘表示下），J(x) = ρ^{1/2} x* ρ^{-1/2}。检验 J² = 1：J²(x) = ρ^{1/2} (ρ^{1/2} x* ρ^{-1/2})* ρ^{-1/2} = ρ^{1/2} ρ^{-1/2} x ρ^{1/2} ρ^{-1/2} = x ✓。模自同构 σ_t(x) = ρ^{it} x ρ^{-it}，对 e₁₂ 得 σ_t(e₁₂) = (1/2)^{it} e₁₂（因 r₁/r₂ = 1/2）。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Takesaki, Theory of Operator Algebras I (Springer)</strong></p>
+<p>&rarr; <strong>R. V. Kadison &amp; J. R. Ringrose, Fundamentals of the Theory of Operator Algebras I (AMS)</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/functional-analysis.html">泛函分析</a>、<a href="/pages/measure-theory.html">测度论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：同一学科分类「分析」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/operator-algebras.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

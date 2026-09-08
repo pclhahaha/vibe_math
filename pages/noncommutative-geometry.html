@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Connes的谱三元组——当空间不再有"点"" />
+  <meta property="og:title" content="非交换几何 — Vibe Math" />
+  <meta property="og:description" content="Connes的谱三元组——当空间不再有"点"" />
+  <title>非交换几何 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌌 非交换几何 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Connes的谱三元组——当空间不再有"点"</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='noncommutative-geometry',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/algebraic-K-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔧 代数K理论</a>
+  <a href="/pages/proof-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📝 证明论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：无理旋转的轨道空间——一个"没有点"的空间</h3>
+<p>想象在单位圆上旋转一个小球：旋转 R_θ 把 t 送到 t + θ（模 1）。取 θ 为无理数，比如 √2 的十进制部分。那么球的轨迹（轨道）在圆上<strong>处处稠密</strong>——它永远不会回到起点，却会蹭过圆上任意一点的任意近处。</p>
+<p>现在问一个几何问题：<strong>"轨道空间"</strong> T/R_θ（把每条轨道捏成一个点）长什么样？答案是：<strong>它不配称为空间</strong>——任何非空开集都覆盖几乎所有轨道（稠密性），商空间的拓扑坏到每个"点"都在其它任何"点"的邻域里，连 Hausdorff 公理都彻底崩溃。商空间 T/R_θ 的"点"无法被测量、无法被区分。</p>
+<p>但物理世界就是这样：量子力学中，位置和动量不能同时精确测量，[X,P] = iħ ≠ 0——"精确的空间点"在量子尺度同样失去意义。非交换几何给这类问题一个答案：<strong>不去问"空间里有什么点"，而是问"空间上的函数怎么互相作用"</strong>。对 T/R_θ，有交换代数 C(T/R_θ)（几乎不存在）和非交换代数</p>
+<div class="formula display" data-tex="A_\theta=C(\mathbb T)\rtimes_\theta\mathbb Z\qquad(\theta\ \text{无理})"></div>
+<p>后者定义完美、理论丰富，就是"非交换空间"的正式替身。本课全部内容从这一个例子出发。</p>
+<div class="key-insight">一句话：空间碎到没有"点"时，非交换几何改用"函数怎么相处"来认识它——这是通往量子世界的几何。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/functional-analysis.html">泛函分析</a>、<a href="/pages/operator-algebras.html">算子代数</a>、<a href="/pages/category-theory-adjoint.html">伴随函子</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、热身：Gelfand 对偶——空间 ⟷ 交换代数</h3>
+<p>非交换几何的出发点是一条对偶（Gelfand–Naimark）：</p>
+<div class="formula display" data-tex="C(X)\cong C_0(\Omega)\qquad\text{(Gelfand–Naimark)}"></div>
+<p>普通空间 X 上的连续函数构成交换 C* 代数 C(X)，而<strong>任何交换 C* 代数都等于某个空间上的连续函数代数</strong>。所以"空间"与"交换代数"是两个等价的视角——<strong>几何 = 函数代数的交换情形</strong>。</p>
+<p><strong>为什么"非交换"能走得更远？</strong> 一旦去掉交换性，我们立刻失去"点"（点 = 极大理想 = 同态，而非交换代数没有同态可言）。但代数结构（乘法、对合、范数、算子）全部保留。Connes 的核心纲领：把经典流形的几何结构（度量、测度、微分、曲率、同调）全部用<strong>算子代数 + 无界算子</strong>的语言重写，让它们在非交换情形下依然有意义。<strong>非交换 C* 代数 = "非交换空间"</strong>，谱三元组 = "非交换 Riemann 流形"。</p>
+<p><strong>关键公式（预告）。</strong> 经典 Riemann 流形的全部信息可以从一个 Dirac 算子 D 的谱读出；对非交换空间，"几何"由三元组 (A, H, D) 承载——这就是下一节的对象。</p>
+</section>
+
+<section>
+<h3>二、商空间为什么病态——"非交换商"的处方</h3>
+<p>回到〇节的轨道空间。商空间 T/R_θ 的病态根源：<strong>轨道不"分离"</strong>（每条轨道稠密），经典的商（把轨道捏成点）把"接近"与"相同"搅成一团。</p>
+<p><strong>处方：交叉积。</strong> 不捏点，而保留作用的全部信息。对作用 R_θ: ℤ ↷ C(T)（t ↦ t + θ 诱导的 *-自同构 α），构造交叉积</p>
+<div class="formula display" data-tex="A_\theta=C(\mathbb T)\rtimes_{\alpha}\mathbb Z\qquad(\text{非交换商 / 轨道代数的替身})"></div>
+<p>它由 C(T) 和移位酉元 u 生成，关系 u f u* = f ∘ R_θ。这个代数<strong>完全良定义、且包含了"轨道"的所有代数信息</strong>（群的每段作用都编码在 u 里），却不需要"轨道空间"真的存在。</p>
+<p><strong>为什么这是"商"？</strong> 直观：经典商 C(T/G) ⊂ C(T)^G（不变函数）。若 G 自由且作用好，C(T/G) ≅ C(T)^G 且 C(T) ⋊ G ≅ C(T/G) ⊗ K(ℓ²(G))——K 理论层面商代数和交叉积"差一个稳定化"。所以交叉积是"商空间的非交换版本"，且在病态情形依然存在。θ 无理的 A_θ 是单代数（无反例可言），它是"真正非交换的空间"的教科书实例。</p>
+</section>
+
+<section>
+<h3>三、完整例题 1：A_θ 的生成元、表示与唯一迹</h3>
+<p>把非交换环面 A_θ 从头构造到底，并计算它的唯一迹——这是后面一切计算（K 理论、谱三元组、量子 Hall）的原料。</p>
+<p><strong>第 1 步：泛定义。</strong> A_θ 是生成元 U、V 的泛 C*-代数，满足</p>
+<div class="formula display" data-tex="VU=e^{2\pi i\theta}UV,\qquad UU^*=U^*U=1,\qquad VV^*=V^*V=1"></div>
+<p>等价地 A_θ = C(T²) ⋊_θ ℤ（T² 上函数代数与"角度 θ 旋转"作用的交叉积）。θ = 0 时 U、V 交换，A₀ ≅ C(T²) 恢复经典环面。</p>
+<p><strong>第 2 步：具体表示。</strong> 在 H = ℓ²(ℤ) 上定义：</p>
+<div class="formula display" data-tex="(U\xi)_n=\xi_{n-1},\qquad (V\xi)_n=e^{2\pi i n\theta}\xi_n"></div>
+<p>（U 是移位，V 是乘相位。）验证交换关系：</p>
+<div class="formula display" data-tex="(VU\xi)_n=e^{2\pi i n\theta}\xi_{n-1},\qquad (UV\xi)_n=e^{2\pi i(n-1)\theta}\xi_{n-1}\;\Longrightarrow\; VU=e^{2\pi i\theta}UV\ \checkmark"></div>
+<p>（计算差一个相位 e^{2πiθ}，正符合定义。θ 无理时该表示忠实——Rieffel 的逼近论证。）</p>
+<p><strong>第 3 步：计算唯一迹 τ。</strong> 断言 τ(U^m V^n) = δ_{m,0}δ_{n,0}，且 A_θ 有唯一的归一化迹（θ 无理）。用"共轭不变性"验证：迹满足 τ(ab) = τ(ba)，故 τ(U^m V^n) = τ(V · U^m V^n · V⁻¹)。而</p>
+<div class="formula display" data-tex="V(U^mV^n)V^{-1}=(VUV^{-1})^m V^n=e^{2\pi im\theta}U^mV^n\;\Longrightarrow\;\tau(U^mV^n)=e^{2\pi im\theta}\tau(U^mV^n)"></div>
+<p>若 m ≠ 0，e^{2πimθ} ≠ 1（θ 无理），迫使 τ = 0。若 m = 0 而 n ≠ 0，用 U 共轭：</p>
+<div class="formula display" data-tex="\tau(V^n)=\tau(U\,V^n U^{-1})=e^{-2\pi i n\theta}\tau(V^n)\;\Longrightarrow\;\tau(V^n)=0"></div>
+<p>剩下 τ(1) = 1。故 τ 由 τ(U^m V^n) = δ_{m,0}δ_{n,0} 唯一决定。∎</p>
+<p><strong>第 4 步：解释为什么这很重要。</strong> 唯一迹 τ 是 A_θ 上的"积分"（∫ f = τ(f)），它给出 GNS 表示、谱三元组的度量、以及量子 Hall 电导的填充因子。没有它，非交换几何无从计算。∎</p>
+</section>
+
+<section>
+<h3>四、谱三元组的公理化定义</h3>
+<p><strong>定义（Connes 谱三元组）。</strong> 一个<strong>谱三元组</strong>是三元组 (A, H, D)，其中：</p>
+<ul style="list-style-type: none; padding-left: 1em;">
+<li><strong>A：</strong> 一个对合 *-代数（非交换"光滑函数"代数），在 Hilbert 空间 H 上有忠实的 *-表示 π: A → B(H)。</li>
+<li><strong>H：</strong> 一个可分的 Hilbert 空间，承载 A 的表示和 Dirac 算子的作用。</li>
+<li><strong>D：</strong> H 上的无界自伴算子（"Dirac 算子"），具有紧致预解式，即使得 (1 + D²)^{-1/2} 为紧致算子。</li>
+</ul>
+<p><strong>公理。</strong></p>
+<ul>
+  <li>(i) <strong>有界交换子</strong>：对所有 a ∈ A，[D, π(a)] 是 H 上的有界算子（保证"光滑性"——函数与微分算子交换后的余项不爆炸）。</li>
+  <li>(ii) <strong>阶次求和性</strong>：D 的特征值第 n 个的增长速率决定"几何维度"。具体地，μ_n(D) ~ C n^{1/p}，其中 p 为度规维数。</li>
+  <li>(iii) <strong>维数谱</strong>：ζ-函数 ζ_D(z) = Tr(|D|^{-z}) 在 z = 0 处亚纯延拓，其极点结构编码了空间的几何维数和 Weyl 渐近行为。</li>
+  <li>(iv) <strong>定向和实结构</strong>：存在 H 上的 ℤ/2 分次 γ（手性算子）和反线性等距 J（电荷共轭），满足 J² = ε, JD = ε'DJ, Jγ = ε''γJ。这八个可能的符号组合（KO-维数）决定了几何的实的/复的/四元数型。</li>
+</ul>
+<p><strong>为什么需要这些公理？</strong> 前两条保证"D 的谱像真流形上的 Dirac 算子"（Weyl 渐近给出维数），第三条让"体积/积分"可定义（Dixmier 迹），第四条让"自旋结构、电荷共轭、手性"这些物理结构在纯代数层面存在——它们共同保证谱三元组<strong>真的编码了一个几何</strong>，而不只是"一个算子"。</p>
+<p><strong>经典极限——自旋流形。</strong> 对紧致 Riemann 自旋流形 (M, g) 带自旋结构 S → M：取 A = C^∞(M)（光滑函数的 *-代数），H = L²(M, S)（平方可积的自旋子截面），D = ∂̸_g（自旋 Dirac 算子），则 (C^∞(M), L²(M, S), ∂̸_g) 是谱三元组，其所有几何信息（度量、联络、曲率）均可恢复：</p>
+<div class="formula display" data-tex="d(x,y)=\sup\{\,|f(x)-f(y)|: f\in C^\infty(M),\ \|[D,f]\|\le 1\,\}\quad\text{(Connes 距离公式)}"></div>
+<div class="formula display" data-tex="\int_M f\,d\mathrm{vol}=c(n)\cdot\mathrm{Tr}_\omega(f\,|D|^{-n})\quad\text{(Dixmier 迹恢复体积)}"></div>
+<div class="key-insight">谱三元组是"非交换 Riemann 流形"的严格数学概念。经典流形 → 函数代数 → 谱三元组的推广路径与量子力学中"经典可观测量 → 算子代数"的路径完全平行。Connes 的核心洞察：<em>几何的谱性质（Laplacian 和 Dirac 算子的谱）编码了几何的全部信息</em>，而算子代数不预设一个底层的"点集"，因此可以自然地推广到非交换情形。</div>
+</section>
+
+<section>
+<h3>五、完整例题 2：圆上的 Connes 距离公式——证明它 = 弧长</h3>
+<p>用最简单的流形 S¹ 把距离公式完全算通，确认它确实给出普通几何距离。</p>
+<p><strong>第 1 步：搭建谱三元组。</strong> 取 M = S¹ = {e^{it}}，H = L²(S¹)，D = −i d/dt，A = C^∞(S¹)。对 f ∈ C^∞(S¹)，D f 与乘法算子 [D, f]：</p>
+<div class="formula display" data-tex="[D,f]=-i\,\frac{d}{dt}(f\,\cdot)+f\cdot i\frac{d}{dt}=-i f'\cdot\ (\text{乘以 } -i f')\quad\Longrightarrow\quad \|[D,f]\|=\|f'\|_\infty=\operatorname{Lip}(f)"></div>
+<p>所以"‖[D,f]‖ ≤ 1"精确等于"f 是 1-Lipschitz 函数"。</p>
+<p><strong>第 2 步：上界。</strong> 对任意 Lip(f) ≤ 1 的 f：|f(x) − f(y)| ≤ Lip(f)·d_geo(x,y) ≤ d_geo(x,y)。（1-Lipschitz ⟹ 增长不超过测地距离。）</p>
+<p><strong>第 3 步：下界（构造达到者）。</strong> 固定 y，取 f₀(t) = d_geo(t, y)（到 y 的测地距离函数）。则 Lip(f₀) = 1，且</p>
+<div class="formula display" data-tex="|f_0(x)-f_0(y)|=|d_{\mathrm{geo}}(x,y)-0|=d_{\mathrm{geo}}(x,y)"></div>
+<p>（f₀ 是 1-Lipschitz 且"恰好把 x 与 y 分开"到最大距离。）</p>
+<p><strong>第 4 步：合拢。</strong> sup ≤ d_geo 且 sup ≥ d_geo，故</p>
+<div class="formula display" data-tex="d_{\mathrm{Connes}}(x,y)=\sup_{\|[D,f]\|\le 1}|f(x)-f(y)|=d_{\mathrm{geo}}(x,y)\qquad\forall x,y\in S^1"></div>
+<p>Connes 距离公式在圆上精确重现弧长。∎</p>
+<p><strong>为什么这个公式"非交换可用"？</strong> 右端只用到换位子 [D, f] 的范数与点上的求值——但在非交换情形没有点！解药：把求值 |f(x) − f(y)| 换成"态的距"：若 ω、ω' 是 A 的纯态，定义 d(ω, ω') = sup{|ω(a) − ω'(a)| : ‖[D,a]‖ ≤ 1}。于是距离公式对整个非交换谱三元组依然有效——"点的距离"升级为"态的距离"，这正是推广的机制。</p>
+</section>
+
+<section>
+<h3>六、完整例题 3：Pimsner–Voiculescu 六项正合列——算 A_θ 的 K 理论</h3>
+<p>非交换空间的拓扑信息藏在 K 理论里。用交叉积的基本工具 Pimsner–Voiculescu 正合列（1980）完整算出 A_θ 的 K 群。</p>
+<p><strong>第 1 步：写出正合列。</strong> 对交叉积 A ⋊_α ℤ，有六项正合列：</p>
+<div class="formula display" data-tex="\begin{array}{ccccccc}K_0(A)&\xrightarrow{1-\alpha_*}&K_0(A)&\xrightarrow{i_*}&K_0(A\rtimes_\alpha\mathbb Z)&\\ &&&&&\downarrow\ \delta\\K_1(A\rtimes_\alpha\mathbb Z)&\xleftarrow{i_*}&K_1(A)&\xleftarrow{1-\alpha_*}&K_1(A)&\end{array}"></div>
+<p><strong>第 2 步：代入 A = C(T)。</strong> 已知</p>
+<div class="formula display" data-tex="K_0(C(\mathbb T))=\mathbb Z\ (\text{由 }[1]),\qquad K_1(C(\mathbb T))=\mathbb Z\ (\text{由 }[z\mapsto z])"></div>
+<p>旋转作用 α_θ 同伦于恒等（把圆"转 θ"连续变回不动），故在 K 理论层面 α_* = id，从而 1 − α_* = 0。</p>
+<p><strong>第 3 步：正合列退化。</strong> 六项列变成两串短正合列：</p>
+<div class="formula display" data-tex="0\;\to\;K_0(C(\mathbb T))\;\xrightarrow{i_*}\;K_0(A_\theta)\;\xrightarrow{\delta}\;K_1(C(\mathbb T))\;\to\;0"></div>
+<div class="formula display" data-tex="0\;\to\;K_1(C(\mathbb T))\;\xrightarrow{i_*}\;K_1(A_\theta)\;\xrightarrow{\delta}\;K_0(C(\mathbb T))\;\to\;0"></div>
+<p>（两个 1 − α_* = 0 使上排与下排各自断开。）</p>
+<p><strong>第 4 步：解出 K 群。</strong> 每个短正合列都是 0 → ℤ → G → ℤ → 0。ℤ 是自由 Abel 群，正合列分裂（选 δ 的右逆即得 G ≅ ℤ ⊕ ℤ），故</p>
+<div class="formula display" data-tex="K_0(A_\theta)\cong\mathbb Z^2,\qquad K_1(A_\theta)\cong\mathbb Z^2"></div>
+<p><strong>第 5 步：读出"为什么"。</strong> A_θ 的 K 理论<strong>不依赖 θ</strong>——与经典环面 T² 完全相同（K₀ = K₁ = ℤ²）。这正是"非交换同伦不变量"的含义：<strong>非交换几何保留拓扑结构、改变度量结构</strong>。Pimsner–Voiculescu 序列因此成为计算一切交叉积 K 理论的基本工具。∎</p>
+</section>
+
+<section>
+<h3>七、非交换环面 A_θ——非交换几何的"氢原子"</h3>
+<p>上面例题已建好 A_θ 的全部核心数据，这里系统整理它的结构。</p>
+<p><strong>θ 有理 vs 无理。</strong> 若 θ = p/q（既约分数），则 A_θ 同构于平凡 Azumaya 代数 M_q(C(T²)) 的结构代数——经典环面的 q 重有限覆盖。若 θ 为无理数，A_θ 是<strong>单</strong> C*-代数（无非平凡双边闭理想），代表<strong>真正非交换的空间</strong>；它有唯一归一化迹 τ(U^m V^n) = δ_{m,0}δ_{n,0}（例题 1 已算）。</p>
+<p><strong>K 理论。</strong> K₀(A_θ) ≅ ℤ²、K₁(A_θ) ≅ ℤ²（例题 3 已证，Pimsner–Voiculescu 1980）。</p>
+<p><strong>谱三元组与度量。</strong> 在 A_θ 上构造自然谱三元组：取 GNS 表示 π_τ（由迹 τ 构造），Dirac 算子形如经典 Dirac 算子但导数替换为导子 δ₁(U) = 2πiU、δ₂(U) = 0、δ₁(V) = 0、δ₂(V) = 2πiV。该谱三元组的度规维数为 2。由此 A_θ 有良定义的非交换几何——包括非交换 Ricci 曲率（Connes–Tretkoff, 2010+），以及 Connes–Moscovici（2014）证明的非交换环面上的 Gauss–Bonnet 定理推广。</p>
+<p><strong>量子 Hall 效应。</strong> K 理论群 K₀(A_θ) ≅ ℤ² 中的整数对 (n, m) 对应于量子 Hall 系统的填充因子与反填充因子；非交换参数 θ = eB/ħ（磁场 B 的度量）。TKNN（Thouless–Kohmoto–Nightingale–de Nijs, 1982）证明 Hall 电导 σ_xy = n e²/h 是 K₀ 中的 Chern 数——这是 K 理论在凝聚态物理中的首次应用，并启发了拓扑绝缘体的分类。</p>
+</section>
+
+<section>
+<h3>八、证明——θ 无理时迹的唯一性</h3>
+<p>把例题 1 第 3 步提炼为完整定理并补足细节。</p>
+<p><strong>定理。</strong> 设 θ 无理，A_θ 为对应的非交换环面。则 A_θ 有唯一归一化迹 τ，且 τ(U^m V^n) = δ_{m,0}δ_{n,0}。</p>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：迹被"共轭不变"约束。</strong> 迹 τ 满足 τ(ab) = τ(ba)，故对任意 (m,n) ∈ ℤ²：</p>
+<div class="formula display" data-tex="\tau(U^mV^n)=\tau\big(V\,U^mV^n\,V^{-1}\big)=\tau\big(e^{2\pi im\theta}U^mV^n\big)=e^{2\pi im\theta}\tau(U^mV^n)"></div>
+<p><strong>第二步：m ≠ 0 时为零。</strong> θ 无理 ⟹ e^{2πimθ} ≠ 1，故 (1 − e^{2πimθ})τ(U^m V^n) = 0 给出 τ = 0。</p>
+<p><strong>第三步：m = 0、n ≠ 0 时为零。</strong> 用 U 共轭：</p>
+<div class="formula display" data-tex="\tau(V^n)=\tau\big(U\,V^n\,U^{-1}\big)=\tau\big(e^{-2\pi in\theta}V^n\big)=e^{-2\pi in\theta}\tau(V^n)\;\Longrightarrow\;\tau(V^n)=0"></div>
+<p><strong>第四步：归一化。</strong> 由 τ(1) = 1（归一化迹），综合得 τ(U^m V^n) = δ_{m,0}δ_{n,0}，且这样的 τ 由群元上的取值唯一决定，故唯一。∎</p>
+<p><strong>附加说明（忠实性）。</strong> 由 U^m V^n 生成的子代数在 |m|+|n| 很大时对 τ 的 Hilbert 空间有分离性（Powers 的论证 / Rieffel 的逼近），故 τ 是忠实的。迹的唯一性 + 忠实性是 A_θ 作为"非交换测度空间"的根基：它的积分理论没有歧义。</p>
+</section>
+
+<section>
+<h3>九、反例——θ 有理时单性失败，商空间无点</h3>
+<p><strong>反例 1：θ = p/q 有理时 A_{p/q} 不单。</strong> A_{p/q} ≅ M_q(C(T²))（Azumaya 代数）。其中心 ≅ C(T²) 非平凡，例如对任意 x₀ ∈ T²，"在 x₀ 处消失的函数"生成 C(T²) 的非平凡闭理想，再乘到 M_q 上得到非平凡闭双边理想。所以有理环面 <strong>不是</strong>真正非交换的——它只是经典环面的"矩阵束"。单性（θ 无理）与非单性（θ 有理）的二分是 A_θ 最鲜明的性格。</p>
+<p><strong>反例 2：商空间 T/R_θ 不存在（作为 Hausdorff 空间）。</strong> θ 无理时每条轨道稠密。任何"商拓扑"下，非空开集的像与任何别的非空开集的像相交（稠密性），两个不同的"商点"无法用开集分离——T/R_θ 非 Hausdorff 到极点。这正说明：<strong>不能把"无点的空间"强塞进经典点集拓扑的框架</strong>，必须换代数语言（交叉积 A_θ）。</p>
+<p><strong>反例 3：非自旋流形没有"经典"谱三元组。</strong> 自旋流形才天然有 Dirac 算子。CP² 紧致 Kähler 但不自旋，若坚持用经典自旋 Dirac 算子则 CP² 被排除在谱三元组之外——公理依赖自旋结构（手性 γ、实结构 J 来自自旋表示），这是谱三元组目前覆盖范围的边界（见开放问题 2）。</p>
+</section>
+
+<section>
+<h3>十、前沿一：从谱三元组推导标准模型</h3>
+<p><strong>Connes–Chamseddine 方法（1996–2007）。</strong> 取底空间为闭自旋 4-流形 M 与"有限几何" F 的乘积：M × F。F 的谱三元组 (A_F, H_F, D_F) 由以下数据给定：A_F = C ⊕ H ⊕ M₃(ℂ)（对应 U(1)_Y × SU(2)_L × SU(3)_C 的规范群），H_F = ℂ⁹⁶（三代费米子的内部自由度，含右手中微子），D_F 为有限维 Hermitian 矩阵，编码了汤川耦合质量和 CKM 矩阵。<strong>关键点：无需手动添加 Higgs 场、汤川耦合或对称性破缺——它们自动从乘积几何的 Dirac 算子中涌现。</strong></p>
+<p><strong>Higgs 场的几何解释。</strong> 乘积几何 M × F 上的 Dirac 算子 D = ∂̸_M ⊗ 1 + γ₅ ⊗ D_F 包含内部波动（internal fluctuations）D_ω = D + A + JAJ⁻¹，其中 A = Σ aᵢ[D, bᵢ] 是"广义联络"。A 在 F 方向的分量恰好给出一个 SU(2) 二重态标量场——这就是 <strong>Higgs 场</strong>。Higgs 场不是任意添加的——它本质上是<strong>有限几何 F 的方向上的联络分量</strong>。</p>
+<p><strong>谱作用量（Spectral Action Principle）。</strong> 物理作用量仅依赖于 Dirac 算子的谱：</p>
+<div class="formula display" data-tex="S=\operatorname{Tr}\Big(f\Big(\frac{D_\omega}{\Lambda}\Big)\Big)\quad\longrightarrow\quad S_{\mathrm{EH}}+S_{\mathrm{YM}}+S_{\mathrm{Higgs}}+S_{\mathrm{Yukawa}}+\cdots"></div>
+<p>其中 f 是适当截断的正偶函数（f(0) &gt; 0, lim_{x→∞} f(x) = 0），Λ 是能量截断标度。Chamseddine–Connes（1996+，最终形式 2007）证明：该单式子的热核展开自动产生 (1) Einstein–Hilbert 作用量 + 宇宙常数，(2) Yang–Mills 作用量（对所有规范群），(3) Higgs 动能项，(4) Higgs 四次势 V(φ) = λ|φ|⁴ − μ²|φ|²（所有耦合常数在统一能标 Λ 由本征值谱决定），(5) 汤川耦合项，(6) 右手中微子的 Majorana 质量项。<strong>不需输入任何自由参数——所有耦合在统一能标被预测。</strong></p>
+<p><strong>实验检验与局限。</strong> 该模型预测 Higgs 质量约 170 GeV（2007 年计算）——与 LHC 的 125 GeV 有偏离，但可通过更精细的 Dirac 算子参数调整。最关键的开放问题：该方法预言了额外的规范玻色子和费米子，需要在大统一能标 Λ 验证。此外，引力作为 Riemann 几何（交换几何）与规范相互作用作为非交换几何在此统一描述——这是目前将四种基本力统一到一个数学框架中最完整的尝试。</p>
+</section>
+
+<section>
+<h3>十一、前沿二：Connes 嵌入猜想的否证（2020）——MIP* = RE</h3>
+<p>量子交互证明可以验证停机问题（MIP* = RE）——而这是 Connes 嵌入猜想的否定。这是量子信息和算子代数交叉的最重要结果——2020 年 JNVWY（Natarajan–Vidick–Wright–Yuen 等）的证明震撼了两个领域。细节见《算子代数》课：该猜想说每个 II₁ 因子可嵌入超有限因子 R 的超积 R^ω，其等价形式 Tsirelson 问题（纠缠相关函数的两种定义是否一致）被 MIP* = RE 推翻。对非交换几何的含义：大量依赖 R^ω 与"近似可嵌入"结构的构造需要重新审视。</p>
+</section>
+
+<section>
+<h3>十二、开放问题</h3>
+<p>
+<strong>1. 量子谱三元组——非交换几何的量子化。</strong> 谱三元组是"经典"非交换几何（类比于经典微分几何和经典场论）的框架。是否存在一个<strong>量子谱三元组</strong>的概念——即非交换几何的量子化——使得当 ħ → 0 时恢复经典谱三元组，且自然地兼容量子场论的重整化？初步尝试包括 (i) 用量子群替换 C*-代数，(ii) 引入算子代数的路径积分（Connes–Kreimer, 2001），(iii) 在 II₁ 型因子代数上建立与自由概率（Voiculescu）相关的随机矩阵模型。尚无公认定义。<br>
+<strong>2. 非自旋流形的非交换几何。</strong> 当前谱三元组的公理严重依赖于自旋结构（手性算子 γ、实结构 J 等基于自旋表示的 Clifford 代数）。但许多重要的流形（如 CP²，更一般的非自旋复 Kähler 流形）不自旋。是否可以为非自旋流形定义谱三元组？Spinc 谱三元组是部分答案，但非交换几何对一般流形的覆盖范围仍很窄。<br>
+<strong>3. 超标准模型物理的谱作用量。</strong> 如果谱三元组真能推导标准模型，那么它是否也能预测更高能标的物理？（超对称性？额外维度？暗物质候选者？）一个自然途径是寻找"下一个"有限几何 F' 使得 A_{F'} 包含更大的规范群和表示空间。Connes 提出过超越标准模型的谱几何方案，但目前在数学上尚无系统的分类程序。另一个方向是：谱作用量重正化群的流是否可能自动地在高能标打破统一性，从而解释当前加速器未见非标准模型粒子的现象？
+</p>
+</section>
+
+<section>
+<h3>十三、重要论文与文献</h3>
+<p>
+A. Connes, "Non-commutative differential geometry", <em>Publ. Math. IHÉS</em> 62 (1985), 41–144. [谱三元组与循环上同调的奠基性论文，定义了 Chern–Connes 示性标]<br>
+A. Connes, <em>Noncommutative Geometry</em>, Academic Press (1994), 661 页. [该领域的标准参考书，囊括了直到 1994 年的全部核心结果]<br>
+A. Connes &amp; J. Lott, "Particle models and noncommutative geometry", <em>Nucl. Phys. B (Proc. Suppl.)</em> 18 (1991), 29–47. [首次用非交换几何构造粒子物理模型——标准模型的"玩具版本"]<br>
+A. H. Chamseddine, A. Connes &amp; M. Marcolli, "Gravity and the standard model with neutrino mixing", <em>Adv. Theor. Math. Phys.</em> 11 (2007), 991–1089. [谱三元组推导标准模型的最终完整版本，包含中微子混合]<br>
+Z. Ji, A. Natarajan, T. Vidick, J. Wright &amp; H. Yuen, "MIP* = RE", <em>Comm. ACM</em> 64 (2021), 131–138. [Connes 嵌入猜想的否证——量子信息理论推翻算子代数猜想]
+</p>
+</section>
+
+<section>
+<h3>十四、关键公式</h3>
+<div class="formula display" data-tex="C(X)\cong C_0(\Omega)\quad\text{(Gelfand–Naimark)}"></div>
+<div class="formula display" data-tex="VU=e^{2\pi i\theta}UV\quad\text{(非交换环面 A}_\theta\text{)},\qquad \tau(U^mV^n)=\delta_{m,0}\delta_{n,0}"></div>
+<div class="formula display" data-tex="d(x,y)=\sup\{\,|f(x)-f(y)|:\|[D,f]\|\le 1\,\}\quad\text{(Connes 距离公式)}"></div>
+<div class="formula display" data-tex="K_0(A_\theta)\cong K_1(A_\theta)\cong\mathbb Z^2\quad\text{(Pimsner–Voiculescu)}"></div>
+<div class="formula display" data-tex="S=\operatorname{Tr}(f(D_\omega/\Lambda))\quad\text{(谱作用量)}"></div>
+</section>
+
+<section>
+<h3>十五、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 验证 (VUξ)_n = e^{2πiθ}(UVξ)_n 在例题 1 的表示里精确成立（θ 固定）。</p>
+<p><em>提示：分别写 (VUξ)_n = e^{2πinθ}ξ_{n−1} 与 (UVξ)_n = e^{2πi(n−1)θ}ξ_{n−1}，两式相差整体因子 e^{2πiθ}。</em></p>
+<p><strong>2.</strong> 若 θ = 1/2，A_{1/2} 的 U²、V² 与中心：说明为什么 U² 与 V 交换。</p>
+<p><em>提示：VU = e^{πi}UV = −UV，故 U²V = U(UV·…)。直接算 U²V = U(U²V…)——由 VU² = (VU)U = −UVU = −U(−UV) = U²V，故 VU² = U²V，U² 与 V 交换。</em></p>
+<p><strong>3.</strong> 用 Connes 距离公式在直线 ℝ 上（D = −i d/dx）推导：d(x,y) = |x − y|。</p>
+<p><em>提示：与圆的情形完全平行——‖[D,f]‖ = ‖f'‖∞ = Lip(f)；上界 |f(x)−f(y)| ≤ Lip(f)|x−y|，下界取 f₀(t) = |t−y|。</em></p>
+<p><strong>4.</strong> 说明为什么旋转作用 α_θ 在 K 理论上平凡（α_* = id），从而 PV 正合列的 1 − α_* = 0。</p>
+<p><em>提示：旋转 R_θ 是同胚且同伦于恒等（连续转回不动的旋转）；K 理论是同伦不变量，故诱导映射为恒等。</em></p>
+<p><strong>5.</strong> 为什么 A_θ（θ 无理）的单性意味着"真正非交换的空间"没有可定义的"边界点集"？</p>
+<p><em>提示：经典空间的闭理想 = 开子集的余集（子空间）；无闭理想 ⟹ 没有非平凡的"闭子集"，点集概念彻底失效，只能靠代数本身。</em></p>
+</section>
+
+<section>
+<h3>十六、附：工作题——A_θ 的计算与谱三元组验证</h3>
+<p><strong>工作题 1（A_θ 的迹）。</strong> 用定义验证 τ(U⁻¹) = 0、τ(U²V³) = 0，并解释为何任何迹都满足 τ(U^m) = 0（m ≠ 0）。</p>
+<details><summary>显示解答</summary><p>
+τ(U⁻¹)：m = −1 ≠ 0 ⟹ τ(U⁻¹V⁰) = 0。τ(U²V³)：m = 2 ≠ 0 ⟹ 0。一般地 τ(U^m) = e^{2πimθ}τ(U^m)，θ 无理时 e^{2πimθ} ≠ 1（m ≠ 0），故 τ = 0。</p></details>
+<p><strong>工作题 2（Connes 距离）。</strong> 在 S¹ 上取 x = e^{iα}、y = e^{iβ}（|α − β| &lt; π），写出达到 sup 的函数 f₀，并算出 d_Connes(x,y)。</p>
+<details><summary>显示解答</summary><p>
+取 f₀(t) = 到 y 的测地距离 d_geo(t, y)。则 Lip f₀ = 1，f₀(x) − f₀(y) = |α − β|，且对任何 1-Lipschitz f，|f(x) − f(y)| ≤ |α − β|。故 d_Connes = |α − β|（短弧长）。</p></details>
+<p><strong>工作题 3（PV 正合列）。</strong> 对 A = C₀(ℝ) 与平移作用 α_t（t ∈ ℤ），写出 PV 正合列并说明各项（用 K₀(C₀(ℝ)) = 0、K₁(C₀(ℝ)) = ℤ）。</p>
+<details><summary>显示解答</summary><p>
+K₀(C₀(ℝ)) = 0 → K₀(C₀(ℝ) ⋊ ℤ) → K₁(C₀(ℝ)) = ℤ →⁰→ ℤ → K₁(C₀(ℝ) ⋊ ℤ) → K₀(C₀(ℝ)) = 0。平移同伦于恒等，1 − α_* = 0。于是 K₀(C₀(ℝ)⋊ℤ) ≅ ℤ、K₁(C₀(ℝ)⋊ℤ) ≅ ℤ——C₀(ℝ) ⋊ ℤ ≅ 单位化 C₀(ℝ) ⋊ … 事实上 C₀(ℝ)⋊ℤ ≅ C(S¹)（由 Bott：C(S¹) 的 K₀ = K₁ = ℤ 复核）。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>A. Connes, Noncommutative Geometry</strong></p>
+<p>&rarr; <strong>J.M. Gracia-Bondía, J.C. Várilly, H. Figueroa, Elements of Noncommutative Geometry</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/functional-analysis.html">泛函分析</a>、<a href="/pages/operator-algebras.html">算子代数</a>、<a href="/pages/category-theory-adjoint.html">伴随函子</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：分析核心链。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：分析核心链。</p>
+<p>&rarr; <a href="/pages/functional-analysis.html">📊 泛函分析</a>：分析核心链。</p>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：分析核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/noncommutative-geometry.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<section>
+<h3>〇、直觉入门——研究所有"鼓起来不凹陷"的形状</h3>
+<p>皮球、鸡蛋、肥皂泡都是"凸的"——从任何角度看都鼓鼓的，中间不会凹下去。凸几何就是专门研究这种形状的学科：它们谁大谁小、体积和表面积怎么变。</p>
+<p>它像"形状世界的尺子"，帮我们比较和测量各种凸形状，在画画、做图、优化问题里到处都用得上。</p>
+<div class="key-insight">一句话：鼓起来不凹的形状里，藏着体积与表面积之间最美的不等式。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/linear-transform.html">线性变换</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——两个凸体"加起来"，体积怎么变？</h3>
+<p>凸几何的第一个对象不是单个形状，而是把两个凸体<strong>相加</strong>的运算：Minkowski 和 A+B = {a+b : a∈A, b∈B}（把 A 的每个点都让 B 的每个点去推一把）。</p>
+<p><strong>具体算一笔账。</strong> 取两条线段（一维凸体）A = [0,2]、B = [0,3]。逐点相加：0+0=0，2+3=5，且中间的每个数都取得到，故 A+B = [0,5]，长度 5。</p>
+<div class="formula display" data-tex="|A+B|^{1/1}=5=2+3=|A|^{1/1}+|B|^{1/1}"></div>
+<p>在 1 维，等式成立——这并非巧合。再看二维：取正方形 A = [0,2]×[0,2]（面积 4）与圆盘 B = 半径 1 的闭圆（面积 π）。A+B 是"边长为 2 的正方形被磨圆"：四个角各被半径为 1 的四分之一圆替换，面积 = 4 + 8 + π = 12 + π ≈ 15.14。现在比较两个数：</p>
+<div class="formula display" data-tex="\sqrt{\mathrm{vol}(A+B)}=\sqrt{12+\pi}\approx 3.89,\qquad \sqrt{4}+\sqrt{\pi}=2+1.77=3.77"></div>
+<p>第一个数更大——3.89 &gt; 3.77。于是我们得到了一个惊人的普遍规律：</p>
+<div class="formula display" data-tex="\mathrm{vol}(A+B)^{1/n}\ge \mathrm{vol}(A)^{1/n}+\mathrm{vol}(B)^{1/n}\quad(\text{Brunn-Minkowski 不等式})"></div>
+<p><strong>为什么这件事值得一整门课？</strong> 取 B = ε 球，让 ε → 0，Brunn-Minkowski 直接推出<strong>等周不等式</strong>：在给定体积的所有凸体中，球（欧氏球）使表面积最小。一个"加法不等式"居然等价于"最省表面积的形状是球"——这就是凸几何的威力：从一条不等式，导出整个分析、几何、概率交叉地带的核心结论。</p>
+</section>
+
+<section>
+<h3>二、凸体、Minkowski 和与 Brunn-Minkowski 不等式——直觉与严格</h3>
+<p><strong>凸体（convex body）</strong>：ℝⁿ 中的紧凸集，且内部非空。圆盘、球、立方体、单纯形、正多面体都是凸体；"凹进去"的形状（如月牙形）不是。</p>
+<p><strong>为什么研究 Minkowski 和？</strong> 两个凸体相加后仍是凸体，且"加法"与体积、表面积有着漂亮的刚性联系。它是把"两个形状"的几何信息组装成"一个形状"的几何信息的机器——而 Brunn-Minkowski 不等式保证了这台机器"单调不漏"。</p>
+<p><strong>Brunn-Minkowski 不等式（一般形式）。</strong> 对任意凸体（更一般地，任何非空紧集）A、B ⊂ ℝⁿ，</p>
+<div class="formula display" data-tex="\mathrm{vol}(A+B)^{1/n} \ge \mathrm{vol}(A)^{1/n} + \mathrm{vol}(B)^{1/n}"></div>
+<p><strong>为什么它是"几何的一切之母"？</strong> 它有四个互相等价的化身：① <strong>等周不等式</strong>（球最省表面积）；② <strong>Brunn-Minkowski</strong>（加法保体积）；③ <strong>Prékopa-Leindler 不等式</strong>（函数的对数凹卷积）；④ <strong>等容集不等式</strong>。任何一个成立，其余全部推出。它还反过来控制高维概率：对数凹测度的集中现象（见第九节）也由它统摄。</p>
+<p><strong>直觉。</strong> 把 A、B 看成两堆"粉末"，A+B 是它们"一一配对的推挤"；n 次方根把体积的"维度"拉平，使得不同维数的贡献可以相加——这也解释了为什么开 n 次方根：只有取 n 次根，不等式才是齐次的、才配得上"度量"的身份。</p>
+</section>
+
+<section>
+<h3>三、例题 1——矩形的 Brunn-Minkowski：用柯西不等式一步验证（一步步算完）</h3>
+<p><strong>题目。</strong> 取矩形 K = [0,a]×[0,b]、L = [0,c]×[0,d]（a,b,c,d &gt; 0）。验证 Brunn-Minkowski 不等式，并确定等号何时成立。</p>
+<p><strong>第一步：算 K+L。</strong> 逐点相加（区间、区间相加）得 K+L = [0,a+c]×[0,b+d]，面积 (a+c)(b+d)。</p>
+<p><strong>第二步：把要证的不等式写开。</strong> 需证</p>
+<div class="formula display" data-tex="\sqrt{(a+c)(b+d)}\ge\sqrt{ab}+\sqrt{cd}"></div>
+<p><strong>第三步：展开并配方。</strong> 两边平方，等价于 (a+c)(b+d) ≥ ab + cd + 2√(abcd)，即 ab+ad+cb+cd ≥ ab+cd+2√(abcd)，化简为 ad+cb ≥ 2√(abcd)。</p>
+<p><strong>第四步：用 AM-GM。</strong> 对两个正数 ad 与 cb，均值不等式给出 ad+cb ≥ 2√(ad·cb) = 2√(abcd)。成立。∎</p>
+<p><strong>第五步：等号条件。</strong> AM-GM 的等号当且仅当 ad = cb，即 a/b = c/d——K 与 L 的长宽比相同，即它们是<strong>位似（homothetic）</strong>的（相差一个平移与一个正伸缩）。这正是"等号 ⟺ 位似"这条经典结论在矩形上的体现。</p>
+<p><strong>数值核对。</strong> a=1,b=1,c=4,d=9：左 = √50 ≈ 7.07，右 = 1+6 = 7，严格不等；a=2,b=3,c=4,d=6（长宽比同为 2/3）：左 = √54 = 7.35，右 = √6+√24 = 7.35，等号。∎</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="\mathrm{vol}(A+B)^{1/n} \ge \mathrm{vol}(A)^{1/n} + \mathrm{vol}(B)^{1/n}"></div>
+<div class="formula display" data-tex="V(K+\varepsilon B_n)=\sum_{i=0}^n \varepsilon^{n-i}\omega_{n-i}W_i(K)\quad(\text{Steiner 公式})"></div>
+<div class="formula display" data-tex="\mathrm{vol}(K)\,\mathrm{vol}(K^\circ)\ge \frac{4^n}{n!}\quad(\text{Mahler, 中心对称}),\qquad \le \omega_n^2\quad(\text{Blaschke-Santaló})"></div>
+</section>
+
+<section>
+<h3>五、混合体积、Steiner 公式与 Minkowski 问题——体积的"多线性化"</h3>
+<p>Brunn-Minkowski 是不等式，而<strong>混合体积（mixed volumes）</strong>是它的"等式化"：</p>
+<div class="formula display" data-tex="V(\lambda_1K_1+\cdots+\lambda_mK_m)\ \text{是 } \lambda_i \text{ 的 } n \text{ 次齐次多项式}"></div>
+<p>其系数 V(K_{i₁},…,K_{iₙ}) 称为混合体积。特别地，把 n−i 个 K 与 i 个单位球 B 混合，得到第 i 个 <strong>quermassintegral</strong> W_i(K)。</p>
+<p><strong>Steiner 公式——平行体的体积展开。</strong> 把凸体 K"加厚"一层：K+εB_n = {离 K 不超过 ε 的点}。它的体积是 ε 的多项式：</p>
+<div class="formula display" data-tex="V(K+\varepsilon B_n) = \sum_{i=0}^n \varepsilon^{n-i} \omega_{n-i} W_i(K)"></div>
+<p>其中 ω_{n−i} 是 (n−i) 维单位球的体积。n=3 时的经典形式：</p>
+<div class="formula display" data-tex="V(K+\varepsilon B)=V+ S\cdot\varepsilon + M\cdot\varepsilon^2 + \frac{4\pi}{3}\varepsilon^3"></div>
+<p>其中 S = 表面积，M = 平均曲率积分。W_i(K) 构成凸体 K 的完整"微分几何不变量族"——第 i 个截面中值积分通过一维中值投影公式与表面积、平均曲率联系。这就是为什么"加一层皮"能读出表面几何：<strong>每次展开的系数，都精确记录了一维的某种几何信息</strong>。</p>
+<p><strong>Minkowski 问题。</strong> 凸体 K 的表面积测度由曲率决定；反过来问：给定一个合适的曲率测度，能否找到唯一凸体以它为表面积测度？答案是肯定的（Minkowski 1903），Alexandrov 推广到一般情形。这是凸几何和 <strong>Monge-Ampère PDE</strong> 的交汇点——凸体的存在性变成偏微分方程的可解性。</p>
+</section>
+
+<section>
+<h3>六、例题 2——球的平行体：Steiner 公式的完全展开（一步步算完）</h3>
+<p><strong>题目。</strong> 取半径 r = 2 的球 K = B(0,2) ⊂ ℝ³，写出平行体 K+εB 的体积展开，并读出 S、M 与常数项。</p>
+<p><strong>第一步：识别 K+εB 是什么。</strong> 球的平行体还是球：K+εB = B(0, 2+ε)。体积直接可算。</p>
+<p><strong>第二步：展开。</strong></p>
+<div class="formula display" data-tex="V(B(0,2+\varepsilon))=\frac{4\pi}{3}(2+\varepsilon)^3=\frac{4\pi}{3}(8+12\varepsilon+6\varepsilon^2+\varepsilon^3)"></div>
+<p><strong>第三步：逐项读出。</strong></p>
+<ul>
+  <li>常数项：V = (4π/3)·8 = <strong>32π/3</strong>（半径 2 的球体积 ✓）。</li>
+  <li>ε 系数：S = (4π/3)·12 = <strong>16π</strong>（表面积 4πr² = 4π·4 = 16π ✓）。</li>
+  <li>ε² 系数：M = (4π/3)·6 = <strong>8π</strong>（平均曲率积分：球面 H = 1/r = 1/2，∫H dA = 16π/2 = 8π ✓）。</li>
+  <li>ε³ 系数：(4π/3)·1 = <strong>4π/3 = ω₃</strong>（三维单位球体积 ✓）。</li>
+</ul>
+<p><strong>第四步：结论。</strong></p>
+<div class="formula display" data-tex="V(B(0,2)+\varepsilon B)=\frac{32\pi}{3}+16\pi\,\varepsilon+8\pi\,\varepsilon^2+\frac{4\pi}{3}\varepsilon^3"></div>
+<p>∎</p>
+<p><strong>为什么球的例子有示范性？</strong> 球的平行体仍是球，所以展开可以"闭式"算出——这让你亲眼看到 Steiner 公式的每一项分别对应什么几何量。任何别的凸体都只是这套系数的某种"推广"（多面体用棱长与角亏展开）。</p>
+</section>
+
+<section>
+<h3>七、Brunn-Minkowski 不等式的证明与等号条件</h3>
+<p><strong>证明方法。</strong> Prékopa-Leindler 不等式的几何版本，经 Steiner 对称化归约为 1 维。<strong>Steiner 对称化</strong>：把凸体关于某个超平面对称化——把每条与平面垂直的线段整体平移到以平面为中线——这保持体积不变，而（对充分好的集合）表面积不增。反复对各个方向对称化，极限是球：等周不等式的标准几何证明，纯粹构造、不需要变分法。</p>
+<p><strong>等号条件。</strong> 等式成立<strong>当且仅当</strong> K 与 L 是位似的（相差平移和伸缩）。例题 1 里的矩形验证了这一点（等号 ⟺ 长宽比相同）。等号条件揭示了极值情况的唯一刚性——比如等周不等式等号 ⟺ 凸体是球。</p>
+<p><strong>混合体积（重述）。</strong> Minkowski 的混合体积是 Brunn-Minkowski 的多线性化：V(λ₁K₁+…+λ_mK_m) 是 λ_i 的 n 次齐次多项式，其系数 V(K_{i₁},…,K_{iₙ}) 称为混合体积，W_i(K) 称为 quermassintegrals（截面中值积分）。</p>
+</section>
+
+<section>
+<h3>八、John 椭球定理——每个凸体有一个"最佳拟合"椭球</h3>
+<p>对任何对称凸体 K，存在唯一体积最大的包含在 K 中的椭球 E，使得 K 包含在 √n·E 中。这个"John 椭球"在 Banach-Mazur 距离、凸体近似、和机器学习（核方法）中有重要应用。它说明凸体可以被椭球在因子 √n 内近似。</p>
+<p><strong>为什么"因子 √n"重要？</strong> 它把"任意的、无结构的凸体"压缩成"欧氏球 + 一个可控的 √n 拉伸"。高维中很多看似可怕的凸体（如单位立方体）其实和球只差一个 √n——这直接解释了高维概率里的集中现象为什么总能"回到球"。</p>
+</section>
+
+<section>
+<h3>九、对数凹性、对数 Sobolev 与高维集中</h3>
+<p>正态分布、指数分布都是对数凹的：它们的密度 f 满足 log f 是凹函数。<strong>Borell 不等式</strong>：对数凹测度满足等周不等式。这是高维概率和凸几何的深刻联系——随机向量的集中现象由凸几何控制。</p>
+<p><strong>对数 Sobolev 不等式。</strong> 对数凹空间中 Lipschitz 函数以高概率集中在均值附近。这是高维概率论的核心结果——机器学习泛化误差和随机矩阵理论中反复出现。</p>
+<p><strong>为什么凸几何能管住"随机"？</strong> 一个对数凹密度 f 的水平集 {f ≥ t} 是凸集（因为 log f 凹）。于是"高概率区域"自动是凸体——它的形状由 Brunn-Minkowski / 等周不等式控制。随机性一进入凸体的领地，就被几何的刚性接管。</p>
+</section>
+
+<section>
+<h3>十、Mahler 猜想与 Blaschke-Santaló——极体的两端</h3>
+<p>对中心对称凸体 K，其极体 K° = {y : ⟨x,y⟩ ≤ 1 ∀x∈K}（"与 K 所有点内积都不超过 1"的点的集合）。极体把"宽"变成"窄"、把立方体变成交叉多胞形。</p>
+<p><strong>Mahler 猜想（1939）：</strong> vol(K)·vol(K°) ≥ 4ⁿ/n!，极值在立方体达到。n=2 已证（Mahler 1939），n≥3 仍是<strong>开放问题</strong>。</p>
+<p><strong>对偶方向——Blaschke-Santaló 不等式：</strong> vol(K)·vol(K°) ≤ ω_n²（极值在球达到，对所有对称凸体成立）。两个不等式分别控制下界/上界——<strong>乘积既不能太小（Mahler）也不能太大（Blaschke-Santaló），球在中间是"最圆"的</strong>。</p>
+</section>
+
+<section>
+<h3>十一、例题 3——立方体的 Mahler 乘积（一步步算完）</h3>
+<p><strong>题目。</strong> 取 n 维立方体 Q = [−1,1]ⁿ。求其极体 Q°，并计算 vol(Q)·vol(Q°)。</p>
+<p><strong>第一步：写出 Q° 的定义。</strong> y ∈ Q° ⟺ |x·y| ≤ 1 对一切 |xᵢ| ≤ 1 成立。内积对 x 的最大值出现在 x = sign(y)（逐分量取 y 的符号），故</p>
+<div class="formula display" data-tex="\max_{x\in Q} x\cdot y=\sum_{i=1}^n |y_i|\le 1"></div>
+<p><strong>第二步：识别 Q°。</strong> Q° = {y : |y₁|+…+|yₙ| ≤ 1}，这是<strong>交叉多胞形</strong>（cross-polytope）——n=2 是菱形、n=3 是正八面体。</p>
+<p><strong>第三步：算两个体积。</strong> vol(Q) = 2ⁿ；交叉多胞形是"顶点在 ±eᵢ 的锥之并"，其体积为 2ⁿ/n!。故</p>
+<div class="formula display" data-tex="\mathrm{vol}(Q)\cdot\mathrm{vol}(Q^\circ)=2^n\cdot\frac{2^n}{n!}=\frac{4^n}{n!}"></div>
+<p><strong>第四步：数值核对。</strong> n=2：vol(Q)=4，菱形面积 2，乘积 8 = 4²/2! ✓；n=3：vol(Q)=8，八面体体积 4/3，乘积 32/3 = 4³/3! ✓。∎</p>
+<p><strong>为什么选立方体？</strong> 立方体恰好达到 Mahler 下界——它是 Mahler 猜想的极值情形。这个例子同时教会你：<strong>极体运算是"对偶化"的几何化身</strong>，立方体与交叉多胞形互为极体，是理解整个 Mahler 问题的核心对象。</p>
+</section>
+
+<section>
+<h3>十二、Alexandrov-Fenchel 不等式——凸几何最深的不等式</h3>
+<p>对凸体 K₁,…,K_n，</p>
+<div class="formula display" data-tex="S(K_1,K_2,K_3,\ldots,K_n)^2 \ge S(K_1,K_1,K_3,\ldots,K_n)\cdot S(K_2,K_2,K_3,\ldots,K_n)"></div>
+<p>这一条不等式（混合盘面积 mix）可以推出<strong>所有</strong>经典不等式：等周、Brunn-Minkowski、Minkowski 不等式。其证明（经由 Alexandrov 的 PDE 方法或 Khovanskii-Teissier 代数几何方法）是凸几何中最艰难的结果之一。</p>
+</section>
+
+<section>
+<h3>十三、关键文献</h3>
+<p>Brunn（1887, 关于卵形体的首篇系统论文）。Minkowski（1903,"Volumen und Oberfläche"——创立 Brunn-Minkowski 理论）。Alexandrov（1937, Alexandrov-Fenchel 不等式的首证）。Fenchel（1936, 混合体积的独立公理化）。Lutwak（1988, 创立对偶 Brunn-Minkowski 理论——用星体代替凸体）。Ball（1991, 逆向等周不等式——John 椭球的最优依赖性）。开放: Mahler 猜想 n≥3。</p>
+</section>
+
+<section>
+<h3>十四、工作题</h3>
+<p><strong>题 1（一维等号）。</strong> 取 A = [0,2]、B = [3,5]（两个线段，平移关系）。验证 Brunn-Minkowski 等式。<strong>提示：</strong>A+B = [3,7]，长度 4 = 2+2；一维凸体即区间，等号恒成立（平移是位似特例）。</p>
+<p><strong>题 2（单位立方体的 Steiner 展开）。</strong> 单位立方体 K = [0,1]³。注意 K+εB 是"被磨圆"的平行体（不是边长 1+2ε 的尖立方体！），其体积是 1 + 6ε + 3πε² + (4π/3)ε³。验证并读出 S、M。<strong>提示：</strong>平行体 = 1 个体部 + 6 个 ε 厚的面片 + 12 条"半径 ε 的四分之一圆柱"（沿棱）+ 8 个"半径 ε 的球的八分之一"（在角上）；分别求和即得。</p>
+<p><strong>题 3（2D 等周不等式）。</strong> 固定面积 A 的所有矩形中，证明周长最小的是正方形。<strong>提示：</strong>P = 2(a+b) ≥ 4√(ab) = 4√A（AM-GM），等号 a=b。</p>
+<p><strong>题 4（对数凹自检）。</strong> 验证 f(x) = e^{−x²/2} 是对数凹的。<strong>提示：</strong>log f(x) = −x²/2 是凹二次函数。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1：</strong> A+B = {a+b} = [0+3, 2+5] = [3,7]，长度 4。|A+B| = 4 = 2+2 = |A|+|B|，故 (|A+B|)^{1/1} = |A|^{1/1}+|B|^{1/1}，等式成立。一维中所有线段都是位似的，所以等号总是成立。∎</p>
+<p><strong>题 2：</strong> K+εB = 1 个立方体 + 6 个面片 + 12 条棱柱 + 8 个角块。体部 1；每个面片体积 ε·1 = ε，共 6ε；每条棱贡献"半径 ε、长 1 的四分之一圆柱" = (πε²/4)·1，共 12·πε²/4 = 3πε²；每个角贡献"半径 ε 的球之八分之一" = (4π/3)ε³/8，共 8·(4π/3)ε³/8 = (4π/3)ε³。故 V = 1 + 6ε + 3πε² + (4π/3)ε³，即 S = 6（表面积 ✓）、M = 3π（平均曲率积分，等于各棱 ℓ·(外二面角)/2 之和）。注意 ε³ 系数仍是 ω₃ = 4π/3，与光滑情形一致；只有 ε² 系数因棱的存在而改变。∎</p>
+<p><strong>题 3：</strong> 矩形边长 a、b，面积 A = ab，周长 P = 2(a+b)。由 AM-GM，a+b ≥ 2√(ab)，故 P ≥ 4√A。等号当且仅当 a=b，即正方形。这是等周不等式在矩形类中的精确版本。∎</p>
+<p><strong>题 4：</strong> log f(x) = −x²/2，其二阶导数 −1 &lt; 0，是严格凹函数，故 f 对数凹。正态密度正因如此才能享受 Borell 不等式与集中性质。∎</p>
+</details>
+</section>
+
+<section>
+<h3>十五、试试看（每题附提示）</h3>
+<p><strong>试试看 1（矩形的等号情形）。</strong> 用 a=2,b=3,c=4,d=6 代入例题 1 验证等号。<strong>提示：</strong>a/b = 2/3 = c/d，位似；√((2+4)(3+6)) = √54 = √6+√24，两边相等。</p>
+<p><strong>试试看 2（球的 Steiner 换半径）。</strong> 把例题 2 换成 r=1，验证 S = 4π。<strong>提示：</strong>V = (4π/3)(1+ε)³ = 4π/3 + 4πε + 4πε² + (4π/3)ε³，S = 4π 正是单位球表面积。</p>
+<p><strong>试试看 3（John 椭球的反例直觉）。</strong> 对正方形 K = [−1,1]²，内切圆 B₂ 是不是体积最大的内接椭球？K 能否被 √2·B₂ 包住？<strong>提示：</strong>内切单位圆接触 K 的四边中点（4 个切点）；顶点 (±1,±1) 到原点距离 √2，故 K ⊂ B₂(√2) 恰好。</p>
+<p><strong>试试看 4（Mahler 的球端）。</strong> 对球 B₂（单位圆盘）验证 Blaschke-Santaló 等号。<strong>提示：</strong>球的极体是自身，vol(B₂)·vol(B₂°) = π·π = π² = ω₂²。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>R. Schneider, Convex Bodies: The Brunn-Minkowski Theory</strong></p>
+<p>&rarr; <strong>P. Gruber, Convex and Discrete Geometry</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/symplectic-geometry.html">🌊 辛几何</a>：同一学科分类「几何」。</p>
+<p>&rarr; <a href="/pages/soul-conjecture.html">👻 灵魂猜想</a>：几何核心链。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+</section>

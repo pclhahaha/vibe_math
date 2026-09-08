@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="点选参数 c：迭代 z²+c，看 Julia 集从圆盘变成尘埃" />
+  <meta property="og:title" content="复动力系统：Julia 集与 Mandelbrot 集 — Vibe Math" />
+  <meta property="og:description" content="点选参数 c：迭代 z²+c，看 Julia 集从圆盘变成尘埃" />
+  <title>复动力系统：Julia 集与 Mandelbrot 集 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🪸 复动力系统：Julia 集与 Mandelbrot 集 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">点选参数 c：迭代 z²+c，看 Julia 集从圆盘变成尘埃</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='complex-dynamics',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/riemann-surface.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🫧 黎曼面</a>
+  <a href="/pages/geodesic.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌐 测地线 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——反复按下一个键：z 变成 z²，再变成 (z²)²，再……</h3>
+<p>取一个复数 c，从 z₀=0 出发反复迭代 z_{n+1}=z_n²+c。这个"按平方再加 c"的简单操作，把平面上的点分成两类：轨道逃逸到无穷（z_n 的模越来越大），或永远待在有限范围内。分界线就是神秘的 <strong>Julia 集</strong>——一个可以光滑如线段、也可以毛糙如尘埃的集合。</p>
+<p>而当我们把 c 本身当作变量、问"这个 c 的 Julia 集是否连通"，就在 c 平面上得到另一个集合：<strong>Mandelbrot 集</strong>（MB 集）。它在 1980 年因计算机图形学而举世闻名——那个"雪花/海马/灯泡层层嵌套"的黑色图形。但对数学家而言，MB 集的意义不是好看：它编码了二次多项式族 z²+c 的全部动力学，是 20 世纪复动力系统（Fatou–Julia 理论 + Douady–Hubbard 纲领）的心脏。</p>
+<div class="formula display" data-tex="z_{n+1}=z_n^{2}+c,\qquad z_0=0;\qquad \text{Julia 集 }J_c=\partial\{z:\text{轨道有界}\};\qquad c\in M\iff J_c\ \text{连通}"></div>
+<p>更惊人的是，这门"迭代平方"的学问连着数学的许多角落：牛顿法求根、连分数与小除数（Siegel 圆盘）、重整化与统计物理的相变、双曲几何的模群、以及尚未解决的重大猜想。它把"混沌"从口号变成了黎曼球面上的严格几何。</p>
+<div class="key-insight">洞察：一个函数的所有"长期行为"浓缩成一个集合：J_c 是混沌的边界（排斥周期点稠密、对初值敏感），Fatou 集是秩序的地盘（吸引盆、Siegel 圆盘）。参数空间（MB 集）则反过来按 Julia 集的拓扑分类函数——"迭代一个函数"与"遍历所有函数"两个问题，由 Fatou–Julia–Douady–Hubbard 焊接成一套理论。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/complex-plane.html">复平面与全纯函数</a>（迭代的舞台）、<a href="/pages/fractal.html">分形</a>（自相似与维数的语言）、<a href="/pages/riemann-surface.html">黎曼面</a>（可选：黎曼球面视角）。本课画布直接实现逃逸时间算法。</p></div>
+
+<section>
+<h3>一、一个具体问题——Fatou 与 Julia 在 1918 年的对垒</h3>
+<p>第一次世界大战前后，Fatou（1906、1919）与 Julia（1918，为此获法国科学院大奖）独立研究<strong>有理函数 f 的迭代</strong>：fⁿ=f∘…∘f。核心观察：黎曼球面 ℂ̂ 被迭代分成两个互补的开/闭集——</p>
+<ul>
+<li><strong>Fatou 集 F(f)：</strong> 轨道行为"正常"的开集（在它上面迭代族局部等度连续；Fatou 集由吸引盆、抛物盆、Siegel 圆盘与 Herman 环组成）。</li>
+<li><strong>Julia 集 J(f)：</strong> F 的补集——混沌集：排斥周期点稠密、J 在 f 下完全不变（f(J)=J）、对初值高度敏感。J 通常是有理函数动力学的"骨架"。</li>
+</ul>
+<p>对二次多项式 f_c(z)=z²+c，理论变得惊人地丰富而干净：填充 Julia 集 K_c={z：轨道有界}，J_c=∂K_c。Fatou–Julia 时代就确立了：<strong>J_c 连通 ⟺ c 属于 MB 集 M</strong>（c 在 M 外时 J_c 是完全不连通的 Cantor 尘埃）。但"MB 集长什么样、是否连通"这类问题悬了近六十年——直到 Douady–Hubbard（1982，Orsay 讲义）用<strong>外部射线与位势理论</strong>证明：<strong>M 本身连通</strong>，并给出其精密的参数化理论。</p>
+<p><strong>为什么要问这些？</strong> 三个至今未解的大问题把它推上前线：(1) M 的<strong>局部连通性</strong>（MLC）——若真则 M 的拓扑完全理解；(2) M 的<strong>面积是否有限</strong>（数值 ~1.506，严格未定）；(3) 参数空间中的<strong>双曲稠密猜想</strong>（吸引周期动力学的参数是否稠密）。复动力系统是少数"打开电脑就能看到、打开论文却推不动"的领域——像素与证明之间的鸿沟本身就是它的魅力。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——"平方再加 c"的三个观察</h3>
+<p><strong>观察 1：拉伸与折叠。</strong> z↦z² 把角加倍（z=re^{iθ} → r²e^{2iθ}），模从 r 变 r²：|z|&gt;1 被推向更远、|z|&lt;1 被吸向 0。加 c 再把图形平移。迭代 = 反复"拉伸—折叠—平移"，混沌的几何来源就在这个动作里。</p>
+<p><strong>观察 2：逃逸判据。</strong> 若某个 |z_n|&gt;2 且 |c|≤2，则轨道必逃逸（|z_{n+1}|≥|z_n|²−|c|&gt;2|z_n|−2，一旦超过 2 就回不来）。所以填充 Julia 集被包含在闭圆盘 |z|≤2 内；"超过 2 就再见"是画布逃逸时间算法的判据。</p>
+<p><strong>观察 3：三类临界点行为。</strong> 二次多项式有唯一临界点 0（f_c′(0)=0）。它的轨道决定一切：</p>
+<div class="formula display" data-tex="0\text{ 的轨道有界 }\iff c\in M;\qquad J_c\ \text{连通}\iff c\in M"></div>
+<p>直观：若 0 逃逸，Julia 集被"撕碎"成 Cantor 尘埃（完全不连通）；若 0 有界，J_c 连成一个整体。Mandelbrot 集因此可以定义得很朴素：<strong>M = {c：0 的轨道不逃逸}</strong>——画布的小 MB 窗口就是把每个 c 的临界轨道画一遍。</p>
+</section>
+
+<section>
+<h3>三、例题 1——手算几条临界轨道（一步步算完）</h3>
+<p><strong>题目。</strong> 分别取 c=0、−1、1、−2、i，从 z₀=0 迭代并判断归属。</p>
+<p><strong>第一步：c=0。</strong> 0→0→0…：不动点 0（超吸引，f′(0)=0）。K_0=单位圆盘，J_0=单位圆。0∈M ✓（Julia 是圆周——光滑！）。</p>
+<p><strong>第二步：c=−1。</strong> 0→−1→0→−1…：<strong>周期 2 环</strong> {0,−1}；导数 f′(0)·f′(−1)=0·(−2)=0 ⟹ <strong>超吸引周期环</strong>。−1∈M，Julia 连通（著名的"兔形"开端）。</p>
+<p><strong>第三步：c=1。</strong> 0→1→2→5→26→…：超过 2 后逃逸（z₂=2 已触发判据）。1∉M，Julia 是 Cantor 尘埃。∎</p>
+<p><strong>第四步：c=−2。</strong> 0→−2→2→2→…：进入不动点 2（f_c(2)=2）。−2∈M（MB 集最左端，实数轴端点）。</p>
+<p><strong>第五步：c=i。</strong> 0→i→−1+i→−i→−1+i→…：从 i 之后进入周期 2 环 {−1+i, −i}。i∈M ✓（Julia 连通但形状复杂）。∎</p>
+<p><strong>总结。</strong> 判别只靠"临界轨道逃不逃"：c∈M ⟺ 0 的轨道有界。画布上点 MB 窗口即可复现这五条轨道与对应的 Julia 集。</p>
+</section>
+
+<section>
+<h3>四、例题 2——当 Julia 集"不是分形"：z²−2 的惊人案例（一步步算完）</h3>
+<p><strong>题目。</strong> 证明 f_c(z)=z²−2（c=−2）的 Julia 集是实线段 [−2,2]。</p>
+<p><strong>第一步：找共轭。</strong> 令 z=w+w⁻¹（w≠0）。代入：</p>
+<div class="formula display" data-tex="(w+w^{-1})^{2}-2=w^{2}+w^{-2}\qquad\Longrightarrow\qquad f_{-2}^{n}(w+w^{-1})=w^{2^{n}}+w^{-2^{n}}"></div>
+<p>迭代 = 把 w 反复平方（连同倒数）。</p>
+<p><strong>第二步：翻译轨道。</strong> 令 w=e^{iθ}（|w|=1）：w^{2ⁿ}+w^{−2ⁿ}=2cos(2ⁿθ)——<strong>轨道 = 2cos(2ⁿθ)</strong>，永远落在 [−2,2]，且有界。</p>
+<p><strong>第三步：反之。</strong> 若 z∉[−2,2]，则 w 满足 |w|≠1（w+w⁻¹=z 有两个解，一在单位圆内一在外，模 ≠1）。|w|&gt;1 时 w^{2ⁿ}→∞，轨道逃逸；|w|&lt;1 同理（倒数）。故填充集恰为 [−2,2]，Julia 集 = [−2,2]。∎</p>
+<div class="formula display" data-tex="J_{-2}=[-2,2]\qquad(\text{Julia 集可以是光滑线段！})"></div>
+<p><strong>第四步：这一例的三重教训。</strong> (1) Julia 集不必是分形；(2) 轨道 z_n=2cos(2ⁿθ) 对 θ 高度敏感——<strong>倍角映射 2cos 就是遍历理论课</strong>（→ <a href="/pages/ergodic-theory.html">遍历理论</a>）的共轭亲兄弟：混沌的根源同一个；(3) c=−2 位于 MB 集"主天线"端点，动力学退化到实直线——参数空间的边界点往往藏着退化与临界（抛物线化）行为。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>定义。</strong> f_c(z)=z²+c；填充集 K_c={z：f_cⁿ(z) 有界}；Julia 集 J_c=∂K_c；MB 集 M={c：0 的轨道有界}。</li>
+<li><strong>Fatou–Julia 基本事实（1918–19）：</strong> J_c 是完全不变的紧集、排斥周期点稠密于 J_c、J_c 对 f_c 敏感依赖；Fatou 集是正常族区域。</li>
+<li><strong>逃逸判据：</strong> |c|≤2 时，若某 |f_cⁿ(z₀)|&gt;2 则轨道逃逸；K_c⊆{|z|≤2}。</li>
+<li><strong>连通性定理：</strong> c∈M ⟺ J_c 连通；c∉M ⟹ J_c 是完全不连通 Cantor 集（对二次多项式族）。</li>
+<li><strong>Douady–Hubbard（1982）：</strong> M 连通；外部射线参数化、势函数 G(c)=lim 2⁻ⁿ log⁺|f_cⁿ(0)| 存在且调和——M 的补集与单位圆外区域共形等价（对连通的 M 外部），是现代参数化与计算（外部射线画图）的根基。</li>
+<li><strong>Sullivan 无游荡域（1985）：</strong> Fatou 集的分量都是周期的（无"游荡"分量）——用拟共形形变证明，复动力系统迎来现代纪元。</li>
+<li><strong>Shishikura（1998）：</strong> MB 集边界的 Hausdorff 维数 = 2。</li>
+<li><strong>开放问题：</strong> MLC（M 局部连通）、M 面积有限性、双曲稠密猜想——均未解决（Lyubich 1990s 证明双曲参数在 M 内部稠密、且 M 在双曲参数处局部连通）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="f_c(z)=z^{2}+c;\qquad z_{n+1}=f_c(z_n);\qquad c\in M\iff (f_c^n(0))_n\ \text{有界}"></div>
+<div class="formula display" data-tex="K_c=\{z:f_c^n(z)\text{ 有界}\},\quad J_c=\partial K_c;\qquad c\in M\iff J_c\ \text{连通}"></div>
+<div class="formula display" data-tex="G(c)=\lim_{n\to\infty}\frac{1}{2^{n}}\log^{+}|f_c^{n}(0)|;\qquad |z_n|>2\Rightarrow\text{逃逸}"></div>
+<div class="formula display" data-tex="f_{-2}(w+w^{-1})=w^{2}+w^{-2};\qquad J_{-2}=[-2,2]"></div>
+</section>
+
+<section>
+<h3>七、延伸——平方迭代的亲戚们</h3>
+<ul>
+<li><strong>牛顿法。</strong> 求多项式根的牛顿迭代 z↦z−p(z)/p′(z) 的 Julia 集把复平面分成各根的吸引盆，边界常是分形；"哪个初始值收敛到哪个根"就是动力系统的地图题。→ <a href="/pages/numerical-methods.html">数值计算方法</a> 课。</li>
+<li><strong>Siegel 圆盘与小除数。</strong> 当 c 使临界点附近有不动的中性点且旋转数满足丢番图条件时，出现 Siegel 圆盘（线性化的旋转区域）——与连分数/丢番图逼近（后续课程）直接相连。</li>
+<li><strong>重整化与统计物理。</strong> 周期加倍瀑布的自相似结构可用重整化算子解释（Feigenbaum 常数、Sullivan/Lyubich 的严格理论）——复动力系统成为相变理论的数学外壳。→ <a href="/pages/ising-model.html">Ising</a>、分岔（后续课程）。</li>
+<li><strong>模群与双曲几何。</strong> 二次多项式的参数空间（MB 集）与模空间、外部射线的"分母有理数"标记连接泰希米勒理论；双曲分量上的动力学由拟共形映射刚性化。→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a>、<a href="/pages/modular-forms.html">模形式</a> 课。</li>
+<li><strong>计算与算法。</strong> 逃逸时间算法（画布所用）、外部射线追踪、高精度参数空间计算——"看得见的数学"的最成功案例；也催生了"Julia 集的可计算性"研究（Braverman–Yampolsky 2006 起）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"像素想当然"</h3>
+<p><strong>陷阱 1："Julia 集一定分形"？</strong> 反例：c=0 时 J=单位圆（光滑）；c=−2 时 J=[−2,2]（例题 2 线段）。分形只出现在"动力学复杂"的参数上——把"看到分形"当"所有情况"，会漏掉理论里最精妙的部分（光滑 Julia 与 Cantor 尘埃同样重要）。</p>
+<p><strong>陷阱 2："MB 集 = 参数 c 对应的图形"？</strong> 概念要分清：<strong>填充 Julia 集 K_c</strong>（动态平面里的一个点集）、<strong>Julia 集 J_c</strong>（其边界）、<strong>MB 集 M</strong>（参数平面上 c 的集合）。画布左图是 K_c 的近似（黑色），右栏小窗是 M——两者活在不同的平面上。</p>
+<p><strong>陷阱 3："|z|&gt;2 判据可以一次定论"？</strong> 判据只在 |c|≤2 且从某一步起成立；像素图里"黑色"只是"迭代 N 次仍未超过 2"的近似——真正的 K_c 边界需要无穷迭代。增加最大迭代数会让图"长毛"，但永远不会变成证明。计算机画的是近似，定理才管精确。</p>
+<p><strong>陷阱 4："周期点都是稳定的"？</strong> 周期点按乘子 |(fⁿ)′(z₀)| 分类：&lt;1 吸引（稳定）、&gt;1 排斥（Julia 集里的稠密点）、=1 中性（Siegel/抛物线/Cremer 的精微情形）。"混沌"恰恰由排斥周期点构成——稳定性与混沌并存于同一函数的不同周期点上。</p>
+<p><strong>陷阱 5："MB 集边界就是 Julia 集"？</strong> 两者无关地"相像"是审美巧合。M 是参数空间的连通紧集（它的每个点是一个二次多项式）；J_c 是动态平面上的集合。M 的边界在参数上对应临界轨道"临界"的行为——但这是参数空间自己的故事，与某个 J_c 的形状无直接包含关系。</p>
+</section>
+
+<section>
+<h3>九、当前状态——未解问题与活跃方向</h3>
+<ol>
+<li><strong>MLC（Mandelbrot 局部连通性）。</strong> M 的每个点是否都有任意小连通邻域？Douady–Hubbard 纲领的头号目标；已知在双曲参数处成立，一般情形仍开放——"M 的拓扑是否完全理解"就卡在这。</li>
+<li><strong>M 的面积。</strong> 数值 ≈1.50659177…；严格证明"面积有限"或"为正"（后者显然？面积可测为正易证？实际"面积 >0"部分易？M 有内点故面积>0 trivially；"有限"难）——"M 的面积有限吗"仍是开放（Buff–Chéritat 2012 证明了存在面积正的二次 Julia 集，但那是动态平面不是参数平面）。</li>
+<li><strong>双曲稠密猜想。</strong> 具有吸引周期轨道的参数（双曲参数）是否在 M 中稠密？Lyubich 证明了双曲参数在 M 内部稠密（1990s），但边界附近情形（与 MLC、面积问题纠缠）仍开放——这是"参数空间动力学"的最大猜想。</li>
+<li><strong>更高次与超越。</strong> 三次多项式连通轨迹集、指数族 e^{λz}、超越整函数的 Julia 集（无穷远成为本质奇点）——结构远比二次族复杂，是当前最活跃的扩张方向。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Julia (1918)</strong>：迭代有理函数的大奖论文——Julia 集理论与排斥周期点的稠密性。</li>
+<li><strong>Fatou (1906, 1919)</strong>：Fatou 集与正规族方法（与 Julia 独立、互补）。</li>
+<li><strong>Douady–Hubbard (1982)</strong>：<em>"Itération des polynômes quadratiques complexes"</em>（Orsay 讲义）——MB 集连通性、外部射线、势函数；现代复动力系统奠基。</li>
+<li><strong>Sullivan (1985)</strong>：<em>"Quasiconformal homeomorphisms and dynamics I: solution of the Fatou–Julia problem on wandering domains"</em>——无游荡域定理。</li>
+<li><strong>Shishikura (1998)</strong>：MB 集边界 Hausdorff 维数为 2。</li>
+<li><strong>Lyubich (1990s)</strong>：双曲参数稠密性（M 内部）与重整化收敛（Feigenbaum 的严格化）。</li>
+<li><strong>Buff–Chéritat (2012)</strong>：<em>"Quadratic Julia sets with positive area"</em>——存在面积正的二次 Julia 集（动态平面）。</li>
+<li><strong>Braverman–Yampolsky (2006 起)</strong>：Julia 集的可计算性——像素与精确拓扑计算的分野。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——轨道手算与判据</h3>
+<p><strong>题 1（超吸引环）。</strong> c=−1：写出 0 的轨道并验证它是周期 2 的超吸引环。<strong>提示：</strong>0→−1→0；乘子 = f′(−1)·f′(0)=(−2)·0=0。</p>
+<p><strong>题 2（进入环）。</strong> c=i：验证轨道 0→i→−1+i→−i→−1+i…（从 −1+i 起周期 2）。<strong>提示：</strong>(−1+i)²+i=−i；(−i)²+i=−1+i。</p>
+<p><strong>题 3（判据应用）。</strong> 用 |z|&gt;2 判据说明 c=1∉M、c=−2∈M。<strong>提示：</strong>c=1：0→1→2→5（z₂=2 起判据触发）；c=−2：0→−2→2→2（有界不动点 2）。</p>
+<p><strong>题 4（共轭推导）。</strong> 用 w+w⁻¹ 完成 f_{−2} 的共轭：验证 f_{−2}(w+w⁻¹)=w²+w⁻²，并说明由此 J_{−2}=[−2,2] 的证明要点。<strong>提示：</strong>见例题 2 三步。∎</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示。∎</p>
+<p><strong>题 2</strong>：见提示。∎</p>
+<p><strong>题 3</strong>：见提示：c=1 逃逸、c=−2 收敛到 2。∎</p>
+<p><strong>题 4</strong>：共轭把迭代变成 w↦w² 的迭代，|w|=1 对应 2cos(2ⁿθ)∈[−2,2]，|w|≠1 逃逸。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布遍历 c）。</strong> 在右栏 MB 集小窗里点参数：c=0（Julia=圆）、c=−1（超吸引兔）、c=i（复杂连通）、c=1（尘埃）、c=−2（线段）。把最大迭代从 50 拉到 500：边界"长出"更细的结构——体会"黑色=有界（近似）"。</p>
+<p><strong>试试看 2（临界轨道）。</strong> 左图点击任意点看它的轨道在 Julia 集上的行为：在黑色填充集里轨道徘徊；在彩色外部轨道逃逸；靠近边界轨道极敏感（相邻起点分歧极快）。提示：这就是"Julia 集=混沌边界"的体验版。</p>
+<p><strong>试试看 3（与遍历课对表）。</strong> 例题 2 的 2cos(2ⁿθ) 与 <a href="/pages/ergodic-theory.html">遍历理论</a> 课倍角映射同构：同一混沌的两个化身。提示：把 w 的角 θ 当作初始状态，每次迭代 θ→2θ mod 2π——信息翻倍、熵 = ln 2。</p>
+<p><strong>试试看 4（缩放自相似）。</strong> 在 MB 集边界附近（如 c=−0.75 附近的"海马谷"）双击放大几层：出现微缩的 MB 拷贝与周期梳子——自相似是双曲分量重整化的指纹。提示：严格化自相似需要 Douady–Hubbard 的"调音"（tuning）理论。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J. Milnor, Dynamics in One Complex Variable</strong>（标准研究生教材，从零到 Douady–Hubbard）</p>
+<p>&rarr; <strong>L. Carleson, T. Gamelin, Complex Dynamics</strong>（分析视角的经典）</p>
+<p>&rarr; <strong>A. Douady, "The Mandelbrot set and the dynamics of quadratic polynomials"（讲义）</strong>：最优雅的导览</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.17/III（复分析相关条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/complex-plane.html">复平面与全纯函数</a>、<a href="/pages/fractal.html">分形</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fractal.html">🌀 分形</a>：Julia 集是分形理论的头号画廊。</p>
+<p>&rarr; <a href="/pages/complex-plane.html">🧭 复平面与全纯函数</a>：迭代的舞台与全纯动力学的基础。</p>
+<p>&rarr; <a href="/pages/ergodic-theory.html">♻️ 遍历理论</a>：2cos(2ⁿθ) 与倍角映射同构，混沌的测度论版。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🌐 黎曼面</a>：有理函数迭代活在黎曼球面上。</p>
+<p>&rarr; <a href="/pages/numerical-methods.html">💻 数值计算方法</a>：牛顿法的动力系统与逃逸时间算法的计算。</p>
+<p>&rarr; <a href="/pages/hyperbolic-geometry.html">🥏 双曲几何</a>：外部射线与模空间、拟共形形变的几何背景。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/complex-dynamics.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

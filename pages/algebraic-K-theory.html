@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="向量丛的分类——Grothendieck群与Bott周期性" />
+  <meta property="og:title" content="代数K理论 — Vibe Math" />
+  <meta property="og:description" content="向量丛的分类——Grothendieck群与Bott周期性" />
+  <title>代数K理论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🔧 代数K理论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">向量丛的分类——Grothendieck群与Bott周期性</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='algebraic-K-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/hyperbolic-geometry.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🥏 双曲几何与庞加莱圆盘</a>
+  <a href="/pages/noncommutative-geometry.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌌 非交换几何 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：给"向量丛"做体检——为什么要稳定等价？</h3>
+<p>设一个具体的问题：在圆 S¹ 上，有多少种"本质上不同"的复线丛（秩 1 复向量丛）？答案是<strong>可数无穷多个</strong>，分类由第一 Chern 类给出：</p>
+<div class="formula display" data-tex="\{\text{S}^1\ \text{上秩-1 复线丛的同构类}\}\cong H^2(S^1,\mathbb Z)=\mathbb Z"></div>
+<p>（等价说法：线丛的"缠绕数"就是它在 S¹ 边界上的旋转数。）这是<strong>拓扑 K 理论</strong>的核心问题：给空间上所有向量丛分类。把 S¹ 换成 2-球面 S²，线丛分类变成 H²(S², ℤ) = ℤ（Chern 类），等等。</p>
+<p>现在把同样的"体检"搬到纯代数：给一个<strong>环 R</strong>，"向量丛"的代数替身是<strong>有限生成射影 R-模</strong>。K₀(R) 就是这些射影模的"分类报告"。它会蹦出惊喜：对代数数域 K 的整数环 𝒪_K，</p>
+<div class="formula display" data-tex="K_0(\mathcal O_K)=\mathbb Z\oplus\mathrm{Cl}(K)"></div>
+<p>——<strong>理想类群 Cl(K)（数论里的类数问题！）自动出现在 K₀ 的直和分量里</strong>。代数 K 理论把"数洞的拓扑"和"代数结构"焊成一体。</p>
+<p><strong>为什么强调"稳定"？</strong> 直觉：分类要干净，得把"平凡丛"当零处理——因为平凡丛是"虚的洞"，不携带拓扑信息。把"同构类"升级为"稳定等价类"（允许加一个平凡直和项抵消），分类才又小又美又可计算。这就是 Grothendieck 群的动机。</p>
+<div class="key-insight">一句话：代数K理论给环和数论结构做"拓扑体检"，用数洞的方式衡量它们的复杂程度。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/abstract-algebra.html">抽象代数</a>、<a href="/pages/algebraic-topology-homology.html">同调论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、热身：射影模与 Grothendieck 群——K₀ 的定义</h3>
+<p><strong>为什么射影模 = "向量丛"？</strong> 向量丛的截面层是局部自由的：局部看是平凡丛，全局由转移函数拼起来。射影模是"局部自由的模"：P 射影 ⟺ P ⊕ Q = R^{free}（某自由模的直和项）。直觉：<strong>自由模 = 平凡丛，直和项 = 局部平凡但整体缠绕的丛</strong>。</p>
+<p><strong>定义（Grothendieck 群）。</strong> K₀(R) 由有限生成射影 R-模的同构类生成：</p>
+<div class="formula display" data-tex="K_0(R)=\Big\langle [P]:P\ \text{有限生成射影}\ \Big\rangle\Big/\big\langle [P]=[P']+[P'']:0\to P'\to P\to P''\to 0\ \text{短正合}\big\rangle"></div>
+<p>对每个短正合列 0 → P′ → P → P″ → 0 施加关系 [P] = [P′] + [P″]。直接推论（直和正合）：[P ⊕ Q] = [P] + [Q]，故 K₀ 是 Abel 群，元素是"稳定等价类"。</p>
+<p><strong>泛性质（universal property）。</strong> 任何从投射 R-模范畴到 Abel 群的<strong>加性函数</strong>（把短正合列映到和）唯一地通过 K₀(R) 分解——K₀ 是射影模的"万有加法不变量"。<strong>为什么这是核心？</strong> 因为几乎所有"不变量"（维数、行列式、Chern 类、特征标）都是加性函数，泛性质说：<strong>算它们只需算 K₀ 上的同态</strong>。</p>
+<p><strong>拓扑版本。</strong> 拓扑 K 理论中 K⁰(X) 是 X 上复向量丛的 Grothendieck 群，由 Atiyah–Hirzebruch（1959）引入——这是代数 K 理论与拓扑 K 理论的"Rosetta 石碑"：两个理论共享同一种构造哲学。</p>
+</section>
+
+<section>
+<h3>二、完整例题 1：K₀(PID) = ℤ——维数是唯一不变量</h3>
+<p>对 PID（主理想整环，如 ℤ、ℂ[t]）从头算到底。</p>
+<p><strong>第 1 步：射影模的结构。</strong> 在 PID 上，有限生成射影模 = 无挠有限生成模（射影性 ⟺ 自由直和项，而 PID 上无挠 ⟹ 自由）。故每个射影模同构于 R^n（秩 n）。</p>
+<p><strong>第 2 步：维数映射。</strong> 定义 dim: K₀(R) → ℤ，[R^n] ↦ n。它是良定义的：短正合列 0 → R^a → R^{a+b} → R^b → 0 给出 dim 加性，故诱导出同态。</p>
+<p><strong>第 3 步：满射。</strong> [R] ↦ 1，故 dim 满。</p>
+<p><strong>第 4 步：单射。</strong> 若 Σ nᵢ[R^{aᵢ}] = 0 ∈ K₀，两边取 dim 得 Σ nᵢaᵢ = 0 ∈ ℤ。所以"K₀ 中相等的类维数必相同"，且维数唯一确定类（每类 = 某个 [R^n]）。故</p>
+<div class="formula display" data-tex="K_0(\mathbb Z)=\mathbb Z,\qquad K_0(\mathbb C[t])=\mathbb Z\qquad(\text{由 }[R]\text{ 生成})"></div>
+<p><strong>第 5 步：解释"为什么"。</strong> PID 上"向量丛全是平凡的"——没有缠绕。K₀ = ℤ 说明拓扑信息为零，只剩"维数"（秩）。真正的"洞"要靠非 PID 才出现（例题 2）。∎</p>
+</section>
+
+<section>
+<h3>三、完整例题 2：K₀(ℤ[√−5]) = ℤ ⊕ ℤ/2——理想类群跳出来</h3>
+<p>ℤ[√−5] 是经典的"唯一分解失败"的环。算它的 K₀，看理想类群怎么出现。</p>
+<p><strong>第 1 步：Dedekind 整环上射影模的结构定理。</strong> 对 Dedekind 整环 𝒪_K，有限生成模是射影的 ⟺ 无挠，且</p>
+<div class="formula display" data-tex="P\ \text{射影、秩 } n\ \Longleftrightarrow\ P\cong \mathcal O_K^{\,n-1}\oplus I,\qquad I\ \text{可逆理想（射影秩 1 模）}"></div>
+<p>（结构定理：无挠模分裂为自由部分 + 一个理想。）</p>
+<p><strong>第 2 步：K₀ = ℤ ⊕ Cl(K)。</strong> 映射 P ↦ (rank, det P)（det P = 最高外幂 ≅ I）给出</p>
+<div class="formula display" data-tex="K_0(\mathcal O_K)\cong\mathbb Z\cdot[\mathcal O_K]\oplus \mathrm{Cl}(K),\qquad [I]\mapsto \text{理想 }I\text{ 的类}"></div>
+<p>直和的正合性：0 → I → I ⊕ J → J → 0 短正合（I ⊆ I⊕J 商 = J），故 [I ⊕ J] = [I] + [J] 与理想类的乘积律兼容。</p>
+<p><strong>第 3 步：算出 Cl(ℤ[√−5])。</strong> 用 Minkowski 界：K = ℚ(√−5)，判别式 d = −20，n = 2，Minkowski 界</p>
+<div class="formula display" data-tex="M=\Big(\frac{4}{\pi}\Big)\frac{2!}{2^2}\sqrt{20}=\frac{2}{\pi}\cdot 2\sqrt5\approx 2.85"></div>
+<p>每个理想类有范数 ≤ 2.85 的代表元，即范数 1 或 2：范数 1 只有 (1)；范数 2 的理想是 (2, 1+√−5) 与 (2, 1−√−5)，两者乘积 (2) 主、本身非主（见反例），且互为逆类。故</p>
+<div class="formula display" data-tex="\mathrm{Cl}(\mathbb Z[\sqrt{-5}])\cong\mathbb Z/2\qquad(\text{类数 }2)"></div>
+<p><strong>第 4 步：读 K₀ 的挠元。</strong> 由第 2 步：</p>
+<div class="formula display" data-tex="K_0(\mathbb Z[\sqrt{-5}])=\mathbb Z\oplus\mathbb Z/2"></div>
+<p>取 I = (2, 1+√−5)。因为 [I]² = [I²] = [(2)] = [𝒪_K]（主理想 ≅ 自由模，类群阶 2 ⟹ I² 主），故</p>
+<div class="formula display" data-tex="2\big([I]-[\mathcal O_K]\big)=0\in K_0\qquad(\text{非零挠元！})"></div>
+<p><strong>第 5 步：解释"为什么"。</strong> 非自由射影模 = "缠绕的向量丛"，它的 K₀ 类不等于任何 n·[R]，从而产生挠元。数论的类数问题（Cl(K)）因此直接映射为 K 理论的挠结构——<strong>K₀ 是一面镜子，把数论和拓扑照在一起</strong>。∎</p>
+</section>
+
+<section>
+<h3>四、K₁——GL 与初等矩阵，Whitehead 引理</h3>
+<p><strong>定义。</strong> K₁(R) = GL(R)/[GL(R), GL(R)]，其中 GL(R) = lim→ GLₙ(R)（稳定一般线性群）。<strong>K₁ 测量一般线性群离完美群有多远</strong>。</p>
+<p><strong>Whitehead 引理（Whitehead 1940s，Bass 1964 完善）。</strong> 对任何环 R，换位子群 [GL(R), GL(R)] = E(R)，其中 E(R) 是由初等矩阵 e_{ij}(r)（i ≠ j，r ∈ R，单位矩阵在 (i,j) 位置加 r）生成的子群。因此</p>
+<div class="formula display" data-tex="K_1(R)\cong GL(R)/E(R)\qquad(\text{K}_1\text{ 实质上是 GL 模去初等矩阵})"></div>
+<p><strong>对域 F：</strong> 行列式同态 det: K₁(F) → F^× 是同构（Dieudonné 行列式）——因为域上初等矩阵恰是行列式 1 的矩阵（高斯消元）。</p>
+<p><strong>对整数环：</strong> K₁(ℤ) = {±1} ≅ ℤ/2——只有 ±1 两个元素（例题 3 算给你看）。</p>
+<p><strong>为什么 K₁ 有用？</strong> K₁(R) = 0 当且仅当对充分大的 n，任何幺模行（行向量能补成可逆矩阵）都可扩充为 GLₙ(R) 中的可逆矩阵——这是稳定秩理论和矩阵消去律的基石。</p>
+</section>
+
+<section>
+<h3>五、完整例题 3：K₁(ℤ) = {±1} 与 Whitehead 的矩阵恒等式</h3>
+<p>把第四节的机制用矩阵算通。</p>
+<p><strong>第 1 步：Whitehead 恒等式。</strong> 计算 [e₁₂(r), e₂₃(s)] = e₁₂(r)e₂₃(s)e₁₂(r)⁻¹e₂₃(s)⁻¹。用 E₁₂E₂₃ = E₁₃（其余 Eᵢⱼ 乘积为零）：</p>
+<div class="formula display" data-tex="e_{12}(r)e_{23}(s)=I+rE_{12}+sE_{23}+rsE_{13}"></div>
+<p>乘以逆 e₁₂(−r)e₂₃(−s) = I − rE₁₂ − sE₂₃ + rsE₁₃ 后，rE₁₂、sE₂₃ 项对消，交叉项恰留 rsE₁₃：</p>
+<div class="formula display" data-tex="[e_{12}(r),e_{23}(s)]=e_{13}(rs)\qquad(\text{Whitehead 恒等式})"></div>
+<p>所以换位子生成初等矩阵（至少下三角那类），E ⊆ [GL, GL]；Whitehead 引理保证反向包含，故 [GL, GL] = E。</p>
+<p><strong>第 2 步：K₁(ℤ) 的计算。</strong> det: K₁(ℤ) → {±1}。单射：det(e_{ij}(r)) = 1，故 det 在 E 上平凡，诱导到商上是良定的。满射：−I ∈ GL₁(ℤ) 映到 −1。核心步骤——单射：</p>
+<p><em>任意行列式为 ±1 的整矩阵，经初等行/列变换（Smith 正规型）可化为 diag(±1, 1, …, 1)。在 ℤ 上 gcd 可逐步提取，每一步都是乘初等矩阵。故 A = (±1)·(E 中元素)，A 的 K₁ 类只由 det 决定。</em></p>
+<p><strong>第 3 步：结论。</strong></p>
+<div class="formula display" data-tex="K_1(\mathbb Z)=\mathrm{GL}(\mathbb Z)/E(\mathbb Z)=\{\pm 1\}\cong\mathbb Z/2"></div>
+<p><strong>第 4 步：读出"为什么"。</strong> ℤ 的可逆矩阵全体在稳定意义下被初等矩阵 + 符号 ±1 覆盖——K₁ 只剩"符号"这一个障碍。这也预示了后面 Whitehead 群 Wh(G) = K₁(ℤ[G])/{±g} 中"±g"这个商掉的符号项。∎</p>
+</section>
+
+<section>
+<h3>六、Bass 的稳定代数与 Whitehead 群</h3>
+<p><strong>Bass 的稳定代数</strong>（Bass 1964, "K-theory and Stable Algebra", W.A. Benjamin）：Bass 系统建立了 K₁ 理论，引入<strong>稳定秩 sr(R)</strong> 和幺模行的消去。</p>
+<p><strong>Bass–Heller–Swan 公式（1964）：</strong></p>
+<div class="formula display" data-tex="K_1(R[t,t^{-1}])\cong K_1(R)\oplus K_0(R)\oplus \mathrm{Nil}_1(R)\oplus \mathrm{Nil}_1(R)"></div>
+<p>其中 Nil₁ 是幂零 K 理论（幂零算子的自同构群带来的修正项）。这是计算 Laurent 多项式环 K 群的基本工具，也是高次 K 群、局部化谱序列的原型。</p>
+<p><strong>Whitehead 群与 h-配边。</strong> 群环 ℤ[G] 的 K₁ 给出</p>
+<div class="formula display" data-tex="\mathrm{Wh}(G):=K_1(\mathbb Z[G])/\{\pm g:g\in G\}"></div>
+<p>它是 h-配边理论的基本不变量：Smale（1961）的高维 Poincaré 猜想证明中，h-配边是否为平凡的障碍正落在 Wh(G) 中。Milnor（1966）的 "Whitehead Torsion"（BAMS 72）对此有经典阐述——<strong>Whitehead 挠量是第一个由代数 K 理论构造的几何不变量</strong>，直接催生了手术理论。</p>
+</section>
+
+<section>
+<h3>七、Quillen 的 +-构造——高等 K 群</h3>
+<p><strong>动机。</strong> K₀、K₁ 有了，怎么定义 K₂、K₃、…？关键洞察（Quillen, 1971）：<strong>用拓扑空间定义高等 K 群——代数信息编码在同伦群中</strong>。</p>
+<p><strong>+-构造（Quillen 1971, "Cohomology of Groups", ICM 1970）。</strong> 给定连通 CW 复形 X 和完美正规子群 N ⊲ π₁(X)（N 的换位子群等于自身），存在"加化(plus)"空间 X⁺ 和映射 X → X⁺ 使得：(i) π₁(X⁺) = π₁(X)/N；(ii) 对所有局部系数系统，X → X⁺ 诱导同调同构。构造是显式的：<strong>对 N 的每个生成元附贴 2-胞腔（杀死 π₁ 中对应元素），再附贴 3-胞腔修复被破坏的同调</strong>。</p>
+<p><strong>定义。</strong> 对环 R：</p>
+<div class="formula display" data-tex="K_n(R)=\pi_n(BGL(R)^+)\qquad(n\ge 1)"></div>
+<p>其中 N = [GL(R), GL(R)] 是完美群（Whitehead 引理！），BGL(R) 是分类空间。K₁(R) = π₁(BGL(R)⁺) = GL/E 自动恢复。K 理论因此是"环的拓扑"——K₂、K₃ 等成为 BGL(R)⁺ 的更高同伦群。</p>
+<div class="key-insight">Quillen 用拓扑空间定义高等 K 群：K_n(R) = π_n(BGL(R)⁺)。K 理论是"环的拓扑"——代数信息编码在同伦群中。Quillen 因此获 1978 年 Fields 奖。</div>
+</section>
+
+<section>
+<h3>八、Q-构造与 Milnor K 群——高等 K 理论的双重定义</h3>
+<p><strong>Q-构造（Quillen 1973, "Higher Algebraic K-Theory I", LNM 341）。</strong> 设 ℰ 为正合范畴（如投射 R-模范畴），定义 Qℰ：对象与 ℰ 相同，态射 A → B 是图表 A ↞ A′ ↪ B 的同构类（↞ 为可许满态射，↪ 为可许单态射）。则</p>
+<div class="formula display" data-tex="K_n(\mathcal E)=\pi_{n+1}(BQ\mathcal E,\ 0)"></div>
+<p><strong>Q-构造的威力：</strong> (1) 一次性定义所有 K 群——K₀ 恢复 Grothendieck 群，K₁ 恢复 Bass–Whitehead 群，K₂ 恢复 Milnor K₂；(2) 自动产生局部化定理和分解定理（局部化序列、投影公式）；(3) 通过 Waldhausen（1985）推广到"有纤维化的范畴"，产生拓扑空间和谱的 A 理论。</p>
+<p><strong>Milnor K 群（域 F）：</strong></p>
+<div class="formula display" data-tex="K_2^M(F):=(F^\times\otimes F^\times)/\langle a\otimes(1-a)\rangle\qquad(\text{Milnor 1971})"></div>
+<p>（Matsumoto 定理：当 F 无限域时，K₂(F) ≅ K₂^M(F)，符号映射 a ⊗ (1−a) ↦ {a, 1−a} 编码了 Steinberg 符号。）它是 Bloch–Kato 猜想的左手边（第九节），也是数论符号（Hilbert 符号、幂剩余符号）的统一框架。</p>
+</section>
+
+<section>
+<h3>九、关键计算结果——从整数环到有限域到数环</h3>
+<p><strong>ℤ 的 K 群——已知部分与巨大未知。</strong> K₀(ℤ) = ℤ；K₁(ℤ) = ℤ/2；K₂(ℤ) = ℤ/2（Milnor 1971，由符号映射给出）；K₃(ℤ) = ℤ/48（Lee–Szczarba 1976，48 来自 Bernoulli 数分母）；K₄(ℤ) = 0（Rognes 1993，用拓扑循环同调证明）；K₅(ℤ) = ℤ ⊕ 有限群（Elbaz-Vincent–Gangl–Soulé 2013，结合了模形式和多重 zeta 值）。<strong>n ≥ 8 时 K_n(ℤ) 的结构完全未知！</strong></p>
+<p><strong>Quillen 的有限域定理</strong>（Quillen 1972, Ann. Math. 96）：K_{2n}(F_q) = 0（n ≥ 1）；K_{2n−1}(F_q) ≅ ℤ/(qⁿ−1)。证明用到 Tits building 的 Lefschetz 不动点定理——是群上同调、代数拓扑和 K 理论交叉的里程碑。</p>
+<p><strong>Borel 的数环定理</strong>（Borel 1974, Invent. Math. 23; 1977, Ann. Math. 105）：对代数数域 F 的整数环 𝒪_F，K_n(𝒪_F) ⊗ ℚ 的维数由 F 的实嵌入数 r₁ 和复嵌入对数 r₂ 确定：n ≡ 3 mod 4 时维数 = 0（全挠）；n ≡ 1 mod 4 且 n ≥ 5 时维数 = r₂；其余情形维数 = 0。Borel 还证明了 K_{4k−1}(𝒪_F) ⊗ ℝ 的维数恰好等于 zeta 函数值 ζ_F(1−2k) 的零点阶数——为 Lichtenbaum 猜想的雏形。</p>
+<p><strong>Bloch–Kato 猜想（范数剩余同构定理）。</strong> 对任意域 F 和素数 ℓ ≠ char(F)，自然映射</p>
+<div class="formula display" data-tex="K_n^M(F)/\ell\ \longrightarrow\ H^n_{\text{ét}}(F,\mu_\ell^{\otimes n})"></div>
+<p>是 Galois 上同调的同构。ℓ = 2 时 Voevodsky（1996）证明（Milnor 猜想，关于二次型理论）；一般 ℓ 由 Voevodsky–Rost（2001–2011）完成——这是 Voevodsky 2002 年 Fields 奖的核心贡献。推论：Lichtenbaum–Quillen 猜想（ℓ-完备 K 理论与 étale 上同调之间的谱序列）随之成立。</p>
+</section>
+
+<section>
+<h3>十、证明——K₀ 的泛性质与 K₀(域) = ℤ</h3>
+<p>把第一、二节的断言写成完整证明。</p>
+<p><strong>定理（泛性质）。</strong> 设 F 为从有限生成射影 R-模范畴 ℰ 到 Abel 群 G 的加性函数（对每个短正合列 0 → P′ → P → P″ → 0 有 F(P) = F(P′) + F(P″)，且 F(0) = 0）。则存在唯一同态 F̄ : K₀(R) → G 使 F̄([P]) = F(P)。</p>
+<p><strong>证明。</strong> 定义 F̄ 于生成元 [P] ↦ F(P)。良定义：K₀(R) 的定义关系恰好是 F 所保持的 [P] = [P′] + [P″]。故 F̄ 在生成元与关系上兼容，唯一性由生成元决定。∎</p>
+<p><strong>定理（K₀(域) = ℤ）。</strong> 设 k 为域。则 K₀(k) ≅ ℤ，由 [k] 生成。</p>
+<p><strong>证明。</strong> k 的射影模 = 向量空间，同构类由维数决定，[kⁿ] 是生成元全体。定义 dim : K₀(k) → ℤ 为 [kⁿ] ↦ n：良定义（维数在短正合列上加性），满射（[k] ↦ 1）。单射：若 Σ mᵢ[k^{aᵢ}] = 0 ∈ K₀(k)，因每个生成元都等于 a·[k]（[k^a] = a[k] 由直和关系迭代），故该元形如 n·[k]；应用 dim 得 n = 0。故核为零。∎</p>
+<p>这两个证明展示了 K 理论的标准套路：<strong>先定生成元与关系，再用"加性不变量"（维数、行列式、Chern 类）作坐标检验</strong>。</p>
+</section>
+
+<section>
+<h3>十一、反例——射影模不自由、K₀ 有挠</h3>
+<p><strong>反例 1：ℤ[√−5] 上的射影但非自由模。</strong> 理想 I = (2, 1+√−5)。先证非主：若 I = (α)，则 α | 2 且 α | 1+√−5。用范数 N(a + b√−5) = a² + 5b²：N(2) = 4、N(1+√−5) = 6，故 N(α) | gcd(4,6) = 2，即 N(α) ∈ {1, 2}。但 a² + 5b² = 2 无整数解（b = 0 ⟹ a² = 2；b ≠ 0 ⟹ ≥ 5），故 N(α) = 1，α 为单位，I = (1) = 整环。但商 R/I ≅ ℤ/2 ≠ 0（因 (2, 1+√−5) 是极大理想，商为域 ℤ/2），矛盾。故 I 非主理想。而 Dedekind 整环上非零理想是有限生成无挠模，因而射影——所以 I 是<strong>射影但非自由</strong>的模。这是"非平凡向量丛"的代数化身（对应 S¹ 上缠绕数 ≠ 0 的线丛）。</p>
+<p><strong>反例 2：K₀ 的挠元。</strong> 由上，[I] ≠ [𝒪_K] ∈ K₀(ℤ[√−5])，但 2([I] − [𝒪_K]) = 0（例题 2 已算）。所以 K₀ 含有二阶挠——"非平凡丛的两倍是平凡丛"。这对应拓扑中"非平凡线丛的 Whitney 和两倍变平凡"。</p>
+<p><strong>反例 3：稳定秩不等于 1。</strong> 在稳定秩 sr(R) = 1 的环（如 PID、局部环）上，幺模行可自由扩充，K₁ 等计算简单；但对 sr(R) &gt; 1 的环（某些坐标环），消去律失败——[P ⊕ R] = [Q ⊕ R] 推不出 [P] = [Q]。这提醒：K 理论必须"稳定化"到足够高维才可靠，正是 BGL(R) 取直极限的原因。</p>
+</section>
+
+<section>
+<h3>十二、经典文献与历史发展</h3>
+<p><strong>Grothendieck（1958, Bourbaki 讨论班第 157 号报告）</strong>——在 Riemann–Roch 定理的推广中首次引入 K₀，作为代数向量丛的 Grothendieck 群；完整理论见 SGA 6 (1971)。<strong>Atiyah–Hirzebruch（1959–1961）</strong>——在拓扑中独立发展了 K 理论，Bott 周期性 K(X×S²) ≅ K(X) 是其基石，Atiyah–Singer 指标定理（1963）用 K 理论统一了分析和拓扑。拓扑 K 理论提供了一条与代数 K 理论平行的、相互启发的路径。<strong>Bass（1964, "K-theory and Stable Algebra"）</strong>——独立于 Grothendieck 发展了环论的 K₁，发现了稳定秩和 Whitehead 群的深刻联系，是第一本代数 K 理论专著。<strong>Milnor（1971, "Introduction to Algebraic K-Theory", Princeton）</strong>——定义了 K₂ 和 Milnor K 群，Milnor 猜想（1970）首次提出 K^M_n(F)/2 ≅ Hⁿ(F, ℤ/2)，成为 Bloch–Kato 猜想的原型。<strong>Quillen（1973–1974）</strong>——"Higher Algebraic K-Theory I"（LNM 341）和 II，建立 +-构造和 Q-构造，奠定了现代 K 理论的拓扑基础。获 1978 年 Fields 奖。<strong>Suslin（1982–1984）</strong>——证明了仿射空间上的向量丛是平凡的（Serre 猜想的 K 理论版），建立了 K 理论局部化定理。<strong>Voevodsky（1996–2011）</strong>——构建 motivic 同伦论（A¹ 同伦论），证明 Milnor 猜想和 Bloch–Kato 猜想。Motivic 稳定同伦范畴 SH(k) 中，代数 K 理论谱 KGL 是实现 motivic 球谱的关键对象。获 2002 年 Fields 奖。</p>
+</section>
+
+<section>
+<h3>十三、开放问题与前沿方向</h3>
+<p>
+<strong>1. ℤ 的 K 群。</strong> 计算 K_n(ℤ) 是所有代数 K 理论的圣杯之一。n ≤ 7 已知，n ≥ 8 几乎空白。Lichtenbaum–Quillen 猜想将模 ℓ K 群关联于 étale 上同调和 L 函数特殊值，但 ℓ = 2 情形仍有大量精细问题。Vandiver 猜想（p 不整除分圆域的类数）若成立则可约束 K_n(ℤ) 的部分挠结构。本质上，K_*(ℤ) 的完全计算等价于理解球谱稳定同伦群与代数数论之间的全貌——这是同伦论和数论最深度的交叉。<br>
+<strong>2. Baum–Connes 猜想</strong>（1982，发表为 Baum–Connes–Higson 1994）：对局部紧群 G，装配映射 μ: K_*^{top}(G) → K_*(C_r^*(G)) 是群 C*-代数 K 理论的同构。对 a-T-menable 群成立（Higson–Kasparov 2001），对双曲群成立（Lafforgue 2002, Clay 研究奖），对 SL(3,ℤ) 成立——但一般情形广泛开放。与 Novikov 猜想（高维特征类同伦不变性）和正标量曲率存在性问题（Gromov–Lawson–Rosenberg 猜想）构成几何拓扑中的"铁三角"。<br>
+<strong>3. Motivic 红移（Red-Shift）猜想。</strong> 在 motivic 稳定同伦范畴 SH(k) 中，色展局部化函子 L_{K(n)} 作用于代数 K 理论时存在"红移"现象——色展层次"移动一位"。若成立，将揭示代数 K 理论和色展同伦论（chromatic homotopy theory）之间的深层同源性。Beilinson–Soulé 猜想（motivic 上同调在负权消失）与此密切相关。<br>
+<strong>4. K 理论在物理中的应用。</strong> 拓扑绝缘体和量子 Hall 效应中 K⁻ⁿ(pt) 对拓扑超导体分类（Kitaev 周期表）。非交换 Brillouin 区方法（Bellissard 1990s）用 C*-代数 K 理论分类非周期固体的拓扑相。弦论中 D-brane 的 Ramond–Ramond 荷由 K 理论分类（Witten 1998）——K 理论已取代通常上同调成为量子场论中反常分类的正确不变量语言。这些应用正在启发纯数学中 K 理论的新结构（扭曲 K 理论、微分 K 理论等）。
+</p>
+</section>
+
+<section>
+<h3>十四、关键公式</h3>
+<div class="formula display" data-tex="K_0(\mathcal O_K)=\mathbb Z\oplus\mathrm{Cl}(K)\qquad\text{(Dedekind 整环)}"></div>
+<div class="formula display" data-tex="K_1(R)=GL(R)/E(R),\qquad [GL(R),GL(R)]=E(R)\quad\text{(Whitehead 引理)}"></div>
+<div class="formula display" data-tex="K_n(R)=\pi_n(BGL(R)^+)\qquad(n\ge 1,\ \text{Quillen}+\text{-构造})"></div>
+<div class="formula display" data-tex="K_n(\mathcal E)=\pi_{n+1}(BQ\mathcal E)\qquad\text{(Quillen Q-构造)}"></div>
+<div class="formula display" data-tex="K_2^M(F)=(F^\times\otimes F^\times)/\langle a\otimes(1-a)\rangle\quad\text{(Milnor)}"></div>
+<div class="formula display" data-tex="K(X\times S^2)\cong K(X)\quad\text{(Bott 周期性)},\qquad K_1(\mathbb Z)=\mathbb Z/2,\quad K_0(\mathbb Z)=\mathbb Z"></div>
+</section>
+
+<section>
+<h3>十五、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 为什么 K₀(k) 对域 k 等于 ℤ 而 K₀(ℂ[t]) 也等于 ℤ？两者有什么共同结构？</p>
+<p><em>提示：两者都是 PID；PID 上射影模都自由，唯一的加性不变量是维数（例题 1）。</em></p>
+<p><strong>2.</strong> 验证 ℤ[√−5] 中 (2, 1+√−5) 的商环 ≅ ℤ/2，从而它是真理想。</p>
+<p><em>提示：商 = ℤ[√−5]/(2, 1+√−5) ≅ ℤ/(2)（模掉 1+√−5 后 √−5 ≡ −1，剩 ℤ/2）；故理想真且极大。</em></p>
+<p><strong>3.</strong> 证明 2([I] − [𝒪_K]) = 0 ∈ K₀(ℤ[√−5]) 需要 I² 是主理想。为什么 Cl = ℤ/2 保证了这一点？</p>
+<p><em>提示：类群阶 2 ⟹ I ⊗ I = I² 属于平凡类，即 I² ≅ 𝒪_K 作为射影模（主理想 ≅ 自由模）。</em></p>
+<p><strong>4.</strong> 用 Whitehead 恒等式验证 e₁₂(1) 与 e₂₁(1) 的换位子属于 E(ℤ)，且其行列式为 1。</p>
+<p><em>提示：交换 i,j 顺序后 [e₁₂(1), e₂₁(1)] 需用 e₁₂(1)、e₂₁(1) 的同阶形式；初等矩阵行列式皆 1，故 det = 1。直接算 e₁₂(1)e₂₁(1)e₁₂(−1)e₂₁(−1) = diag(2, 1/2)（在 ℤ 上不属于 GL₂(ℤ)！）——所以要在 GL₃(ℤ) 里做，用 e₁₂、e₂₃ 的形式才是正确的 Whitehead 恒等式方向。</em></p>
+<p><strong>5.</strong> 说明为什么 K₁(F) = F^×（F 为域）"测量 GL(F) 离 E(F) 有多远"。</p>
+<p><em>提示：域上高斯消元把任何可逆阵变成对角阵，对角阵只差行列式；E(F) 恰是行列式 1 的群，故 GL/E ≅ F^×（Dieudonné 行列式）。</em></p>
+<p><strong>6.</strong> 为什么 Borel 的定理（K_n(𝒪_F) ⊗ ℚ 的维数由嵌入数 r₁、r₂ 决定）暗示 K 群是"算术对象"而非纯代数的？</p>
+<p><em>提示：维数由 ℚ 的嵌入数决定——r₁、r₂ 是数域 F 的算术数据（实的/复的嵌入个数），与 zeta 函数特殊值 ζ_F(1−2k) 相连（Lichtenbaum 猜想的雏形）。</em></p>
+</section>
+
+<section>
+<h3>十六、附：工作题——K₀ 与 K₁ 的显式计算</h3>
+<p><strong>工作题 1（K₀(ℤ/6ℤ)）。</strong> 用中国剩余定理算 K₀(ℤ/6ℤ)。</p>
+<details><summary>显示解答</summary><p>
+ℤ/6ℤ ≅ ℤ/2 × ℤ/3（CRT）。射影模：ℤ/6 上射影模 = (ℤ/2)^a ⊕ (ℤ/3)^b（每个分量上自由）。正合列加性给出 K₀(ℤ/6) = ℤ²，由 [ℤ/2] 与 [ℤ/3] 生成。一般：K₀(R₁×R₂) = K₀(R₁) ⊕ K₀(R₂)。</p></details>
+<p><strong>工作题 2（K₁(ℂ)）。</strong> 说明 K₁(ℂ) = ℂ^×，并指出它作为 Abel 群的结构。</p>
+<details><summary>显示解答</summary><p>
+域上 K₁ = 乘群（Dieudonné 行列式）。ℂ^× ≅ ℝ_{&gt;0} × U(1) ≅ ℝ ⊕ (ℚ/ℤ 的 ℚ-向量空间版本，即其可除包）——更精确地 ℂ^× ≅ ℝ_{&gt;0} × S¹，作为 Abel 群 ℂ^× 可除。K₁(ℂ) 携带了"复数乘群"的全部信息。</p></details>
+<p><strong>工作题 3（射影但非自由）。</strong> 证明 ℤ[√−5] 的理想 (2, 1+√−5) 是射影的（直接理由），并写出它的一个补模。</p>
+<details><summary>显示解答</summary><p>
+Dedekind 整环上一切非零理想可逆（I·I⁻¹ = 𝒪_K），可逆理想是射影的（视为模，分式理想 ⊗ … 给出分裂）。补模 Q 满足 I ⊕ Q = 自由模：取 Q = I⁻¹（分数理想），则 I ⊕ I⁻¹ ≅ … 可逆性给出 I ⊕ I^{-1} ≅ 𝒪_K ⊕ 𝒪_K（标准恒等式 I ⊗ I^{-1} = 𝒪_K 配直和恒等式 I ⊕ I^{-1} = 𝒪_K ⊕ I·I^{-1}）。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>C. Weibel, The K-book: An Introduction to Algebraic K-theory</strong></p>
+<p>&rarr; <strong>J. Rosenberg, Algebraic K-theory and its Applications</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/abstract-algebra.html">抽象代数</a>、<a href="/pages/algebraic-topology-homology.html">同调论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/commutative-algebra.html">💍 交换代数</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/universal-algebra.html">🧱 泛代数</a>：代数核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/algebraic-K-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

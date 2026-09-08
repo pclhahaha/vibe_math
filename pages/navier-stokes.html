@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Reynolds 数——从层流到湍流" />
+  <meta property="og:title" content="Navier-Stokes 流场 — Vibe Math" />
+  <meta property="og:description" content="Reynolds 数——从层流到湍流" />
+  <title>Navier-Stokes 流场 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌪️ Navier-Stokes 流场 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">Reynolds 数——从层流到湍流</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='navier-stokes',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/thermodynamics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔥 热力学与熵</a>
+  <a href="/pages/band-structure.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📶 能带结构 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——流体运动的总规律</h3>
+<p>你搅动一杯水，或者看烟囱冒烟，这些流动都是由同一条规律管着的。就像无论谁开车都要遵守同一套交规，无论水、空气还是蜂蜜，它们的流动都受同一套"交规"约束。</p>
+<p>这套"交规"就是Navier-Stokes方程——它想把"流体下一瞬间往哪儿跑"算出来。它存在是因为：有了它，飞机设计、天气预报、管道里的石油输送才能被计算和预测。</p>
+<div class="key-insight">一套规律管住所有液体的流动——只想懂核心思想，看到这里就够了</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/derivative.html">导数与切线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、数字驱动的问题——一根管子，每分钟流多少油？</h3>
+<p>一根内半径 R = 1 cm 的圆管，长 L = 1 m，两端压差 ΔP = 1000 Pa（约 1% 大气压），里面是油（密度 ρ ≈ 900 kg/m³，动力黏度 μ ≈ 0.1 Pa·s）。一分钟能流过多少油？</p>
+<p>先猜：水肯定哗哗流，蜂蜜挤半天不动——"黏度"决定了一切。实验发现，稳定层流下流量与压差成正比、与半径的四次方成正比、与管长成反比（Hagen–Poiseuille，1840 年代）：</p>
+<div class="formula display" data-tex="Q=\frac{\pi \Delta P R^4}{8\mu L}"></div>
+<p>代入数字：</p>
+<div class="formula display" data-tex="Q=\frac{\pi\times 1000\times (0.01)^4}{8\times 0.1\times 1}=\frac{3.14\times 10^{-5}}{0.8}\approx 3.9\times 10^{-5}\ \mathrm{m^3/s}\approx 39\ \mathrm{mL/s}"></div>
+<p>约 <strong>39 mL/s</strong>，一分钟约 2.4 L。流量被四个量精确控制——但 Q ∝ R⁴ 这样的"四次方定律"不是凭空猜的，它是 <strong>Navier–Stokes 方程</strong>在简单几何下的解。这门课的目标：把这条方程本身写出来、读懂每一项，再亲自从它推出这个结果。</p>
+</section>
+
+<section>
+<h3>二、NS 方程——为什么会有非线性项？</h3>
+<p>守恒律：质量守恒 + 动量守恒（牛顿第二定律）作用在每个无穷小的流体微团上。三维不可压 Navier–Stokes 方程：</p>
+<div class="formula display" data-tex="\frac{\partial\mathbf{v}}{\partial t}+(\mathbf{v}\cdot\nabla)\mathbf{v}=-\frac{1}{\rho}\nabla p+\nu\nabla^2\mathbf{v}"></div>
+<p>逐项读出物理意义：</p>
+<ul>
+<li><strong>∂v/∂t</strong>：在某一点看，速度随时间怎么变——"当地加速度"。</li>
+<li><strong>(v·∇)v</strong>：流体微团被流动本身"带走"到速度不同的地方——"迁移加速度"。</li>
+<li><strong>−∇p/ρ</strong>：压力梯度推动流体从高压流向低压。</li>
+<li><strong>ν∇²v</strong>：黏性耗散——相邻流速不同的层互相"拖拽"。</li>
+</ul>
+<p><strong>为什么会有非线性项 (v·∇)v？</strong> 因为流体微团携带的动量本身就跟着流场运动——"惯性"让流体想把当前速度"带着走"。乘积 v·∇v 里出现两个 v：一个是"运载者"（流场速度），一个是"被运载者"（被迁移的动量）。这就像在流动的河里随波逐流：河水流到弯道，你也跟着拐弯。非线性正是"自输运"的数学影子——也是湍流、能量级联乃至千禧年难题的根源：线性方程不会制造混沌，非线性才会。</p>
+<p><strong>没有黏性项会怎样？</strong> 方程退化成 Euler 方程：能量守恒、时间可逆，瀑布的水花不会"碎"成雾。ν∇²v 给系统带来耗散，也让倒放录像露馅。</p>
+</section>
+
+<section>
+<h3>三、完整例题1——圆管层流（Poiseuille 流）：从 NS 方程到流量</h3>
+<p>目标：从 NS 方程推出上面的流量公式，再代回数字。考虑定常（∂v/∂t = 0）、充分发展（速度只沿径向 r 变化）的不可压圆管层流，轴向速度 u(r)，管轴为 z。</p>
+<p><strong>第 1 步：简化方程</strong>。定常 + 轴对称 → (v·∇)v = 0（沿轴向不变，无横向运动）。z 分量方程只剩两项平衡：</p>
+<div class="formula display" data-tex="0=-\frac{1}{\rho}\frac{dp}{dz}+\nu\frac{1}{r}\frac{d}{dr}\left(r\frac{du}{dr}\right)"></div>
+<p><strong>第 2 步：积分</strong>。dp/dz = −ΔP/L 是常数。两次积分并施加边界条件：管壁 u(R) = 0（无滑移），轴心 du/dr|₀ = 0（对称性）：</p>
+<div class="formula display" data-tex="u(r)=\frac{\Delta P}{4\mu L}\left(R^2-r^2\right)"></div>
+<p><strong>第 3 步：代数字</strong>。最大速度在轴心：u_max = u(0) = ΔP R²/(4μL) = 1000×10⁻⁴/(4×0.1×1) = 0.25 m/s。</p>
+<p><strong>第 4 步：流量</strong>。对抛物线剖面积分：</p>
+<div class="formula display" data-tex="Q=\int_0^R u(r)\,2\pi r\,dr=\frac{\pi\Delta P R^4}{8\mu L}\approx 3.9\times 10^{-5}\ \mathrm{m^3/s}\approx 39\ \mathrm{mL/s}"></div>
+<p>平均速度 U = Q/(πR²) = u_max/2 = 0.125 m/s；Reynolds 数 Re = ρUD/μ = 900×0.125×0.02/0.1 ≈ 23 ≪ 1，层流假设自洽 ✓。</p>
+<div class="key-insight">抛物线剖面 u(r) ∝ R²−r² 是 NS 方程在圆管中的"指纹"：轴心最快、管壁不动。流量里的 R⁴ 四次方就来自这个剖面的积分——半径翻倍，流量×16。</div>
+</section>
+
+<section>
+<h3>四、一个方程，两个世界——Reynolds 数与层流/湍流</h3>
+<p>Navier-Stokes方程统治着从茶杯到台风的一切流体运动——但它内部藏着一个惊人的分叉。一切取决于一个<strong>无量纲数</strong>（不带单位的纯数，比较惯性力与粘性力谁更强）：<strong>Reynolds数 Re = UL/ν</strong>。U = 流速，L = 特征尺度，ν = 粘性（流体的内摩擦）。</p>
+<p><strong>Re &lt; 1</strong>：粘性主导 → <strong>层流</strong>。蜂蜜缓缓流淌、静脉中的血液——平滑、可预测、时间可逆。倒着放录像看不出破绽。</p>
+<p><strong>Re &gt; 10⁴</strong>：惯性主导 → <strong>湍流</strong>。香烟袅袅、暴风云翻涌——混沌、多尺度涡旋级联、不可逆转的耗散。<strong>同一个方程。截然不同的物理世界。</strong></p>
+<p><strong>为什么无量纲数能一锤定音？</strong> 方程里只有两个尺度：惯性项 (v·∇)v 的量级是 U²/L，黏性项 ν∇²v 的量级是 νU/L²。两者之比正好是 Re = UL/ν。把方程除以惯性项的量级，就得到只含一个参数的无量纲 NS 方程——所以所有层流都是彼此的"缩放版"，Re 相同则流型相同。</p>
+<div class="formula display" data-tex="\frac{\partial\mathbf{v}}{\partial t}+(\mathbf{v}\cdot\nabla)\mathbf{v}=-\frac{1}{\rho}\nabla p+\nu\nabla^2\mathbf{v}"></div>
+</section><div class="key-insight">湍流是<strong>经典物理中最后一个未被完全理解的领域</strong>。三维NS方程光滑解的存在性和唯一性是Clay千禧年问题之一——悬赏100万美元。我们知道方程，但不知道方程对任意初值是否永远有意义。</div><section>
+<h3>五、完整例题2——算一算你身边的 Reynolds 数</h3>
+<p>Re = UL/ν 只需三个量，人人都能算。几个真实例子：</p>
+<p><strong>① 主动脉中的血液</strong>：ρ ≈ 1060 kg/m³，μ ≈ 4×10⁻³ Pa·s，ν = μ/ρ ≈ 3.8×10⁻⁶ m²/s；U ≈ 0.3 m/s，D ≈ 2 cm。</p>
+<div class="formula display" data-tex="\mathrm{Re}=\frac{UL}{\nu}=\frac{0.3\times 0.02}{3.8\times 10^{-6}}\approx 1600\quad(\text{层流边缘})"></div>
+<p><strong>② 池塘里游泳的人</strong>：U ≈ 1 m/s，L ≈ 1 m，ν ≈ 10⁻⁶ m²/s（水）。</p>
+<div class="formula display" data-tex="\mathrm{Re}=\frac{1\times 1}{10^{-6}}=10^6\quad(\text{深湍流})"></div>
+<p><strong>③ 大肠杆菌</strong>：U ≈ 3×10⁻⁵ m/s，L ≈ 10⁻⁶ m。</p>
+<div class="formula display" data-tex="\mathrm{Re}=\frac{3\times 10^{-5}\times 10^{-6}}{10^{-6}}=3\times 10^{-5}\quad(\text{黏性海洋})"></div>
+<p><strong>解读</strong>：同一条方程，细菌泡在"蜂蜜"里（时间可逆、来去如钟摆），人泡在"湍流"里（惯性主宰、水花四溅）。改一改 U、L、ν 三个量，物理世界整个切换——这就是"无量纲"的神奇。也正因如此，同一个风力模型能通过缩小比例、增大流速，用风洞模拟 747 的机翼。</p>
+</section>
+
+<section>
+<h3>六、Kolmogorov的-5/3定律(1941)——纯量纲分析的胜利</h3>
+<p>湍流的<strong>惯性区</strong>（η ≪ r ≪ L，比耗散尺度大但比宏观尺度小的涡旋），能谱 E(k) 仅由两个量决定：<strong>能量耗散率 ε</strong>（能量如何从大涡流向小涡流）和 <strong>波数 k</strong>（涡旋大小的倒数）。</p>
+<p>量纲分析——<strong>没有任何可调参数</strong>：E(k) ∝ ε^{2/3} k^{-5/3}。动能随波数的-5/3次方衰减。从大气湍流到太阳风，从太平洋洋流到星系际介质，K41定律遍地开花。</p>
+<p>K41的"漏洞"：实际湍流中-5/3谱有<strong>间歇性修正</strong>——耗散不是均匀的，而是集中在"热点"。K62修正加入了间歇性参数——但仍不是完整的理论。</p>
+<div class="formula display" data-tex="\mathrm{Re}=\frac{UL}{\nu},\quad E(k)\propto\varepsilon^{2/3}k^{-5/3}"></div>
+</section>
+
+<section>
+<h3>七、千禧年问题——Blow-up 还是永恒的光滑？</h3>
+<p>3D NS方程有一个致命的未知量：<strong>非线性项 v·∇v</strong>。它会将能量从大尺度"泵送"到越来越小的尺度——涡旋不断撕裂变小。理论上，这个过程在有限时间后可能产生<strong>数学奇点</strong>（速度在某处无限大）。</p>
+<p><strong>两种可能</strong>：(A) 光滑解永远存在 → 湍流"只是很复杂"，数值计算可信。(B) 有限时间炸裂 → NS在3D不适用，需要修改方程本身。</p>
+<p>Tao(2014)证明了一个令人不安的结果："平均化NS"会炸裂——对原始NS进行某种平均后的版本必然爆破。这暗示原版也可能炸裂。侯一钊等(2022-2024)用超级计算机发现了可能的自相似blow-up数值证据——但严格解析证明仍未完成。</p>
+</section>
+
+<section><h3>八、湍流在日常</h3><p>为什么飞机的翼尖会有涡流？为什么高尔夫球的凹坑让它飞得更远？为什么在河流中逆着水流划更容易保持方向？——这些都是湍流动力学在作用。高尔夫球的凹坑<strong>强制湍流</strong>，使边界层附着球面更久，减少尾流低压区——飞行距离增加约30%。</p></section>
+<section><h3>九、前沿：机器学习 + 湍流建模</h3><p>传统CFD在Re&gt;10⁴时需要亚网格模型。Google DeepMind 2023年用图神经网络学习湍流应力张量的亚网格闭包——训练后比传统Smagorinsky模型准30%以上。仍开放：物理可解释的ML湍流模型——既能精准预测，又尊重守恒律。</p></section>
+
+<section>
+<h3>十、关键公式块</h3>
+<div class="formula display" data-tex="\frac{\partial\mathbf{v}}{\partial t}+(\mathbf{v}\cdot\nabla)\mathbf{v}=-\frac{1}{\rho}\nabla p+\nu\nabla^2\mathbf{v}\qquad(\text{Navier-Stokes})"></div>
+<div class="formula display" data-tex="\mathrm{Re}=\frac{UL}{\nu}\qquad(\text{层流/湍流判据})"></div>
+<div class="formula display" data-tex="u(r)=\frac{\Delta P}{4\mu L}\left(R^2-r^2\right),\qquad Q=\frac{\pi\Delta P R^4}{8\mu L}\qquad(\text{Poiseuille 流})"></div>
+<div class="formula display" data-tex="E(k)\propto\varepsilon^{2/3}k^{-5/3}\qquad(\text{K41 能谱})"></div>
+</section>
+
+<section>
+<h3>十一、试试看——练习与提示</h3>
+<ol>
+<li><strong>半径翻倍</strong>：把例题1的管半径从 1 cm 改成 2 cm（其余不变），流量变几倍？平均流速呢？<br><details><summary>提示</summary><p>Q ∝ R⁴，流量 ×16 ≈ 630 mL/s；但平均流速 U = Q/(πR²) ∝ R²，只 ×4 ≈ 0.5 m/s。这就是"四次方定律"的反直觉：管道加粗一点点，流量暴涨。</p></details></li>
+<li><strong>换水</strong>：把例题1里的油换成水（ν ≈ 10⁻⁶ m²/s），在同样的管道几何与平均流速 U = 0.125 m/s 下，Re 是多少？层流还成立吗？<br><details><summary>提示</summary><p>水的 ν 比油小约 100 倍，Re = UD/ν = 0.125×0.02/10⁻⁶ ≈ 2500——已进入过渡区，抛物线剖面会被破坏。同样流速，介质决定流态。</p></details></li>
+<li><strong>飞鱼还是爬虫</strong>：估算一颗尘埃（直径 10⁻⁵ m，下落速度约 0.001 m/s，空气 ν ≈ 1.5×10⁻⁵ m²/s）的 Re，判断它"游泳"的感觉。<br><details><summary>提示</summary><p>Re = UL/ν ≈ 0.001×10⁻⁵/1.5×10⁻⁵ ≈ 6.7×10⁻⁴ ≪ 1。尘埃在空气中感受到的黏性，比你在蜂蜜里的感受还强——它一停就立刻"刹车"，倒放录像毫无破绽。</p></details></li>
+<li><strong>设想的流体</strong>：如果 ν = 0（理想无黏），NS 方程变成什么？为什么湍流（需要能量耗散）在这种流体里无法产生？<br><details><summary>提示</summary><p>变成 Euler 方程：∂v/∂t + (v·∇)v = −∇p/ρ。无黏 → 无能量耗散 → 没有让多尺度级联运行的能量"下水道"；Euler 方程能量守恒、时间可逆，倒放录像看不出破绽。</p></details></li>
+</ol>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Batchelor, An Introduction to Fluid Dynamics</strong></p>
+<p>&rarr; <strong>A. Chorin &amp; J. Marsden, A Mathematical Introduction to Fluid Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/derivative.html">导数与切线</a>。</p>
+</section>
+<section>
+<h3>十二、关联课程</h3>
+<p>&rarr; <a href="/pages/lorenz-attractor.html">Lorenz 吸引子</a>：流体对流的不稳定 → 第一个混沌模型——蝴蝶效应的起源。</p>
+<p>&rarr; <a href="/pages/millennium-problems.html">千禧年问题</a>：NS 光滑解存在性 → 数学的可判定性边界。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">布朗运动</a>：悬浮微粒的随机运动 → 流体分子在微观尺度的"可见"证据。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/navier-stokes.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

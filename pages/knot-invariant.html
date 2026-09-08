@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="三叶结 vs 平凡结——Jones 多项式" />
+  <meta property="og:title" content="纽结不变量 — Vibe Math" />
+  <meta property="og:description" content="三叶结 vs 平凡结——Jones 多项式" />
+  <title>纽结不变量 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🪢 纽结不变量 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">三叶结 vs 平凡结——Jones 多项式</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='knot-invariant',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/yang-mills-mass-gap.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⚗️ Yang–Mills 与质量缺口</a>
+  <a href="/pages/fundamental-group.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🕳️ 基本群 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——两个结是同一个吗？</h3>
+<p>绳子打结再首尾相连，就得到一个<strong>纽结</strong>（knot）。两个纽结如果只靠"拉扯、移动、转圈"能互相变到（<strong>不能剪断</strong>），就算"同一个"。问题来了：</p>
+<p><strong>怎么证明两个结确实不是同一个？</strong></p>
+<p>直接试很难——可能的移动方式无穷无尽。数学的办法：给每个结发一个"指纹"——一个数或一个多项式，只要"同一个结"必定有"同一个指纹"。若两个结指纹不同，那它们必不同。这样的指纹就叫<strong>纽结不变量</strong>（knot invariant）。</p>
+<p>这门课讲两个最重要的指纹：<strong>亚历山大多项式</strong> Δ(t) 和 <strong>Jones 多项式</strong> V(t)。Jones 多项式特别强：它连三叶结和它自己的镜像（左右手镜像）都能分辨——这是亚历山大多项式做不到的。</p>
+<div class="key-insight">核心洞察：纽结不变量 = 给结发"指纹"。指纹相同不保证是同一个结，但指纹不同必不是同一个。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、一个具体的问题：三叶结和它的镜像</h3>
+<p>把一根绳子打成简单的结再粘起来，得到<strong>三叶结</strong>（trefoil knot）。如果你在镜子里看它，镜像结似乎"同样地打结"。但直觉告诉我们：一个打"左旋"的结，拉扯、转动都变不成"右旋"的结——就像左手手套戴不到右手上。</p>
+<p>但"直觉"不能当证明。要严格说明三叶结与它的镜像<strong>不是同一个结</strong>，需要一个能区分它们的指纹。亚历山大多项式做不到（三叶结的 Δ(t)=t−1+t⁻¹，镜像不变），而 Jones 多项式做到了——这是它在 1984 年震惊数学界的第一个成就。</p>
+<p>下面一步步建起这个指纹。</p>
+</section>
+
+<section>
+<h3>二、纽结的图——投影与 Reidemeister 移动</h3>
+<p>先在纸上画一个纽结的<strong>投影图</strong>（diagram）：把结压平到平面，交叉处用"断线"标出谁在上谁在下。同一个结可以画成很多种投影图。</p>
+<p><strong>什么时候两张图代表同一个结？</strong>Reidemeister 定理给出答案：两个投影图代表同一个结，当且仅当能通过有限次下面三种基本动作互相转化——</p>
+<div class="formula display" data-tex="\text{R1：去掉/添一个无意义的小圈}\quad \text{R2：两股分开或叠上}\quad \text{R3：一股从另两股的交叉上方滑过}"></div>
+<p>这很重要：它把"拉扯绳子"这个连续动作，离散成三种局部改写规则。于是"两个结相同"变成了"两个图能否用 R1、R2、R3 互变"——一个可以动手验证的问题。</p>
+<p><strong>为什么三种就够？</strong>因为绳子在空间中的任何连续变形，投影到平面后，只有这几类局部图案会改变。这是 Reidemeister 1926 年的定理，它是所有纽结不变量的逻辑起点。</p>
+</section>
+
+<section>
+<h3>三、纽结不变量——什么才是好的"指纹"</h3>
+<p>一个规则 F 把每个投影图算出一个代数对象（数、多项式、群……）。如果满足：</p>
+<div class="formula display" data-tex="\text{图 }D_1\text{ 与 }D_2\text{ 能经 R1/R2/R3 互变 }\implies F(D_1)=F(D_2)"></div>
+<p>就说 F 是<strong>纽结不变量</strong>。条件只有一个方向：图等价 ⟹ 指纹相等。反过来不要求——这正是它的用处，因为逆否命题"指纹不同 ⟹ 结不同"给出了证明两结不同的唯一方法。</p>
+<div class="key-insight">不变量是用来"否定"的：我们很少用它确认两个结相同，而是用它坚决否认——"指纹都对不上，你们别想是同一个"。</div>
+</section>
+
+<section>
+<h3>四、亚历山大多项式——从矩阵到多项式</h3>
+<p>第一个真正管用的指纹是 J. W. Alexander 1928 年定义的<strong>亚历山大多项式</strong> Δ(t)，它是变元 t 的多项式（允许负次幂）。</p>
+<p>它的定义要用到<strong>投影图的微分矩阵</strong>：给图的每个弧段（两交叉点之间的段）编号，写出一个矩阵 A，其中行对应交叉点、列对应弧段，元素是 0、±1、±t。行列式的某个主子式除以 t−1 化简后，就得到 Δ(t)。</p>
+<p>现代更常用的定义用<strong>Skein 关系</strong>（拧绳关系）——对亚历山大多项式：</p>
+<div class="formula display" data-tex="\Delta(L_+)-\Delta(L_-)=(t^{1/2}-t^{-1/2})\,\Delta(L_0)"></div>
+<p>这里 L₊、L₋、L₀ 是三个只差一个交叉点扭转的图。只要规定平凡结 Δ=1，这个关系就能对任何结一步步算出 Δ(t)。</p>
+<p><strong>完整例题 1：三叶结的亚历山大多项式。</strong> 用 Skein 关系：把三叶结某交叉点改成 L₋ 得平凡结，改成 L₀ 得 Hopf 链环。逐步代入算出</p>
+<div class="formula display" data-tex="\Delta_{\text{三叶}}(t)=t-1+t^{-1}"></div>
+<p>注意它在 t→t⁻¹ 下不变，所以分辨不了镜像——这是它的局限。</p>
+</section>
+
+<section>
+<h3>五、Jones 多项式——能分辨手性的指纹</h3>
+<p>1984 年，Vaughan Jones 从冯诺依曼代数的研究中意外发现一个更精细的不变量，满足另一个 Skein 关系：</p>
+<div class="formula display" data-tex="t^{-1}V(L_+)-t\,V(L_-)=(t^{1/2}-t^{-1/2})\,V(L_0)"></div>
+<p>同样是"平凡结 V=1 起步，逐交叉点递推"。看起来和亚历山大多项式只差系数，但 t→t⁻¹ 时它<strong>会变</strong>——正是这个差别让它能分辨左右手。</p>
+<p><strong>完整例题 2：三叶结的 Jones 多项式。</strong> 从平凡结出发，用关系逐步算（每一步把交叉点换成 L₋ 和 L₀，直到都归约成已知的结）：</p>
+<div class="formula display" data-tex="V_{\text{三叶}}(t)=-t^{-4}+t^{-3}+t^{-1}"></div>
+<p>现在看镜像：Jones 多项式满足 V_{镜像}(t)=V(t^{-1})。对三叶结：</p>
+<div class="formula display" data-tex="V_{\text{镜像}}(t)=-t^{4}+t^{3}+t\neq V_{\text{三叶}}(t)"></div>
+<p>两边不同 ⟹ 三叶结与它的镜像<strong>不是同一个结</strong>。亚历山大多项式做不到的事，Jones 多项式做到了。</p>
+<p><strong>完整例题 3：检查平凡结的指纹。</strong> 平凡结（不打结的圈）V=1、Δ=1。任何 V(t)≠1 的结必然不是平凡结——比如上面的三叶结。反过来，V(t)=1 的结可能是平凡结也可能不是（Jones 多项式有已知的"非平凡但指纹平凡"例子），这正是"指纹只能单向否定"的含义。</p>
+</section>
+
+<section>
+<h3>六、为什么 Skein 关系能定义不变量？</h3>
+<p>一个担心：从不同交叉点开始递推，会不会算出不同的多项式？</p>
+<p><strong>答案：不会，但这不是显然的。</strong>关键有三点：</p>
+<p>&rarr; <strong>局部性</strong>：Skein 关系每次只改一个交叉点，而 Reidemeister 移动 R1/R2/R3 也只局部改图。可以验证：对这三种移动分别做 Skein 递推，左右两边得到同一个多项式——这需要逐个移动检查（约四五个交叉点归约），是教科书里标准的"画图核对"。<br>
+&rarr; <strong>可终止性</strong>：每递推一步，把交叉点归约成更简单的图，有限步必达平凡结/链环，所以计算总能完成。<br>
+&rarr; <strong>与起点无关</strong>：递推的最终结果对所有交叉点路径一致，因为每次局部改动都满足 Reidemeister 不变性。</p>
+<p>正因为这三条，Jones/Alexander 多项式才是良定义的"指纹"。这也解释了为什么要在证明不变量性上花功夫——定义谁都会写，<strong>良定义性</strong>才是难点。</p>
+</section>
+
+<section>
+<h3>七、更精细的指纹——Khovanov 同调</h3>
+<p>Jones 多项式虽然强，仍不是万能的：有些不同结的 Jones 多项式相同。2000 年，Mikhail Khovanov 把 Jones 多项式"升级"成<strong>Khovanov 同调</strong>：一个由同调群组成的更丰富对象，其欧拉特征数恰好是 Jones 多项式——就像把数字升级成矩阵，信息量剧增。</p>
+<p>Khovanov 同调至今是分辨纽结的最强武器之一，也与物理（弦论中的 Khovanov 同调）、四维拓扑有深刻联系。</p>
+</section>
+
+<section>
+<h3>八、关键公式</h3>
+<div class="formula display" data-tex="\text{Jones：}\quad t^{-1}V(L_+)-t\,V(L_-)=(t^{1/2}-t^{-1/2})V(L_0),\quad V(\text{平凡结})=1"></div>
+<div class="formula display" data-tex="\text{镜像：}\quad V_{L^*}(t)=V_L(t^{-1})"></div>
+<div class="formula display" data-tex="\text{Alexander：}\quad \Delta(L_+)-\Delta(L_-)=(t^{1/2}-t^{-1/2})\Delta(L_0),\quad \Delta(\text{平凡结})=1"></div>
+<div class="formula display" data-tex="\text{三叶结：}\quad \Delta=t-1+t^{-1},\quad V=-t^{-4}+t^{-3}+t^{-1}"></div>
+</section>
+
+<section>
+<h3>九、试试看（每题附提示）</h3>
+<p>1. 为什么"指纹相同 ⟹ 结相同"这个反向推理不能成立？<em>提示：两个不同结完全可能有相同 Jones 多项式；想想"必要条件 vs 充分条件"。</em></p>
+<p>2. 用镜像公式验证：如果某结满足 V=V(t⁻¹)（关于 t 对称），它可能是什么性质的结？<em>提示：它和它的镜像指纹相同，无法用手性分辨。</em></p>
+<p>3. 平凡结的 Jones 多项式是 1。一个结的 Jones 多项式是 t²+t⁻²，它可能是平凡结吗？<em>提示：把 V(t)≠1 代入判断。</em></p>
+<p>4. 为什么 Reidemeister 移动只有三种就够？<em>提示：绳子连续变形的投影只在局部改变，归纳这三类。</em></p>
+</section>
+<section><h3>证明：Skein 关系的不变性思路</h3><p>要证 V 是纽结不变量，须对 R1/R2/R3 分别检查。以 R2 为例：设 D、D′ 由 R2 联系（两股平行上下互换）。对其中任一交叉点做 Skein 展开，D 和 D′ 得到的"部分和"逐项相同（因为 R2 只引入一对互补交叉点，它们在线性组合中抵消）。R1、R3 类似但代数细节更多——这是 Jones 1985 年论文的核心计算，教科书（如 Lickorish《An Introduction to Knot Theory》）完整处理。</p></section>
+<section><h3>附录 A · Reidemeister 移动——图等价的标准操作</h3><p>R1：去掉/添一个孤立的扭圈。R2：两股平行线叠合/分开。R3：一股从交叉点上方/下方滑过。定理：两图同伦等价（代表同一结）⟺ 可用 R1/R2/R3 有限步互变。这是不变量理论的地基。</p></section>
+<section><h3>附录 C · 不变量性的证明思路</h3><p>任何好的不变量，都要先过三关：良定义（与递推路径无关）、Reidemeister 不变（对 R1/R2/R3 稳定）、可计算。Jones/亚历山大满足前两关；Khovanov 同调再加一层同调信息。</p></section>
+<section><h3>附录 D · 标准反例：镜像结与 Jones 的手性探测</h3><p>三叶结 V(t)=−t⁻⁴+t⁻³+t⁻¹，镜像 V(t)=−t⁴+t³+t。不等 ⟹ 手性结（chiral）。但某些结是<strong>可逆且镜像对称</strong>的（两股互相对称），其 Jones 多项式必然 t→t⁻¹ 不变。Jones 多项式检测不到这些——是分辨力的边界，也是更精细不变量的舞台。</p></section>
+<section><h3>附录 E · 工作题</h3><p><details><summary>工作题 1（含解答）：给平凡结加一个"假圈"再展开，验证 V=1。</summary>R1 加圈不改变结；由 R1 不变性 V 不变，故仍为 1。</details></p>
+<p><details><summary>工作题 2（含解答）：Hopf 链环（两个圈套在一起）的 Jones 多项式。</summary>用 Skein：某交叉点 L₊→L₋=平凡结、L₀=平凡结（拆开），代入 t⁻¹·1−t·V(平凡)=-（t^{1/2}−t^{-1/2}）·1，解得 V=−t^{1/2}−t^{-1/2}。</details></p>
+<p><details><summary>工作题 3（含解答）：为什么投影图必须标上下，否则不变量无意义。</summary>同一投影不标上下可以是完全不同的结；不变量依赖交叉点信息。</details></p></section>
+<section><h3>前沿：Khovanov 同调与四维拓扑</h3><p>Khovanov 同调不仅强于 Jones 多项式，还与"切片结"、四维中嵌入球面、Rasmussen 不变量有关——后者给出了第一个纯组合的"拓扑不依赖光滑结构"检测工具。纽结理论的现代形态与物理弦论、量子场论深度交织。</p></section>
+<section><h3>教科书与进一步阅读</h3><p>&rarr; <strong>L. Kauffman, Knots and Physics</strong>（纽结与物理的桥梁）</p>
+<p>&rarr; <strong>W. B. R. Lickorish, An Introduction to Knot Theory</strong>（标准教材，Skein 关系与 Khovanov 同调）</p>
+<p>&rarr; <strong>C. Adams, The Knot Book</strong>（直觉极佳）</p></section>
+<section><h3>前置知识</h3><p>学习本课前，建议先掌握：<a href="/pages/fundamental-group.html">基本群</a>、<a href="/pages/homology.html">同调论</a>。</p></section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fundamental-group.html">🪢 基本群</a>：把"洞"翻译成群结构。</p>
+<p>&rarr; <a href="/pages/homology.html">🔗 同调论</a>：∂²=0 的威力——纽结同调的近亲。</p>
+<p>&rarr; <a href="/pages/feynman-diagram.html">🌊 费曼图</a>：纽结多项式在量子场论与统计力学中的反复出现。</p>
+<p>&rarr; <a href="/pages/algebraic-topology-homology.html">🧭 代数拓扑</a>：奇异同调与 Jones 同调的家族关系。</p></section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/knot-invariant.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

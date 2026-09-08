@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="在弯曲空间中平移矢量——路径决定结果" />
+  <meta property="og:title" content="平行移动 — Vibe Math" />
+  <meta property="og:description" content="在弯曲空间中平移矢量——路径决定结果" />
+  <title>平行移动 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>↗️ 平行移动 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">在弯曲空间中平移矢量——路径决定结果</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='parallel-transport',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/curvature.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📐 曲率</a>
+  <a href="/pages/fiber-bundle.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🧵 纤维丛 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、具体动机——把箭头从北极搬到赤道再搬回来，它转了多少度？</h3>
+<p>先不看抽象定义，先看一个带数字的具体问题。拿一个单位球（R = 1），在北极放一支箭头，指向东。现在做三件事：</p>
+<ul>
+  <li><strong>第 1 步：</strong>沿经线把箭头"平移"到赤道上的 A 点（经度 0°）——搬的时候让箭头始终贴住球面、始终与路径保持平行，绝不让它绕自身的轴转。</li>
+  <li><strong>第 2 步：</strong>再沿赤道把它"平移"到 B 点（经度 90°）。</li>
+  <li><strong>第 3 步：</strong>再沿经线把它"平移"回北极。</li>
+</ul>
+<p>一路上你都小心翼翼地"平移"，一步都没有让箭头自转。可是回到北极后，箭头却指向了<strong>南</strong>——相对出发时的"指向东"，整整转了 <strong>90° = π/2</strong>。</p>
+<p>这不是手抖，是几何。这个三角形的内角和是 270°（比平面多 90°），而"多出来的 90°"恰好就是箭头转过的角度。再给两个带数字的判例：</p>
+<ul>
+  <li><strong>沿赤道绕一整圈：</strong>箭头回到起点方向不变，转角 = 0；</li>
+  <li><strong>沿北纬 60° 的纬圈绕一整圈：</strong>转角 = 2π(1 − cos60°) = <strong>π = 180°</strong>——箭头最后指向反方向。</li>
+</ul>
+<div class="key-insight">核心洞察：在弯曲的面上"平移"方向，绕一圈回来后方向会悄悄改变；转了多少度，正好量出这片面弯了多少。这个"搬方向"的规则叫<b>平行移动</b>，转过的角度叫<b>和乐（holonomy）</b>。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/geodesic.html">测地线</a>、<a href="/pages/curvature.html">曲率</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、具体动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、平行移动的直觉——从平桌到球面</h3>
+<p><strong>在平桌上：</strong>把一支箭头从桌角搬到另一个角，你毫不怀疑它"没转向"——因为平面有<b>全局的方向</b>：每个点都可以说"这是北、那是东"。搬的过程就是把同一个方向复制过去。</p>
+<p><strong>在球面上：</strong>麻烦来了。球面上没有全局方向——北极点的"东"指向所有经线的方向，到了南极点的"东"又变成另一个意思。你想知道"这个点的方向搬到那个点算几个意思"，必须先定一条<b>规则</b>：沿着什么路径、怎么一步一步搬。</p>
+<p><strong>为什么需要"一步一步"？</strong> 因为球面没有"两点之间方向怎么平移"的天然答案——搬的方向 <em>取决于路径</em>（〇节已经演示：绕不同圈回到同一点，箭头朝向不同）。所以平行移动只能是"沿一条给定路径、逐点搬运"的局部规则，而不是"一次性把方向搬到远方"。</p>
+<p><strong>规则是什么？</strong> 直觉版的规则：搬的时候，箭头永远"贴着面"（不离开切平面），并且与搬运方向的夹角保持不变。在平面上，这条规则退化成普通的平移；在球面上，它给出〇节的 90° 结果。下面把这句直觉写成方程。</p>
+<p><strong>为什么在乎这个？</strong> 三件大事都靠它：</p>
+<ul>
+  <li><strong>微分几何：</strong>曲率 = 平行移动绕闭合路径一圈的净旋转 ÷ 所围面积（Gauss-Bonnet 的局部版本，第四节）；</li>
+  <li><strong>广义相对论：</strong>自由落体 = 四维速度沿 Levi-Civita 联络的平行移动；</li>
+  <li><strong>规范场论：</strong>带电粒子 = 其 U(1) 相位沿路径的平行移动——Aharonov-Bohm 效应证明这个"相位搬运"有物理实在性。</li>
+</ul>
+</section>
+
+<section>
+<h3>二、严格化：联络、协变导数、平行移动方程</h3>
+<p>把第一节的直觉变成严格定义。核心概念是<strong>联络</strong>——"怎么算平行"的规则本身。</p>
+<p><strong>定义（仿射联络）：</strong>设 M 为光滑流形，TM 为切丛。一个<strong>联络</strong>是 R-双线性映射</p>
+<div class="formula display" data-tex="\nabla:\Gamma(TM)\times\Gamma(TM)\to\Gamma(TM),\qquad (X,Y)\mapsto\nabla_XY"></div>
+<p>满足：(i) 对 X 是 C^∞(M)-线性（∇_{fX}Y = f∇_XY）；(ii) 乘积法则 ∇_X(fY) = (Xf)Y + f∇_XY。在黎曼流形上，Levi-Civita 联络由两个附加条件<strong>唯一确定</strong>：(iii) 度规相容 ∇_Z⟨X,Y⟩ = ⟨∇_ZX,Y⟩ + ⟨X,∇_ZY⟩；(iv) 无挠 ∇_XY − ∇_YX = [X,Y]。局部坐标 (x^i) 中联络由 Christoffel 符号编码：</p>
+<div class="formula display" data-tex="\nabla_{\partial_i}\partial_j = \Gamma^k_{ij}\,\partial_k,\qquad \Gamma^k_{ij} = \tfrac12 g^{kl}(\partial_i g_{jl} + \partial_j g_{il} - \partial_l g_{ij})"></div>
+<p><strong>为什么需要这些公理？</strong> 联络的选择有无数种，为什么偏偏挑 Levi-Civita？因为两条附加条件各有"不得不"的理由：</p>
+<ul>
+  <li><strong>度规相容（保长度保夹角）：</strong>平行移动要是把箭头的长度搬变了，那"长度"这个几何量就不可靠了。度规相容保证 P_γ 是正交映射，长度和夹角在搬运中不变——这正是"平移"一词的含义。</li>
+  <li><strong>无挠（对称性）：</strong>保证测地线方程里 Γ 关于 α,β 对称，从而"测地线 = 变分极值"与"测地线 = 自平行"两种定义一致（见《测地线》课第二节）。</li>
+</ul>
+<p><strong>定义（沿曲线的平行移动）：</strong>设 γ: [a,b] → M。向量场 V 沿 γ 称为<strong>平行</strong>的，若</p>
+<div class="formula display" data-tex="\nabla_{\dot\gamma} V = 0 \iff \frac{dV^k}{dt} + \Gamma^k_{ij}\,\dot\gamma^i V^j = 0"></div>
+<p>这是沿曲线的一阶线性常微分方程组——给定初值 V(a) = V₀ 有唯一解。于是对每条曲线定义了线性同构</p>
+<div class="formula display" data-tex="P_\gamma:\ T_{\gamma(a)}M\to T_{\gamma(b)}M,\qquad V_0\mapsto V(b)"></div>
+<p>即<strong>平行移动算子</strong>。由 ODE 理论 P_γ 是线性同构；由度规相容性 P_γ <strong>保持内积</strong>（长度与夹角不变），故 P_γ ∈ O(T_{γ(a)}M, T_{γ(b)}M)。</p>
+<p><strong>定义（协变导数）：</strong>V 沿 γ 的<strong>协变导数</strong>度量"V 相对平行移动的偏差"：</p>
+<div class="formula display" data-tex="(\nabla_{\dot\gamma}V)(t) = \lim_{h\to 0}\frac{P^{-1}_{\gamma|_{[t,t+h]}}V(t+h) - V(t)}{h}"></div>
+<p><strong>测地线</strong>正是满足 ∇_{ẋ}ẋ = 0 的曲线（初速度沿自身平行移动）——平行移动是测地线的定义工具。GR 中自由落体 = 四维速度沿 Levi-Civita 联络的平行移动；规范理论中带电粒子的 U(1) 相位沿路径平行移动（联络 A 即规范势）。</p>
+</section>
+
+<section>
+<h3>三、完整例题一——球面上沿纬圈的平行移动：一步步解方程</h3>
+<p>用第二节的方程，把〇节的数字"180°（纬圈 60°）"完整算一遍。球面度规 ds² = R²(dθ² + sin²θ dφ²)。</p>
+<p><strong>第 1 步：非零 Christoffel。</strong> 与《测地线》课相同：</p>
+<div class="formula display" data-tex="\Gamma^\theta_{\varphi\varphi} = -\sin\theta\cos\theta,\qquad \Gamma^\varphi_{\theta\varphi} = \Gamma^\varphi_{\varphi\theta} = \cot\theta"></div>
+<p><strong>第 2 步：写出平行移动方程。</strong> 沿纬圈 θ ≡ θ₀，φ(t) = ωt，故 ẋ = (0, ω)。平行移动方程 dV^k/dt + Γ^k_{ij}ẋ^i V^j = 0 的两个分量：</p>
+<div class="formula display" data-tex="\frac{dV^\theta}{dt} - \omega\sin\theta_0\cos\theta_0\,V^\varphi = 0,\qquad \frac{dV^\varphi}{dt} + \omega\cot\theta_0\,V^\theta = 0"></div>
+<p><strong>第 3 步：消元成单个方程。</strong> 把第二式代入第一式的导数：</p>
+<div class="formula display" data-tex="\frac{d^2V^\theta}{dt^2} = \omega\sin\theta_0\cos\theta_0\Big(-\omega\cot\theta_0\,V^\theta\Big) = -\omega^2\cos^2\theta_0\,V^\theta"></div>
+<p><strong>第 4 步：解方程。</strong> 这是简谐振动，频率 ωcosθ₀：</p>
+<div class="formula display" data-tex="V^\theta(t) = A\cos(\omega t\cos\theta_0) + B\sin(\omega t\cos\theta_0),\qquad V^\varphi = \frac{1}{\sin\theta_0}\big(-A\sin(\omega t\cos\theta_0) + B\cos(\omega t\cos\theta_0)\big)"></div>
+<p>取初值 V(0) = (1, 0)（先沿经线方向 e_θ）：A = 1, B = 0。</p>
+<div class="formula display" data-tex="V^\theta(t) = \cos(\omega t\cos\theta_0),\qquad V^\varphi(t) = -\frac{\sin(\omega t\cos\theta_0)}{\sin\theta_0}"></div>
+<p>换算成物理向量（单位正交标架 (e_θ, e_φ)）：V = V^θ e_θ + R sinθ₀ V^φ e_φ，即</p>
+<div class="formula display" data-tex="V(t) = \cos(\omega t\cos\theta_0)\,e_\theta - \sin(\omega t\cos\theta_0)\,e_\varphi"></div>
+<p><strong>第 5 步：绕一整圈，读出转角。</strong> 绕一圈 T = 2π/ω：</p>
+<div class="formula display" data-tex="V(T) = \cos(2\pi\cos\theta_0)\,e_\theta - \sin(2\pi\cos\theta_0)\,e_\varphi,\qquad \text{转角} = 2\pi\cos\theta_0 \equiv -2\pi(1-\cos\theta_0)\;(\bmod 2\pi)"></div>
+<p>即净转角 = <strong>2π(1 − cosθ₀)</strong>（与环路取向有关，北半球逆时针为正）。带数字核对〇节：θ₀ = 60°（北纬 60°）：2π(1 − cos60°) = 2π(1 − ½) = <strong>π = 180°</strong> ✓。赤道 θ₀ = 90°：转角 0 ✓。北极附近 θ₀ → 0：转角 → 2π ≡ 0，箭头几乎被"拖着"随纬圈转回原样。</p>
+<div class="key-insight">这个例题说明两件事：第一，平行移动可以用一条一阶 ODE 精确求解；第二，转角 2π(1−cosθ₀) 恰好等于"曲率 × 所围球冠面积"——下一节把它变成一般定理。</div>
+</section>
+
+<section>
+<h3>四、为什么绕一圈会转角——曲率 = holonomy（小环路定理）</h3>
+<p>第三节的转角 2π(1−cosθ₀) 不是巧合，它来自一条深刻定理：<strong>转过的角 = 曲率积分</strong>。为什么？因为平行移动的"偏差"本来就是在度量曲率。</p>
+<p><strong>定理（无穷小 holonomy）：</strong>设 X, Y ∈ T_pM，取以 p 为顶点、边沿 X 与 Y 方向的小平行四边形（边长 ε，即 exp_p(εX), exp_p(εY) 张成的四边形）。把向量 V 沿此环路平行移动一圈回到 p，所得线性同构为</p>
+<div class="formula display" data-tex="P_\square = \mathrm{Id} + \varepsilon^2\,R(X,Y) + O(\varepsilon^3)"></div>
+<p>其中 R 为黎曼曲率张量（约定 R(X,Y)Z = ∇_X∇_YZ − ∇_Y∇_XZ − ∇_{[X,Y]}Z）。</p>
+<p><strong>为什么平方项？</strong> 平直空间里平行移动一圈是恒等变换（Id）。弯曲空间里，偏差的首阶出现在 ε²——一阶 ε 项被"绕一圈走回去"抵消掉，剩下的正是 <strong>曲率×面积</strong>（ε² 即小四边形的面积量级）。这解释了第三节的 2π(1−cosθ₀) 为什么正比于面积：转角的单位是"曲率×面积"。</p>
+<p><strong>证明思路（法坐标计算）：</strong>取 p 点处的法坐标，使 Γ^k_{ij}(p) = 0。</p>
+<ul>
+  <li><strong>1. 沿单边移动：</strong>平行移动方程 dV/dt = −Γ(x(t))·ẋ·V。因 Γ(p) = 0，沿长为 ε 的边，V 改变量首阶为 ε²（导数 ∂Γ 项）。</li>
+  <li><strong>2. 四次移动串联：</strong>依次沿 εX、εY、−εX、−εY 移动。平行移动沿两条"路径"的差正比于 ∂ⱼΓ − ∂ᵢΓ + ΓΓ 项——这正是 R 的定义（在法坐标中 [X,Y] 项为零，R^k_{\;lij} = ∂ᵢΓ^k_{lj} − ∂ⱼΓ^k_{li} + ΓΓ − ΓΓ）。</li>
+  <li><strong>3. 展开到 ε²：</strong>交叉项合并后得 P_□ = Id + ε²R(X, Y) + O(ε³)。□</li>
+</ul>
+<p><strong>推论（周游角 ≈ 曲率 × 面积）：</strong>对二维曲面，R(X,Y)V 作用于 V 恰为"绕法向量旋转"：</p>
+<div class="formula display" data-tex="\text{旋转角} = K\cdot A + O(\text{高阶}),\qquad A = \text{环路所围面积}"></div>
+<p>即平行移动绕小环路的净旋转角 = 曲率积分 ≈ K·A。这与 Gauss-Bonnet 衔接：把区域分割为无数小环路，周游角相加 = ∫K dA。第三节的纬圈结果就是积出来的：∫_{球冠} (1/R²)dA = (1/R²)·2πR²(1−cosθ₀)。</p>
+<p><strong>更一般（Ambrose-Singer 定理局部版）：</strong>平行移动沿全部闭合环路产生的变换构成<strong>和乐群</strong> Hol_p(M) ⊆ O(T_pM)。其李代数由曲率张量生成——曲率是和乐群的"无穷小生成元"。这正是规范理论中"Wilson 圈 = exp(∮A)"与"场强 F = 曲率"的几何对应：局部曲率决定沿环路的全局相位（holonomy）。</p>
+<div class="key-insight">一句话：平行移动为什么绕圈会转角？因为弯曲空间里"往东再往北"和"往北再往东"不是一回事，差多少由曲率 R 决定。曲率是"转角的无穷小版本"，holonomy 是"转角本身"。</div>
+</section>
+
+<section>
+<h3>五、完整例题二——"转角 = 曲率×面积"的具体运用：赤道、纬圈、球冠</h3>
+<p>把推论"转角 = K·A"用在球面上，三个数字逐个验证，并用面积公式互相核对。</p>
+<p><strong>第 1 步：公式。</strong> 球面 K = 1/R² 常数。沿纬圈 θ₀ 围成的球冠面积：</p>
+<div class="formula display" data-tex="A = \int_0^{\theta_0}\!\int_0^{2\pi} R^2\sin\theta\,d\varphi\,d\theta = 2\pi R^2(1-\cos\theta_0),\qquad \text{转角} = \frac{1}{R^2}\cdot A = 2\pi(1-\cos\theta_0)"></div>
+<p>这与第三节 ODE 直接解出的结果<strong>逐字相同</strong>——两条独立路线指向同一个数。</p>
+<p><strong>第 2 步：三个具体值。</strong></p>
+<ul>
+  <li><strong>赤道 θ₀ = π/2：</strong>球冠 = 半球，A = 2πR²，转角 = 2π ≡ 0 (mod 2π)。向量绕赤道一圈方向不变——holonomy 平凡。这与"沿赤道平行移动向量始终沿经线"（第三节 θ₀=90° 时 V ≡ e_θ 不变）一致。</li>
+  <li><strong>北纬 60°（θ₀ = 60°）：</strong>A = 2πR²(1 − ½) = πR²，转角 = π。<strong>箭头绕一圈指向反方向</strong>——〇节与第三节的判例。</li>
+  <li><strong>北极附近（θ₀ → 0）：</strong>A → 0，转角 → 0。很小的圈几乎不产生 holonomy——因为几乎没有围住任何面积。</li>
+</ul>
+<p><strong>第 3 步：反向核对面积。</strong> 反过来用"转角 = K·A"当公理：已知转角 2π(1−cosθ₀)（ODE 解），K = 1/R²，则 A = R²·2π(1−cosθ₀) = 2πR²(1−cosθ₀)，与球冠直接积分一致 ✓。公式两条路互相印证。</p>
+<div class="key-insight">转角只取决于"围住了多少曲率"（K×面积），与路径本身的形状无关——这是 holonomy 最反直觉也最有用的性质：路径越绕，转得越多，但多出来的总是"里面的曲率总量"。</div>
+</section>
+
+<section>
+<h3>六、完整例题三——球面测地三角的 holonomy：内角和与转角</h3>
+<p>回到〇节的三角形，把它从头到尾推一遍，解释为什么"转角 = 内角和的超额"。单位球 R = 1，顶点 A = 北极、B = (θ=π/2, φ=0)、C = (θ=π/2, φ=π/2)。</p>
+<p><strong>第 1 步：三条边都是测地线。</strong> AB 是经线 φ=0，BC 是赤道段，CA 是经线 φ=π/2——三条都是大圆弧（测地线）。沿测地线平行移动切向量：∇_{ẋ}ẋ = 0，且度规相容保夹角，所以"平行移动的向量与速度方向的夹角保持不变"。</p>
+<p><strong>第 2 步：沿边搬向量。</strong> 初始向量取 V₀ = e_θ（沿 AB 方向，指向赤道）。</p>
+<ul>
+  <li><strong>AB 段：</strong>V₀ 与路径切线同向，搬到 B 仍是 e_θ（指向 A 方向）。</li>
+  <li><strong>BC 段（赤道）：</strong>到 B 时 V = e_θ，恰好垂直于赤道。沿赤道平行移动，由第三节公式（θ₀ = 90° ⟹ cosθ₀ = 0），V 保持不变：<strong>V 一直等于 e_θ</strong>。</li>
+  <li><strong>CA 段：</strong>到 C 时 V = e_θ，恰好又指向北极 A，与路径切线同向。搬到 A 仍沿 e_θ。</li>
+</ul>
+<p><strong>第 3 步：回到北极读转角。</strong> 回到 A 时向量 V 指向"朝 C 那条经线"的方向；出发时 V₀ 指向"朝 B 那条经线"的方向。两条经线在北极夹角 90° = π/2，所以</p>
+<div class="formula display" data-tex="\text{holonomy 转角} = \frac{\pi}{2} = 90^\circ"></div>
+<p><strong>第 4 步：为什么等于角盈。</strong> 内角和 = 3π/2，比平面多 π/2。沿测地线搬向量时，向量始终"贴着"路径方向（夹角不变），所以整圈下来向量相对"起点方向"的净偏转，正好等于"路径方向的净偏转"——而路径（一个闭合三角形）方向偏转的总和，就是角盈。于是</p>
+<div class="formula display" data-tex="\text{转角} = \text{角盈} = \alpha+\beta+\gamma-\pi = \frac{\pi}{2} = \int_T K\,dA"></div>
+<p>三个视角（ODE 逐边搬运 / 内角和 / K×面积）得到同一个 π/2。这就是"holonomy 不依赖路径形状，只依赖曲率×所围面积"在测地三角上的显式演示。</p>
+</section>
+
+<section>
+<h3>七、反例辨析——球面的旋转 vs 圆柱的不旋转</h3>
+<p><strong>反例 1（球面：绕纬圈一圈后向量旋转）：</strong>球面 S²(R)，纬圈 C 位于余纬 θ₀（半径 R sinθ₀），把向量沿 C 平行移动一圈。由"旋转角 = ∫K dA"（K = 1/R² 常数，围成球冠面积 A = 2πR²(1−cosθ₀)）：</p>
+<div class="formula display" data-tex="\text{周游角} = \int_{\text{球冠}} K\,dA = \frac{1}{R^2}\cdot 2\pi R^2(1-\cos\theta_0) = 2\pi(1-\cos\theta_0)"></div>
+<p>赤道（θ₀ = π/2）周游角 = 2π ≡ 0（mod 2π）：向量沿赤道回到起点方向不变——holonomy 平凡。北极附近小圈（θ₀ → 0）周游角 → 0。中间纬圈有非平凡净旋转，旋转角 = K·A。经典表述："沿纬圈平行移动后向量相对初始方向旋转 2πcosθ₀（按 ODE 求解的符号约定），这与 2π(1−cosθ₀) 相差整圈，是同一旋转。"</p>
+<p><strong>反例 2（圆柱：曲率为零故无旋转）：</strong>圆柱 R²/2π 的度规 ds² = R²dθ² + dz² 与坐标无关，Christoffel 符号全为零，曲率 R = 0。平行移动方程 dV/dt = 0 ⟹ V 的坐标分量<strong>不变</strong>。沿任何闭合环路（包括绕一整圈回到原点）平行移动 = 恒等，<strong>无旋转</strong>。<strong>几何原因：</strong>圆柱可展成平面（等距），平面上平行移动 = 保持方向，而等距保持平行移动 ⟹ 圆柱平行移动同样保持"坐标方向"。这直观验证 K = 0 ⟹ holonomy 平凡。对比第三节：同一个"旋转角 = K×面积"公式，在球面给非零、在圆柱给零——K 是唯一判据。</p>
+<p><strong>反例 3（测地三角的净旋转）：</strong>球面上取测地三角（三条大圆劣弧），沿边平行移动一个向量回到起点：沿测地线段向量与速度夹角不变（∇_{ẋ}ẋ = 0），但绕完闭合回路后向量相对起点旋转了 A/R²（角盈）。这正是曲率存在的最直接表现——holonomy 不依赖于"路径的曲率"，只依赖于"空间的曲率 × 所围面积"（第六节的完整计算）。</p>
+<p><strong>对比总结：</strong>球面（K ≠ 0）绕闭合圈<strong>有</strong>净旋转（正比于所围面积）；圆柱（K = 0）<strong>无</strong>净旋转。周游角把局部曲率与沿路径的整体效应联系起来，是"局部几何 ⟹ 全局结论"的机制。</p>
+</section>
+
+<section>
+<h3>八、和乐群——所有闭合回路的净效果</h3>
+<p>把"绕一条路转多少角"升级成"绕所有可能的路，能产生哪些变换"——这个集合不是杂乱无章，而是一个<strong>群</strong>。</p>
+<p><strong>定义：</strong>固定基点 p，把平行移动沿<b>所有</b>以 p 为起点终点的闭合回路得到的变换全体收集起来，构成<strong>和乐群</strong> Hol_p(M) ⊆ O(T_pM)（保内积的线性变换群）。它是 O(T_pM) 的一个李子群。Ambrose–Singer 定理说：<strong>和乐群的李代数由曲率张量在所有点上的值生成</strong>——曲率是"无穷小和乐"，和乐是"曲率的有限版本"。</p>
+<p><strong>为什么曲率决定和乐群？</strong> 第四节的小环路定理：任何闭合回路可以切成许多小平行四边形，每个贡献 Id + ε²R，串起来乘积就得到整个 P_γ。反过来，凡是和乐群里的变换都来自曲率的"积累"。所以"和乐平凡 ⟺ 平坦"（K = 0，圆柱），"和乐群由曲率撑大"（K ≠ 0，球面）。</p>
+<p><strong>Berger(1955) 分类：</strong>紧致单连通黎曼流形的和乐群只有几种可能：</p>
+<div class="formula display" data-tex="\mathrm{SO}(n),\quad \mathrm{U}(n/2),\quad \mathrm{SU}(n/2),\quad \mathrm{Sp}(n/4),\quad \mathrm{Sp}(1)\mathrm{Sp}(n/4),\quad \mathrm{G}_2,\quad \mathrm{Spin}(7)"></div>
+<p>它们分别对应一般黎曼流形、Kähler、Calabi–Yau、超 Kähler、四元 Kähler、G₂（7 维）与 Spin(7)（8 维）流形。这是微分几何中最伟大的分类定理之一：<strong>空间的对称类型（和乐群）被限制在极少数名单里</strong>，而 Calabi–Yau 流形正是弦论紧化的舞台。</p>
+<div class="key-insight">一句话：平行移动绕一圈的转角是小风景（holonomy），绕遍所有圈的变换全体是大格局（和乐群）。曲率是它的"无穷小生成元"，而整幅大格局总共只有七种可能。</div>
+</section>
+
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="\nabla_\gamma v=0\quad\text{(平行移动)}"></div>
+<div class="formula display" data-tex="\frac{dV^k}{dt} + \Gamma^k_{ij}\,\dot\gamma^i V^j = 0\quad\text{(分量形式)}"></div>
+<div class="formula display" data-tex="P_\square = \mathrm{Id} + \varepsilon^2 R(X,Y) + O(\varepsilon^3)\quad\text{(小环路 holonomy)}"></div>
+<div class="formula display" data-tex="\text{周游角} = \int_{\text{所围区域}} K\,dA = \frac{1}{R^2}\cdot 2\pi R^2(1-\cos\theta_0)\quad\text{(球面纬圈)}"></div>
+</section>
+
+<section>
+<h3>十、试试看（带提示）</h3>
+<p><strong>1. 为什么沿赤道平行移动向量回到起点方向不变，而沿北纬 60° 的纬圈却转 180°？</strong><br>提示：转角 = K × 所围面积。赤道围住半球，K·A = (1/R²)(2πR²) = 2π ≡ 0；北纬 60° 围住球冠，面积只有 πR²。差别全在"围住了多少面积"。</p>
+<p><strong>2. 在圆锥上平行移动向量绕顶点一圈，会转多少度？</strong><br>提示：去掉顶点后圆锥可展成平面扇形。展开后"绕顶点一圈"变成"绕扇形顶点 2π(1−sin 半顶角) 角度"；平行移动对应平面上的平移（不转），所以还原回锥面后向量相对起点转了 2π(1−sin 半顶角)。这个角也叫顶点的"集中曲率"。</p>
+<p><strong>3. 为什么圆柱没有 holonomy，而圆锥（在顶点处）有？</strong><br>提示：圆柱处处 K = 0 且无顶点；圆锥去掉顶点后也处处 K = 0，但顶点把曲率"集中"了——绕顶点的圈围住了顶点，就围住了曲率。这呼应《曲率》课里"顶点集中曲率 2π(1−sin半角)"的说法。</p>
+</section>
+
+<section><h3>前沿：Aharonov-Bohm效应与拓扑量子场论</h3><p>AB效应证明联络A具有<strong>物理实在性</strong>——不仅是曲率F的辅助量。这启发了Chern-Simons理论(Schwarz 1978,Witten 1989)——纯拓扑作用量产生物理可观测量。Jones多项式=Chern-Simons的Wilson圈期望值。仍开放:CS理论在4D的推广(Donaldson理论)。</p></section>
+
+<section>
+<h3>工作题——球面上沿纬圈的平行移动</h3>
+<p><strong>题 1（直接 ODE 求解）：</strong>球面度规 ds² = R²(dθ² + sin²θ dφ²)。写出非零 Christoffel 符号；对纬圈 φ(t) = ωt（θ = θ₀ 常数）写出平行移动方程，解出向量 V(t)，并证明绕一整圈后向量相对初始方向旋转角 = 2π(1 − cosθ₀)（即等于球冠面积，K = 1/R²）。</p>
+<p><strong>题 2（两种理解）：</strong>用题 1 的解求：(a) 向量与经线单位切向 e_θ 的夹角随时间的变化率；(b) 解释为什么"沿赤道回到原点向量不变，而沿小纬圈有净旋转"。</p>
+<p><strong>题 3（Gauss-Bonnet 复核）：</strong>由"旋转角 = ∫_球冠 K dA"反推球冠面积 A = 2πR²(1 − cosθ₀)，并用直接积分 A = ∫₀^{θ₀}∫₀^{2π} R² sinθ dφ dθ 核对。</p>
+<p><strong>题 4（圆柱对照）：</strong>在圆柱 R²/2π 上沿水平圆 θ(t) = ωt（z 固定）平行移动向量 V = (V_θ, V_z)。求 V(t)，证明绕一圈后无旋转，并与题 1 对比说明"曲率为零 ⟹ 无 holonomy"。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1：</strong>非零 Christoffel：Γ^θ_{φφ} = −sinθcosθ，Γ^φ_{θφ} = Γ^φ_{φθ} = cotθ。沿纬圈 ẋ = (0, ω)（θ̇ = 0, φ̇ = ω），平行移动方程分量：<br>
+θ 分量：dV^θ/dt − sinθ₀cosθ₀·ω·V^φ = 0 ⟹ dV^θ/dt = ω sinθ₀cosθ₀·V^φ；<br>
+φ 分量：dV^φ/dt + cotθ₀·ω·V^θ = 0 ⟹ dV^φ/dt = −ω cotθ₀·V^θ。<br>
+合并：d²V^θ/dt² = ω sinθ₀cosθ₀·(−ω cotθ₀ V^θ) = −ω²cos²θ₀·V^θ，故 V^θ(t) = A cos(ωt cosθ₀) + B sin(ωt cosθ₀)，V^φ = (dV^θ/dt)/(ω sinθ₀cosθ₀) = (−A sin(ωt cosθ₀) + B cos(ωt cosθ₀))/sinθ₀。初值 V(0) = (1, 0)：A = 1, B = 0 ⟹ V^θ(t) = cos(ωt cosθ₀)，V^φ(t) = −sin(ωt cosθ₀)/sinθ₀。物理向量 = V^θ e_θ + R sinθ₀·V^φ e_φ = (cos(ωt cosθ₀), −sin(ωt cosθ₀))。绕一圈 T = 2π/ω：向量相对初始方向旋转角 = 2πcosθ₀。由于旋转 mod 2π 意义下 2πcosθ₀ ≡ −(2π(1−cosθ₀))，即净旋转（按面积约定）为 <strong>2π(1 − cosθ₀)</strong> = K·(球冠面积) ✓。方向与环路取向相关（北半球取逆时针为正）。</p>
+<p><strong>题 2：</strong>(a) 向量与 e_θ 的夹角 = ωt cosθ₀（线性增长），即向量相对经线方向以角速度 ωcosθ₀ 旋转——每绕一圈相对经线转过 2πcosθ₀。(b) 赤道 θ₀ = π/2：cosθ₀ = 0 ⟹ 旋转角 0，向量恒为 (1, 0)（沿经线），回到起点完全不变 ✓；北极附近 θ₀ → 0：cosθ₀ → 1，向量相对经线每圈转过 2π——向量被"拖着"几乎随纬圈一起转动。这正是"纬度越高，旋转越明显"的几何直觉。</p>
+<p><strong>题 3：</strong>由题 1，旋转角 = 2π(1 − cosθ₀)；由公式旋转角 = ∫_球冠 K dA = (1/R²)·A，故 A = R²·2π(1 − cosθ₀) = 2πR²(1 − cosθ₀)。直接积分核对：A = ∫₀^{θ₀}∫₀^{2π} R² sinθ dφ dθ = 2πR²(1 − cosθ₀) ✓。两者自洽——"周游角 = K×面积"与球冠面积公式互相印证。</p>
+<p><strong>题 4：</strong>圆柱联络 Γ = 0，平行移动方程 dV/dt = 0 ⟹ V(t) = V(0) 恒为常数。绕一圈回到原处向量不变，旋转角 = 0。由公式旋转角 = K·A 且 K = 0，自然得 0。对比题 1：同一公式"旋转角 = K·A"在球面给非零、在圆柱给零——K 是唯一判据。这也解释了为何可展曲面（K = 0）上平行移动无 holonomy，而球面（K ≠ 0）上必有净旋转。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. do Carmo, Differential Geometry of Curves and Surfaces</strong></p>
+<p>&rarr; <strong>J. Lee, Introduction to Smooth Manifolds</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/geodesic.html">测地线</a>、<a href="/pages/curvature.html">曲率</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一学科分类「微分几何」。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一学科分类「微分几何」。</p>
+<p>&rarr; <a href="/pages/fiber-bundle.html">🧵 纤维丛</a>：同一学科分类「微分几何」。</p>
+<p>&rarr; <a href="/pages/convex-geometry.html">⬡ 凸几何</a>：几何核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/parallel-transport.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

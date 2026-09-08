@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖 r 看倍周期瀑布：3.57 之后"混沌中藏着秩序"" />
+  <meta property="og:title" content="分岔与 Logistic 映射 — Vibe Math" />
+  <meta property="og:description" content="拖 r 看倍周期瀑布：3.57 之后"混沌中藏着秩序"" />
+  <title>分岔与 Logistic 映射 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌋 分岔与 Logistic 映射 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">拖 r 看倍周期瀑布：3.57 之后"混沌中藏着秩序"</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='bifurcation',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/lorenz-attractor.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🦋 Lorenz 吸引子</a>
+  <a href="/pages/ergodic-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">♻️ 遍历理论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一个变量、一个参数，却藏着整个混沌世界</h3>
+<p>逻辑斯蒂映射（Logistic map）只有一个变量和一个参数：</p>
+<div class="formula display" data-tex="x_{n+1}=r\,x_n(1-x_n),\qquad x_n\in[0,1],\ r\in[0,4]"></div>
+<p>它 1838 年由 Verhulst 提出，用来描述种群（出生率 r、环境承载 1）：x 太小增长慢、太大又被环境压回。看起来平淡无奇，但把参数 r 从 0 慢慢调到 4，这个一维迭代会经历一场完整的"动力学戏剧"：</p>
+<ul>
+<li><strong>r &lt; 3：</strong> 稳定不动点（种群趋于平衡值）；</li>
+<li><strong>r = 3：</strong> 分岔——平衡点失稳，出现<strong>周期 2</strong> 的交替振荡（大小年）；</li>
+<li><strong>r ≈ 3.4495：</strong> 周期 2 → 周期 4（又一次倍周期）；</li>
+<li><strong>r → 3.569945…：</strong> <strong>倍周期级联</strong>：周期 2、4、8、16……无限叠加，直至<strong>混沌</strong>；</li>
+<li><strong>r &gt; 3.57：</strong> 混沌区——但<strong>混沌中仍有秩序</strong>：窗口（如 r=1+√8≈3.8284 的周期 3 窗口）里，同样的倍周期级联以缩微版重新上演。</li>
+</ul>
+<p>1976 年 May 在 <em>Nature</em> 发表 <em>"Simple mathematical models with very complicated dynamics"</em>，让整个学界意识到：简单确定性方程能产生不可预测行为。1978 年 Feigenbaum 发现级联的收敛速率惊人地普适——<strong>Feigenbaum 常数 δ≈4.6692…</strong> 不仅属于 Logistic 映射，而是属于"一切单峰映射"（以及流体的 Rayleigh–Bénard 对流实验！）。倍周期级联是通往重整化群（RG）的物理—数学桥梁。</p>
+<div class="key-insight">洞察：倍周期级联 = 自我重复的"动力学分形"：在 rₙ 附近把图放大，看到的是与前一级相同的结构，只是缩小了 α≈2.5029 倍——这就是重整化的雏形（与 <a href="/pages/complex-dynamics.html">复动力系统</a> 课 MB 集的 Feigenbaum 点同源）。混沌不是"乱"，而是"结构密度高到不可穷尽"。画布上 r=3.8284 处你会看到周期 3 窗口里嵌套着更小的分岔图。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/lorenz-attractor.html">Lorenz 吸引子</a>（混沌的直观背景）、<a href="/pages/real-analysis.html">实分析</a>（不动点与序列极限）、<a href="/pages/fractal.html">分形</a>（可选：自相似结构）。与 <a href="/pages/ergodic-theory.html">遍历理论</a> 的倍角映射是表亲。</p></div>
+
+<section>
+<h3>一、一个具体问题——May 1976 与"简单方程的复杂动力学"</h3>
+<p><strong>为什么这个模型值得一整门课？</strong> 因为它用最少的原料（一个二次函数）制造了最完整的动力学分类——稳定、倍周期、混沌、窗口、间歇，一应俱全。May 的论文标题就是它的宣言：复杂行为不需要复杂方程。</p>
+<p><strong>动力学家谱（r 增大时）。</strong></p>
+<ul>
+<li><strong>不动点 x*=1−1/r</strong>（r≥1）：稳定当 |f′(x*)|=|2−r|&lt;1，即 1&lt;r&lt;3。</li>
+<li><strong>r₁=3：超临界倍周期。</strong> 乘子过 −1，稳定不动点让位于稳定周期 2（例题 1 手算）。</li>
+<li><strong>r₂=1+√6≈3.44949、r₃≈3.54409…：</strong> 周期 4、8 相继分岔；分岔点 r_n 收敛到 <strong>r_∞≈3.569945672…</strong>。</li>
+<li><strong>Feigenbaum（1978）：</strong> 间距比 (r_{n+1}−r_n)/(r_{n+2}−r_{n+1}) → <strong>δ=4.669201609…</strong>，且图形自相似缩小因子 <strong>α≈2.502907875…</strong>——对所有单峰映射普适（Coullet–Tresser 独立发现；Lanford 1982 用计算机辅助证明严格化）。</li>
+<li><strong>r&gt;r_∞：</strong> 混沌区间与稳定窗口交替。最著名窗口 <strong>周期 3 窗口 r=1+√8≈3.828427</strong>（窗口内再走一遍倍周期级联）。</li>
+<li><strong>r=4：</strong> 混沌达到"满度"——映射共轭于倍角映射（例题 2），Lyapunov 指数 = ln 2。</li>
+</ul>
+<p><strong>理论背景。</strong> Sharkovskii（1964）给出区间映射周期轨道的包含序（"周期 3 蕴含一切周期"是它的一角）；Li–Yorke（1975）证明"周期 3 ⟹ 混沌"（有无穷多非周期点与敏感依赖）。一维映射的符号动力学（Metropolis–Stein–Stein 1973；Milnor–Thurston 的 kneading 理论）给了"分岔图里窗口顺序"完整的字典。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——蛛网、乘子与"为什么周期会加倍"</h3>
+<p><strong>蛛网图。</strong> 在 (x, f(x)) 平面画 y=f(x) 与 y=x：从 (x₀,x₀) 竖直走到抛物线、水平走到对角线、再竖直……交替前进就得到整条轨道。蛛网图让"稳定/发散"变成"是否被吸向交点"的几何问题——画布蛛网模式就是它。</p>
+<p><strong>稳定性的判据是乘子。</strong> 周期轨道 {x₀,…,x_{p−1}} 的稳定性由乘子 M=(fᵖ)′(x₀)=∏f′(xᵢ) 决定：|M|&lt;1 稳定（吸引）、|M|&gt;1 排斥。倍周期分岔发生在乘子穿过 <strong>−1</strong>：扰动每周期"翻转一下并放大"，于是轨道放弃单周期、改走两倍长的路来抵消翻转——<strong>负乘子 = 倍周期的机制</strong>。</p>
+<p><strong>为什么是"级联"而不是"一次到混沌"？</strong> 周期 2 的乘子在 r 增大时也穿过 −1（在 r₂），产生周期 4；如此反复。分岔点的间距按 Feigenbaum δ 收缩，因为每次"下一级"的结构与上一级只差一个普适的重标度——重整化算子在函数空间里有同一个不动点。这不是巧合，而是<strong>普适性 = 重整化不动点</strong>。</p>
+<div class="key-insight">记忆锚：稳定 ⟺ 乘子模 &lt;1；分岔 ⟺ 乘子穿过 ±1（+1：鞍结/不动点对生灭；−1：倍周期）；混沌 ⟺ 排斥周期点稠密 + 敏感依赖。三个判据管住整张分岔图。</div>
+</section>
+
+<section>
+<h3>三、例题 1——r=3.2 的周期 2 轨道（一步步算完）</h3>
+<p><strong>题目。</strong> 对 r=3.2，验证不动点 x*=1−1/r 已失稳，并求出稳定周期 2 轨道。</p>
+<p><strong>第一步：不动点与乘子。</strong> x*=1−1/3.2=0.6875；f′(x*)=2−r=−1.2，|−1.2|&gt;1——<strong>失稳</strong>（r=3 时乘子 −1，r&gt;3 后排斥）。</p>
+<p><strong>第二步：周期 2 点。</strong> 满足 f(f(x))=x 且 x≠x*。f(f(x))−x 是 4 次多项式，除以 (x−x*)² 得二次式，其两根为</p>
+<div class="formula display" data-tex="a,b=\frac{1+r\pm\sqrt{(r-3)(r+1)}}{2r};\qquad r=3.2:\ a,b=\frac{4.2\pm\sqrt{0.84}}{6.4}=\frac{4.2\pm0.9165}{6.4}"></div>
+<p>得 <strong>a≈0.5130、b≈0.7995</strong>。</p>
+<p><strong>第三步：验证轨道。</strong> f(0.5130)=3.2·0.513·0.487≈0.7994 ✓；f(0.7994)=3.2·0.799·0.2006≈0.5130 ✓——<strong>{0.513, 0.799} 是周期 2 轨道</strong>（"大小年"：种群一年大一年小）。</p>
+<p><strong>第四步：稳定性。</strong> 乘子 M=f′(a)f′(b)=r²(1−2a)(1−2b)=3.2²·(1−1.026)(1−1.599)…≈10.24·(−0.026)·(−0.599)≈0.159?（|·|&lt;1 ✓ 稳定——两因子都负，乘积为正小）。∎ 数值核对：3.2²=10.24；(1−2·0.513)=−0.026；(1−2·0.7995)=−0.599：乘积 10.24·0.026·0.599≈0.159∈(0,1) 稳定。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——r=4 的解析混沌：共轭于倍角映射（一步步算完）</h3>
+<p><strong>题目。</strong> 证明 r=4 的 Logistic 映射混沌，并给出与圆上倍角映射的共轭。</p>
+<p><strong>第一步：代换。</strong> 令 x=sin²θ（0≤θ≤π/2 类）。则</p>
+<div class="formula display" data-tex="4x(1-x)=4\sin^{2}\theta\cos^{2}\theta=(\sin 2\theta)^{2}"></div>
+<p>所以若 xₙ=sin²θₙ 且 θ_{n+1}≡2θₙ (mod 2π)，则 x_{n+1}=sin²θ_{n+1}——<strong>θ 的迭代就是倍角映射 θ↦2θ mod 2π</strong>。∎</p>
+<p><strong>第二步：混沌的翻译。</strong> 倍角映射已知混沌（→ <a href="/pages/ergodic-theory.html">遍历理论</a> 课例题 2）：周期点稠密（θ=mπ/(2ᵏ−1) 类）、敏感依赖（θ 差 δ 每步 ×2）。共轭把全部性质带回 Logistic：r=4 混沌。∎</p>
+<p><strong>第三步：Lyapunov 指数。</strong> 每步误差 ×2（平均），λ=ln 2≈0.693——"信息以每步 1 比特产生"。画布上取 r=4、x₀ 与 x₀+10⁻⁹ 两个起点，十几步内轨道完全分道扬镳。∎</p>
+<p><strong>第四步：为什么 r=4 特别？</strong> 单峰映射在 r=4 处达到"满混沌"（映射把 [0,1] 恰好盖满两次，与扩张圆映射等距）；一般 r 的混沌度（Lyapunov 谱）随 r 起伏如分形——这正是分岔图混沌带里明暗不均的数学来源。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心事实清单</h3>
+<ul>
+<li><strong>不动点与稳定性：</strong> x*=1−1/r（1≤r≤4）；|f′(x*)|=|2−r|。</li>
+<li><strong>倍周期级联：</strong> r₁=3（周期 1→2）、r₂=1+√6≈3.44949（2→4）、r₃≈3.54409（4→8）…… r_∞≈3.569945672；间距比 → Feigenbaum δ≈4.669201609，图形缩小因子 α≈2.502907875（普适于单峰映射族，Coullet–Tresser；Lanford 1982 严格化）。</li>
+<li><strong>Sharkovskii（1964）：</strong> 区间连续自映射的周期轨道按"Sharkovskii 序"嵌套存在；3 &lt; 5 &lt; 7 &lt; … &lt; 2·3 &lt; 2·5 &lt; … &lt; 2ⁿ·3 &lt; … &lt; … &lt; 8 &lt; 4 &lt; 2 &lt; 1。</li>
+<li><strong>Li–Yorke（1975）：</strong> 周期 3 ⟹ 混沌（不可数多非周期点 + 敏感依赖）。</li>
+<li><strong>r=4 解析混沌：</strong> x=sin²θ 共轭于 θ↦2θ（mod 2π）；λ=ln 2。</li>
+<li><strong>窗口结构：</strong> r&gt;r_∞ 的混沌区含无穷多稳定窗口（如 r=1+√8 周期 3 窗口），窗口内倍周期级联重演——分岔图是"分形的"（把窗口放大又见分岔图）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="x_{n+1}=r x_n(1-x_n);\qquad x^{*}=1-\tfrac1r;\qquad |f'(x^{*})|=|2-r|"></div>
+<div class="formula display" data-tex="r_1=3,\ r_2=1+\sqrt6\approx3.4495,\ r_3\approx3.5441,\ldots\ r_\infty\approx3.5699457"></div>
+<div class="formula display" data-tex="\delta=\lim\frac{r_{n+1}-r_n}{r_{n+2}-r_{n+1}}\approx4.6692;\qquad \alpha\approx2.5029\ (\text{普适})"></div>
+<div class="formula display" data-tex="x=\sin^2\theta:\ 4x(1-x)=\sin^2(2\theta);\qquad \lambda(r=4)=\ln2"></div>
+</section>
+
+<section>
+<h3>七、延伸——从一维迭代到世界的秩序与混乱</h3>
+<ul>
+<li><strong>实验物理中的普适性。</strong> Rayleigh–Bénard 对流、电子电路（Chua）、化学振荡（Belousov–Zhabotinsky）都实测到倍周期级联与 Feigenbaum δ≈4.669——"一维图"的预言在真实三维系统中以极高精度复现。普适性的根源是重整化（→ <a href="/pages/ising-model.html">Ising</a>/相变课的 RG 世界观）。</li>
+<li><strong>与复动力系统的汇合。</strong> 实 Logistic 的倍周期级联对应 MB 集实轴上的分岔点序列，最终汇聚到 <strong>Feigenbaum 点 c≈−1.401155…</strong>（MB 集边界上的自相似点）——一维实动力学与复二次动力学在此握手（→ <a href="/pages/complex-dynamics.html">复动力系统</a> 课）。</li>
+<li><strong>应用。</strong> 生态与渔业管理（把"大小年"当噪声会误判）、保密通信（混沌同步，谨慎）、伪随机数发生器（LCG/混沌映射的混合）、经济学（投机泡沫的倍周期）。"简单模型+复杂行为"成为跨学科的方法论范本。</li>
+<li><strong>符号动力学与 kneading。</strong> 一维映射的轨道 ↔ 无限符号串（左/右），窗口次序与分岔字典由 kneading 理论完全编码（Milnor–Thurston）——动力学的"语法化"。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"分岔想当然"</h3>
+<p><strong>陷阱 1："r&gt;r_∞ 后全是混沌"？</strong> 不。混沌区里塞满稳定窗口（周期 3、5、6……无穷多），每个窗口内还嵌套着更小的倍周期级联与窗口。混沌参数集是"正测度"但<strong>不是全区间</strong>；分岔图的"暗带"与"亮窗"交错正是这一点的图像证据。</p>
+<p><strong>陷阱 2："混沌 = 随机 = 无规律"？</strong> 混沌是<strong>确定性</strong>的：方程给出唯一未来；"随机感"来自对初值的指数放大（λ&gt;0）。把混沌误当噪声，会丢掉系统最核心的预测限制——初始误差每步 ×e^λ，而不是"没有规律"。</p>
+<p><strong>陷阱 3："周期 3 ⟹ 混沌，所以无周期 3 就无混沌"？</strong> Li–Yorke 是充分条件不是必要条件：很多混沌映射没有周期 3（r=3.6 附近的混沌带无周期 3 却有混沌）。反过来，Sharkovskii 序告诉你周期 3 存在时哪些周期必然存在——别把单箭头当双箭头。</p>
+<p><strong>陷阱 4："分岔图是算出来的，所以严格"？</strong> 数值图在 r_∞ 附近与极窄窗口处会骗人：有限精度下周期 7 的极窄窗口可能消失，r_∞ 处的无穷级联在像素里只是"糊成一团"。分岔图是导航图，严格结论需要区间算术/符号动力学。</p>
+<p><strong>陷阱 5："倍周期与 Feigenbaum δ 只是这个模型的巧合"？</strong> 不是巧合而是<strong>普适</strong>——但普适性属于"单峰映射"这个族（重整化不动点），不是所有映射。改变映射形状（如取非单峰）会得到不同（或没有）普适常数。把 δ 当成"一切混沌的常数"是过度推广。</p>
+</section>
+
+<section>
+<h3>九、当前状态——一维之外</h3>
+<ol>
+<li><strong>一维理论相对完成。</strong> 单峰映射的动力学分类（kneading、重整化、可测动力学）已相当完整；但仍有一些精细问题（如周期窗口的精确 Lebesgue 测度估计、混沌带的统计）在推进。</li>
+<li><strong>高维混沌无一般理论。</strong> 从一维到二维/三维（→ <a href="/pages/lorenz-attractor.html">Lorenz</a>），没有等价的完整分类；"均匀双曲"假设下理论漂亮（Smale 马蹄），但真实系统多非均匀双曲——严格验证（区间算术、Tucker 证明 Lorenz 吸引子）是近年的范式。</li>
+<li><strong>重整化与普适性。</strong> 一维重整化的严格理论（Sullivan、Lyubich 等）证明 Feigenbaum 现象在单峰映射中的普遍性；把 RG 思想带到更广动力系统是活跃方向。</li>
+<li><strong>数据与混沌。</strong> 从时间序列估计 Lyapunov 指数与嵌入维数（Takens）、用机器学习"盲重建"动力学——数据科学时代的一维动力学继续输出方法。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Verhulst (1838)</strong>：逻辑斯蒂方程的提出（人口模型）。</li>
+<li><strong>Sharkovskii (1964)</strong>：区间映射周期轨道的嵌套序。</li>
+<li><strong>Li–Yorke (1975)</strong>：<em>"Period three implies chaos"</em>, <em>Amer. Math. Monthly</em>——"混沌"一词的科学定型。</li>
+<li><strong>May (1976)</strong>：<em>"Simple mathematical models with very complicated dynamics"</em>, <em>Nature</em>——Logistic 映射与分岔图的普及。</li>
+<li><strong>Feigenbaum (1978)</strong>：<em>"Quantitative universality for a class of nonlinear transformations"</em>——δ、α 普适常数。</li>
+<li><strong>Coullet–Tresser (1978)</strong>：独立发现普适性（重正化方法）。</li>
+<li><strong>Lanford (1982)</strong>：Feigenbaum 现象的计算机辅助严格证明。</li>
+<li><strong>Milnor–Thurston (1988)</strong>：kneading 理论——一维动力学的符号完整化。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——不动点、倍周期与共轭</h3>
+<p><strong>题 1（r=3.2 复核）。</strong> 验证例题 1 的周期 2 轨道 {0.513,0.799} 与乘子 0.159。<strong>提示：</strong>代入 f 两次；乘子 = r²(1−2a)(1−2b)。</p>
+<p><strong>题 2（不动点失稳）。</strong> 为什么 r=3 是第一个分岔点？<strong>提示：</strong>|f′(x*)|=|2−r|：r&lt;3 时 &lt;1（稳定），r=3 时 =1（中性，乘子 −1），r&gt;3 时 &gt;1（排斥）。</p>
+<p><strong>题 3（恒等式）。</strong> 展开验证 sin²(2θ)=4sin²θ(1−sin²θ)。<strong>提示：</strong>sin2θ=2sinθcosθ ⟹ sin²2θ=4sin²θcos²θ=4sin²θ(1−sin²θ)。</p>
+<p><strong>题 4（灭绝阈值）。</strong> 解释为何 0&lt;r&lt;1 时一切轨道趋于 0（种群灭绝）。<strong>提示：</strong>x_{n+1}=rxₙ(1−xₙ)&lt;rxₙ&lt;xₙ（r&lt;1 且 xₙ∈(0,1)）：单调递减有下界 ⟹ 极限 x 满足 x=r x(1−x)，唯一解 x=0。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见例题 1。∎</p>
+<p><strong>题 2</strong>：乘子穿过 −1。∎</p>
+<p><strong>题 3</strong>：见提示。∎</p>
+<p><strong>题 4</strong>：0&lt;r&lt;1 时轨道单调收敛 0。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布分岔图）。</strong> 先看整体：r∈[2.5,4] 的主图——r&lt;3 单线（不动点）、3 处分叉成两条（周期 2）、级联到 3.57 后"糊成带"，窗口清晰可见。点击图上任意位置可直接跳到该 r。</p>
+<p><strong>试试看 2（窗口里的自相似）。</strong> 把 r 放大到 3.8284 附近（周期 3 窗口）：你会看到窗口内部有一个<strong>缩微版的分岔图</strong>。再放大、再放大——每次看到同样的级联结构。这就是 Feigenbaum 重整化的像素版。</p>
+<p><strong>试试看 3（蛛网与敏感）。</strong> 切到蛛网模式：r=2.8 时轨道螺旋吸向交点；r=3.2 时进入 2-环；r=3.9 时蛛网永不重复。把初始值在 x=0.300000000 与 0.300000001 间切换（若提供），观察十几步内分道扬镳——λ&gt;0 的实感。</p>
+<p><strong>试试看 4（与复动力系统联动）。</strong> 在 <a href="/pages/complex-dynamics.html">复动力系统</a> 课画布把 c 沿实轴从 0 拖到 −2：Julia 集的连通性变化（圆→兔→Feigenbaum 点→Cantor 尘埃）与 Logistic 的 r 轴一一对应（x↔c 的坐标变换）。提示：r=1+√8≈3.828（周期 3 窗口）对应 MB 集实轴上 −1.75 附近的"兔形"参数。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>R. Devaney, An Introduction to Chaotic Dynamical Systems</strong>（Logistic 映射与分岔的标准读本）</p>
+<p>&rarr; <strong>H.-O. Peitgen, H. Jürgens, D. Saupe, Chaos and Fractals</strong>（大量可视化与历史）</p>
+<p>&rarr; <strong>J. Milnor, Dynamics in One Complex Variable</strong>（一维实/复动力学的严格版）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.11（动力系统）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/lorenz-attractor.html">Lorenz 吸引子</a>、<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/lorenz-attractor.html">🌪️ Lorenz 吸引子</a>：连续时间混沌与分岔的姐妹篇。</p>
+<p>&rarr; <a href="/pages/complex-dynamics.html">🪸 复动力系统</a>：实轴分岔 = MB 集上的参数轨迹；Feigenbaum 点同源。</p>
+<p>&rarr; <a href="/pages/ergodic-theory.html">♻️ 遍历理论</a>：r=4 共轭于倍角映射；Lyapunov 指数 = 熵。</p>
+<p>&rarr; <a href="/pages/fractal.html">🌀 分形</a>：分岔图的自相似与普适标度。</p>
+<p>&rarr; <a href="/pages/ising-model.html">🧲 Ising 模型</a>：重整化群：从倍周期到相变的同一思想。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：不动点、极限与压缩映射。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/bifurcation.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

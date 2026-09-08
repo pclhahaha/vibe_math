@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="多值函数的单值化舞台" />
+  <meta property="og:title" content="黎曼面 — Vibe Math" />
+  <meta property="og:description" content="多值函数的单值化舞台" />
+  <title>黎曼面 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🫧 黎曼面 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">多值函数的单值化舞台</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='riemann-surface',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/contour-integral.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⭕ 围道积分与留数</a>
+  <a href="/pages/complex-dynamics.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🪸 复动力系统：Julia 集与 Mandelbrot 集 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——让"一个数有两个答案"的麻烦，变成一张光滑的曲面</h3>
+<p>想象一座商场的停车场：一楼和二楼格局几乎一样，如果你从一楼绕到二楼，会发现"同一个位置"其实有两个不同的楼层。数学里有些运算（比如开平方根）会给你两个答案，就像每辆车都有两个车位一样让人犯难。</p>
+<p>黎曼面就是把"答案不止一个"这件事，变成一层层叠起来的曲面：每个答案都有自己的"楼层"，你走完整整一圈（绕两圈）才会回到出发的那个答案。它让数学家能安心地在上面做计算，也成了现代数学许多分支的共同地基。</p>
+<div class="key-insight">灵感：答案多没关系，给它盖几层楼就好——每层住一个答案，数学就再也不打架了。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/complex-plane.html">复平面与全纯函数</a>、<a href="/pages/contour-integral.html">围道积分与留数</a>、<a href="/pages/algebraic-topology-homology.html">同调论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——√4 到底等于几？一个函数怎么会有两个答案？</h3>
+<p>中学老师告诉你 √4 = 2。但方程 w² = 4 有两个解：w = 2 与 w = −2。如果我们坚持把 √ 当函数，它就必须同时吐出 2 和 −2——在复平面上这是致命的：绕原点 z = re^{iθ} 转一圈（θ 增加 2π），√z = √r·e^{iθ/2} 变成 √r·e^{i(θ+2π)/2} = −√z。你绕了一整圈回到原处，√z 的值却变了号。<strong>一个"良定义"的函数绝不接受这种事。</strong></p>
+<p>这个麻烦有多具体？拿 w² = z 的"图像"来说：把 w 画在第二张复平面上，z 每绕原点一圈，w 就在这张平面上从 +√z 跳到 −√z。两条分支（w 与 −w）像两张叠在一起的纸，绕一圈就穿越一次。</p>
+<p><strong>黎曼面给出的解决方案（先给结论）。</strong> 造两张复平面，沿负实轴各剪一刀，然后交叉粘起来：第一张的上岸粘第二张的下岸，第一张的下岸粘第二张的上岸。这样得到的"双层曲面"上，w 从头到尾只用走一层就能连续地完成 z 绕一圈——你需要<strong>绕两圈</strong>才回到原处（这正是"每辆车两个车位"）。在这张曲面上，w = √z 是<strong>单值</strong>的良定义函数。</p>
+<p><strong>为什么这个问题值得用一整门课研究？</strong> 因为"答案不止一个"几乎处处出现：√z、log z、椭圆积分、代数方程 y² = 多项式 的解集……黎曼的创见是：<strong>与其削足适履地切掉多余分支，不如给函数修一座足够大的"住房"（黎曼面），让它在上面彻底单值。</strong> 从此，"多值函数"不再是麻烦，而是一张张光滑曲面——而光滑曲面是几何可以大展身手的地方。</p>
+</section>
+
+<section>
+<h3>二、多值函数与分支切割——为什么 √z 在复平面上"人格分裂"</h3>
+<p>f(z) = √z 在复平面上是<strong>多值</strong>的：绕原点走一圈，√z 变成 −√z。在复平面上你不能给 √z 一个统一的定义——它在原点的邻域内"人格分裂"。</p>
+<p><strong>黎曼面的解决方案</strong>：创造两张复平面（两个"层"），每张沿负实轴剪开。把第一张的上岸粘到第二张的下岸，第一张的下岸粘到第二张的上岸。在这个"双层的曲面"上，√z 是<strong>单值</strong>的良好定义函数——你需要走<strong>两圈</strong>才能回到同一个值。</p>
+<div class="formula display" data-tex="f(z)=\sqrt{z},\quad w^2=z"></div>
+<div class="formula display" data-tex="\text{Two sheets glued along branch cut}"></div>
+<p><strong>为什么是负实轴？</strong> √z 的奇点在 z=0（和 z=∞）。分支切割通常选在负实轴——沿这条线，√z 的幅角"跳跃"了 2π。关键在于：<strong>不同的分支切割选择给出同一个黎曼面的不同表示</strong>——黎曼面本身是独立于坐标选择的几何对象。剪哪里都行，只要把两层"错位"地接起来，最后得到的曲面是同胚的。</p>
+<p><strong>log z 更难：</strong>绕一圈增加 2πi，无穷多层螺旋上升——它的黎曼面有<strong>无穷多层</strong>。与 √z 的"两层"相比，log z 的层数可数无限：log z 的黎曼面 ≅ ℂ 本身（取对数把螺旋铺平），而 √z 的黎曼面 ≅ ℂ（w²=z 的曲线）。这告诉你：<strong>一个多值函数的黎曼面长什么样，是该函数全部拓扑信息的浓缩。</strong></p>
+</section>
+
+<section>
+<h3>三、紧黎曼面——一维复流形的精确定义</h3>
+<p>一个<strong>黎曼面</strong>是满足以下三条的拓扑空间 X：① X 是连通的 Hausdorff 空间；② X 是第二可数的（存在可数拓扑基）；③ X 上有复结构——存在开覆盖 {U<sub>α</sub>} 与同胚 φ<sub>α</sub>: U<sub>α</sub> → φ<sub>α</sub>(U<sub>α</sub>) ⊂ ℂ，使得转移映射 φ<sub>β</sub>∘φ<sub>α</sub><sup>−1</sup> 在 φ<sub>α</sub>(U<sub>α</sub>∩U<sub>β</sub>) 上是<strong>全纯</strong>的。坐标卡之间"全纯兼容"（而非光滑兼容）是黎曼面区别于一般二维实流形的本质——它赋予了 X 刚性的复结构。</p>
+<p><strong>为什么是这三条？（逐个讲清动机）</strong></p>
+<ul>
+  <li><strong>连通性</strong>排除"拼起来的独立曲面"——我们要研究的是一个整体对象，而非一组互不往来的碎片。</li>
+  <li><strong>第二可数</strong>保证可三角剖分（Rado 定理）与可度量化——这是后续一切计数（Euler 数、亏格）的技术前提；没有它，"洞的个数"都没法严格定义。</li>
+  <li><strong>Hausdorff 性</strong>排除"双重原点"等病态粘合——比如把平面去掉原点后粘成"两个原点"，它上面解析函数论会彻底失灵。</li>
+  <li><strong>全纯转移</strong>意味着任意全纯函数 f 的零点局部有限、有界全纯函数常值（Liouville 的紧情形）等刚性结论自然成立——这是"为什么用全纯而非光滑"的答案：光滑兼容的流形上会有取之不尽的光滑函数，而全纯函数少得可怜、也因此"刚性"十足。</li>
+</ul>
+<p><strong>标准例子。</strong>开集 Ω ⊂ ℂ（恒等坐标卡）；Riemann 球面 ℙ¹(ℂ) = ℂ ∪ {∞}（两张卡：z 卡与 1/z 卡，转移 z ↦ 1/z 在 ℂ* 上全纯）；环面 ℂ/Λ（Λ 为格，转移来自平移）——这是<strong>亏格 1</strong> 的紧黎曼面。注意 ℂ/Λ 作为复流形需要平移是全纯同构，这一点保证了格商确实有复结构。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="\chi(X)=V-E+F=2-2g"></div>
+<div class="formula display" data-tex="\dim_\mathbb{C}H^0(X,\Omega^1)=g,\qquad \ell(D)-\ell(K-D)=\deg D+1-g"></div>
+<div class="formula display" data-tex="2g(X)-2=d\,\bigl(2g(Y)-2\bigr)+\sum_{p\in X}(e_p-1)"></div>
+</section>
+
+<section>
+<h3>五、例题 1——超椭圆曲线 y² = x⁶ − 1 的亏格（一步步算完）</h3>
+<p><strong>题目。</strong> 设 X 为方程 y² = x⁶ − 1 的紧黎曼面（在射影平面中的完备化）。计算它的亏格 g(X)。</p>
+<p><strong>第一步：认清对象与次数。</strong> 把 X 看成 ℙ¹ 的<strong>二重覆叠</strong>：投影 f: X → ℙ¹，(x,y) ↦ x。每个"一般"的 x 对应两个 y（±√(x⁶−1)），故次数 d = 2。完备化后 X 在无穷远处有且仅有一个点 [0:1:0]（检查：齐次方程 Y²Z⁴ = X⁶ − Z⁶ 中令 Z=0，得 X⁶=0，故唯一的无穷远点是 [0:1:0]）。</p>
+<p><strong>第二步：找全部分歧点与分歧指数。</strong> f 的纤维在 x⁶ − 1 = 0 处退化：x⁶=1 有 6 个不同的根（6 个六次单位根 e^{2πik/6}，k=0,…,5）。在每个这样的 x 处，方程 y² = 0 只有 y=0 一个解，两张"纸"在此处重合——这是指数 e=2 的分歧点。共 6 个点。</p>
+<p><strong>第三步：检查无穷远点。</strong> 换坐标 w = 1/x，则 y² = x⁶ − 1 变成 (y/x³)² = 1 − w⁶。在 w = 0 处，(y/x³)² = 1 给出 y/x³ = ±1 两个不同分支——<strong>不</strong>分歧。故无穷远点不是分歧点。</p>
+<p><strong>第四步：代入 Riemann-Hurwitz。</strong> Y = ℙ¹，g(Y) = 0；d = 2；Σ(e_p − 1) = 6·(2−1) = 6。代入公式</p>
+<div class="formula display" data-tex="2g(X)-2=2\cdot(2\cdot0-2)+6=-4+6=2"></div>
+<p>故 2g(X) = 4，<strong>g(X) = 2</strong>。</p>
+<p><strong>第五步：交叉验证。</strong> 用 Euler 数核对：g=2 ⟹ χ(X) = 2 − 2g = −2，与"亏格 2 曲面"一致。也可用超椭圆一般公式 y² = ∏ᵢ(x−aᵢ)（n 个相异 aᵢ）给出 g = ⌊(n−1)/2⌋；这里 n=6，得 g = ⌊5/2⌋ = 2。∎</p>
+<p><strong>这套做法为什么可靠？</strong> 分歧点只有有限多个（紧黎曼面上全纯映射的分歧点是孤立且有限的），逐个数清指数 e_p，再交给一个只依赖 d、g(Y)、Σ(e_p−1) 的代数等式——我们完全绕开了"画出这张曲面"这种不可能的任务。这就是 Riemann-Hurwitz 的全部威力。</p>
+</section>
+
+<section>
+<h3>六、亏格、欧拉示性数与三角剖分——"洞的个数"怎么严格数</h3>
+<p>紧黎曼面 X 的<strong>亏格</strong> g(X) 定义为"洞的个数"。精确地说，对 X 的任意三角剖分，令 χ = V − E + F（顶点数 − 边数 + 面数）为 <strong>Euler 示性数</strong>，则 g = (2 − χ)/2。Euler 定理保证 χ 与三角剖分无关——它是同胚不变量。三个基本曲面：</p>
+<ul>
+  <li>Riemann 球面 ℙ¹：χ = 2，g = 0。</li>
+  <li>环面 ℂ/Λ：χ = 0，g = 1。</li>
+  <li>亏格 g 曲面：χ = 2 − 2g，g ≥ 2 时 χ &lt; 0（负 Euler 数！）。</li>
+</ul>
+<p><strong>动手验证一下环面 χ=0。</strong> 把环面剪开成一个正方形，对边两两粘合（方向相反）。最粗的"剖分"是：1 个顶点（四条边粘合后全部等同）、2 条边、1 个正方形面，得 χ = 1 − 2 + 1 = 0 ✓。注意这还不是三角剖分（面是四边形）；要升级成真正的三角形剖分，粘合后每个三角形必须顶点互不相同——最省的 7 顶点三角剖分给 V=7、E=21、F=14，χ = 7 − 21 + 14 = 0，结果不变。这正说明 Euler 数是剖分无关的同胚不变量：无论剖得多粗多细，都算得同一个 0（§试试看 3 会让你亲手核对）。</p>
+<p>由此得到"分析维数 = 拓扑不变量"的恒等式：紧黎曼面上全纯 1-形式空间 H⁰(X, Ω¹) 的维数恰为 g（Hodge 定理特例）：</p>
+<div class="formula display" data-tex="\dim_\mathbb{C}H^0(X,\Omega^1)=g,\qquad \chi(X)=2-2g"></div>
+<p><strong>为什么全纯微分只有 g 个？</strong> 这正是"刚性"的体现：光滑实曲面上微分形式空间无穷维（乘以任何光滑函数仍是微分形式），而全纯微分必须满足 Cauchy-Riemann，自由余地只剩 g 维——它由曲面的拓扑唯一决定，反过来又唯一决定拓扑。这是一座连接"分析"与"拓扑"的桥梁。</p>
+</section>
+
+<section>
+<h3>七、Riemann-Roch 定理——为什么"自由度"要减去"亏格代价"</h3>
+<p><strong>Riemann-Roch 定理</strong> 是这些计数的最终形式：对任意除子 D，</p>
+<div class="formula display" data-tex="\ell(D)-\ell(K-D)=\deg D+1-g"></div>
+<p>其中 K 是典范除子（对应全纯 1-形式），ℓ(D) = dim H⁰(X, O(D))。取 D=0 得 ℓ(K)=g（重证全纯微分维数 = 亏格）；取 D=K 得 deg K = 2g−2。</p>
+<p><strong>为什么是这样？</strong> 线性系 ℓ(D) 的维数由"自由度数 deg D 减去亏格代价"决定。直观：一个次数为 deg D 的除子给出 deg D 个"允许的零点位置"自由度，但曲面每有一个洞，就消耗一个额外的约束——亏格 g 是<strong>"刚性"的度量</strong>：它越大，线系越难丰富。</p>
+<p><strong>一个即刻的具体应用。</strong> 对亏格 2 的 X，取 D = K（典范除子，deg K = 2）。Riemann-Roch 说 ℓ(K) − ℓ(0) = 2 + 1 − 2 = 1，而 ℓ(K) = g = 2、ℓ(0) = 1，代入成立——公式自洽地复述了"典范除子的线性系正是全纯微分空间"。</p>
+</section>
+
+<section>
+<h3>八、Riemann-Hurwitz 公式——分歧与亏格的增长（证明）</h3>
+<p>设 f: X → Y 是紧黎曼面之间的非常值全纯映射（次数 d：一般点恰有 d 个原像）。f 在大多数点是 d 对 1 的局部双全纯，仅在<strong>分歧点</strong>例外——那里局部形如 z ↦ z<sup>e</sup>，整数 e 称为<strong>分歧指数</strong>。Riemann-Hurwitz 公式：</p>
+<div class="formula display" data-tex="2g(X)-2=d\,\bigl(2g(Y)-2\bigr)+\sum_{p\in X}(e_p-1)"></div>
+<p><strong>证明。</strong></p>
+<p><strong>① 挖去分歧点：</strong> 设 B ⊂ X 为全部分歧点（紧黎曼面上分歧点孤立且有限）。限制 f: X∖B → Y∖f(B) 是 d 重覆叠映射且为局部同胚。</p>
+<p><strong>② 三角剖分计数：</strong> 取 Y 的三角剖分使 f(B) 落于顶点，提升到 X——非分歧处每个顶点/边/面恰有 d 个原像，故 χ(X∖B) = d·χ(Y∖f(B))。</p>
+<p><strong>③ 补回分歧点：</strong> 每加回一个分歧点 p（指数 e_p），在 X 侧需 e_p 个顶点拼接 1 条，净贡献 (e_p − 1)。</p>
+<p><strong>④ 代入整理：</strong> 用 χ = 2 − 2g 代入整理即得公式。∎</p>
+<p><strong>标准应用。</strong> 超椭圆曲线 y² = ∏(x − aᵢ)（n 个相异 aᵢ）作为 ℙ¹ 的双重覆叠：d=2，分歧点恰 n 个，公式给 2g−2 = −4 + n ⟹ g = (n−2)/2。例如 y² = x⁶−1 给出 g=2（这正是例题 1 的结论）。</p>
+</section>
+
+<section>
+<h3>九、例题 2——三叶覆叠的分歧计算：分歧不足，亏格不长（一步步算完）</h3>
+<p><strong>题目。</strong> 设 X → ℙ¹ 是次数 d = 3 的三叶覆叠，在 4 个点上各有指数 e = 2 的分歧，且无其他分歧。求 g(X)。</p>
+<p><strong>第一步：收集全部输入。</strong> d = 3，Y = ℙ¹ ⟹ g(Y) = 0。分歧指数：4 个点各 e=2，故每个贡献 e−1 = 1。</p>
+<p><strong>第二步：求和。</strong> Σ(e_p − 1) = 4·1 = 4。</p>
+<p><strong>第三步：代入公式。</strong></p>
+<div class="formula display" data-tex="2g(X)-2=3\cdot(2\cdot0-2)+4=-6+4=-2"></div>
+<p><strong>第四步：解出 g。</strong> 2g − 2 = −2 ⟹ g = 0 ⟹ X ≅ ℙ¹。</p>
+<p><strong>反直觉的结论。</strong> 次数 3、四个二分歧点听上去很"复杂"，但算下来 X 竟是射影直线本身！教训：<strong>分歧次数过小不足以提高亏格</strong>——要制造高亏格，你需要足够的"总分歧量" Σ(e_p−1) 来抵消 −2d 的负项。具体门槛：2g(X) ≥ 2 + 4d − Σ(e_p−1)，只有总分歧超过 4d−2 时亏格才被迫为正。∎</p>
+</section>
+
+<section>
+<h3>十、标准反例——圆盘、球面与环面的本质差异</h3>
+<p>黎曼面远非"都能化成同一块"——Riemann 映射定理在紧流形上彻底失效。<strong>反例 1（球面 ≇ 环面）</strong>：若 φ: ℙ¹ → ℂ/Λ 双全纯，则 φ 是紧致黎曼面 ℙ¹ 上的全纯函数，其值落在紧致环面中故有界，由 Liouville 定理必为常值，矛盾。更一般地，<strong>亏格是双全纯不变量</strong>。</p>
+<p><strong>反例 2（亏格 1 的"模"差异）。</strong> 两个环面 ℂ/Λ₁ 与 ℂ/Λ₂ 双全纯 ⟺ 存在 c ∈ ℂ* 使 cΛ₁ = Λ₂。即使 g=1 也连续地存在无穷多互不同构的环面——参数化于 j-不变量模掉 SL(2,ℤ)。故"亏格 1 只有一种流形"是<strong>拓扑</strong>命题（微分同胚），而<strong>复结构</strong>上有 1 维连续族（模空间）——这是"拓扑分类 ≠ 解析分类"的最基本实例。</p>
+<p><strong>反例 3（非紧的圆盘 vs 紧的球面）。</strong> 单位圆盘 D ≇ ℂ（Riemann 映射定理：D ≅ 上半平面 ≄ ℂ）。D 上有界全纯函数空间 H<sup>∞</sup> 是无穷维，而紧黎曼面上全局全纯函数只能是常值（Liouville/极大模原理）——"全纯函数太少"恰是紧黎曼面上除子与线丛理论如此重要的原因：Riemann-Roch 对紧情形给出 ℓ(D) 随 deg D 线性增长，对非紧圆盘则无此定理。</p>
+</section>
+
+<section>
+<h3>十一、紧黎曼面 = 光滑射影代数曲线——同一对象的两副面孔</h3>
+<p>紧Riemann面=光滑射影代数曲线(一维复流形=复维数1的代数簇)。亏格g的Riemann面的全纯微分空间维数=g。Riemann-Roch:l(D)-l(K-D)=deg D+1-g。这是代数曲线理论的基石——从除子计算维数。</p>
+<div class="key-insight">黎曼面 = 代数曲线 = 紧Riemann面。它是复分析、代数几何和弦论的共同语言。弦论中的"世界面"就是黎曼面——弦在时空中扫出的二维轨迹。</div>
+<p><strong>为什么能画等号？</strong> 任何紧黎曼面都可由某张代数方程（甚至可在某个射影空间中等距嵌入）给出（Riemann 面嵌入定理 / Kodaira 嵌入的二维情形）；反过来，光滑射影代数曲线的光滑复点集天然是一维复流形。两个方向互逆——于是<strong>复分析的曲线</strong>与<strong>代数几何的曲线</strong>是同一个东西，只是穿了两件不同的外衣。这也是为什么弦论家口中的"世界面"（时空中扫出的二维面，携带复结构）可以放心地用代数曲线的整套理论。</p>
+</section>
+
+<section>
+<h3>十二、模空间 M_g——所有亏格 g 黎曼面的分类空间</h3>
+<p>M_g是(3g-3)维复空间(g>=2)。Teichmuller空间是M_g的万有覆叠。M_g的紧致化(Deligne-Mumford)用稳定曲线——允许节点。弦论中g-loop振幅=对M_g的积分。</p>
+<p><strong>为什么是 3g−3 维？</strong> 粗略数自由度：一个亏格 g 紧黎曼面可由 3g−3 个复参数（模）唯一刻画。g=0 时 M₀ 只有一个点（只有 ℙ¹ 一个对象）；g=1 时 M₁ 是 1 维（正是反例 2 中"环面有一维连续族"）；g ≥ 2 才进入 3g−3 的正维数时代。参数的具体值（如椭圆曲线族的 j-不变量）把"有哪些互不同构的对象"变成一个具体的复数集合——分类问题从此有了"几何形状"。</p>
+<p><strong>Deligne-Mumford 紧致化做了什么？</strong> M_g 本身非紧（参数可以"逃到无穷"），把边界点补成<strong>稳定曲线</strong>（允许成对节点收缩的双曲线），就得到紧空间 —— 这使"积分"有了意义：弦论中 g-loop 振幅正是对 M_g（或它的自然胞腔）的积分。</p>
+</section>
+
+<section>
+<h3>十三、例题 3——Riemann-Roch 的应用：亏格 3 曲面上的除子（一步步算完）</h3>
+<p><strong>题目。</strong> 设 X 为亏格 3 的紧黎曼面，D 为 deg D = 5 的除子。证明存在非常值亚纯函数 f 使 (f) + D ≥ 0（即 ℓ(D) ≥ 2），并解释"为什么亏格越大越需要大的 deg D"。</p>
+<p><strong>第一步：代入 Riemann-Roch。</strong> 把 g=3、deg D=5 代入：</p>
+<div class="formula display" data-tex="\ell(D)-\ell(K-D)=\deg D+1-g=5+1-3=3"></div>
+<p><strong>第二步：利用 ℓ(K−D) ≥ 0。</strong> 线性系统维数永远非负，故</p>
+<div class="formula display" data-tex="\ell(D)=3+\ell(K-D)\ge 3\ge 2"></div>
+<p><strong>第三步：翻译成函数的存在性。</strong> 函数空间维数 ℓ(D) ≥ 2 意味着 H⁰(X,O(D)) 里至少有 2 个线性无关的全纯截面；拿其中一个非平凡截面对应的亚纯函数 f，它的零点-极点除子满足 (f) ≥ −D，即 (f) + D ≥ 0。特别地，若 ℓ(D) = 1 就只会是常值函数，所以 ℓ(D) ≥ 2 正意味着存在非常值 f。∎</p>
+<p><strong>第四步：为什么"亏格越大越需要大的 deg D"？</strong> 回到不等式 ℓ(D) ≥ deg D + 1 − g。想让 ℓ(D) ≥ 2，只需 deg D + 1 − g ≥ 2，即 <strong>deg D ≥ g + 1</strong>。亏格 g 像一个"门槛"：每多一个洞，就要求除子多带至少 1 个自由度才挤得出非常值函数。g=3 时门槛是 deg D ≥ 4，题目给的 deg D=5 刚好越过。这就是"亏格度量刚性"的量化形式。</p>
+<p><strong>数值对照。</strong> 若换成 g=5、deg D=5：ℓ(D) − ℓ(K−D) = 1，只能推出 ℓ(D) ≥ 1，无法保证非常值函数存在——同一个 deg D 在更高亏格上"失灵"了。这正是直觉"亏格越大越难"的严格版本。</p>
+</section>
+
+<section><h3>前沿：Mirzakhani的模空间体积</h3>
+<p>Mirzakhani(2000s)用Weil-Petersson辛几何计算了M_g的体积——发现递推关系。这惊人地连接了模空间、双曲几何、弦论(Witten猜想)和可积系统。Mirzakhani是史上第一位女性Fields奖得主(2014年获奖，2017年因癌症去世，年仅40岁)。</p>
+<p><strong>为什么这值得一枚 Fields 奖？</strong> 模空间 M_g 的体积不是"为了算而算"：它一端连着双曲几何（每个亏格 g 曲面都有双曲度量），一端连着辛几何（Weil-Petersson 形式给出自然的体积测度），一端还通往弦论（Witten 猜想的生成函数满足 KdV 方程）。Mirzakhani 的递推公式（用双曲几何中的"活动曲线"切割曲面）第一次让这些体积可以被系统计算——同一个数，三种截然不同的学科给出了相互印证的算法。</p></section>
+
+<section>
+<h3>工作题：亏格计算与 Riemann-Roch 应用</h3>
+<p><strong>题 1</strong>：曲面上由 y² = x⁶ − 1 定义的紧黎曼面（超椭圆曲线）。用 Riemann-Hurwitz 公式计算其亏格。<strong>提示：</strong>投影 (x,y) ↦ x 是次数 2 的二重覆叠；分歧点恰是 x⁶−1=0 的 6 个根（各 e=2）；无穷远点检查 w=1/x 是否分歧；套公式 2g−2 = 2(−2) + 6。</p>
+<p><strong>题 2</strong>：设 X 为亏格 3 的紧黎曼面，D 为 deg D = 5 的除子。用 Riemann-Roch 定理证明存在非常值亚纯函数 f 使 (f) + D ≥ 0（即 ℓ(D) ≥ 2），并解释"为什么亏格越大越需要大的 deg D"。<strong>提示：</strong>ℓ(D) = deg D + 1 − g + ℓ(K−D) ≥ deg D + 1 − g = 3；门槛 deg D ≥ g+1 才保证 ℓ(D) ≥ 2。</p>
+<p><strong>题 3</strong>：三叶形覆叠 X → ℙ¹，次数 d=3，在 4 个点上各有指数 2 的分歧（且无其他分歧）。求 g(X)。<strong>提示：</strong>Σ(e_p−1)=4，代入 2g−2 = 3(−2)+4。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：f: X → ℙ¹，(x,y) ↦ x 是次数 d=2 的二重覆叠。分歧点：x⁶−1=0 的 6 个根（各 e=2）；x=∞ 处换坐标 w=1/x 得 (y/x³)²=1 无分歧。于是 Σ(e_p−1)=6·1=6。Riemann-Hurwitz：2g−2 = 2·(−2)+6 = 2 ⟹ g=2。∎</p>
+<p><strong>题 2</strong>：Riemann-Roch：ℓ(D) − ℓ(K−D) = deg D + 1 − g = 5+1−3 = 3，而 ℓ(K−D) ≥ 0，故 ℓ(D) = 3 + ℓ(K−D) ≥ 3 ≥ 2。存在非平凡的 f（否则 ℓ(D)=1）使得 (f) ≥ −D。几何直觉：D 携带 deg D 个自由度，每个洞消耗一个约束，剩余 ≥ 2 才产生非常值函数——"deg D + 1 − g ≥ 2"。∎</p>
+<p><strong>题 3</strong>：4 个点各 e=2，Σ(e_p−1)=4。2g−2 = 3·(−2)+4 = −2 ⟹ g=0 ⟹ X ≅ ℙ¹。反直觉结论：<strong>分歧次数过小不足以提高亏格</strong>。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（换个数再算一遍）。</strong> 用 Riemann-Hurwitz 计算 y² = x⁸ − 1 的亏格。<strong>提示：</strong>x⁸=1 有 8 个根，各 e=2；∞ 处仍无分歧；2g−2 = 2(−2)+8，答案 g=3。</p>
+<p><strong>试试看 2（一般超椭圆公式）。</strong> 证明 y² = ∏ᵢ₌₁ⁿ (x−aᵢ)（aᵢ 相异）的亏格是 ⌊(n−1)/2⌋。<strong>提示：</strong>先假设 n 为偶数（分歧恰 n 个，g=(n−2)/2）；n 为奇数时在 ∞ 处多出一个分歧点，g=(n−1)/2；两式统一成地板函数。</p>
+<p><strong>试试看 3（环面 χ=0 的亲手剖分）。</strong> 把环面剪成正方形、对边粘合：先用"1 个顶点、2 条边、1 个面"的四边形剖分算 χ；再把它精细成真正的三角剖分（顶点互不相同），核对 Euler 数不变。<strong>提示：</strong>四边形剖分给 χ = 1−2+1 = 0；最省的 7 顶点三角剖分有 V=7、E=21、F=14，χ = 7−21+14 = 0——两种剖分结果一致，这正是"剖分无关"的体验。</p>
+<p><strong>试试看 4（Riemann-Roch 自检）。</strong> 亏格 2 的 X，取 deg D = 3 的除子：证明 ℓ(D) ≥ 2，从而存在非常值函数。<strong>提示：</strong>ℓ(D) ≥ deg D + 1 − g = 3+1−2 = 2；对照门槛 deg D ≥ g+1 = 3 刚好踩线。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>L. Ahlfors, Complex Analysis</strong></p>
+<p>&rarr; <strong>J. Conway, Functions of One Complex Variable</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/complex-plane.html">复平面与全纯函数</a>、<a href="/pages/contour-integral.html">围道积分与留数</a>、<a href="/pages/algebraic-topology-homology.html">同调论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/several-complex-variables.html">🪞 多复变</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/complex-plane.html">🔄 复平面与全纯函数</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/contour-integral.html">⭕ 围道积分与留数</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：分析核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/riemann-surface.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

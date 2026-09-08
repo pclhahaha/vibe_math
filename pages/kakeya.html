@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="旋转一根针需要多小面积？与Fourier限制性估计的深刻联系" />
+  <meta property="og:title" content="Kakeya猜想 — Vibe Math" />
+  <meta property="og:description" content="旋转一根针需要多小面积？与Fourier限制性估计的深刻联系" />
+  <title>Kakeya猜想 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🪡 Kakeya猜想 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">旋转一根针需要多小面积？与Fourier限制性估计的深刻联系</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='kakeya',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/martingales.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ♟️ 鞅与随机游走</a>
+  <a href="/pages/geometric-measure-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">✂️ 几何测度论与 Hausdorff 维数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把一根针在桌上转一整圈，需要的面积竟然可以接近零</h3>
+<p>想象在一张桌子上把一根筷子转一圈（360度），直觉上你得给它留一个圆形的空间。但一个叫Besicovitch的人玩了个"魔术"：先平移一点点、再转一点点、再平移……结果真的用几乎看不见的空间就把整根筷子转完了，扫过的面积小到趋近于零。</p>
+<p>这听起来像作弊，但却是严格的数学。而正是这个"魔术"引出了一个硬核难题：如果把问题从"桌面"搬到"三维空间"，数学家至今证明不了那些奇怪的小集合到底能有多小——这成了调和分析里最著名的未解问题之一。</p>
+<p>整门课的张力在于：<strong>构造（把面积做到任意小）已经解决，下界（证明它不能太小）却卡住了整整一个世纪。</strong>构造容易，证明"不能再小"极难。</p>
+<div class="key-insight">洞察：一个"转筷子"的魔术背后，藏着一个让全世界数学家头疼了几十年的谜题。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——1917 年的那根针</h3>
+<p>1917 年，日本数学家 <strong>Kakeya 宗一</strong> 提出：让一根<strong>单位长度</strong>的针在平面上旋转整整 360°，回到原来的位置——所需扫过的<strong>最小面积</strong>是多少？</p>
+<p><strong>直觉给出的三种答案（先算给你看，例题 1 再严格化）：</strong></p>
+<ul>
+  <li>针绕自己的中点转 → 扫出半径 1/2 的圆盘，面积 π/4 ≈ 0.785；</li>
+  <li>针一端固定、另一端绕一圈 → 扫出半径 1 的圆盘，面积 π ≈ 3.142；</li>
+  <li>当时已知最好的办法：让针沿一条"三尖回线"（deltoid，内摆线）内壁滚动，面积只有 <strong>π/8 ≈ 0.393</strong>。</li>
+</ul>
+<p>20 世纪头二十年的纪录是 π/8。所有人都以为这就是极限——把针转一整圈，怎么可能比三尖回线还省？</p>
+<p><strong>1919 年 Besicovitch 的晴天霹雳：</strong> 存在一种方式，把针的旋转分成"平移一小段 → 转一小角 → 平移一小段 → ……"的序列，使得扫过的总面积<strong>任意接近零</strong>。不是 π/8，不是 1/100，而是对任意 ε&gt;0 都能做到小于 ε。于是原问题的答案是：<strong>下确界为 0</strong>。</p>
+<div class="key-insight">Kakeya 问题（1917）：旋转单位针 360° 的最小面积是多少？直觉答案是 π/8（三尖回线）——但 Besicovitch 证明可以做到任意小。这个"意外"没有终结问题，反而开启了更深的猜想。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——"分而叠之"为什么省面积</h3>
+<p>直觉：把针的旋转切成一串<strong>小角度</strong>，每个小角度只需要一片<strong>很窄的扇形</strong>（面积 ~ θ/2，θ 小时极小）。麻烦在于这些小扇形排成一排，连起来就又是大圆。Besicovitch 的洞见是：<strong>让它们彼此重叠</strong>——只要平移拼接得当，两个窄扇形可以"共享"一大块区域，却仍然各自完成自己那一段旋转。</p>
+<p>严格的第一块基石是一个三角形算术（例题 2 会算完）：</p>
+<div class="formula display" data-tex="\text{两个底为 }b\text{、高为 }h\text{ 的直角三角形重叠后：}\quad A_{\text{并}}=2\cdot\frac{bh}{2}-\frac{bh}{4}=\frac34\,bh"></div>
+<p>同一枚针需要的旋转角没变，容纳它的面积却从 bh 降到了 (3/4)bh。反复切割、反复重叠，(3/4)ⁿ→0——这就是"面积任意小"的机制。</p>
+<p><strong>严格第二块基石：针必须能"穿过"重叠区。</strong> 重叠不是摆设：针在 T₁ 里转完 α，要从重叠的窄带平移进 T₂，再转 α。窄带要有足够的宽度让针滑过去——这个细节正是构造中"细长的三角形"（而不是点）的由来。</p>
+</section>
+
+<section>
+<h3>三、例题 1——三种朴素配置的面积算术（一步步算完）</h3>
+<p><strong>题目。</strong> 一根单位长度（L=1）的针，分别按三种方式转 360°，各扫过多少面积？</p>
+<p><strong>第一步：绕中点旋转。</strong> 针的中点固定，两端各画半径 1/2 的圆，扫过的区域是以中点为心的半径 1/2 的圆盘：</p>
+<div class="formula display" data-tex="A_{\text{中点}}=\pi\left(\frac12\right)^2=\frac{\pi}{4}\approx0.7854"></div>
+<p><strong>第二步：一端固定旋转。</strong> 固定端是圆心，自由端画半径 1 的整圆，扫过整个单位圆盘：</p>
+<div class="formula display" data-tex="A_{\text{端点}}=\pi\cdot1^2=\pi\approx3.1416"></div>
+<p><strong>第三步：三尖回线（deltoid）。</strong> 让针始终与一条三尖内摆线相切、绕行一整圈。内摆线的滚动圆半径为 r=1/4 时（针长恰为 4r=1），围出面积</p>
+<div class="formula display" data-tex="A_{\text{deltoid}}=2\pi r^2=2\pi\left(\frac14\right)^2=\frac{\pi}{8}\approx0.3927"></div>
+<p><strong>第四步：比较。</strong> π/8 ≈ 0.393 &lt; π/4 ≈ 0.785 &lt; π ≈ 3.142。三尖回线省下了中点旋转的一半还多——这是 1919 年以前的最好纪录。∎</p>
+<p><strong>为什么 deltoid 能更省？</strong> 圆盘里每一块扇形都被"扫过又扫过"（针旋转时反复经过同一区域）；deltoid 让针贴着边界走，把重复扫过压到最少。Besicovitch 的下一步是把"重复"从"最少"压到"任意少"。</p>
+</section>
+
+<section>
+<h3>四、例题 2——Besicovitch 的一步重叠：面积 ×3/4（一步步算完）</h3>
+<p><strong>题目。</strong> 设一枚单位针要完成一个角度为 2α 的旋转。把一个高 h、底 2b 的等腰三角形沿中垂线劈成两个直角三角形 T₁、T₂，再平移 T₂ 使它与 T₁ 重叠。证明：重叠后并集的面积是原来两三角形面积之和的 3/4，且针仍能完成同样的旋转。</p>
+<p><strong>第一步：写出原来的面积。</strong> 等腰三角形面积 = 底×高/2 = (2b)(h)/2 = bh。劈成的 T₁、T₂ 各为直角三角形，面积各 bh/2。</p>
+<p><strong>第二步：平移并计算重叠。</strong> 把 T₂ 沿底边方向平移，使它叠在 T₁ 上，重叠区域是一个高 h、底 b/2 的直角三角形（T₂ 的尖角伸进 T₁ 底边一半处）：</p>
+<div class="formula display" data-tex="A_{\text{并}}=A_{T_1}+A_{T_2}-A_{\text{重叠}}=\frac{bh}{2}+\frac{bh}{2}-\frac{1}{2}\Bigl(\frac{b}{2}\Bigr)h=\frac{3}{4}\,bh"></div>
+<p><strong>第三步：核对"针还能转"。</strong> 把 2α 拆成两段 α：先在 T₁ 里以一点为轴转 α（T₁ 的高 h≥1 保证针放得下），再平移穿过重叠窄带进入 T₂，在 T₂ 里再转 α。全程针不离开并集。∎</p>
+<p><strong>第四步：迭代。</strong> 把针的旋转等分成 2ⁿ 段，每两段在各自的一对"重叠三角形"里完成，各对再彼此重叠：总面积 ≤ (3/4)ⁿ · bh。n→∞ 时 (3/4)ⁿ→0，面积任意小。∎</p>
+<p><strong>为什么这没有作弊？</strong> 针没有"瞬间移动"——它始终连续地走一条路径，每一段都是合法的平移+旋转。省面积靠的是<strong>把原来彼此不重叠的扇形区域重叠起来</strong>：同样的"工作量"（旋转 2α）被压缩进更少的"场地"（并集）。严格来说，第三步要求重叠窄带足够宽以容纳针的横截面——用"宽度 ε 的细长带"处理，ε 可任意小，这就是 Besicovitch 1919 拼装引理的内容。</p>
+</section>
+
+<section>
+<h3>五、Kakeya 集合与 Kakeya 猜想——严格陈述</h3>
+<p><strong>Kakeya 集合</strong>：ℝ<sup>n</sup>中包含每个方向上的单位线段（即任意方向 v ∈ S<sup>n−1</sup>存在线段 ℓ ⊂ K 含平行于 v 的单位线段）。Kakeya针问题(1917)：旋转单位针360°所需扫过的最小面积是多少？答案：如直觉所说 π/8？错——Besicovitch (1919) 证明可以用<strong>任意小的面积</strong>跑完一整圈！构造令人惊叹：通过将针平移→微小旋转→平移→旋转→...，用极细长的三角形重叠消除冗余区域。结果是"Kakeya Besicovitch集"——面积为零(或任意小)但包含所有方向的单位线段。</p>
+<p>但这并不是故事的结尾。<strong>Kakeya 猜想</strong>：ℝ<sup>n</sup>中的 Kakeya 集必须具有<strong>Hausdorff 维数 n</strong>（满维数）。即：不能在低维数空间中"塞"进所有方向的线段。n=2的情形由 Davies (1971) 完整证明——需要用加权的周长估计和纯几何构造。对 n≥3，猜想至今开放——这是现代调和分析中最核心的未解问题之一。</p>
+<p>为什么关心？因为Kakeya猜想关乎小球倍乘估计、Fourier限制性、波函数的集中现象——这些都是偏微分方程和量子混沌中的基本问题。更一般地：<strong>一条小管能不重叠地堆积出多少不同的方向？</strong>这就是Kakeya猜想的"管道形式"——调和分析中最自然的表述。</p>
+<p><strong>为什么是"猜想"而不是"显然"？</strong> 第四节的构造已经证明"面积任意小"可能——所以"包含所有方向的集合必须很大"绝非自动成立。要排除的是"面积任意小"升级为"维数也低"的可能性。零面积与低维是两回事（见第十节反例），这正是难题所在。</p>
+<p>关键文献：Besicovitch, <em>Math. Ann.</em> 98 (1919) 422–464. Davies, <em>Proc. Camb. Phil. Soc.</em> 69 (1971) 417–421. Wolff, "Recent work connected with the Kakeya problem", in <em>Prospects in Mathematics</em>, AMS (1999).</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\dim_H(K) = 3\quad\text{(Kakeya猜想, 3D)}"></div>
+<div class="formula display" data-tex="\|\hat{f}\|_{L^q(S^2)} \le C\|f\|_{L^p(\mathbb{R}^3)}\quad\text{(限制性猜想)}"></div>
+<div class="formula display" data-tex="|K| \ge \binom{q+n-1}{n}\quad\text{(有限域 Kakeya, Dvir 2008)}"></div>
+<div class="formula display" data-tex="A_{\text{deltoid}}=\tfrac{\pi}{8},\qquad A_{\text{重叠}}=\tfrac34 bh\qquad\text{(例题 1、2 的数字)}"></div>
+</section>
+
+<section>
+<h3>七、Kakeya ↔ Fourier 限制性估计——和调和分析的深层联系</h3>
+<p>Kakeya问题之所以"硬"，是因为它的等价形式深入到调和分析的核心。Fefferman (1971) 的在 <em>"The Multiplier Problem for the Ball"</em> (<em>Ann. of Math.</em> 94, 330–336) 中证明了惊天结果：单位球的<strong>Bochner-Riesz平均值</strong>仅在p=2时是L<sup>p</sup>有界的。他的证明使用了Kakeya集作为反例——构造一个函数，其Fourier变换集中在细管的并集上（一个Kakeya集），若球倍乘算子有界，则Kakeya集无法具有满维数。这把Kakeya从"谁会需要的几何奇观"推进到<strong>调和分析的核心障碍</strong>。</p>
+<p>现在已知Kakeya猜想等价于(或强依赖于)以下调和分析中的核心问题：</p>
+<ul>
+<li><strong>限制性猜想(Restriction Conjecture)</strong>：球面S<sup>n−1</sup>上的Fourier变换从L<sup>p</sup>(ℝ<sup>n</sup>)限制到L<sup>q</sup>(S<sup>n−1</sup>)的映射是否有界？Tomas-Stein限制定理给出了p&lt;2(n+1)/(n+3)时的正解，但猜想的全范围仍然开放。</li>
+<li><strong>局部光滑性猜想(Local Smoothing Conjecture)</strong>：Schrödinger方程e<sup>itΔ</sup>的解的空间-时间L<sup>p</sup>估计。Sogge (1991) 证明了局部光滑性与Kakeya猜想的强关联——如果Kakeya为真，则最优局部光滑性成立。目前仅部分范围得证。</li>
+<li><strong>Bochner-Riesz猜想</strong>：球倍乘算子(1−|ξ|²)<sup>δ</sup><sub>+</sub>在L<sup>p</sup>的有界性。Carbery-Rubio de Francia-Vega (1988) 证明了Bochner-Riesz猜想在n维中可由更强形式的Kakeya猜想推导出来。</li>
+</ul>
+<p>这些猜想的共同之处：都依赖于"波不能同时在方向和位置上都集中"这个物理启发——但将其转化为严格的L<sup>p</sup>不等式是极其困难的。</p>
+<p><strong>为什么"一根针"与"波的集中"有关？</strong> 一根细管（针的 ε 加厚版）的 Fourier 变换集中在"垂直于管轴"的一块薄区域；而 Fourier 变换在球面 S^{n−1} 上的限制，正是检验"波的频率都落在单位球面上"时能量如何分布。细管并集的几何（Kakeya）与球面限制的 L^p 估计（限制性猜想）通过不确定性原理挂钩——这是 Fefferman 1971 的发现。</p>
+<p>关键文献：Fefferman, <em>Ann. of Math.</em> 94 (1971) 330–336. Wolff, <em>Acta Math.</em> 178 (1997) 225–275. Tao, "Recent progress on the restriction conjecture", <em>Proc. ICM</em> 2006. Bourgain, <em>Geom. Funct. Anal.</em> 1 (1991) 147–187.</p>
+</section>
+
+<section>
+<h3>八、例题 3——有限域 Kakeya：Dvir 的计数下界 |K| ≥ q(q+1)/2（一步步算完）</h3>
+<p><strong>题目。</strong> 设 K ⊂ F_q² 是有限域 Kakeya 集：对 F_q² 中每个方向（共 q+1 个方向）都含有一条该方向的整条直线。证明 |K| ≥ q(q+1)/2。</p>
+<p><strong>第一步：数一数自由度。</strong> 两个变量 x、y 的二元多项式里，次数 ≤ q−1 的单项式共</p>
+<div class="formula display" data-tex="\sum_{d=0}^{q-1}(d+1)=\frac{q(q+1)}{2}\qquad\text{个（d 次项有 d+1 个单项式）}"></div>
+<p><strong>第二步：反设 |K| &lt; q(q+1)/2。</strong> 未知数（单项式，共 q(q+1)/2 个）多于方程（|K| 个"P 在 K 上为零"的约束），齐次线性方程组有非零解：存在非零多项式 P，deg P ≤ q−1，且 P 在 K 上处处为零。</p>
+<p><strong>第三步：沿每条直线看。</strong> K 含有所有方向的直线。取任意方向 v 上的一条直线 ℓ = {a + t·v : t ∈ F_q} ⊂ K。P 限制在 ℓ 上是 t 的一元多项式，次数 ≤ q−1 &lt; q，却在全部 q 个点上都为零——一元多项式若次数低于零点数，则恒为零。所以 P 在每条这样方向的直线上恒为零。</p>
+<p><strong>第四步：看最高次齐次部分。</strong> 记 P_d 为 P 的最高次齐次部分（deg P_d = d ≤ q−1）。P 在 ℓ 上恒为零 ⟹ t^d 的系数为零，即 <strong>P_d(v)=0</strong>。v 跑遍所有方向 ⟹ P_d 在 F_q²∖{0} 的一切方向上为零；因 P_d 齐次，P_d 在整个 F_q² 上为零。</p>
+<p><strong>第五步：矛盾。</strong> P_d 的每个单项式 x^i y^j 有 i,j ≤ d ≤ q−1 &lt; q。一个"每个变量次数都 &lt; q、且在整个 F_q² 上为零"的非零多项式不可能存在（Schwartz–Zippel / 有限域消元引理）。矛盾。故反设不成立：</p>
+<div class="formula display" data-tex="|K|\ \ge\ \frac{q(q+1)}{2}\quad\blacksquare"></div>
+<p><strong>第六步：代入具体 q 检查。</strong> q=3：下界 3·4/2 = 6。四条过原点的直线（斜率 0、1、2、∞）拼成的"星"有 1+4·(3−1)=9 个点，确实 ≥6，且它确实覆盖所有 4 个方向。q=5：下界 15。∎</p>
+<p><strong>为什么这证明"漂亮"？</strong> 没有调和分析、没有度量——只有计数 + 代数 + 一条"低次多项式不能到处为零"的引理。Dvir 的洞见是：把"针"翻译成"方向上的直线"，把"面积"翻译成"点的个数"，大域的分析难题就变成了有限域上的多项式零点问题。</p>
+</section>
+
+<section>
+<h3>九、有限域 Kakeya——Dvir 的漂亮证明</h3>
+<p>为什么有限域上的Kakeya问题重要？因为它的证明方法揭示了大域(ℝ<sup>n</sup>)中也许能用<strong>代数</strong>而不是分析获得突破。有限域版本：<strong>Kakeya集在F<sub>q</sub><sup>n</sup></strong>——包含F<sub>q</sub><sup>n</sup>中所有方向的小区域(方向F<sub>q</sub><sup>n</sup>∖{0}/F<sub>q</sub>×)。Wolff (1999) 提议研究有限域Kakeya作为大域猜想的简化模型。</p>
+<p>Dvir (2008) 给出了<strong>一页纸的华丽证明</strong>：假设K是F<sub>q</sub><sup>n</sup>中的Kakeya集且|K|太小。则存在非零多项式P ∈ F<sub>q</sub>[x<sub>1</sub>,...,x<sub>n</sub>] 在K上恒为零，且deg P &lt; q。关键步骤：对K在最后一个变量方向上的"拉伸"构造新多项式Q(t,x) = Σ<sub>j=0</sub><sup>q−1</sup> t<sup>j</sup>·P<sup>(j)</sup>，其中P<sup>(j)</sup>是关于最后一个变量的j阶齐次部分。利用Kakeya性质：K包含所有方向的线。考虑某条线ℓ = a + b·F<sub>q</sub>，沿着ℓ，Q退化为t的多项式且在F<sub>q</sub>中全为零——由Lagrange插值，Q(t,a)作为t的多项式全为零。但deg Q &lt; q，故Q ≡ 0，从而每个齐次部分P<sup>(j)</sup>在K上为零。降次重复——矛盾。得证|K| ≥ (q+n−1 choose n)，即|K| ≳ q<sup>n</sup>。</p>
+<p>这就是<strong>多项式方法(Polynomial Method)</strong>的思想。Dvir的证明表明：在大特征零的情形，也许可以用多变量多项式的零点计数来代替调和分析的管道堆积论证。Guth-Katz (2015) 用多项式分拆(Polynomial Partitioning)将这种方法带回ℝ<sup>n</sup>，推进了Erdős问题、限制性和Kakeya下界。这被认为是近20年调和分析最重要的方法论创新。</p>
+<p>Dvir证明的推广：Kopparty等人 (2013) 将多项式方法推广到k-plane Kakeya（包含了所有方向k-平面的集合），证明其在有限域上必具有满维数。Ellenberg-Erman (2016) 用代数拓扑的方法给出同类结果的抽象框架。</p>
+<p><strong>为什么一页纸的证明配得上这么大的名声？</strong> 大域 ℝ³ 的下界在 1990–2020 年用尽调和分析、组合、几何，只推进到 5/2+ε（还差 0.5）；而有限域版本被一个本科生都能读懂的多项式计数一次性解决。反差越大，越说明"代数路线"可能才是 ℝⁿ 的钥匙。</p>
+<p>关键文献：Dvir, <em>J. Amer. Math. Soc.</em> 22 (2009) 1093–1097. Guth-Katz, <em>Ann. of Math.</em> 181 (2015) 155–190. Wolff, in <em>Prospects in Mathematics</em>, AMS (1999).</p>
+</section>
+
+<section>
+<h3>十、反例——"面积任意小"不是"低维"</h3>
+<p>第四节做了"面积任意小"的集合，读者容易误以为"那维数也应该任意小"。两个反例划清界限——它们同时解释了为什么 Kakeya 猜想不平凡。</p>
+<p><strong>反例 1：零面积集合可以满维数。</strong> 二维 Besicovitch 集是零面积（Lebesgue 测度 0）的，但 Davies 定理说它的 Hausdorff 维数是 <strong>2</strong>。测度为 0 只说明"没有体积感"，维度衡量的是"在多大程度上覆盖方向"。ℝ² 里甚至可以构造"包含每个方向、但维度 1 的集合"吗？不能——但"面积 0"本身给不出这个否定，必须靠 Davies 的整篇证明。教训：<strong>测度与维数是两个独立的量，用测度推维数是错的。</strong></p>
+<p><strong>反例 2：维度 1 的集合最多覆盖一个方向。</strong> 一条直线只含一个方向；有限条直线只含有限个方向；而 S^{n−1} 有不可数个方向。要覆盖"所有方向"至少需要"连续的"自由度——这是为什么 Kakeya 集被直觉认为"不小"、为什么猜想是"满维数 n"而不是"正测度"。</p>
+<p><strong>反例 3（"显然成立"为什么靠不住）。</strong> 在二维，Furstenberg 型结果帮了 Davies 大忙；但同样的直觉搬到三维就失灵——ℝ³ 里可以把许多小平面"竖着叠"而不增加维度。三维 Kakeya 的 5/2+ε 下界 <strong>离 3 差一截</strong>，正是"直觉"在维度提升时失效的活证据。</p>
+</section>
+
+<section>
+<h3>十一、当前状态——开问题与进展</h3>
+<p><strong>n=2</strong>：完全证明(Davies 1971)。二维的Kakeya猜想(Lebesgue测度&gt;0对于所有Kakeya集)已完全解决。</p>
+<p><strong>n=3</strong>：当前世界记录——在Wolff的5/2基础上，Katz-Zahl (2019, <em>Proc. London Math. Soc.</em>) 证明 dim_H K ≥ 5/2 + ε ≈ 2.5000... + 微小正数，Zahl (2020) 与 Wang-Zahl (2022) 进一步放大ε。这些改进微小但意义重大——证明了Wolff的5/2不是真正的障碍。方法论：polynomial partitioning(Guth-Katz) + k-plane Kakeya递推 + 精细的代数拓扑嵌入。</p>
+<p><strong>n≥4</strong>：随n增大下界比例更差。当前最优下界约为n/2 + ... 离n还差得远。</p>
+<p><strong>当前未被攻克的里程碑</strong>：</p>
+<ol>
+<li><strong>3D满维(3→3)</strong>：证明dim_H K = 3。任何进展都会引爆调和分析中的多个对应推进。这被认为是调和分析三大核心难题(Kakeya, 限制性, Bochner-Riesz)中最难的一个。</li>
+<li><strong>限制性猜想的完整证明</strong>：已知Kakeya为真⇒限制性为真。但如果Kakeya硬到不行，也许限制性可以从别处证明？目前没有独立的限制性证明方法。</li>
+<li><strong>大域多项式方法</strong>：有限域Kakeya已解决的优美程度与ℝ<sup>n</sup>中的泥沼形成鲜明对比。找到ℝ<sup>n</sup>上多项式方法的正确版本——也许是通过代数拓扑的交换代数重构——这是目前最受关注的研究方向。Guth-Nguyen (2021) 和 Hickman-Wright (2022) 正尝试用代数簇的高级分解(如Bertini定理在ℝ中的应用)来攻略。</li>
+</ol>
+</section>
+
+<section><h3>前沿：Katz-Guth多项式方法</h3><p>Guth(2016)用多项式分拆(Guth-Katz 2010)推进3D Kakeya下界。Katz-Tao(2002)与Katz-Zahl(2019)给出5/2+ε的严格改进，Zahl(2020)与Wang-Zahl(2022)进一步放大ε。仍开放:如何突破5/2+ε的3D界限——目标dim=3。</p>
+<p><strong>为什么多项式分拆能推进下界？</strong> 有限域证明了"多项式计数"威力巨大；Guth–Katz 在 ℝ³ 里用"把空间切成若干代数簇（零点集）的并、每片内做经典估计"的混合策略，把有限域的灵感移植回连续世界。5/2→5/2+ε 的每一步都来自"哪一层多项式、切多细"的微妙权衡——离满维 3 还差在"折叠重叠"的精细控制上。</p></section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Besicovitch (1919)</strong>：<em>"Sur deux questions d'intégrabilité"</em>, <em>Math. Ann.</em> 98, 422–464——构造了零面积Kakeya集，证明可旋转针360°而面积任意小。用基本几何方法构造"重叠消除"。</li>
+<li><strong>Davies (1971)</strong>：<em>"Some remarks on the Kakeya problem"</em>, <em>Proc. Camb. Phil. Soc.</em> 69, 417–421——完整证明n=2的Kakeya猜想：二维的Kakeya集必有Hausdorff维数2。用周长(L²-Cauchy-Crofton不等式)和局部凸包络方法。</li>
+<li><strong>Fefferman (1971)</strong>：<em>"The Multiplier Problem for the Ball"</em>, <em>Ann. of Math.</em> 94, 330–336——用Kakeya型构造证明球倍乘算子仅在p=2有界，建立Kakeya与调和分析的桥梁。</li>
+<li><strong>Wolff (1995–1999)</strong>：系列论文推进3D Kakeya下界到5/2=2.5 ("Wolff bound")。引入hairbrush方法与组合几何，成为后来所有下界改进的基础。</li>
+<li><strong>Bourgain (1991–1999)</strong>：用加法组合和sum-product估计改进Kakeya下界——打开了"组合加性调和分析"的新方向。Bourgain的重要创新是把Kakeya转化为离散和集合——"Bush"结构。</li>
+<li><strong>Katz-Tao (2002)</strong>：<em>"New bounds for Kakeya problems"</em>, <em>J. Anal. Math.</em> 87, 231–263——精细的代数拓扑和代数几何方法，将Wolff的好argument进一步推进。提供了对数改进和关键反例构造。</li>
+<li><strong>Dvir (2008)</strong>：<em>"On the size of Kakeya sets in finite fields"</em>, <em>J. Amer. Math. Soc.</em> 22, 1093–1097——有限域Kakeya猜想的完整证明（一页纸！），用多项式方法——高度简洁且深刻。</li>
+<li><strong>Guth (2015–2016)</strong>：<em>"A restriction estimate using polynomial partitioning"</em>——将Guth-Katz多项式分拆方法用于限制性估计，改进了限制性定理并推进3D Kakeya下界的研究。这是将有限域方法大域化的重要尝试。</li>
+<li><strong>Katz-Zahl (2019)</strong>：<em>"An improved bound on the Hausdorff dimension of Kakeya sets in ℝ³"</em>, <em>Proc. London Math. Soc.</em> 119, 619–659——给出3D Kakeya下界 dim_H K ≥ 5/2 + ε 的严格改进（Wang-Zahl 2022 进一步放大ε）。</li>
+</ul>
+<p>更多文献：Tao, "From rotating needles to stability of waves...", <em>Notices AMS</em> 48 (2001) 294–303 (优秀综述)。Wolff, <em>Lectures on Harmonic Analysis</em>, AMS (2003). Guth, <em>Polynomial Methods in Combinatorics</em>, AMS (2016).</p>
+</section>
+
+<section>
+<h3>工作题——面积算术、重叠构造与有限域下界</h3>
+<p><strong>题 1（旋转配置对比）。</strong> 分别写出单位针"绕中点转一圈"与"沿三尖回线转一圈"扫过的面积，并算出两者之比。<strong>提示：</strong>π/4 与 π/8，比值 2。</p>
+<p><strong>题 2（两步重叠的预算）。</strong> 若把针的旋转分成 4 段、两两重叠（每对按例题 2 的算术），最多能把起始面积降到多少？<strong>提示：</strong>每对 ×3/4，共 2 对，≤(3/4)²=9/16≈0.5625 倍。</p>
+<p><strong>题 3（q=3 的下界核对）。</strong> 对 F_3²，验证方向数是 4、Kakeya 集下界是 6，并构造一个 9 点的 Kakeya 集。<strong>提示：</strong>斜率 0、1、2、∞ 共 4 个方向；q(q+1)/2=6；四条过原点的直线并起来 1+4·(3−1)=9 点，覆盖全部方向。</p>
+<p><strong>题 4（deltoid 的半径核对）。</strong> 说明为什么单位针对应滚动圆半径 r=1/4（即针长 = 4r）。<strong>提示：</strong>三尖内摆线由半径 r 的圆在半径 3r 的圆内滚动生成，针长 = 4r；令 4r=1 得 r=1/4，面积 2πr²=π/8。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：绕中点：π(1/2)²=π/4≈0.785；deltoid：π/8≈0.393；比值 π/4 ÷ π/8 = 2。∎</p>
+<p><strong>题 2</strong>：4 段 = 2 对，每对重叠后乘 3/4，总 ≤ (3/4)²·bh = (9/16)bh≈0.5625 bh。n 段推广到 (3/4)^n→0。∎</p>
+<p><strong>题 3</strong>：方向数 q+1=4；下界 q(q+1)/2=6；四条过原点的直线（每个方向一条）并集 = 1+4·2=9 点，是合法的 Kakeya 集。∎</p>
+<p><strong>题 4</strong>：滚动圆半径 r、外圆半径 3r，针长 = 内摆线"直径方向"的最大跨度 4r；单位针 → r=1/4；面积 2πr²=π/8。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（q=2 的最小例子）。</strong> 对 F_2²，手数方向数并验证下界 q(q+1)/2=3。<strong>提示：</strong>F_2 只有两个数，方向 = 斜率 0、1 与竖直 ∞ 共 3 个；3=2·3/2 恰成立。</p>
+<p><strong>试试看 2（圆盘面积复核）。</strong> 自己推导"一端固定转一圈 = π"的扇形面积公式（角度为 θ 的扇形面积 = θ/2，取 θ=2π）。<strong>提示：</strong>扇形面积 = (1/2)·半径²·角，单位半径、2π 角 → (1/2)·1·2π=π。</p>
+<p><strong>试试看 3（方向数不可数）。</strong> 说明为什么一条直线只能"提供一个方向"，因而有限个点/线段不可能覆盖 S^{n−1}。<strong>提示：</strong>S^{n−1} 是不可数连续统，而直线集合 {v} 是单点；有限并仍是有限集，覆盖不了连续统。</p>
+<p><strong>试试看 4（Davies 的二维武器）。</strong> 说出二维 Davies 证明用到的核心不等式（周长估计），并对比为什么它在三维失效。<strong>提示：</strong>二维用 L²-Cauchy-Crofton：一族平行线的长度积分 ~ 测度上界，方向再多也受 Crofton 约束；三维的"小平面叠放"绕开了 Crofton，因此需要新的（多项式）工具。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>T. Wolff, Lectures on Harmonic Analysis</strong></p>
+<p>&rarr; <strong>L. Guth, Polynomial Methods in Combinatorics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：分析核心链。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：分析核心链。</p>
+<p>&rarr; <a href="/pages/functional-analysis.html">📊 泛函分析</a>：分析核心链。</p>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：分析核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/kakeya.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

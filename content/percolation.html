@@ -1,0 +1,160 @@
+<section>
+<h3>〇、直觉入门——一块石头里，水何时能穿过去？</h3>
+<p>把一块多孔材料切成薄片，想象成一张格子：每个"孔"独立地以概率 p 是通的、1−p 是堵的。问：<strong>水能否从左边流到右边？</strong>把 p 从 0 慢慢调到 1，你会看到一个毫不含糊的转折——存在一个临界值 p_c：</p>
+<ul>
+<li>p &lt; p_c：几乎不可能贯通（只有零星小水洼）；</li>
+<li>p &gt; p_c：几乎必然贯通（出现贯穿左右的"大团簇"）；</li>
+<li>p = p_c：临界——恰好卡在"碎"与"通"之间，团簇呈分形。</li>
+</ul>
+<p>这个模型叫<strong>渗流（percolation）</strong>，由 Broadbent 与 Hammersley 在 1957 年提出（研究煤矿瓦斯过滤）。它是"相变"最干净的数学样本：没有温度、没有能量，只有一个参数 p 和一个连通性概念，却完整复现了物理相变的全部特征——尖锐阈值、普适临界指数、分形团簇、有限尺寸标度。最令人吃惊的事实之一：<strong>在平面正方形键渗流中，临界值恰好是 p_c = 1/2</strong>（Kesten 1980），一半开一半关就是相变点。</p>
+<div class="key-insight">洞察：渗流把"相变"蒸馏成纯概率：无穷连通团簇的存在性 θ(p)=P(0↔∞) 充当"序参量"，它从 0（亚临界）跳到正值（超临界）的临界点 p_c 依赖格子细节，而临界指数（θ~(p−p_c)^β，β=5/36；关联长度 ξ~(p−p_c)^{−ν}，ν=4/3）却<strong>不依赖格子</strong>——普适性。画布上滑动 p，你会亲眼看到这个转折，以及临界点附近团簇的"处处相似"。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/probability.html">概率论基础</a>（独立与极限）、<a href="/pages/graph-theory.html">图论与网络</a>（连通性与团簇）、<a href="/pages/ising-model.html">Ising 模型</a>（可选的相变对照）。与 <a href="/pages/clt.html">大数定律</a> 的"大偏差"思想也相关。</p></div>
+
+<section>
+<h3>一、一个具体问题——Broadbent–Hammersley 1957 与 Kesten 的 1/2</h3>
+<p><strong>模型。</strong> 键渗流：取无限图（如平面方格 ℤ²），每条边独立地"开"（概率 p）或"关"。开边的连通分量叫<strong>团簇</strong>。核心量：</p>
+<div class="formula display" data-tex="\theta(p)=P_p(0\text{ 属于无穷团簇})=\lim_{n}P_p(|C(0)|\ge n)"></div>
+<p>θ(p) 是"原点处有无限大水洼"的概率。单调性给出临界值 p_c=sup{p：θ(p)=0}：</p>
+<div class="formula display" data-tex="\theta(p)=0\ (p&lt;p_c),\qquad \theta(p)&gt;0\ (p&gt;p_c)"></div>
+<p><strong>历史上的里程碑。</strong></p>
+<ul>
+<li><strong>Broadbent–Hammersley（1957）：</strong> 提出模型并证明 p_c 存在、0&lt;p_c&lt;1（平面格）；一维情形平凡（p_c=1）。</li>
+<li><strong>Harris（1960）：</strong> 用平面对偶证明方形键渗流在 p=1/2 无贯通（θ(1/2)=0）。</li>
+<li><strong>Russo–Seymour–Welsh（1978，RSW）：</strong> 关键估计：临界附近的"穿越概率"被夹在正上下界之间——为尖锐相变提供几何工具。</li>
+<li><strong>Kesten（1980）：</strong> 证明方形键渗流 <strong>p_c=1/2</strong>——最著名的精确临界值。三角形格键渗流 p_c=2sin(π/18)≈0.3473、蜂窝格 ≈0.6527 也是精确的（Sykes–Essam 猜测、Wierman 证明）；但点渗流方形格 p_c≈0.5927 至今<strong>没有闭式</strong>。</li>
+<li><strong>Aizenman–Kesten–Newman（1987）：</strong> 无穷团簇至多一个（几乎必然唯一）。</li>
+</ul>
+</section>
+
+<section>
+<h3>二、先直觉后严格——为什么平面键渗流的临界值会是 1/2</h3>
+<p><strong>平面对偶。</strong> 方形格的"对偶格"还是方形格：把每个小方格中心连成网，原始边与对偶边一一对应、且恰好相交于一点。原始图的"无限开团簇"与对偶图的"无限闭团簇"不能共存——若两边都贯通，拓扑上必然相交于一条原始开边与一条对偶闭边的交叉处，矛盾。而开/闭互换恰好把 p 换成 1−p：</p>
+<div class="formula display" data-tex="P_p(\text{存在无限开团簇})+P_{1-p}(\text{存在无限闭团簇})\le 1"></div>
+<p>由于方形格自对偶，若 p=1/2 时存在无限开团簇，则对偶同样存在无限闭团簇，矛盾——于是 <strong>θ(1/2)=0</strong>（Harris）。RSW 估计再保证 p&gt;1/2 时穿越概率 >0（Kesten 完成另一半），合起来 p_c=1/2。∎</p>
+<p><strong>锐化（sharp threshold）。</strong> 在边长 L 的方盒里，"左-右穿越"概率作为 p 的函数在 p_c 附近从 ε 跳到 1−ε，过渡窗口宽度 ~L^{−1/ν}（ν=4/3 ⟹ 宽度 ~L^{−3/4}）：盒子越大，相变越"陡"。画布的扫参曲线正是这条阶梯曲线随 L 变陡的实况。</p>
+<p><strong>普适性从哪来？</strong> 临界现象只"看见"大尺度几何：三角格、方形格、蜂窝格在 p_c 处的长程行为由同一个共形不变极限描述（Smirnov 2001 在三角格点渗流证明共形不变性，通向 SLE₆）。阈值 p_c 是"微观"细节（不普适）；临界指数是"宏观"行为（普适）。</p>
+</section>
+
+<section>
+<h3>三、例题 1——小盒子手算穿越概率与对偶（一步步算完）</h3>
+<p><strong>题目。</strong> (a) 一维链 p_c=1（平凡）：说明为何无相变。(b) 方形 n×n 盒键渗流：用对偶论证它在 p=1/2 的左→右穿越概率恰为 1/2。</p>
+<p><strong>第一步：(a) 一维。</strong> 原点属于长 L 团簇需要连续的 L 条边全开，概率 p^L→0（p&lt;1）。只有 p=1 才有无穷团簇：p_c(ℤ)=1——<strong>维度不够，没有非平凡相变</strong>（树的 p_c=1 同理）。相变需要"绕过障碍的多种路径"，即维度 ≥2 的拓扑。∎</p>
+<p><strong>第二步：(b) 旋转对称。</strong> 把 n×n 盒旋转 90°：左→右的穿越变成下→上的穿越，故 P(LR)=P(BT)。</p>
+<p><strong>第三步：平面对偶收尾。</strong> “无 LR 穿越” ⟺ 对偶图存在一条<strong>下→上</strong>的闭穿越（屏障）。方形格自对偶，p=1/2 时开/闭过程同分布，故 P(无LR)=P(对偶有BT闭)=P(BT开)=P(LR)，于是 P(LR)=1/2。∎</p>
+<p><strong>第四步：为什么这是 Kesten 定理的种子？</strong> 有限盒临界穿越概率 = 1/2 是对偶性的直接后果；RSW 估计保证临界处该概率被夹在正数之间（盒子增大不塌到 0），Kesten 再用单调性与对偶把它钉成全局 p_c=1/2。画布的扫参曲线在 p=1/2 附近最陡，正是这一定理的数值回声。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——临界团簇的分形与普适指数（一步步算完）</h3>
+<p><strong>题目。</strong> 把 p_c 处与 p&gt;p_c 处的团簇几何"称重"：引入并核对 2D 关键指数。</p>
+<p><strong>第一步：临界关联长度。</strong> 定义 ξ(p)（两点关联衰减的相关长度）：ξ ~ |p−p_c|^{−ν}。2D：<strong>ν=4/3</strong>。</p>
+<p><strong>第二步：序参量。</strong> θ(p) ~ (p−p_c)^β。2D：<strong>β=5/36</strong>（≈0.1389）。θ 增长"极缓"：p−p_c=10⁻⁶ 时 (10⁻⁶)^{5/36}=10^{−30/36}=10^{−0.833}≈0.147·C——临界点附近的序参量从零"翘起"得非常慢，这是连续（二级）相变的标志。</p>
+<p><strong>第三步：临界团簇是分形。</strong> 在 p=p_c，无穷大团簇尚不存在，但有限团簇的尺寸分布与"质量—半径"满足幂律：</p>
+<div class="formula display" data-tex="P_p(|C|=k)\sim k^{-\tau}\ (k\to\infty),\qquad \text{质量}\sim \text{半径}^{d_f};\qquad 2\text{D: }\tau=\tfrac{187}{91}\approx2.055,\ d_f=\tfrac{91}{48}\approx1.896"></div>
+<p>d_f≈1.9 介于线(1)与面(2)之间——临界团簇是<strong>分形</strong>（→ <a href="/pages/fractal.html">分形</a> 课）。∎</p>
+<p><strong>第四步：普适与不普适。</strong> 上述 ν、β、τ、d_f 对方形/三角/蜂窝<strong>键或点</strong>渗流都一样（同一普适类）；而 p_c 不同（0.5、0.347、0.653、0.593…）。"阈值是格子的事、指数是维度的事"——这是相变理论最深的经验律之一，也是画布扫参曲线的注脚。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>定义：</strong> 键/点渗流、团簇、θ(p)=P(0↔∞)、p_c=sup{p：θ(p)=0}。</li>
+<li><strong>Kesten（1980）：</strong> 方形格键渗流 p_c=1/2。三角键 p_c=2sin(π/18)、蜂窝键 p_c=1−2sin(π/18)（Wierman）；方形格点渗流 p_c≈0.592746…（无闭式）。</li>
+<li><strong>单调与对偶：</strong> θ(p) 单调；p&gt;p_c 时几乎必然存在唯一无穷团簇（AKN 1987）；临界处 θ(p_c)=0（Kesten：连续性）。</li>
+<li><strong>RSW 估计（1978）：</strong> 临界附近方形盒穿越概率有正的均匀下界——"临界窗口不塌缩"的几何支柱。</li>
+<li><strong>Smirnov（2001）：</strong> 三角格<strong>点</strong>渗流在 p_c 的穿越概率共形不变（趋向 SLE₆ 驱动）；由此 Schramm–Smirnov 严格算出若干临界指数（如单臂指数 5/48）。方形键渗流的临界指数仍无严格证明（数值与 CFT 支持普适猜想）。</li>
+<li><strong>临界维度：</strong> 高维（d&gt;6，渗流的上临界维度）进入平均场行为（团簇像分支过程；Hara–Slade 用圈展开在"展宽模型"上严格化）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\theta(p)=P_p(0\leftrightarrow\infty);\qquad p_c=\sup\{p:\theta(p)=0\};\qquad \theta(p)\sim(p-p_c)^{\beta},\ \beta=5/36"></div>
+<div class="formula display" data-tex="\xi(p)\sim|p-p_c|^{-\nu},\ \nu=4/3;\qquad P(|C|=k)\sim k^{-187/91};\qquad d_f=91/48"></div>
+<div class="formula display" data-tex="\mathbb{Z}^2\ \text{键: }p_c=\tfrac12\ (\text{Kesten});\qquad \text{三角键 }2\sin\tfrac{\pi}{18};\qquad \text{方形点 }\approx0.5927"></div>
+<div class="formula display" data-tex="\text{穿越窗口}\sim L^{-1/\nu}=L^{-3/4}\qquad(\text{sharp threshold})"></div>
+</section>
+
+<section>
+<h3>七、延伸——渗流的亲戚与用途</h3>
+<ul>
+<li><strong>Ising 与随机团簇。</strong> Fortuin–Kasteleyn 把 Ising 模型（→ <a href="/pages/ising-model.html">Ising</a> 课）改写成带权渗流（随机团簇模型）：Ising 的相变 = 渗流意义的连通相变。两个模型的临界指数通过同一普适类连接（2D Ising β=1/8 ⟷ 渗流指数满足标度关系）。</li>
+<li><strong>传染病与网络。</strong> 疾病传播 = 接触图上的渗流（超临界爆发 ⟺ 出现巨型连通分支）；互联网故障级联、社交"六度"、电网鲁棒性都用渗流分析真实网络（无标度网络的渗流阈值甚至为 0！）。→ <a href="/pages/graph-theory.html">图论与网络</a> 课。</li>
+<li><strong>多孔介质与油藏。</strong> 石油开采、混凝土渗透、燃料电池多孔层——"能不能通"直接是 p 与 p_c 之比较量。渗流是工程里被引用最多的概率模型之一。</li>
+<li><strong>共形不变量与 SLE。</strong> Smirnov 证明三角格点渗流的穿越概率共形不变并满足 Cardy 公式，驱动曲线收敛到 SLE₆——二维临界现象的严格窗口。→ <a href="/pages/fractal.html">分形</a>、<a href="/pages/complex-dynamics.html">复动力系统</a> 课的自相似世界观。</li>
+<li><strong>有限尺寸标度。</strong> 数值研究靠"盒子越大曲线越陡、在 p_c 处交于一点"标度数据外推 p_c——画布扫参曲线的现代用法。→ <a href="/pages/numerical-methods.html">数值计算方法</a>。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"渗流想当然"</h3>
+<p><strong>陷阱 1："p&gt;p_c 后整张格子都通"？</strong> 不是。唯一无穷团簇的<strong>密度</strong> θ(p) 是正的但远小于 1（p 略超 p_c 时 θ 只比 0 大一点）；到处仍有无限多个有限团簇。θ 是"序参量"，不是"全通概率"。</p>
+<p><strong>陷阱 2："p_c 是格子的几何常数（都一样）"？</strong> p_c 依赖格子细节（方形键 0.5、方形点 0.59、三角键 0.347……）；<strong>普适的是临界指数不是阈值</strong>。看到"渗流临界"先问是哪个格子、键还是点。</p>
+<p><strong>陷阱 3："临界点 p_c 本身有巨团簇"？</strong> 2D 的 θ(p_c)=0（Kesten 连续性）：临界处没有无穷团簇，只有幂律分布的有限分形团簇。相变的"临界"在于关联长度发散，不在于"已经通了"。</p>
+<p><strong>陷阱 4："数值图里的'黑团簇'= 无穷团簇"？</strong> 有限盒里永远只有有限团簇；"无穷"是 L→∞ 的极限概念。画布大盒 p=0.55 看到的"大团簇"是有限盒近似——它在 p_c 处不会变成真正的无穷团簇（θ(p_c)=0）。</p>
+<p><strong>陷阱 5："渗流指数对一切 2D 格子都已被证明"？</strong> 只有三角格<strong>点</strong>渗流的部分指数经 SLE 严格化；方形键渗流的临界指数仍缺严格证明（普适性在物理与数值上极强，数学上仍是核心开放问题）。"普适"是深刻的经验+部分定理，不是随处可用的黑箱。</p>
+</section>
+
+<section>
+<h3>九、当前状态——前沿与开放</h3>
+<ol>
+<li><strong>临界指数严格化。</strong> Smirnov–SLE 路线覆盖三角格点渗流；方形键（最经典模型）的 ν=4/3、β=5/36 严格证明仍是重大开放问题。</li>
+<li><strong>高维与平均场。</strong> d&gt;6 的均值场行为（与树/分支过程一致）——上临界维数以上已被圈展开处理，但"恰在 d=6"的临界行为仍有精细工作。</li>
+<li><strong>依赖性与一般图。</strong> 依赖渗流（边概率相关）、随机几何图、无标度网络（p_c 可为零）——网络科学的渗流前线。</li>
+<li><strong>量子与多体推广。</strong> 纠缠渗流、量子团簇相——渗流思想进入量子信息（→ <a href="/pages/entanglement.html">纠缠</a>）与拓扑相变（玻色子/费米子随机团簇）。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Broadbent–Hammersley (1957)</strong>：渗流模型与 p_c 存在性——"Percolation processes"（剑桥）。</li>
+<li><strong>Harris (1960)</strong>：θ(1/2)=0（方形键，对偶 + 连通性论证）。</li>
+<li><strong>Seymour–Welsh (1978) / Russo (1981)</strong>：RSW 估计与锐相变工具。</li>
+<li><strong>Kesten (1980)</strong>：<em>"The critical probability of bond percolation on the square lattice equals 1/2"</em>, <em>Comm. Math. Phys.</em>——最著名的精确临界值。</li>
+<li><strong>Aizenman–Kesten–Newman (1987)</strong>：无穷团簇唯一性。</li>
+<li><strong>Smirnov (2001)</strong>：<em>"Critical percolation in the plane"</em>——三角格点渗流共形不变性（Cardy 公式），通向 SLE₆。</li>
+<li><strong>Schramm–Smirnov (2011)</strong>：三角格点渗流临界指数（单臂 5/48 等）严格计算。</li>
+<li><strong>Hara–Slade (1990)</strong>：圈展开与高维渗流均值场行为。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——小计算与概念</h3>
+<p><strong>题 1（一维平凡）。</strong> 证明 ℤ 上键渗流 p_c=1。<strong>提示：</strong>原点团簇长 L 需连续 L 条开边，概率 p^L→0（p&lt;1）。</p>
+<p><strong>题 2（对偶+旋转）。</strong> 用旋转对称与平面对偶说明：方形 n×n 盒键渗流在 p=1/2 的左右穿越概率 = 1/2。<strong>提示：</strong>P(LR)=P(BT)（旋转 90°）；无 LR ⟺ 对偶存在 BT 闭穿越；p=1/2 时对偶与原始同分布 ⟹ P(LR)=1/2。</p>
+<p><strong>题 3（指数感觉）。</strong> p−p_c=10⁻⁴ 时，(p−p_c)^{5/36} 约多大？<strong>提示：</strong>10^{−4·5/36}=10^{−0.556}≈0.28（乘上前因子即 θ 的量级——序参量爬升极慢）。</p>
+<p><strong>题 4（为什么 1D 没相变而 2D 有）。</strong> 用"绕过障碍的路径条数"语言解释维度的作用。<strong>提示：</strong>1D 里 0 到 +L 只有唯一路径，任何断点都切断；2D 有指数多条路径，关闭一条可绕行——"多条路"让连通变成集团现象（θ 从 0 跃升）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示。∎</p>
+<p><strong>题 2</strong>：1/2、1、0。∎</p>
+<p><strong>题 3</strong>：≈0.28×前因子。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布扫参）。</strong> 把 p 从 0.3 拖到 0.7：注意左-右穿越"突然"出现的位置。点渗流方形格的 p_c≈0.5927——把 p 停在 0.59 附近，盒子越大越"犹豫"：这就是临界窗口。点"扫描曲线"看穿越概率阶梯（若已实现）。</p>
+<p><strong>试试看 2（临界分形）。</strong> 停在 p≈0.593，观察大团簇的形状：毛糙、分叉、自相似——比较 d_f≈1.896 的"介于线与面之间"的直觉。提示：把团簇放大局部，形状不像任何光滑图形。</p>
+<p><strong>试试看 3（与 Ising 对表）。</strong> 在 <a href="/pages/ising-model.html">Ising</a> 课画布看自旋相变，与本课的连通相变对照：两者都有尖锐阈值与临界涨落。提示：Fortuin–Kasteleyn 随机团簇把两者写成同一个模型的两个版本。</p>
+<p><strong>试试看 4（网络渗流）。</strong> 想一个社交网络：传染病传播的"巨连通分支"就是渗流团簇。提示：无标度网络（度分布幂律）的 p_c 可以是 0——任意小的感染率都能形成大爆发，这是网络科学的著名结论（Pastor-Satorras–Vespignani）。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>G. Grimmett, Percolation</strong>（Springer，标准教材，Kesten 定理与 RSW 的完整证明）</p>
+<p>&rarr; <strong>B. Bollobás, O. Riordan, Percolation</strong>（现代路线，含 Smirnov/SLE 导览）</p>
+<p>&rarr; <strong>H. Kesten, Percolation Theory for Mathematicians</strong>（经典小书）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.21（概率论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/graph-theory.html">图论与网络</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/ising-model.html">🧲 Ising 模型</a>：随机团簇联系 Ising 相变（Fortuin–Kasteleyn）。</p>
+<p>&rarr; <a href="/pages/graph-theory.html">🕸️ 图论与网络</a>：团簇=连通分支；网络巨分支与渗流。</p>
+<p>&rarr; <a href="/pages/clt.html">🎰 大数定律与 CLT</a>：独立大偏差与阈值的概率工具。</p>
+<p>&rarr; <a href="/pages/fractal.html">🌀 分形</a>：临界团簇 d_f=91/48 的分形几何。</p>
+<p>&rarr; <a href="/pages/complex-dynamics.html">🪸 复动力系统</a>：自相似与普适性的另一个舞台。</p>
+<p>&rarr; <a href="/pages/entanglement.html">🔗 量子纠缠</a>：纠缠渗流：量子信息的连通相变。</p>
+</section>

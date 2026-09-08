@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Hartogs延拓——多维全纯函数的刚性" />
+  <meta property="og:title" content="多复变 — Vibe Math" />
+  <meta property="og:description" content="Hartogs延拓——多维全纯函数的刚性" />
+  <title>多复变 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🪞 多复变 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Hartogs延拓——多维全纯函数的刚性</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='several-complex-variables',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/geometric-group-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📐 几何群论</a>
+  <a href="/pages/universal-algebra.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🧱 泛代数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：在 ℂ¹ 的洞里能藏奇点，在 ℂ² 的洞里为什么藏不住？</h3>
+<p>先看一个一维的常识：函数 1/z 在去掉原点 0 的复平面上是全纯的，但在 0 处有一个<strong>真正的奇点</strong>——不管你怎么努力，都无法把它光滑地延拓到 0。更一般地，在环带 {z ∈ ℂ : 1 &lt; |z| &lt; 2} 上的全纯函数，用洛朗级数展开，会出现 z⁻¹、z⁻²、… 这些负幂项——正是这些项"记录"着洞里的奇点。</p>
+<p>现在把问题搬到 ℂ²。想象一个"实心球壳"：</p>
+<div class="formula display" data-tex="\Omega=\{z\in\mathbb C^2:\ 1<|z_1|^2+|z_2|^2<4\}"></div>
+<p>这是"大球套小球"之间的区域（球壳）。在一维，环形洞能装下奇点；在二维，这个洞里能装下奇点吗？直觉上应该可以——毕竟洞是立体的。但答案是：<strong>不能</strong>。Hartogs 延拓定理（1906）说：球壳上的任何全纯函数都自动延拓到整个大球内部。洞是空的，什么都没有。</p>
+<p>更惊人的是这个小例子：设 f ∈ 𝒪(ℂ²∖{0})（在全空间挖掉原点后全纯）。直觉上"原点附近 f 该有个奇点吧"，但实际上 f <strong>一定</strong>延拓到整个 ℂ²。哪怕你试图构造 f = 1/z₁，它也只在整条平面 {z₁ = 0} 上奇——这奇点集是非紧的，绕不过去的问题变成了"二维平面把空间切成两块"的问题，而不是"一个点孤立地奇"。真正"孤立地奇"在 ℂⁿ (n≥2) 里根本造不出来。</p>
+<div class="key-insight">一句话：在 ℂⁿ (n ≥ 2) 中，全纯函数不能有紧致奇点——奇点的"余维数 ≥ 2"让函数总能绕过去。这是多复变与单复变最本质的分水岭。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、热身：单复变里"洞装奇点"的机制——洛朗级数</h3>
+<p>在 ℂ 中，环带 A = {z : r &lt; |z| &lt; R} 上的全纯函数 f 有洛朗展开</p>
+<div class="formula display" data-tex="f(z)=\sum_{m\ge 0}a_m z^m+\sum_{n\ge 1}\frac{c_n}{z^{n}},\qquad a_m=\frac{1}{2\pi i}\oint\frac{f(\zeta)}{\zeta^{m+1}}\,d\zeta,\quad c_n=\frac{1}{2\pi i}\oint f(\zeta)\zeta^{n-1}\,d\zeta"></div>
+<p>（绕内圆 |ζ| = ρ、r &lt; ρ &lt; |z| 积分。）关键在于：<strong>负幂项的存在 ⟺ 洞里真的有奇点</strong>。若所有 cₙ = 0，级数变成泰勒级数，自动延拓进整个圆盘 {|z| &lt; R}。</p>
+<p><strong>为什么一维的洞能装奇点？</strong>因为内边界 |z| = r 是一维的"墙"，一个函数要在环带上全纯，又要在洞里有奇点，只需让负幂项在 0 处发散即可——而 0 是<strong>单个点</strong>，挖掉它不会把圆盘"断开"（ℂ∖{0} 仍然是连通的，但函数值可以在 0 附近无界）。一维的"墙"很薄，函数可以隔着墙朝洞里爆炸。</p>
+<div class="formula display" data-tex="\mathbb C\setminus\{0\}:\ \text{连通但函数可以无界}\ \Longrightarrow\ \text{洞能装奇点}"></div>
+<p>二维的情况完全不同：ℂ²∖{0} 里，"墙"变成了三维球面 S³ = {|z| = 1}，函数要"隔着墙爆炸"，就得在球内某点无界——但那点四周全是"墙内部"的三维区域，函数根本绕不到它"背后"。这就是下一节 Hartogs 定理的直觉。</p>
+</section>
+
+<section>
+<h3>二、Hartogs 延拓定理——紧致奇点不存在</h3>
+<p><strong>定理（Hartogs 延拓，1906）。</strong> 设 Ω ⊂ ℂⁿ (n ≥ 2) 为区域，K ⊂ Ω 为紧致子集且 Ω∖K 连通。则限制映射</p>
+<div class="formula display" data-tex="\mathcal O(\Omega)\longrightarrow\mathcal O(\Omega\setminus K),\qquad f\mapsto f|_{\Omega\setminus K}"></div>
+<p>是<strong>满射</strong>（且单射——全纯函数的恒等定理保证延拓唯一）。也就是说：</p>
+<div class="formula display" data-tex="f\in\mathcal{O}(\Omega\setminus K)\ \Longrightarrow\ f\in\mathcal{O}(\Omega)"></div>
+<p><strong>逐条解释条件。</strong></p>
+<ul>
+  <li><strong>为什么 n ≥ 2？</strong> 紧致集 K 在 ℂⁿ 中的余维数 ≥ 2（K 是实紧致集，而"能隔开空间"的墙需要实余维数 1）。余维数 ≥ 2 ⟹ K 不把空间"切成两块"，函数可以绕着 K 从任何一边走到另一边。</li>
+  <li><strong>为什么要求 Ω∖K 连通？</strong> 这是排除 n = 1 的退化情形（例如 ℂ∖{闭圆盘} 其实连通，但 K 挖掉的是闭球，一维里 Ω∖K = 环带，若取 K = {|z|≤1} ⊂ Ω = {|z|&lt;2}，Ω∖K = 环带 1&lt;|z|&lt;2 连通，此时定理对 n=1 也"意外"成立——因为它只在挖掉一个有界圆盘的圆盘边界之外有定义，且边界上无奇点。真正的一维反例是 K 把区域切成两块，例如 Ω = 圆盘，K = 内部的小圆盘挖到边界？标准反例取 Ω∖K 不连通，比如环带被 K 分成两片）。条件 Ω∖K 连通正是用来保证"绕行"可行。</li>
+  <li><strong>为什么单射？</strong> 若两个延拓 f、g 在连通开集 Ω∖K 上相等，恒等定理给出 f = g 于全 Ω。</li>
+</ul>
+<p><strong>与单复变的对照。</strong> ℂ 中 1/z ∈ 𝒪(ℂ∖{0}) 但不能延拓：K = {0} 紧致，但 n = 1 余维数为 1，"墙"真的隔开了环带内部的洞，奇点 0 可以独立存在。Hartogs 定理在 n = 1 时显然为假。</p>
+</section>
+
+<section>
+<h3>三、完整例题 1：ℂ¹ 与 ℂ²∖{0}——从幂级数看"洞装不下奇点"</h3>
+<p>把第一节的机制搬到 ℂ²，做一次能从头算到尾的对比。</p>
+<p><strong>第 1 步：ℂ¹ 的展开（奇点真实存在）。</strong> 对 f ∈ 𝒪(ℂ∖{0})，在环带 0 &lt; |z| &lt; ∞ 上的洛朗展开</p>
+<div class="formula display" data-tex="f(z)=\sum_{k\in\mathbb Z}c_k z^k,\qquad c_k=\frac{1}{2\pi i}\oint_{|\zeta|=\rho}\frac{f(\zeta)}{\zeta^{k+1}}\,d\zeta"></div>
+<p>取 f(z) = e^{1/z}，则 c_{−m} = 1/m! ≠ 0（对一切 m ≥ 1），负幂项无穷多，奇点 0 真实存在——f 无法延拓。∎</p>
+<p><strong>第 2 步：ℂ² 的均匀展开。</strong> 对 f ∈ 𝒪(ℂ²∖{0})，把它按齐次部分展开：</p>
+<div class="formula display" data-tex="f(z)=\sum_{k\in\mathbb Z}F_k(z),\qquad F_k(z)=\frac{1}{2\pi i}\oint_{|\lambda|=1}\frac{f(\lambda z)}{\lambda^{k+1}}\,d\lambda"></div>
+<p>每个 F_k 是 k 次齐次的（F_k(tz) = tᵏF_k(z)，t ≠ 0），且在 ℂ²∖{0} 上全纯。</p>
+<p><strong>第 3 步：关键引理——负次齐次函数必为零。</strong> 设 F 为 ℂ²∖{0} 上 k &lt; 0 次齐次全纯函数，则 F ≡ 0。</p>
+<p><em>证明。</em> 固定 z₁ ≠ 0。对任意 w ∈ ℂ，点 (z₁, w) ≠ 0，故 w ↦ F(z₁, w) 是<strong>整函数</strong>。当 |w| → ∞ 时，取 w ≠ 0：</p>
+<div class="formula display" data-tex="|F(z_1,w)|=|w|^k\cdot\Big|F\!\big(\tfrac{z_1}{w},1\big)\Big|\ \longrightarrow\ 0\qquad(k<0)"></div>
+<p>（因为 (z₁/w, 1) → (0, 1) ∈ ℂ²∖{0}，F 在 (0,1) 附近连续有界。）于是整函数 w ↦ F(z₁, w) 有界（在紧集上有界 + 在无穷远处 → 0），由 Liouville 定理它是常数；这个常数等于极限 0，故 F(z₁, w) = 0 对一切 w。对一切 z₁ ≠ 0 成立，故 F ≡ 0（在稠密集上为零）。∎</p>
+<p><strong>第 4 步：读出结论。</strong> 由第 3 步，展开式 (⋆) 中所有 k &lt; 0 的项 F_k ≡ 0，于是</p>
+<div class="formula display" data-tex="f(z)=\sum_{k\ge 0}F_k(z)\qquad(\text{只含非负次齐次项})"></div>
+<p>而每个非负次齐次全纯函数在 ℂ²∖{0} 上局部有界（|F_k(z)| ≤ C_k|z|ᵏ，k≥0），由 Riemann 可去奇点定理可延拓到 0，故 F_k 实为整函数（齐次多项式）。级数在紧集上正规收敛，故 f ∈ 𝒪(ℂ²)。<strong>这正是「洞装不下奇点」：ℂ²∖{0} 上的全纯函数全是整函数。</strong>∎</p>
+<p><strong>为什么第 3 步在 ℂ 中失败？</strong> 一维时"固定 z₁"没得固定：点 (z₁, w) ≠ 0 要求 z₁ ≠ 0 且 w ≠ 0，即整函数 w ↦ F(z₁,w) 只在 ℂ∖{0} 上全纯，F(z₁, w) = wᵏF(z₁, 1)（k &lt; 0）在 w → 0 时爆炸——有界性论证失效，负幂项就此"漏进"展开式。差就差在"可绕行的多余维度"。</p>
+</section>
+
+<section>
+<h3>四、刚性谱系——多复变处于单复变与实分析之间</h3>
+<p>用"函数被全局结构束缚得多紧"来衡量，三种分析形成一条谱系：</p>
+<ul>
+  <li><strong>单复变：刚性极强。</strong> 恒等定理（非空开集上为零 ⟹ 全局为零）、内部值由边界决定（调和/全纯延拓的唯一性）、Liouville、最大模原理。函数"一点定全局"。</li>
+  <li><strong>实分析：几乎没有刚性。</strong> 实光滑函数有"鼓包"（bump function）：在任意小块上非零、其余全零。局部信息对全局没有任何约束。</li>
+  <li><strong>多复变：刚性部分保留、但不那么极端。</strong> 恒等定理仍成立（这正是上节延拓唯一的根据）。但"边界决定内部"被削弱为"紧致洞藏不住奇点"这种<strong>结构性的刚性</strong>：函数不能有紧致奇点，却不能像一维那样由少量边界数据强制所有内部值。</li>
+</ul>
+<div class="key-insight">刚性谱系：单复变（极刚）→ 多复变（部分刚：无紧致奇点，但延拓的"形状"自由）→ 实分析（几乎无刚）。Hartogs 延拓就是"局部决定整体"在多维的精确表述。</div>
+<p><strong>为什么"为什么"很重要：</strong> 一维全纯函数刚，是因为柯西积分公式把内部值写成了边界值的积分；多维里柯西公式变成 Bochner–Martinelli 公式，积分链（球面 S³）包围的是"实三维洞"，而奇点若只在"点"上就够不到了——刚性从"积分几何"来，这是多复变反复出现的主题。</p>
+</section>
+
+<section>
+<h3>五、∂̄-问题——多复变的核心技术引擎</h3>
+<p>全纯函数 f 满足 ∂̄f = 0（复结构下"全纯部分"外微分算子 ∂̄ 为 0）。多复变里最常问的问题是<strong>反向</strong>的：给定 (0,1)-形式 g，问是否存在 u 使得</p>
+<div class="formula display" data-tex="\bar\partial u=g"></div>
+<p><strong>为什么想解这个方程？</strong> 三个理由：</p>
+<ul>
+  <li><strong>延拓问题变成方程问题。</strong> 想把 f ∈ 𝒪(Ω∖K) 延拓到 Ω：先用光滑函数 φ（φ ≡ 1 靠近 K，φ ≡ 0 远离 K）把 fφ 搭成一个光滑函数 F（在 K 处会出问题，但"问题"全部落在 ∂̄F 里），然后解 ∂̄u = ∂̄F（在 K 附近），则 F − u 就是全纯延拓。延拓定理的证明 = 解一个 ∂̄ 方程。</li>
+  <li><strong>障碍是可计算的。</strong> ∂̄² = 0，所以 ∂̄u = g 有解的必要条件是 ∂̄g = 0（相容性条件）。在好的区域上这个条件也是充分的——"可解性"就刻画了区域的几何。</li>
+  <li><strong>Hörmander 的 L² 估计（1965）。</strong> 在<strong>拟凸域</strong>（= 全纯函数的自然定义域 = 域 of holomorphy 的内蕴刻画）上，∂̄ 不但可解，还能保证解的 L² 范数受控：‖u‖ ≤ C‖g‖。这把 Hilbert 空间方法（投影、正交分解）引入复几何，成为多复变最重要的技术工具。</li>
+</ul>
+<div class="key-insight">∂̄-问题：把"全纯延拓"变成"解带增长的偏微分方程"。Hörmander L² 估计（1965）在拟凸域上给出可控解，是连接分析与复几何的枢纽。</div>
+<p><strong>什么是拟凸域？</strong> 一个区域若"永远不是其它区域的一部分"（域 of holomorphy：存在其上全纯函数不能延拓到更大的区域），则称它拟凸。圆盘、多圆盘、球壳内的大球都是拟凸的；而 ℂ²∖{0} 不是（Hartogs！）。拟凸域 ℂ ⊂ ℂⁿ 上一切 ∂̄-闭形式都可解——这是 Hörmander 定理的内容。</p>
+</section>
+
+<section>
+<h3>六、完整例题 2：在多圆盘上显式解 ∂̄u = g</h3>
+<p>在 Δ² = Δ×Δ ⊂ ℂ²（单位多圆盘）上动手解一个具体的 ∂̄ 方程，体会"一维解两次"的机制。</p>
+<p><strong>第 1 步：写出 ∂̄ 的作用。</strong> 对 (0,1)-形式 g = g₁ dz̄₁ + g₂ dz̄₂：</p>
+<div class="formula display" data-tex="\bar\partial(g_1\,d\bar z_1+g_2\,d\bar z_2)=\Big(\frac{\partial g_2}{\partial\bar z_1}-\frac{\partial g_1}{\partial\bar z_2}\Big)\,d\bar z_1\wedge d\bar z_2,\qquad \bar\partial u=\frac{\partial u}{\partial\bar z_1}\,d\bar z_1+\frac{\partial u}{\partial\bar z_2}\,d\bar z_2"></div>
+<p><strong>第 2 步：相容性条件不可缺。</strong> 试解 ∂̄u = g₁ dz̄₁ + g₂ dz̄₂。取 g₁ = z̄₁、g₂ = 0，则 ∂̄g = (0 − 1) dz̄₁∧dz̄₂ ≠ 0，方程无解。事实检验：若 ∂̄u = z̄₁ dz̄₁，则 ∂u/∂z̄₂ = 0 ⟹ u 与 z₂ 无关，于是 ∂u/∂z̄₁ 只依赖 z₁，不可能等于 z̄₁·1（含 z₂ 的常数项不出现）——矛盾。所以先验地必须 ∂̄g = 0。</p>
+<p><strong>第 3 步：解一个满足相容性的具体形式。</strong> 取</p>
+<div class="formula display" data-tex="g=\bar z_2\,d\bar z_1+\bar z_1\,d\bar z_2"></div>
+<p>检验相容性：∂g₂/∂z̄₁ − ∂g₁/∂z̄₂ = ∂(z̄₁)/∂z̄₁ − ∂(z̄₂)/∂z̄₂ = 1 − 1 = 0 ✓。猜测 u = z̄₁z̄₂：</p>
+<div class="formula display" data-tex="\frac{\partial u}{\partial\bar z_1}=\bar z_2,\qquad \frac{\partial u}{\partial\bar z_2}=\bar z_1\quad\Longrightarrow\quad \bar\partial u=\bar z_2\,d\bar z_1+\bar z_1\,d\bar z_2=g\ \checkmark"></div>
+<p><strong>第 4 步：解空间 = 一个特解 + 全纯函数。</strong> 若 u、v 都解 ∂̄u = ∂̄v = g，则 ∂̄(u−v) = 0，即 u−v 全纯。故全部解为 u = z̄₁z̄₂ + h(z₁,z₂)（h 全纯）。这精确对应"∂̄ 的核 = 全纯函数"。∎</p>
+<p><strong>第 5 步：一般情形的严格证明（∂̄-魏尔斯特拉斯引理）。</strong> 对任意满足 ∂̄g = 0 的 (0,1)-形式 g，在 Δ² 上解 ∂̄u = g 的两步法（完整证明见第九节）：先解 ∂u₁/∂z̄₁ = g₁（把 z₂ 当参数，用一维 Pompeiu 算子，解对参数全纯），再验证 g' = g₂ − ∂u₁/∂z̄₂ 关于 z₁ 全纯，最后解 ∂u₂/∂z̄₂ = g'。两步都是"一维解一次"，这正是多变量 ∂̄ 化为重复一维问题的模型。Hörmander 的 L² 估计保证在拟凸域上这两步都能带范数控制地执行。</p>
+</section>
+
+<section>
+<h3>七、完整例题 3：紧 Kähler 流形上的 Hodge 分解——用 CP² 算到底</h3>
+<p>本课前几节都在 ℂⁿ 里，现在进入<strong>紧复流形</strong>的世界。核心定理（Hodge 理论）：在紧 Kähler 流形上，d-上同调 = ∂̄-上同调，且</p>
+<div class="formula display" data-tex="H^{k}(M,\mathbb C)=\bigoplus_{p+q=k}H^{p,q}(M)\qquad\text{(Dolbeault 上同调 / Hodge 分解)}"></div>
+<p>其中 h^{p,q} = dim H^{p,q} 叫 <strong>Hodge 数</strong>——复结构的"指纹"。用 CP² 做一次完整计算。</p>
+<p><strong>第 1 步：Betti 数。</strong> CP² 的胞腔分解是 ℂ⁰ ∪ ℂ¹ ∪ ℂ²（每个偶数维恰一个胞腔），故</p>
+<div class="formula display" data-tex="b_0=1,\ b_1=0,\ b_2=1,\ b_3=0,\ b_4=1"></div>
+<p><strong>第 2 步：由 Hodge 分解读 h^{p,q}。</strong> 对 k = 1：H¹ = H^{1,0} ⊕ H^{0,1}，b₁ = 0 ⟹ h^{1,0} = h^{0,1} = 0（Hodge 对称 h^{p,q} = h^{q,p}）。</p>
+<p><strong>第 3 步：k = 2 的情形。</strong> H² = H^{2,0} ⊕ H^{1,1} ⊕ H^{0,2}，维数 1。Hodge 对称给出 h^{2,0} = h^{0,2}。而全纯 2-形式 h^{2,0} = 0：CP² 的典范丛 K = Ω² = 𝒪(−3)，其整体截影空间 H⁰(CP², Ω²) = H⁰(CP², 𝒪(−3)) = 0（负线丛没有非零全纯截影）。于是</p>
+<div class="formula display" data-tex="1=h^{2,0}+h^{1,1}+h^{0,2}=0+h^{1,1}+0\quad\Longrightarrow\quad h^{1,1}=1"></div>
+<p><strong>第 4 步：解释这个"1"。</strong> H^{1,1}(CP²) ≅ ℂ，由 Kähler 类 [ω]（Fubini–Study 形式）生成——这是 CP² 复结构的唯一不变量。Kähler 类的"指纹"就是这唯一的一个 Hodge 数。</p>
+<p><strong>第 5 步：镜像对称预告。</strong> 对一般的 Calabi–Yau 3-fold，Hodge 菱形</p>
+<div class="formula display" data-tex="\begin{array}{ccccccc}&&&1&&&\\&&0&&0&&\\&0&&h^{1,1}&&0&\\1&&h^{2,1}&&h^{2,1}&&1\\&0&&h^{1,1}&&0&\\&&0&&0&&\\&&&1&&&\end{array}"></div>
+<p>在镜像对称下翻转：h^{1,1} ↔ h^{2,1}。CP² 只是检验 Hodge 机制的最小试金石，而整个镜像对称纲领（代数几何 + 多复变 + 辛几何的交汇）正是建立在 Hodge 分解的刚性之上。∎</p>
+</section>
+
+<section>
+<h3>八、Stein 流形与 Andreotti–Frankel 定理——Morse 理论看"没有高维洞"</h3>
+<p>ℂⁿ 里的全纯函数足够多，可以"穷竭"空间（穷竭函数：在无穷远处趋于 +∞）。把这一性质抽象出来：</p>
+<div class="formula display" data-tex="\text{Stein 流形}=\text{有严格多重次调和穷竭函数的 } n\text{-维复流形}"></div>
+<p><strong>定理（Andreotti–Frankel，1959）。</strong> n 维 Stein 流形同伦等价于一个维数 ≤ n 的 CW 复形——即它们"没有高维洞"（约化同调 Hⱼ 在 j &gt; n 时为零）。</p>
+<p><strong>为什么是 Morse 理论？</strong> 设 ρ 为严格多重次调和穷竭函数（ℂ 上相当于"凸性"的高维推广）。Morse 理论说：流形同伦等价于"在每个临界点贴一个指标等于 Hessian 负特征值数的胞腔"。关键是<strong>严格多重次调和的 ρ 的每个临界点的 Morse 指标 ≤ n</strong>（复坐标系下 Hessian 是 Hermitian 的，负特征值数最多 n）。于是胞腔都集中在维数 ≤ n，流形的同伦型维数 ≤ n。这是 Morse 理论在复分析中最优雅的应用：<strong>用函数的刚性推导空间的拓扑</strong>。</p>
+<div class="formula display" data-tex="\rho\ \text{严格多重次调和} \Longrightarrow \operatorname{ind}_{\text{Morse}}(\rho)\le n \Longrightarrow \operatorname{homotopy-dim} M\le n"></div>
+<p><strong>例子。</strong> ℂⁿ 本身是 Stein 的（ρ = |z|²），同伦等价于点（维数 0）；仿射代数簇（多项式的零点集，如 ℂ²∖{0} 之外）是 Stein 的；任何开 Riemann 面（n=1）是 Stein 的。Stein 流形正是"可以嵌入 ℂᴺ 的全纯闭子流形"——它们的拓扑被复结构强烈约束。</p>
+</section>
+
+<section>
+<h3>九、证明——多圆盘上的 ∂̄-Poincaré 引理（Dolbeault–Grothendieck）</h3>
+<p><strong>定理。</strong> 设 Δ² 为单位多圆盘，g = g₁ dz̄₁ + g₂ dz̄₂ 为满足 ∂̄g = 0 的 (0,1)-形式。则存在 u ∈ 𝒞^∞(Δ²) 使得 ∂̄u = g。</p>
+<p><strong>一维准备（Pompeiu 算子）。</strong> 在单圆盘 Δ 上，对 w ∈ Δ：</p>
+<div class="formula display" data-tex="P(h)(w)=\frac{1}{\pi}\int_{\Delta}\frac{h(\zeta)}{w-\zeta}\,dA(\zeta),\qquad \frac{\partial}{\partial\bar w}P(h)=h\ \text{且}\ P(h)\ \text{光滑依赖参数}"></div>
+<p>（这是 ∂/∂z̄ 的基本解：1/(πz) 的卷积；dA 为面积测度。）性质：P(h) 关于出现在 h 里的<strong>全纯参数</strong>是全纯的。</p>
+<p><strong>第 1 步：解 z̄₁ 分量。</strong> 视 z₂ 为参数，令</p>
+<div class="formula display" data-tex="u_1(z)=P\big(g_1(\cdot,z_2)\big)(z_1)"></div>
+<p>则 ∂u₁/∂z̄₁ = g₁，且 u₁ 关于 z₂ 全纯（Pompeiu 算子的参数全纯性）。</p>
+<p><strong>第 2 步：检查余项。</strong> 记 g' = g₂ − ∂u₁/∂z̄₂。计算 ∂g'/∂z̄₁：</p>
+<div class="formula display" data-tex="\frac{\partial g'}{\partial\bar z_1}=\frac{\partial g_2}{\partial\bar z_1}-\frac{\partial}{\partial\bar z_2}\Big(\frac{\partial u_1}{\partial\bar z_1}\Big)=\frac{\partial g_2}{\partial\bar z_1}-\frac{\partial g_1}{\partial\bar z_2}=0\qquad(\text{用 } \partial\bar g=0)"></div>
+<p>故 g' 关于 z₁ 全纯。</p>
+<p><strong>第 3 步：解 z̄₂ 分量。</strong> 视 z₁ 为参数（g' 对它全纯），令 u₂(z) = P(g')(z₂)。则 ∂u₂/∂z̄₂ = g'。</p>
+<p><strong>第 4 步：合拢。</strong> 令 u = u₁ + u₂：</p>
+<div class="formula display" data-tex="\bar\partial u=\Big(\frac{\partial u_1}{\partial\bar z_1}+\frac{\partial u_2}{\partial\bar z_1}\Big)d\bar z_1+\Big(\frac{\partial u_1}{\partial\bar z_2}+\frac{\partial u_2}{\partial\bar z_2}\Big)d\bar z_2=g_1\,d\bar z_1+0\cdot d\bar z_1+(g_2-\frac{\partial u_1}{\partial\bar z_2})d\bar z_2=g"></div>
+<p>（注意 ∂u₂/∂z̄₁ = 0，因 u₂ 关于 z₁ 全纯。）∎</p>
+<p>这证明在单圆盘上有 (0,q)-形式的版本对多圆盘全部成立（逐变量归纳），从而定义 Dolbeault 上同调并证明其在多圆盘上平凡——Hodge 分解第七节的"d-上同调 = ∂̄-上同调"就建立在这一类局部引理上。</p>
+</section>
+
+<section>
+<h3>十、反例——刚性边界在哪里？</h3>
+<p><strong>反例 1：n = 1 时 Hartogs 显然为假。</strong> f(z) = 1/z ∈ 𝒪(ℂ∖{0}) 不能延拓到 0。奇点余维数 = 1，是"真墙"。</p>
+<p><strong>反例 2：ℂ² 中 1/z₁ 仍不延拓——但原因变了。</strong> f(z₁, z₂) = 1/z₁ 在 ℂ²∖{z₁ = 0} 上全纯，不能延拓到整个 ℂ²。注意奇点集 {z₁ = 0} 是<strong>非紧</strong>的（一条复直线），不满足 Hartogs 的条件（K 须紧致）。它把区域切成两块——从一侧走到另一侧必然撞墙。所以：<strong>Hartogs 的关键是"紧致 + 余维数 ≥ 2"，两者缺一不可。</strong></p>
+<p><strong>反例 3：紧致复流形 ≠ 自动 Kähler——Hopf 曲面。</strong> 取 Γ = {z ↦ 2ᵏz : k ∈ ℤ} 作用在 ℂ²∖{0} 上，商 H = (ℂ²∖{0})/Γ 是紧复曲面（Hopf 曲面）。其基本群 π₁(H) ≅ ℤ，故 b₁(H) = 1。但 H 上没有任何全纯 1-形式：全纯 1-形式在 ℂ²∖{0} 上全纯（Hartogs！），延拓为 ℂ² 上的全纯 1-形式，且须是常数倍 dz₁、dz₂ 的组合（ℂ² 上的全纯 1-形式 df 中 f 全纯，f = 线性函数……且要 Γ 不变），最终只能为零。故 h^{1,0} = h^{0,1} = 0，而 b₁ = 1 ≠ 0——<strong>Hodge 分解 H¹ = H^{1,0} ⊕ H^{0,1} 失败</strong>。结论：H 不是 Kähler 流形。紧性不能替代 Kähler 性，Hodge 分解是 Kähler 专属的刚性。</p>
+</section>
+
+<section>
+<h3>十一、前沿：Hörmander L² 估计与 Ohsawa–Takegoshi 延拓</h3>
+<p>本课反复出现的 L² 方法在 1980 年代结出最重要的果实——<strong>Ohsawa–Takegoshi 定理（1987）</strong>：</p>
+<div class="formula display" data-tex="\text{L}^2\text{ 延拓：} f\in\mathcal O(\{z_n=0\})\ \text{的 } L^2 \text{ 延拓 } F\in\mathcal O(\Omega)\ \text{ 存在且 } \|F\|_{L^2}\le C\|f\|_{L^2}"></div>
+<p>它给出"从超平面到整个区域"的、带精确范数控制的延拓——多复变中最强大的工具之一：由它可推出乘性不等式、Berndtsson 的正定性定理、以及整个代数几何中大量"延拓 + 估计"的命题。</p>
+<p><strong>近年突破。</strong> 关启安–周向宇（Guan–Zhou，2014）用代数几何方法（解析难度很大的优化技巧）大幅简化了 Ohsawa–Takegoshi 的证明并给出最优常数。</p>
+<p><strong>仍开放。</strong> L² 延拓的<strong>最优常数</strong>（一般域的精确 C 尚不清楚）；Bergman 核的渐近展开（Fefferman 猜测的高阶项）在多维的完整刻画。</p>
+</section>
+
+<section>
+<h3>十二、关键公式</h3>
+<div class="formula display" data-tex="f\in\mathcal{O}(\Omega\setminus K)\Rightarrow f\in\mathcal{O}(\Omega)\quad\text{(Hartogs 1906, } n\ge 2,\ K\text{ 紧},\ \Omega\setminus K\text{ 连通)}"></div>
+<div class="formula display" data-tex="\bar\partial^2=0,\qquad \bar\partial u=g\text{ 可解于拟凸域 (Hörmander L}^2\text{)}"></div>
+<div class="formula display" data-tex="H^{k}(M,\mathbb C)=\bigoplus_{p+q=k}H^{p,q}(M)\quad\text{(紧 Kähler 上的 Hodge 分解)}"></div>
+<div class="formula display" data-tex="h^{p,q}=h^{q,p},\qquad h^{p,q}=h^{n-p,n-q}\quad\text{(Hodge 对称 / 对偶)}"></div>
+<div class="formula display" data-tex="\text{Stein 流形同伦型维数}\le n\quad\text{(Andreotti–Frankel)},\qquad \text{CP}^2:\ h^{1,1}=1"></div>
+</section>
+
+<section>
+<h3>十三、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 说明为什么 f(z₁, z₂) = 1/(z₁² + z₂²) 在 ℂ²∖{0} 上不定义全纯函数，从而不构成"孤立奇点"的例子。</p>
+<p><em>提示：奇点集 {z₁² + z₂² = 0} 是两条复直线 {z₂ = ±iz₁} 的并，通过原点但不紧致；在 (0, 1) 处 f 无定义。Hartogs 只排除"紧致"奇点。</em></p>
+<p><strong>2.</strong> 用第 3 步的"固定 z₁ 的 Liouville 论证"检查：ℂ³∖{0} 上的全纯函数是否也全部延拓到 ℂ³？</p>
+<p><em>提示：可以，且论证完全一样——固定 z₁ ≠ 0、z₂ ≠ 0，w ↦ F(z₁, z₂, w) 是整函数且 |w|→∞ 时 |w|ᵏ → 0。事实上 n ≥ 2 都成立。</em></p>
+<p><strong>3.</strong> 验证 g = z̄₁ dz̄₂ 不满足 ∂̄g = 0，并说明它为什么没有解。</p>
+<p><em>提示：∂̄g = (∂z̄₁/∂z̄₁ − 0) dz̄₁∧dz̄₂ = dz̄₁∧dz̄₂ ≠ 0。若 ∂̄u = z̄₁ dz̄₂ 有解，则 ∂u/∂z̄₁ = 0，u 与 z₁ 无关，其 ∂u/∂z̄₂ 不含 z̄₁，矛盾。</em></p>
+<p><strong>4.</strong> 计算 CP² 的 Hodge 数 h^{0,0}、h^{4,0}，说明它们为什么分别是 1 和 0。</p>
+<p><em>提示：h^{0,0} = 1：常函数生成全纯函数环；h^{4,0} = h^{0,0}（Hodge 对偶 h^{p,q} = h^{n−p,n−q}，n=2）……小心：h^{4,0} 对应 p+q=4，而 CP² 的实维是 4，复维是 2，故 p,q ≤ 2，h^{4,0} 不在菱形里——正确表述为 h^{p,q} 要求 p,q ≤ n = 2。</em></p>
+<p><strong>5.</strong> 设 M 为紧 Kähler 曲面，b₁(M) 为奇数。说明 M 不可能有 Hodge 分解意义上的"纯"结构。</p>
+<p><em>提示：Hodge 分解 + 对称给出 b₁ = h^{1,0} + h^{0,1} = 2h^{1,0} 为偶数；b₁ 奇 ⟹ 矛盾，M 非 Kähler（这正是 Hopf 曲面反例的本质）。</em></p>
+</section>
+
+<section>
+<h3>十四、附：工作题——Hartogs 条件、∂̄ 解与 Hodge 数</h3>
+<p><strong>工作题 1（Hartogs 条件检查）。</strong> 对下列 (Ω, K) 判断 Hartogs 定理是否适用：(a) Ω = ℂ²，K = 闭球 {|z| ≤ 1}；(b) Ω = ℂ²，K = 直线 {z₁ = 0}∩{|z|≤1} 的并；(c) Ω = ℂ，K = {0}。</p>
+<details><summary>显示解答</summary><p>
+(a) 适用：n=2≥2，K 紧，Ω∖K = {|z|>1} 连通，故 𝒪(Ω∖K) → 𝒪(ℂ²) 满射。<br>
+(b) 不适用：K = {z₁=0}∩{|z|≤1} 不是闭球的一部分而是"帽片"——它紧致，但要注意 Ω∖K 是否连通：{z₁=0}∩{|z|≤1} 挖掉后 Ω∖K 仍连通（绕行可行），所以其实适用！真正的障碍是紧致性，这里 K 紧致，故仍适用。<br>
+(c) 不适用：n=1，1/z 是反例。</p></details>
+<p><strong>工作题 2（显式解 ∂̄）。</strong> 在 Δ² 上解 ∂̄u = 3 z̄₁² dz̄₁ − 2 z̄₂ dz̄₂（先检查相容性）。</p>
+<details><summary>显示解答</summary><p>
+相容性：∂g₂/∂z̄₁ − ∂g₁/∂z̄₂ = 0 − 0 = 0 ✓。猜测 u = z̄₁³ + (−z̄₂²·…)：需 ∂u/∂z̄₁ = 3z̄₁²、∂u/∂z̄₂ = −2z̄₂。取 u = z̄₁³ − z̄₂²。检验：∂u/∂z̄₁ = 3z̄₁² ✓，∂u/∂z̄₂ = −2z̄₂ ✓。全部解：u = z̄₁³ − z̄₂² + h，h 全纯。</p></details>
+<p><strong>工作题 3（Hodge 数计算）。</strong> 求 CP¹ = S² 的 Hodge 数（这是 n = 1 的情形，先写出菱形）。</p>
+<details><summary>显示解答</summary><p>
+b₀ = b₂ = 1，b₁ = 0。Hodge 分解 H¹ = H^{1,0} ⊕ H^{0,1} = 0，故 h^{1,0} = h^{0,1} = 0。H² = H^{1,1}（复维 1 时 p,q ≤ 1），故 h^{1,1} = 1。菱形：h^{0,0} = 1、h^{1,0} = h^{0,1} = 0、h^{1,1} = 1。CP¹ 是唯一的紧致紧 Riemann 面（黎曼球），其 Hodge 菱形正是 1；0 0；1。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>L. Hörmander, An Introduction to Complex Analysis in Several Variables</strong></p>
+<p>&rarr; <strong>R. M. Range, Holomorphic Functions and Integral Representations in Several Complex Variables</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/complex-plane.html">🔄 复平面与全纯函数</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/contour-integral.html">⭕ 围道积分与留数</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：分析核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/several-complex-variables.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

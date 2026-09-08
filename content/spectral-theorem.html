@@ -1,0 +1,246 @@
+<section>
+<h3>〇、具体动机：[[3,1],[1,3]] 为什么能在"不扭曲"的方向上分解？</h3>
+<p>这一课要回答一个具体的问题：<strong>为什么对称矩阵可以在几个"不扭曲"的方向上只做纯缩放？</strong>先别急着看抽象定理，直接拿一个带数字的矩阵动手算。</p>
+<div class="formula display" data-tex="A=\begin{bmatrix}3&amp;1\\1&amp;3\end{bmatrix}"></div>
+<p>问：平面上存不存在某个方向，让 A 只沿这个方向<strong>拉长或压扁、绝不转歪</strong>？假设存在这样的方向 v=(x,y) 和倍数 λ，满足 Av=λv。把 A 代进去：</p>
+<div class="formula display" data-tex="\begin{bmatrix}3&amp;1\\1&amp;3\end{bmatrix}\begin{pmatrix}x\\y\end{pmatrix}=\lambda\begin{pmatrix}x\\y\end{pmatrix}\;\Longleftrightarrow\;\begin{cases}(3-\lambda)x+y=0\\ x+(3-\lambda)y=0\end{cases}"></div>
+<p>这个齐次方程组要有非零解，系数行列式必须为 0，即特征方程：</p>
+<div class="formula display" data-tex="\det(A-\lambda I)=(3-\lambda)^2-1=0\;\Longrightarrow\;\lambda=4\ \text{或}\ 2"></div>
+<p>两个特征值都是实数，一个是 4、一个是 2。逐个代回去解出方向：</p>
+<div class="formula display" data-tex="\lambda=4:\;\;(1-4)\cdot 1+1\cdot 1=0\;\Longrightarrow\;v_1=(1,1),\qquad A\begin{pmatrix}1\\1\end{pmatrix}=\begin{pmatrix}4\\4\end{pmatrix}=4\begin{pmatrix}1\\1\end{pmatrix}"></div>
+<div class="formula display" data-tex="\lambda=2:\;\;x+y=0\;\Longrightarrow\;v_2=(1,-1),\qquad A\begin{pmatrix}1\\-1\end{pmatrix}=\begin{pmatrix}2\\-2\end{pmatrix}=2\begin{pmatrix}1\\-1\end{pmatrix}"></div>
+<p>答案出来了：沿 45° 方向 A 把长度放大 4 倍，沿 −45° 方向放大 2 倍——<strong>两个方向各自只管拉伸，互不干扰</strong>。更要紧的是这个数：</p>
+<div class="formula display" data-tex="(1,1)\cdot(1,-1)=1\cdot1+1\cdot(-1)=0\;\Longrightarrow\;\text{两个方向互相垂直}"></div>
+<p>把两个方向归一化成单位向量 u₁=(1,1)/√2、u₂=(1,−1)/√2，A 就能写成"沿 u₁ 拉 4 倍、沿 u₂ 拉 2 倍"的漂亮形式：</p>
+<div class="formula display" data-tex="A=4\,u_1u_1^T+2\,u_2u_2^T"></div>
+<p>这就是谱定理的雏形：<strong>对称矩阵总能在某组互相垂直的方向上被拆成独立的纯缩放。</strong>整节课就是把这个例子一步步推广成严格的定理。</p>
+<div class="key-insight">核心洞察：对称的变换永远可以"直着拉"——找对方向后它只是沿着几个互相垂直的方向缩放，不需要旋转和剪切。这是它最特别的品格。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、特征值与特征向量的快速回顾——从"变形后方向不变"说起</h3>
+<p>上一课我们详细学过：非零向量 v 若被矩阵 A 作用后只是被拉长（或压扁、掉头）一个倍数 λ，即</p>
+<div class="formula display" data-tex="Av=\lambda v,\qquad v\neq 0"></div>
+<p>就称 v 是 A 的<strong>特征向量</strong>（eigenvector），λ 是对应的<strong>特征值</strong>（eigenvalue）。求法两步：先解特征方程 det(A−λI)=0 得 λ，再对每个 λ 解 (A−λI)v=0 得特征向量。</p>
+<p>这里只提醒一个<strong>关键事实</strong>：一般矩阵的特征向量<strong>不一定是垂直的</strong>。看反例：</p>
+<div class="formula display" data-tex="A=\begin{bmatrix}2&amp;1\\0&amp;3\end{bmatrix}\;\Longrightarrow\;\lambda=2,3,\quad v_1=(1,0),\ v_2=(1,1)"></div>
+<p>(1,0) 与 (1,1) 的夹角是 45°，根本不垂直。所以"特征向量互相垂直"<strong>不是白来的</strong>——它是对称矩阵才有的特权。这正是本课的主角，也是普通矩阵与对称矩阵之间最关键的分水岭。</p>
+<p>一句话总结回顾：特征向量是"变形后方向不变"的方向，特征值是放大的倍数。下面要问的是：什么样的矩阵能让这些方向<strong>恰好互相垂直</strong>？</p>
+</section>
+
+<section>
+<h3>二、什么是对称矩阵？——"关于主对角线对称"的两种写法</h3>
+<p>从最左上角到最右下角的那条斜线叫<strong>主对角线</strong>（main diagonal）。一个方阵如果满足 a[i][j]＝a[j][i]，即<strong>以主对角线为镜子，镜子两边的数一一相等</strong>，就叫<strong>对称矩阵</strong>（symmetric matrix）。把矩阵沿主对角线"翻"过去的矩阵叫<strong>转置</strong>（transpose），记作 Aᵀ。所以对称矩阵一句话就是</p>
+<div class="formula display" data-tex="A=A^T"></div>
+<p>例子：A=[[2,1],[1,3]] 是对称的（第 1 行第 2 列＝第 2 行第 1 列＝1）；而 [[2,1],[0,3]] 不对称（1≠0）。<strong>判断方法：对角线两边的数一一相等，就是对称矩阵。</strong></p>
+<p>光有"代数版"定义还不够，后面证明要用它的"作用版"。对任意两个向量 v,w，计算内积 ⟨Av,w⟩：因为 Aᵀ=A，</p>
+<div class="formula display" data-tex="\langle Av,w\rangle=(Av)^Tw=v^TA^Tw=v^TAw=\langle v,Aw\rangle"></div>
+<p>所以对称矩阵还等价于下面这条性质（<strong>自伴性</strong>）：</p>
+<div class="formula display" data-tex="\langle Av,w\rangle=\langle v,Aw\rangle\quad\forall\,v,w"></div>
+<p>大白话：<strong>A 想作用在哪个向量上都行，搬到哪里结果一样。</strong>这个"对称性"正是后面所有奇迹的根源——它让 A 能自由地在内积里"搬家"。</p>
+</section>
+
+<section>
+<h3>三、为什么不同特征值的特征向量一定正交？——完整证明</h3>
+<p>这是全课最漂亮的一个证明，只有四行，但它依赖的正是上一节的"搬家"能力。设 A=Aᵀ，且 v₁、v₂ 是 A 对应于不同特征值 λ₁≠λ₂ 的特征向量：</p>
+<div class="formula display" data-tex="Av_1=\lambda_1v_1,\qquad Av_2=\lambda_2v_2"></div>
+<p>现在考虑内积 <strong>⟨Av₁,v₂⟩</strong>，用两条不同的路去算它。</p>
+<p><strong>第一路：直接用 Av₁=λ₁v₁。</strong>把 Av₁ 换成 λ₁v₁，一个标量倍可以提到内积外面：</p>
+<div class="formula display" data-tex="\langle Av_1,v_2\rangle=\langle \lambda_1 v_1,v_2\rangle=\lambda_1\langle v_1,v_2\rangle"></div>
+<p><strong>第二路：利用 A 的对称性把 A"搬家"。</strong>由 ⟨Av,w⟩=⟨v,Aw⟩，再把 Av₂=λ₂v₂ 代入：</p>
+<div class="formula display" data-tex="\langle Av_1,v_2\rangle=\langle v_1,Av_2\rangle=\langle v_1,\lambda_2 v_2\rangle=\lambda_2\langle v_1,v_2\rangle"></div>
+<p><strong>两条路必须给出同一个数</strong>，所以相减：</p>
+<div class="formula display" data-tex="\lambda_1\langle v_1,v_2\rangle=\lambda_2\langle v_1,v_2\rangle\;\Longrightarrow\;(\lambda_1-\lambda_2)\langle v_1,v_2\rangle=0"></div>
+<p>因为两个特征值<strong>不同</strong>（λ₁−λ₂≠0），只能有 ⟨v₁,v₂⟩=0，即 v₁ 与 v₂ 正交。∎</p>
+<p>每一步都值得回味：<strong>若 A 不对称，第二路就走不通</strong>，于是正交代言以蔽之就会破功——这正是第一节那个反例 [[2,1],[0,3]] 特征向量不正交的原因。注意：若讨论复矩阵，把内积换成共轭对称形式 ⟨u,v⟩=u†v，证明一字不改地成立，此时条件 A=Aᵀ 换成 A=A†（厄米矩阵）。</p>
+<div class="key-insight">不同特征值的特征向量自动正交，其全部秘密就在 ⟨Av₁,v₂⟩=⟨v₁,Av₂⟩ 这"一搬家"。对称性是正交性的根源。</div>
+</section>
+
+<section>
+<h3>四、为什么实对称矩阵的特征值一定是实数？——完整证明</h3>
+<p>特征值常常代表"要测量的量"（振动频率、能级高低）。如果它是复数，就很难当成一个真实的读数。对称矩阵保证所有 λ 都是实实在在的实数。为什么？</p>
+<p>设 Av=λv，v≠0。这里允许 v 取复值（这样证明最干净），用 v† 表示 v 的共轭转置。考虑一个标量：v†Av。因为 A 对称 ⟹ A†=Aᵀ=A，把它取共轭转置：</p>
+<div class="formula display" data-tex="(v^{\dagger}Av)^{\dagger}=v^{\dagger}A^{\dagger}v=v^{\dagger}Av"></div>
+<p>一个数等于它自己的共轭，所以 <strong>v†Av 是实数</strong>。另一方面，把 Av=λv 代进去：</p>
+<div class="formula display" data-tex="v^{\dagger}Av=v^{\dagger}(\lambda v)=\lambda\,v^{\dagger}v=\lambda\,\|v\|^2"></div>
+<p>v≠0 ⟹ ‖v‖²&gt;0 是正实数，而 v†Av 是实数，于是</p>
+<div class="formula display" data-tex="\lambda=\frac{v^{\dagger}Av}{\|v\|^2}\in\mathbb{R}\qquad\blacksquare"></div>
+<p>这个比值的几何含义值得一提：它就是<strong>瑞利商</strong>（Rayleigh quotient），等于"把 Av 沿 v 方向的分量除以 v 的长度平方"——即沿 v 方向实际测到的拉伸率。它是实数，正是"对称 = 直着拉、不斜着剪"的代数化身。瑞利商还可用于"变分"思想：λ_max = max_{v≠0} vᵀAv/‖v‖²，这是特征值摄动理论与数值计算（如 QR 算法）的基础。</p>
+</section>
+
+<section>
+<h3>五、正交对角化的完整流程——从定理到算法</h3>
+<p>把〇节的例子推广成一般步骤。目标是：给定对称矩阵 A，找到正交矩阵 Q 与对角矩阵 Λ，使</p>
+<div class="formula display" data-tex="Q^TAQ=\Lambda,\qquad A=Q\Lambda Q^T,\qquad Q^TQ=I"></div>
+<p>为什么 Qᵀ=Q⁻¹？因为正交矩阵的列是两两正交的单位向量，直接算 QᵀQ=I，所以 Q⁻¹=Qᵀ。整个公式的意思——"先站到自然坐标轴上（乘 Qᵀ），沿各轴做纯拉伸（乘 Λ），再回到普通坐标（乘 Q）"，拉伸倍数就是特征值。</p>
+<p>教科书式流程分五步：</p>
+<p><strong>第 1 步：求特征值。</strong>解特征方程 det(A−λI)=0。对实对称矩阵，由第四节保证全部 λᵢ∈ℝ。</p>
+<p><strong>第 2 步：求每个特征空间。</strong>对每个 λᵢ 解 (A−λᵢI)v=0，得到特征空间 E_{λᵢ}=ker(A−λᵢI)。</p>
+<p><strong>第 3 步：在每个特征空间内正交化。</strong>对每个 E_{λᵢ} 选一组标准正交基（重特征值时用 Gram–Schmidt 正交化）；<strong>不同特征值的特征空间之间已经自动正交</strong>——这正是第三节证明的定理，不需再做任何处理。</p>
+<p><strong>第 4 步：拼装。</strong>把所有标准正交基向量按顺序并排成 Q（它自动是正交矩阵），把特征值按相同顺序排成 Λ=diag(λ₁,…,λₙ)。</p>
+<p><strong>第 5 步：验证。</strong>检验 QᵀQ=I 且 QᵀAQ=Λ。下面的例题会把每一步都算给你看。</p>
+<div class="key-insight">正交对角化 = 找到一组互相垂直的"自然坐标轴"（标准正交特征向量），在它上面只有纯拉伸，没有旋转和剪切。</div>
+</section>
+
+<section>
+<h3>六、完整例题一：正交对角化 A=[[2,1],[1,2]]</h3>
+<p>一步一步完整地算一遍 2×2 对称矩阵。</p>
+<p><strong>第 1 步：求特征值。</strong></p>
+<div class="formula display" data-tex="\det(A-\lambda I)=\begin{vmatrix}2-\lambda&amp;1\\1&amp;2-\lambda\end{vmatrix}=(2-\lambda)^2-1=0\;\Longrightarrow\;\lambda_1=3,\ \lambda_2=1"></div>
+<p>两个特征值 3 和 1，都是实数 ✓。</p>
+<p><strong>第 2 步：求特征向量。</strong>λ=3 时解 (A−3I)v=0：</p>
+<div class="formula display" data-tex="\begin{bmatrix}-1&amp;1\\1&amp;-1\end{bmatrix}\begin{pmatrix}x\\y\end{pmatrix}=0\;\Longrightarrow\;x=y\;\Longrightarrow\;v_1=(1,1)"></div>
+<p>λ=1 时解 (A−I)v=0：</p>
+<div class="formula display" data-tex="\begin{bmatrix}1&amp;1\\1&amp;1\end{bmatrix}\begin{pmatrix}x\\y\end{pmatrix}=0\;\Longrightarrow\;x=-y\;\Longrightarrow\;v_2=(1,-1)"></div>
+<p><strong>第 3 步：归一化。</strong>两个方向已正交（(1,1)·(1,−1)=0），分别除以长度 √2：</p>
+<div class="formula display" data-tex="u_1=\frac{1}{\sqrt2}(1,1),\qquad u_2=\frac{1}{\sqrt2}(1,-1)"></div>
+<p><strong>第 4 步：拼装 Q 与 Λ。</strong></p>
+<div class="formula display" data-tex="Q=\frac{1}{\sqrt2}\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix},\qquad \Lambda=\begin{bmatrix}3&amp;0\\0&amp;1\end{bmatrix}"></div>
+<p><strong>第 5 步（先验证 Q 正交）。</strong>两列的点积 (1/√2)(1,1)·(1/√2)(1,−1)=0，各自长度 1，所以 QᵀQ=I。这一步保证了 Q⁻¹=Qᵀ。完整验证 QᵀAQ=Λ 放到下一节逐格手算。</p>
+</section>
+
+<section>
+<h3>七、完整例题二：验证 QᵀAQ 是对角矩阵——逐格手算</h3>
+<p>数学书只说"容易验证"的地方，我们把它一步步算出来。继续用 A=[[2,1],[1,2]]、Q=(1/√2)[[1,1],[1,−1]]。目标：证明 QᵀAQ=diag(3,1)。</p>
+<p><strong>先算 AQ。</strong>把 Q 的两列（即 u₁,u₂）分别交给 A：</p>
+<div class="formula display" data-tex="A u_1=A\frac{1}{\sqrt2}(1,1)=\frac{1}{\sqrt2}\begin{pmatrix}3\\3\end{pmatrix}=3u_1,\qquad A u_2=\frac{1}{\sqrt2}\begin{pmatrix}1\\-1\end{pmatrix}=1\cdot u_2"></div>
+<p>也就是说<strong>每列都恰好乘以自己的特征值</strong>，于是 AQ=(3u₁, 1u₂)，即</p>
+<div class="formula display" data-tex="AQ=\frac{1}{\sqrt2}\begin{bmatrix}3&amp;1\\3&amp;-1\end{bmatrix}"></div>
+<p><strong>再左乘 Qᵀ。</strong>Qᵀ 也是 (1/√2)[[1,1],[1,−1]]（Q 对称），做矩阵乘法：</p>
+<div class="formula display" data-tex="Q^TAQ=\frac12\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}\begin{bmatrix}3&amp;1\\3&amp;-1\end{bmatrix}=\frac12\begin{bmatrix}6&amp;0\\0&amp;2\end{bmatrix}=\begin{bmatrix}3&amp;0\\0&amp;1\end{bmatrix}=\Lambda\ \checkmark"></div>
+<p>非对角元全变成 0，对角元恰好是特征值。再由 QQᵀ=I（正交矩阵第二性质），两边左乘 Q 右乘 Qᵀ 就还原出 A=QΛQᵀ：</p>
+<div class="formula display" data-tex="A=Q\Lambda Q^T=\frac12\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}\begin{bmatrix}3&amp;0\\0&amp;1\end{bmatrix}\begin{bmatrix}1&amp;1\\1&amp;-1\end{bmatrix}=\begin{bmatrix}2&amp;1\\1&amp;2\end{bmatrix}\ \checkmark"></div>
+<p>看见交叉项是怎么被"夹"没的吗？Qᵀ 先把坐标转到特征方向（此时交叉项 1 藏进旋转里），Λ 只做对角拉伸，Qᵀ 转回来时——因为拉伸沿着特征方向，两个方向互不影响，交叉项就<strong>永远凑不出来</strong>。这就是"对称 + 正交 = 干净对角化"的几何解释。</p>
+</section>
+
+<section>
+<h3>八、完整例题三：投影矩阵——特征值只有 1 和 0</h3>
+<p>看一类特别重要的对称矩阵：<strong>正交投影矩阵</strong>。取一个单位向量 u，定义</p>
+<div class="formula display" data-tex="P=uu^T"></div>
+<p>它对任意向量 v 的作用是：把 v 正交投影到 u 所在直线上（分量 u(u·v)）。先验证它对称、且是"幂等"的：</p>
+<div class="formula display" data-tex="P^T=(uu^T)^T=uu^T=P,\qquad P^2=u(u^Tu)u^T=u\cdot 1\cdot u^T=uu^T=P"></div>
+<p>P 对称 ⟹ 谱定理适用。它的特征值和特征向量几乎"免费"：</p>
+<p><strong>方向 u 自己：</strong>Pu=u(u·u)=u，特征值 1。<strong>任何与 u 垂直的方向 w：</strong>Pw=u(u·w)=0，特征值 0。而特征空间</p>
+<div class="formula display" data-tex="E_1=\mathrm{span}\{u\},\qquad E_0=\{u\}^{\perp}=\mathrm{span}\{u\}^{\perp}"></div>
+<p>两个特征空间正好互相垂直，拼起来是整个空间。带具体数字：取 u=(1,1)/√2，即"投影到 45° 直线"：</p>
+<div class="formula display" data-tex="P=uu^T=\begin{bmatrix}1/2&amp;1/2\\1/2&amp;1/2\end{bmatrix},\qquad \Lambda=\begin{bmatrix}1&amp;0\\0&amp;0\end{bmatrix}"></div>
+<p>用谱分解写就是 P=1·(uuᵀ)+0·(I−uuᵀ)：特征值 1 贡献"保留 u 分量"，特征值 0 贡献"抹掉垂直分量"。<strong>投影矩阵是谱定理最直白的例子</strong>——两个特征值 1 与 0、两个正交的特征空间，一张对称矩阵就被彻底讲清楚了。</p>
+</section>
+
+<section>
+<h3>九、谱定理：正式陈述 + 三种等价形式 + 关键公式</h3>
+<p>把前三节的例子升华成定理。设 A 是 n×n 实对称矩阵（A=Aᵀ），谱定理承诺三件事：</p>
+<p><strong>(1) 所有特征值都是实数</strong>（第四节证明）；<strong>(2) 存在一组标准正交的特征向量</strong>（第三节保证不同特征值正交，重特征值内用 Gram–Schmidt）；<strong>(3) A=QΛQᵀ，其中 Q 是正交矩阵，Λ=diag(λ₁,…,λₙ)</strong>。事实上这三句话相互等价，任一句成立都推出其余两句。</p>
+<div class="formula display" data-tex="A=A^T\;\Longrightarrow\;A=Q\Lambda Q^T,\quad Q^TQ=I"></div>
+<div class="formula display" data-tex="\Lambda=\mathrm{diag}(\lambda_1,\ldots,\lambda_n),\quad \lambda_i\in\mathbb{R}"></div>
+<div class="formula display" data-tex="\langle Av,w\rangle=\langle v,Aw\rangle\quad\text{(自伴性)}"></div>
+<p>谱定理还有两种与"对角化"等价的写法，在不同场景各有妙用：</p>
+<p><strong>谱分解（按特征值分块）：</strong>把 Q 按特征值分组，A=ΣᵢλᵢPᵢ，其中 Pᵢ 是到第 i 个特征空间上的正交投影。这等价于把矩阵"拆成独立的层"，是量子力学可观测量展开的代数基础。</p>
+<p><strong>乘法算子：</strong>在合适的谱测度下，A 等价于"乘以自变量"。这三种形式在有限维等价，在无穷维各有适用范围——分别对应量子力学中束缚态、散射态和连续谱。</p>
+<div class="key-insight">谱定理 = 线性代数皇冠上的明珠。它告诉你：对称变换在"对的"正交坐标系中就是纯拉伸。没有旋转，没有剪切，只有独立的缩放。</div>
+</section>
+
+<section>
+<h3>十、量子力学的基石</h3>
+<p>量子力学里，物理量（位置、动量、能量、自旋）都用<strong>自伴算子</strong>表示——它就是无穷维版的对称矩阵（满足 ⟨Av,w⟩=⟨v,Aw⟩）。谱定理为每个可观测量保证：</p>
+<p>① <strong>测量结果（特征值）全为实数</strong>——否则"物理量"没有意义，仪器不可能测出复数读数。② <strong>不同测量结果的态互相正交</strong>——它们是可完美区分的物理状态，一次测量不会把两个结果搞混。③ 谱分解 O=ΣᵢλᵢPᵢ 给出测量公理（Born 规则）的数学表述：测量后系统以 |⟨ψ|Pᵢ|ψ⟩|² 的概率落入第 i 个本征态。</p>
+<p><strong>没有谱定理，量子力学的整个"可观测量"概念就崩塌了。</strong>这是纯数学结构决定物理定律的最干净例子之一。</p>
+</section>
+
+<section>
+<h3>十一、试试看（带提示）</h3>
+<p>1. 取 A=[[3,1],[1,3]]（〇节那个矩阵）。已知特征值 4,2，写出一组标准正交特征向量、正交矩阵 Q 和对角阵 Λ，并验证 A=QΛQᵀ。<br><em>提示：特征向量 (1,1) 与 (1,−1) 归一化后就是 Q 的两列；Λ=diag(4,2)；用第七节的方法逐格乘一遍。</em></p>
+<p>2. 如果 A 不对称（如 [[2,1],[0,3]]），特征向量还正交吗？到左侧可视化里把 c 拖得离开 b，观察绿色虚线的夹角。<br><em>提示：λ=2,3，特征向量 (1,0) 与 (1,1) 夹角 45°。单击 Symmetrize (c=b) 让 c→b，两个方向立刻变成垂直——这正是第三节定理的"可视化实验"。</em></p>
+<p>3. 求 A=[[0,1],[1,0]]（关于直线 y=x 的反射）的正交对角化，并指出它对应什么几何动作。<br><em>提示：特征方程 λ²−1=0，λ=±1；特征向量 (1,1)（不动方向）与 (1,−1)（翻转方向）。反射 = "沿对角线保留、垂直方向翻面"，Λ=diag(1,−1)。</em></p>
+<p>4. 取单位向量 u=(1,1)/√2，写出投影矩阵 P=uuᵀ 的谱分解：两个投影算子分别是什么？<br><em>提示：P=1·(uuᵀ)+0·(I−uuᵀ)；I−uuᵀ 是投影到 {u}⊥ 的矩阵，你能否手算验证 (I−uuᵀ)²=I−uuᵀ？</em></p>
+<p>5. 挑战题：A=[[2,0,0],[0,3,1],[0,1,3]] 是对称矩阵，特征值有重根。求它的正交对角化。<br><em>提示：分块看，λ=2 的特征空间是二维的 span{(1,0,0),(0,1,−1)}，在其内做 Gram–Schmidt 得两个正交向量；λ=4 对应 (0,1,1)。三个向量拼出正交 Q。</em></p>
+</section>
+
+<section>
+<h3>谱定理的完整证明</h3>
+<p>把前文两处"动手算"整理成严格引理，再用归纳法完成整个证明。</p>
+<p><strong>引理 1（特征值全为实数）。</strong>设 A=A†（厄米，实对称是其特例）。取 Av=λv（v≠0），考虑 v†Av。因 (v†Av)†=v†A†v=v†Av，故 v†Av∈ℝ；而 v†Av=λ‖v‖²，‖v‖²&gt;0，故 λ=v†Av/‖v‖²∈ℝ。∎</p>
+<p><strong>引理 2（不同特征值 ⟹ 正交）。</strong>设 Av₁=λ₁v₁、Av₂=λ₂v₂，λ₁≠λ₂。⟨Av₁,v₂⟩=λ₁⟨v₁,v₂⟩（用第一路），又由自伴性 ⟨Av₁,v₂⟩=⟨v₁,Av₂⟩=λ₂⟨v₁,v₂⟩（用第二路）。相减得 (λ₁−λ₂)⟨v₁,v₂⟩=0，故 ⟨v₁,v₂⟩=0。∎</p>
+<p><strong>定理（谱定理，归纳于 n）。</strong>n=1 平凡。设 n≥2 且结论对 n−1 成立。由引理 1 取单位实特征向量 v₁（Av₁=λ₁v₁）。把 v₁ 扩充成 ℝⁿ 的标准正交基 {v₁,w₂,…,wₙ}，令 Q₁=(v₁,w₂,…,wₙ) 正交。则</p>
+<div class="formula display" data-tex="Q_1^TAQ_1=\begin{bmatrix}\lambda_1&amp;0\\0&amp;A'\end{bmatrix},\qquad (A')^T=A'"></div>
+<p>（第一列为 Q₁ᵀλ₁v₁=λ₁e₁，对称性保证第一行亦然。）A' 是 (n−1)×(n−1) 对称矩阵，由归纳假设存在正交 Q₂ 使 Q₂ᵀA'Q₂=Λ'。取 Q=Q₁·diag(1,Q₂)（正交矩阵之积仍正交），则 QᵀAQ=diag(λ₁,Λ')。QED。∎</p>
+</section>
+
+<section>
+<h3>为什么谱定理是量子力学的基石</h3>
+<p>可观测量 = 自伴算子（无穷维对称矩阵）。谱定理保证：1. 测量结果（特征值）全为实数——物理量有意义。2. 不同测量结果的态互相正交——可完美区分。3. 谱分解 O=ΣᵢλᵢPᵢ——测量公理（Born 规则）的数学表述：测量把态投影到某个特征空间，概率由投影长度平方决定。<strong>没有谱定理，量子力学的整个"可观测量"概念就崩塌了。</strong></p>
+</section>
+
+<section>
+<h3>谱定理的三种等价形式</h3>
+<p>1. 对角化：</p>
+<div class="formula display" data-tex="A=Q\Lambda Q^{T}\quad\text{(正交对角化)}"></div>
+<p>2. 谱分解：</p>
+<div class="formula display" data-tex="A=\sum_{i}\lambda_i P_i,\qquad P_i=\text{正交投影到特征空间}"></div>
+<p>3. 乘法算子：在谱测度下，A 等价于"乘以自变量"。这三种形式在有限维等价，在无穷维有不同适用范围——分别对应量子力学中束缚态、散射态和连续谱。</p>
+</section>
+
+<section>
+<h3>前沿：非交换谱定理与量子场</h3>
+<p>Type III von Neumann 因子（描述 QFT 局部代数）没有迹——无法用经典谱定理对角化。Connes-Takesaki(1973) 用模理论给出了 Type III 因子的"谱分解"——但和经典谱定理完全不同。这是无穷维非交换几何的核心困难。仍开放：Type III₁ 因子的完整分类。</p>
+</section>
+
+<section>
+<h3>附：实特征值与正交对角化的归纳证明</h3>
+<p><strong>定理（谱定理）</strong>：A=Aᵀ∈Mₙ(ℝ) ⟺ 存在正交矩阵 Q 使 QᵀAQ=Λ=diag(λ₁,…,λₙ)，λᵢ∈ℝ。</p>
+<p><strong>证明（归纳于 n）。</strong>n=1 平凡。设 n≥2 且结论对 n−1 成立。</p>
+<p><strong>第 1 步：特征值全为实数。</strong>对任意 z∈ℂⁿ，⟨z,Az⟩=⟨Az,z⟩=⟨z,Az⟩（A 对称 ⟹ 二次型实值），故 ⟨z,Az⟩∈ℝ。若 Az=λz，则 ⟨z,Az⟩=λ‖z‖²∈ℝ ⟹ λ∈ℝ。取单位实特征向量 v₁。</p>
+<p><strong>第 2 步：块对角化。</strong>把 v₁ 扩充成标准正交基 {v₁,w₂,…,wₙ}，令 Q₁=(v₁,w₂,…,wₙ) 正交。则 Q₁ᵀAQ₁ 的第一列为 Q₁ᵀλ₁v₁=(λ₁,0,…,0)ᵀ；由对称性第一行也只有 λ₁，故</p>
+<div class="formula display" data-tex="Q_1^TAQ_1=\begin{bmatrix}\lambda_1 &amp; 0\\0 &amp; A'\end{bmatrix},\qquad (A')^T=A'"></div>
+<p><strong>第 3 步：归纳。</strong>A' 仍对称且为 n−1 阶，由归纳假设存在正交 Q₂ 使 Q₂ᵀA'Q₂=Λ'。取 Q=Q₁·diag(1,Q₂)（正交矩阵之积仍正交），则 QᵀAQ=diag(λ₁,Λ')。∎</p>
+<p>关键点：每步选出的 vₖ 自动与先前所有 vᵢ 正交（A' 只作用于它们的正交补），这解释了对称矩阵为什么"免费"给出正交的特征向量基——比普通可对角化更强。</p>
+</section>
+
+<section>
+<h3>附：谱分解 A=Σᵢλᵢuᵢuᵢᵀ</h3>
+<p><strong>定理。</strong>若 A=Aᵀ 有互异特征值 λ₁,…,λₖ，第 i 个特征空间的标准正交基为 {u_{i1},…,u_{im_i}}，则</p>
+<div class="formula display" data-tex="A=\sum_{i=1}^k\lambda_i\,P_i,\qquad P_i=\sum_{j=1}^{m_i}u_{ij}u_{ij}^T"></div>
+<p>其中 Pᵢ 是到 E_{λᵢ} 上的正交投影，满足 Pᵢ²=Pᵢ、Pᵢᵀ=Pᵢ、PᵢPⱼ=0（i≠j）、ΣᵢPᵢ=I。</p>
+<p><strong>证明。</strong>由正交对角化 A=QΛQᵀ，把 Q 按特征值分块 Q=(Q₁,…,Qₖ)，则</p>
+<div class="formula display" data-tex="A=Q\Lambda Q^T=\sum_{i=1}^k\lambda_i\,Q_iQ_i^T=\sum_{i=1}^k\lambda_i P_i,\qquad Q_iQ_i^T=\sum_{j=1}^{m_i}u_{ij}u_{ij}^T"></div>
+<p>投影性质由 Q 的列标准正交立即得出。∎</p>
+<p>应用：函数演算 f(A)=Σᵢf(λᵢ)Pᵢ（如 exp(A)、A⁻¹/²、A^t）——投影分解是量子力学可观测量展开与指数族分布代数结构的核心。</p>
+</section>
+
+<section>
+<h3>附：标准反例</h3>
+<p><strong>反例 1（可对角化但特征向量不正交）</strong>：A=[[2,1],[0,3]]。特征值 2,3，特征向量 (1,0)ᵀ 与 (1,1)ᵀ 夹角 45°，不正交。A 可对角化（P⁻¹AP=diag(2,3)，P 非正交），但不存在正交对角化——"可对角化 ⟹ 正交对角化"不成立。</p>
+<p><strong>反例 2（亏损矩阵，完全不可对角化）</strong>：A=[[0,1],[0,0]]（Jordan 块）。特征值 λ=0（代数量 2），但几何重数为 1——唯一特征向量 (1,0)ᵀ。特征向量不构成基 ⟹ 不可对角化，更谈不上正交对角化。谱定理对非对称矩阵没有任何承诺。</p>
+<div class="formula display" data-tex="\begin{bmatrix}2&amp;1\\0&amp;3\end{bmatrix}\ \text{可对角化但非正交};\qquad \begin{bmatrix}0&amp;1\\0&amp;0\end{bmatrix}\ \text{亏损、不可对角化}"></div>
+<p>教训：正交对角化是自伴（对称）矩阵的专有特权；亏损矩阵连特征向量基都没有，只能靠 Jordan 标准形。</p>
+</section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：求 A=[[2,1],[1,2]] 的正交对角化：找正交 Q 与对角阵 Λ，验证 A=QΛQᵀ。</p>
+<p><strong>题 2</strong>：用正交变换把二次型 q(x,y)=3x²+2xy+3y² 化为标准形，并判断其正定性。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：特征方程 (2−λ)²−1=0 ⟹ λ=3,1。λ=3：v₁=(1,1)ᵀ/√2；λ=1：v₂=(1,−1)ᵀ/√2。取 Q=[v₁ v₂]，则 QᵀQ=I 且 QᵀAQ=diag(3,1)。验证：QᵀAQ=(1/2)[[1,1],[1,−1]]·[[2,1],[1,2]]·[[1,1],[1,−1]]=(1/2)[[6,0],[0,2]]=diag(3,1) ✓。</p>
+<p><strong>题 2</strong>：q 的矩阵 A=[[3,1],[1,3]]，特征值 λ=4,2（(3−λ)²−1=0），特征向量同上。作正交变换 (x,y)ᵀ=Q(u,v)ᵀ，得 q(u,v)=4u²+2v²——交叉项消失的标准形。两系数为正 ⟹ q 正定，最小值 0 仅在原点取得。</p>
+</p></details>
+</section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Axler, Linear Algebra Done Right (4th ed.)</strong></p>
+<p>&rarr; <strong>K. Hoffman & R. Kunze, Linear Algebra</strong></p>
+</section>
+
+<section>
+<h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/eigenvectors.html">特征值与特征向量</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/linear-transform.html">📐 线性变换</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/eigenvectors.html">🎯 特征值与特征向量</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/svd.html">🔀 奇异值分解 SVD</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/determinant.html">📏 行列式</a>：同一学科分类「线性代数」。</p>
+</section>

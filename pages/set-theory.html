@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ZFC公理、序数基数、连续统假设" />
+  <meta property="og:title" content="集合论 — Vibe Math" />
+  <meta property="og:description" content="ZFC公理、序数基数、连续统假设" />
+  <title>集合论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📐 集合论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★</span></h2>
+    <p class="subtitle">ZFC公理、序数基数、连续统假设</p>
+    <span class="cat-tag">Part 1: 基础</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='set-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/graph-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🕸️ 图论与网络</a>
+  <a href="/pages/forcing-ch.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌩️ 集合论 II：力迫与连续统假设 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>第1章　开场问题：包含所有"不含自己的集合"的集合，存在吗？</h3>
+<p>集合是什么？1900 年的数学家长这样回答：集合就是"一堆对象"。你可以随意收集：所有奇数是一个集合，所有素数是一个集合，所有"小于 10 的正偶数"是一个集合。只要给出一个条件，就能收集出一批对象——这叫"概括原则"（comprehension）。</p>
+<p>看起来无懈可击。直到 1901 年罗素（Russell）问了一个看似恶作剧的问题：<strong>如果什么都能收集，那么"所有集合的集合"也是一个集合吗？</strong>更狠的是下面这个——</p>
+<p>考虑 <strong>R = {x : x ∉ x}</strong>，即"所有不包含自己的集合"组成的集合。问：R ∈ R 吗？</p>
+<p>&rarr; 如果 R ∈ R，那么按 R 的定义（R 的每个成员都不包含自己），R ∉ R——矛盾。<br>
+&rarr; 如果 R ∉ R，那么 R 满足定义条件（"不包含自己"），所以 R ∈ R——还是矛盾。</p>
+<p>两种假设都爆炸。这就是<strong>罗素悖论</strong>（理发师悖论的数学版：一个理发师只给"不给自己刮胡子的人"刮胡子，那他给自己刮吗？）。</p>
+<p>它摧毁了"随意收集就是集合"的朴素观念。数学必须为"什么是集合"立下严格规则，防止自我指涉爆炸——这直接催生了 1908 年 Zermelo 的公理清单（后经 Fraenkel 补充，成为今天的 <strong>ZFC 公理系统</strong>）。</p>
+<p>所以本课的两大任务很明确：① 学会集合的基本语言和运算（第 2、3 章）；② 回答"ZFC 公理为什么必须存在、为什么是这十条"（第 4 章，教科书式的推演）。</p>
+<div class="key-insight">本课路线图：从罗素悖论出发（第 1 章）→ 集合的基本语言（第 2 章）→ 集合的运算（第 3 章）→ ZFC 十条公理的教科书式推演（第 4 章）→ 用集合造数：Von Neumann 自然数（第 5 章）→ 无穷：可数与不可数（第 6 章）→ 连续统假设（第 7 章）→ 选择公理（第 8 章）→ 关键公式与大基数（第 9 章）→ 反例（第 10 章）→ 工作题（第 11 章）。</div>
+</section>
+
+<section>
+<h3>第2章　集合的基本语言——元素、相等、子集</h3>
+<p>先把话说清楚。<strong>集合</strong>（set）就是一些对象的整体，里面的对象叫<strong>元素</strong>（element）。约定：大写字母表示集合（A, B, C），小写字母表示元素（a, b, c）。</p>
+<p><strong>怎么描述一个集合？</strong> 两种方式：</p>
+<p>&rarr; <strong>列举法</strong>：把元素都写出来，如 A = {1, 2, 3}，B = {红, 蓝, 绿}。<br>
+&rarr; <strong>描述法</strong>：用规则描述，如 C = {x : x 是小于 10 的正偶数} = {2, 4, 6, 8}。</p>
+<p><strong>元素与集合的关系：</strong> 1 ∈ A（1 属于 A），5 ∉ A（5 不属于 A）。</p>
+<p><strong>两个基本事实：</strong></p>
+<p>&rarr; <strong>集合相等</strong>：A = B 当且仅当 A 和 B 的元素完全相同（不看顺序、不管重复）。所以 {1,2,3} = {3,1,2} = {1,1,2,3}。<br>
+&rarr; <strong>子集</strong>：A ⊆ B 表示 A 的每个元素也都是 B 的元素。例如 {1,2} ⊆ {1,2,3}。每个集合都是自己的子集（A ⊆ A），空集是任何集合的子集（∅ ⊆ A）。</p>
+<p><strong>例 2.1（一步步算）。</strong> 设 A={1,2,3}，B={{1}, {1,2}}，C={x∈A : x 是奇数}={1,3}。<br>
+问：1∈A？是。{1}∈B？是——B 的元素本身就是"袋子"{1}。1∈B？不是——B 的元素是 {1} 和 {1,2}，没有"裸的 1"。<strong>元素和子集不是一回事</strong>：1 ∈ {1,2,3}，但 1 ∉ {{1},{2}}——那里的元素是 {1} 这个"袋子"本身。C⊆A？是，且 C⊊A（真子集）。</p>
+<p><strong>例 2.2（描述法变列举法）。</strong> 把 {x∈ℤ : −2 ≤ x &lt; 2} 列举出来：−2,−1,0,1。把 {x∈ℤ : x²=1} 列举出来：1 和 −1（两个！别忘了负数）。</p>
+<p><strong>试试看 2.1。</strong> {∅, {∅}, {{∅}}} 里有几个元素？<br><details><summary>试试看的提示</summary><p>数"袋子"的数量，不是袋子里的东西。这里有 3 个元素：∅、{∅}、{{∅}}。</p></details></p>
+</section>
+
+<section>
+<h3>第3章　集合的运算——怎么把袋子组合起来</h3>
+<p>有了集合，还要能组合它们。类比"袋子"最容易理解：</p>
+<p>&rarr; <strong>并集 A ∪ B</strong>：把两个袋子倒在一起（重复的只留一份）。例：{1,2} ∪ {2,3} = {1,2,3}。相当于"至少属于一个"。<br>
+&rarr; <strong>交集 A ∩ B</strong>：两个袋子里都有的东西。例：{1,2} ∩ {2,3} = {2}。相当于"同时属于两个"。<br>
+&rarr; <strong>差集 A \ B</strong>：从 A 里拿走 B 的东西。例：{1,2,3} \ {2} = {1,3}。相当于"属于 A 但不属于 B"。<br>
+&rarr; <strong>空集 ∅</strong>：什么都没有的集合。例：{1,2} ∩ {3,4} = ∅。<br>
+&rarr; <strong>幂集 P(A)</strong>：A 的所有子集组成的集合。例：P({1,2}) = {∅, {1}, {2}, {1,2}}，共 4 个元素。一般地，如果 A 有 n 个元素，P(A) 有 2ⁿ 个元素（每个元素"选或不选"两种可能）。</p>
+<p><strong>例 3.1（一步步算）。</strong> 设 A={1,2,3}，B={2,3,4}。<br>
+A∪B={1,2,3,4}（并集，重复只留一份）；A∩B={2,3}；A\B={1}（从 A 里去掉也在 B 里的 2,3）；B\A={4}。注意 A\B ≠ B\A——差集不交换。<br>
+再算 P({1})={∅,{1}}，共 2=2¹ 个；P(∅)={∅}，共 1=2⁰ 个。幂集里永远装着空集。</p>
+<p><strong>例 3.2（分配律，用具体集合核对）。</strong> 取 A={1,2}，B={2,3}，C={1,3}。<br>
+左边 A∩(B∪C)：B∪C={1,2,3}，交集={1,2}。<br>
+右边 (A∩B)∪(A∩C)：A∩B={2}，A∩C={1}，并集={1,2}。<br>
+两边相等。这些律和数的运算很像，还有德摩根律 A \ (B ∪ C) = (A \ B) ∩ (A \ C) 等。这就是集合论也叫"布尔代数"的原因——它和逻辑运算（或、且、非）一一对应。</p>
+<p><strong>试试看 3.1。</strong> 计算 P({1,2,3}) 的元素个数，并写出其中所有含 2 的子集。<br><details><summary>试试看的提示</summary><p>每个元素"选或不选"，所以总子集数 = 2³ = 8。含 2 的子集：把 2 定下来，其余 {1,3} 各可选可不选，共 2² = 4 个：{2},{1,2},{2,3},{1,2,3}。</p></details></p>
+</section>
+<section>
+<h3>第4章　ZFC 公理为什么存在——十条规则的教科书式推演</h3>
+<p>这一章回答全课最重要的问题：<strong>为什么需要公理？为什么恰好是这十条？</strong>推演思路如下。我们给自己设定两个必须同时满足的目标——</p>
+<div class="key-insight">目标一：杀死罗素悖论（不许"随便收集"）。<br>目标二：保住数学的全部必需品（自然数、函数、实数……照样造得出来）。</div>
+<p>公理就是同时满足这两个目标的"最小规则集"。下面一步步推演，每引入一条公理都说明：它解决哪个问题。</p>
+<p><strong>4.1 第一步：只加"分离公理"，就能杀死罗素悖论。</strong> 把概括原则（"任意条件都可收集"）削弱为：只能<strong>从已有集合里筛</strong>——给定集合 A 和性质 φ，存在 {x ∈ A : φ(x)}。这就是<strong>分离公理模式</strong>。</p>
+<p>为什么这能杀死罗素悖论？<strong>例 4.1（一步步证）。</strong> 对任意集合 A，定义 R_A = {x∈A : x∉x}。断言 R_A ∉ A。<br>
+反设 R_A∈A。则 R_A∈R_A ⟺（按定义）R_A∉R_A，矛盾。所以 R_A∉A。∎<br>
+也就是说：想造"所有不包含自己的集合"，在分离公理下只能造出"某个已有集合里不包含自己的那些"——而它永远跑不出那个已有集合。<strong>"所有集合的集合"根本造不出来</strong>，因为要造它需要先有一个装着全部集合的集合 A，而分离公理永远造不出这样的 A。罗素悖论被正规地化解了。</p>
+<p><strong>4.2 第二步：没有"原料"，分离公理筛不出东西。</strong> 分离公理说"从已有的 A 里筛"，但最初连一个 A 都没有。所以还需要"最初的点火器"：</p>
+<p><strong>空集公理：</strong> 存在不含任何元素的集合 ∅。这是全部数学的起点。<br>
+<strong>配对公理：</strong> 对任意 x、y，存在 {x,y}。于是能造 {∅}（=1）、{∅,{∅}}（=2）……从空集出发，一层层搭出最初的小集合。<br>
+这两条公理的"为什么"：没有空集就没有起点，没有配对就连 {∅} 都造不出来。</p>
+<p><strong>4.3 第三步：越造越大，需要"合并"和"更大的"。</strong></p>
+<p><strong>并集公理：</strong> 给一袋"袋子们"，存在它们所有元素的并集。为什么需要：我们要造自然数全集 {0,1,2,3,…}，它得是 0,1,2,3,… 的并——这需要一条公理保证"并"永远合法。</p>
+<p><strong>幂集公理：</strong> 给定 X，存在 X 的所有子集组成的集合 P(X)。为什么需要：Cantor 证明了 |P(X)| &gt; |X|，幂集是"造出更大无穷"的关键（第 6 章）。没有它，无穷只能停留在一个层级。</p>
+<p><strong>4.4 第四步：自然数必须存在。</strong> <strong>无穷公理：</strong> 存在一个集合包含 ∅，且每当它含 n 就含 n∪{n}——于是它含 0,1,2,3,… 无穷多个。为什么需要：没有这条，只能造出有限集合，数学"破产"。这条同时解决"存在无限集合"和"自然数集合存在"两个问题。</p>
+<p><strong>4.5 第五步：函数式的对应要能变成集合。</strong> <strong>替换公理模式：</strong> 如果有一条规则把 A 的每个元素 a 对应到 b（且对应是"函数的"），那么所有 b 的全体仍是一个集合。为什么需要：比如"把 n 对应到 2ⁿ"、"把每个序数对应到它的后继"，许多构造（超限递归、基数算术）离不开它。</p>
+<p><strong>4.6 第六步：外延公理——"相等"的意思。</strong> A = B 当且仅当 A 和 B 的元素完全相同。这条规定"集合相等"，不看形状不看标签。平凡但必要：没有它，连"相等"都没法谈（第 2 章的相等事实就是它在生效）。</p>
+<p><strong>4.7 第七步：正则公理——袋子不能自己装自己。</strong> 每个非空集合都有一个"最里面的元素"，不会出现 x ∈ x 或无穷嵌套 x ∈ x₁ ∈ x₂ ∈ …。为什么需要：防止"自指"式的病态集合，让"集合的层数"（秩，见第 10 章）总有定义——数学里我们只想和"一层层造出来的"集合打交道。</p>
+<p><strong>4.8 第八步：选择公理 AC——唯一"保证存在却给不出构造"的公理。</strong> 给一袋非空集合，能从每个里面各挑一个元素组成新集合。为什么需要且为什么有争议，见第 8 章。ZFC 里的 C 就是 Choice（选择）。</p>
+<div class="key-insight">ZFC 的精髓一句话：<strong>只允许"从已知出发，一步步合法地造"</strong>——空集点火，配对、并、幂、分离、替换增长，无穷保底，外延定相等，正则防病态，选择保选择。禁止"凭空收集所有××"。这就是罗素悖论在 ZFC 里不可能出现的原因：那个"自爆的集合"根本造不出来。</div>
+<p><strong>试试看 4.1。</strong> 用分离公理，从自然数里筛出偶数集：写成 {n∈ℕ : φ(n)}，φ 取什么？<br><details><summary>试试看的提示</summary><p>φ(n) 可以是"存在 k∈ℕ 使 n=k+k"。注意：这本身就是"筛"，不是"凭空造"。</p></details></p>
+<p><strong>试试看 4.2。</strong> 为什么"所有集合的集合"在 ZFC 里不存在？<br><details><summary>试试看的提示</summary><p>如果 V 是所有集合的集合，对 V 用分离公理造 R_V={x∈V:x∉x}，用例 4.1 的论证推出 R_V∉V；但 R_V 是集合，所以应该在 V 里——矛盾。故 V 不存在。</p></details></p>
+</section>
+
+<section>
+<h3>第5章　从集合长出数——Von Neumann 的自然数</h3>
+<p>你可能觉得奇怪："自然数 1,2,3 不是很自然吗，干嘛要从集合造？"——因为集合论要当数学的<strong>地基</strong>，就得证明"数"这个观念本身也能用集合表达。而且注意：第 4 章的推演已经给我们造数的全部工具（空集、配对、无穷、并）。现在动工：</p>
+<p>&rarr; 0 = ∅（空集，"什么都没有"）<br>
+&rarr; 1 = {∅} = {0}（一个袋子，装着 0）<br>
+&rarr; 2 = {∅, {∅}} = {0, 1}（装着 0 和 1 的袋子）<br>
+&rarr; 3 = {0, 1, 2}（装着 0, 1, 2 的袋子）<br>
+&rarr; 一般地：<strong>n+1 = n ∪ {n}</strong>（新数 = 把所有比它小的数装进一个袋子）</p>
+<p><strong>例 5.1（一步步算，看透"数字 n 有 n 个元素"）。</strong><br>
+0=∅，元素个数 0。<br>
+1={∅}，元素个数 1（成员是 0）。<br>
+2={∅,{∅}}，元素个数 2（成员是 0 和 1）。<br>
+3={∅,{∅},{∅,{∅}}}，元素个数 3（成员是 0,1,2）。<br>
+每一步 n 的元素恰好是 {0,1,…,n−1}，所以 <strong>数字 n 恰好有 n 个元素</strong>。而且数字之间天然有"包含"关系：1 ∈ 2 ∈ 3 ∈ 4，且 1 ⊆ 2 ⊆ 3 ⊆ 4——"小"就是"是前面那些的成员"。</p>
+<p>加法和乘法定义好之后，小学学的所有算术规则（1+1=2、乘法交换律）都能从集合公理<strong>证明</strong>出来——这就是"数学基础"的含义。</p>
+<p><strong>试试看 5.1。</strong> 写出 4 和 5 的定义（用 n+1=n∪{n}），并数 4 有 4 个元素。<br><details><summary>试试看的提示</summary><p>4=3∪{3}={0,1,2}∪{3}={0,1,2,3}；5=4∪{4}={0,1,2,3,4}。数 4 的元素：0,1,2,3 共 4 个。</p></details></p>
+</section>
+<section>
+<h3>第6章　无穷——可数的和不可数的（Cantor 对角线）</h3>
+<p>集合论真正"炸开"数学的地方，是它严肃对待了<strong>无穷</strong>。Cantor（1874）问了第一个深刻的问题：<strong>所有无穷一样大吗？</strong>答案：不是。</p>
+<p><strong>可数无穷（ℵ₀）</strong>：能跟自然数 N={1,2,3,…} 一一对应的集合。自然数、整数、有理数都是可数的——尽管有理数密密麻麻挤在数轴上，你还是能"排成队"一个一个数完。</p>
+<p><strong>不可数无穷（2^ℵ₀）</strong>：实数集 ℝ 不能排成队。直觉（Cantor 对角线）：假如把所有 0 到 1 之间的实数排成一列，总能构造一个不在列表里的新数——第 1 位和第 1 个数不同、第 2 位和第 2 个数不同、……这样造出的数，和列表里每一个都不相同。</p>
+<p><strong>结论</strong>：|N| &lt; |ℝ|。还更进一步：|P(N)| = |ℝ|，且对任何集合 X，|P(X)| &gt; |X|——<strong>无穷的层级永无止境</strong>（ℵ₀ &lt; 2^ℵ₀ &lt; 2^(2^ℵ₀) &lt; …）。</p>
+<p><strong>例 6.1（手工构造对角线新数，一步步）。</strong> 假设下面三行是"所有 0-1 串"的前三行：<br>
+a₁ = 0.100110…<br>
+a₂ = 0.010011…<br>
+a₃ = 0.110101…<br>
+我们构造 b：取第 1 位 ≠ a₁ 的第 1 位 → b₁=0；取第 2 位 ≠ a₂ 的第 2 位 → b₂=1；取第 3 位 ≠ a₃ 的第 3 位 → b₃=0。得 b=0.010…。对任何 n，b 的第 n 位 ≠ aₙ 的第 n 位，所以 b≠aₙ 对一切 n——b 不在列表里。这就是"对角线"。</p>
+<p><strong>严格定理（Cantor 对角线论证）。</strong> 对任何集合 X，|P(X)|&gt;|X|。特别地 |ℝ|=2^ℵ₀ 不可数。</p>
+<p><strong>证明。</strong> 第一步：反设存在满射 f: X→P(X)。第二步：由分离公理模式定义</p>
+<div class="formula display" data-tex="D=\{x\in X : x\notin f(x)\}"></div>
+<p>D 是 X 的子集，故 D∈P(X)。由 f 满射，存在 d∈X 使 f(d)=D。第三步：问"d∈D?"——若 d∈D=f(d)，则由 D 的定义 d∉f(d)=D，矛盾；若 d∉D=f(d)，则由 D 的定义 d∈D，矛盾。两种情况都矛盾，故满射不存在。第四步：存在单射 X→P(X)（x↦{x}）但无满射，故 |P(X)|&gt;|X|。∎</p>
+<p><strong>严格化要点：</strong> 论证只用分离公理（构造 D）+ 排中律（d∈D 或 d∉D），<strong>不依赖选择公理</strong>。取 X=ℕ 得 |P(ℕ)|=2^ℵ₀&gt;ℵ₀；由 |ℝ|=2^ℵ₀（二进制小数或 Dedekind 分割）得实数不可数。</p>
+<p><strong>试试看 6.1。</strong> 证明 {0,1}^ℕ（全体 0-1 无穷串）不可数。<br><details><summary>试试看的提示</summary><p>把例 6.1 的"三行"改成"任意可数多行"：反设枚举 f₀,f₁,f₂,…，构造 g 的第 n 位取 1−f_n(n)，则 g 和每个 f_n 在第 n 位不同。</p></details></p>
+</section>
+
+<section>
+<h3>第7章　连续统假设——无穷之间还有没有"中间层"？</h3>
+<p>第 6 章知道无穷有大小：|ℕ|=ℵ₀ 和 |ℝ|=2^ℵ₀，且 |ℝ|&gt;|ℕ|。Cantor 接着问：<strong>有没有大小介于两者之间的无穷？</strong></p>
+<p><strong>连续统假设（CH）</strong>说：没有。Cantor 一辈子都在尝试证明它，没有成功。</p>
+<p><strong>这件事难在哪？</strong> 通常的做法是：要么证明"存在中间层"，要么证明"不存在"。但 CH 很奇怪——</p>
+<p>&rarr; Gödel（1940）证明：在 ZFC 的公理框架内，<strong>无法证伪</strong> CH（不存在中间层的设定不会导致矛盾）。<br>
+&rarr; Cohen（1963）证明：在 ZFC 内，<strong>也无法证明</strong> CH（存在中间层的设定同样不会导致矛盾）。</p>
+<p>也就是说：CH 和"它的反面"都能和 ZFC 和平共处——<strong>在现有规则下，这个问题既不能证明也不能推翻</strong>。这就叫"CH 独立于 ZFC"（independent）。</p>
+<p>Cohen 为此发明了 <strong>forcing（强迫法）</strong>——一种"强行造出更丰富模型"的技术，让"存在中间层"成为可能。这是 20 世纪数理逻辑最伟大的技术发明，Cohen 因此获 1966 年 Fields 奖。</p>
+<p><strong>前沿：Woodin 的终极-L 纲领。</strong> Woodin（2010s）提出"Ultimate L"——一个可能包含所有大基数的可构成宇宙。如果成功——连续统假设在 Ultimate L 中为真。这可能是 Gödel 纲领的最终实现。仍开放：Ultimate L 的存在性和唯一性。</p>
+<div class="key-insight">连续统假设的"既不能证明也不能否证"是数学里最让人不安的结论之一：它意味着集合论的公理<strong>没把问题说死</strong>，留下了两种"平行世界"都能成立的空间。</div>
+</section>
+
+<section>
+<h3>第8章　选择公理——数学基础设施中最有争议的一条</h3>
+<p>第 4 章的"C"就是选择公理（Choice）：给你一袋非空的集合，你能从每个集合里<strong>各挑一个元素</strong>，组成一个新集合。听起来理所当然——但仔细想：如果袋子有无限多个、每个又大得没法指明规则，你"怎么选"？</p>
+<p><strong>争议的根源</strong>：它是唯一一条"保证存在、却不告诉你怎么构造"的公理。它的反面也逻辑自洽（存在不满足 AC 的集合论宇宙），所以数学家分裂成"用 AC"和"拒绝 AC"两派。</p>
+<p><strong>用 AC 会得到这些看似"显然"的结果</strong>（其实都依赖 AC）：Zorn 引理、良序定理、Tychonoff 定理（任意紧致空间的积紧致）、<strong>每个向量空间有基</strong>。没有 AC：Hahn-Banach 可能不成立、存在没有基的向量空间。</p>
+<p><strong>AC 也有惊人后果</strong>：Banach-Tarski 悖论——单位球可以分成五块，仅通过旋转和平移重组成<strong>两个</strong>大小一样的单位球。这违反物理直觉，但它是"不可测集合存在"的戏剧性展示（那些切出来的块，体积根本没法定义）。</p>
+<p><strong>定理（ZF 内）。</strong> 下列命题彼此等价：(i) 选择公理 AC；(ii) 良序原理（每个集合可被良序）；(iii) Zorn 引理（偏序集中每个链有上界 ⟹ 有极大元）。</p>
+<p><strong>证明概要（三个方向）。</strong></p>
+<p><strong>AC ⟹ 良序原理。</strong> 设 X 为集合，取选择函数 c: P(X)\{∅}→X（c(A)∈A）。沿序数做超限递归：若 X∖{x_β:β&lt;α}≠∅，令 x_α=c(X∖{x_β:β&lt;α})。由替换公理，过程必在某序数 α₀ 终止（否则全体序数都嵌入 P(X)，矛盾于 Hartogs 数），得良序 (x_β)_{β&lt;α₀}。</p>
+<p><strong>良序原理 ⟹ Zorn。</strong> 设 (P,≤) 每链有上界。给 P 一个良序，沿良序做超限递归逐步选入元素，保证每步"不被已选元素阻塞"；因链有上界，递归终点给出极大元（否则可继续选）。</p>
+<p><strong>Zorn ⟹ AC。</strong> 对族 {X_i}_{i∈I}，考察部分选择函数 f（定义域 I′⊆I，f(i)∈X_i），按包含偏序。每链的上界是其并（仍为部分选择函数）。由 Zorn 得极大元 f_max；若定义域≠I，取 i∉dom f_max 并扩展 f_max∪{(i,x)}（x∈X_i）得更大元素，矛盾。故 f_max 是全选择函数。∎</p>
+<div class="formula display" data-tex="\text{AC} \iff \text{良序原理} \iff \text{Zorn 引理} \iff \text{Tychonoff 定理}"></div>
+<p>三方向均在 ZF 内可证；"哪一步悄悄用了选择"是分析证明的必备技能。</p>
+<div class="key-insight">选择公理是"能选但说不清怎么选"的数学化身。接受它，数学变得好用但偶尔反直觉；拒绝它，数学变干净但很多工具失效。</div>
+</section>
+<section>
+<h3>第9章　关键公式与可测基数</h3>
+<div class="formula display" data-tex="|\mathcal{P}(X)| > |X|\quad\text{(Cantor)}"></div>
+<div class="formula display" data-tex="2^{\aleph_0} = \aleph_1?\quad\text{(CH — 独立于ZFC)}"></div>
+<div class="formula display" data-tex="\text{AC} \iff \text{Zorn} \iff \text{良序} \iff \text{Tychonoff}"></div>
+<p><strong>可测基数与大基数层级。</strong> 可测基数 = 存在非平凡可数可加的二值测度的基数。存在可测基数 → ZFC 一致但 V≠L（可构成宇宙）。大基数公理构成一致性强度的线性层级——从不达到、可测、到巨大、到 Woodin 基数。每个新的大基数公理"解决"更多独立于 ZFC 的问题。</p>
+</section>
+
+<section>
+<h3>第10章　反例——不可数集构造与秩函数</h3>
+<p>反例不是"反面教材"，而是定义和定理的边界线。它们告诉你：哪些直觉在无穷世界里会失效。</p>
+<p><strong>反例 1：测度零却不可数。</strong> 康托尔三分集 C⊂[0,1]：反复"去掉中段开区间"后剩余。|C|=2^ℵ₀ 不可数，但 Lebesgue 测度为零——打破"大小=测度"的直觉。</p>
+<p><strong>反例 2：秩函数的良定义。</strong> 冯诺依曼序数 rank(α)=α。一般集合的秩递归定义为</p>
+<div class="formula display" data-tex="\operatorname{rank}(x)=\sup\{\operatorname{rank}(y)+1 : y\in x\}"></div>
+<p>故 rank(∅)=0, rank({∅})=1, rank({ℕ})=ω+1（因 rank(ℕ)=ω）。正则公理（∈ 良基）保证该递归合法——没有正则公理，秩可能无定义，这是秩作为"集合的建造层数"的严格依据。</p>
+<p><strong>反例 3：可数性的反直觉。</strong> ℤ、ℚ 均可数（Cantor 之对角线编列给出双射 ℚ→ℕ），尽管 ℚ 在 ℝ 中稠密。可数性依赖"存在双射"而非"几何大小"。</p>
+<p><strong>反例 4：</strong> 贝尔空间 ℕ^ℕ 与康托尔空间 2^ℕ 均与 ℝ 等势（基数 2^ℵ₀），且 ℕ^ℕ 同胚于无理数空间 ℝ∖ℚ——同基数的不可数集可有完全不同的拓扑结构。</p>
+</section>
+
+<section>
+<h3>第11章　工作题——判断基数与构造双射（带提示）</h3>
+<p><strong>工作题 1（判断基数）。</strong> 判断基数：(a) {0,1}^*（有限二元串全体）；(b) {0,1}^ℕ；(c) ℤ^ℕ；(d) ℝ^ℕ。</p>
+<details><summary>试试看的提示</summary><p>(a) 有限二元串全体是可数多个有限集的并（第 n 层有 2ⁿ 个串）；(b) 特征函数 ↔ 子集（回忆 P(ℕ)）；(c) ℤ 和 ℕ 一样可数；(d) 用 (b) 和指数律 (2^ℵ₀)^ℵ₀ = 2^(ℵ₀·ℵ₀) = 2^ℵ₀。</p></details>
+<details><summary>显示解答</summary><p>
+(a) 可数：{0,1}^* = ∪_n {0,1}^n，可数并仍可数，基数 ℵ₀。<br>
+(b) 连续统：{0,1}^ℕ 与 P(ℕ) 双射（子集↔特征函数），基数 2^ℵ₀。<br>
+(c) 连续统：ℤ^ℕ ≅ ℕ^ℕ ≅ 2^ℵ₀（二进制编码/对角线），基数 2^ℵ₀。<br>
+(d) 仍为 2^ℵ₀：ℝ^ℕ ≅ (2^ℵ₀)^ℵ₀ = 2^(ℵ₀·ℵ₀) = 2^ℵ₀。</p></details>
+<p><strong>工作题 2（构造双射）。</strong> 构造显式双射：(a) ℚ→ℕ；(b) (0,1)→ℝ；(c) ℕ×ℕ→ℕ。</p>
+<details><summary>试试看的提示</summary><p>(a) 按"分子分母绝对值之和"分层，每层内编号，只取既约分数；(b) 想想哪个函数把 (0,1) 映满全实轴——正切；(c) Cantor 配对函数：按 m+n 分层、同层按 m 递增。</p></details>
+<details><summary>显示解答</summary><p>
+(a) 按"分子分母绝对值之和"分层，每层内按序编号，只取既约分数，逐层不重复地编完所有有理数。<br>
+(b) f(x)=tan(π(x−1/2))：把 (0,1) 拉伸到 (−π/2,π/2) 再由正切映到 ℝ，双射。<br>
+(c) Cantor 配对函数 p(m,n)=(m+n)(m+n+1)/2+m：按 m+n 逐层、同层按 m 递增编号，是 ℕ×ℕ→ℕ 的双射。</p></details>
+<p><strong>工作题 3（对角线变体）。</strong> 用对角线法证明：不存在从 ℕ 到 {f:ℕ→{0,1}} 的满射。</p>
+<details><summary>试试看的提示</summary><p>反设枚举 f₀,f₁,f₂,…。构造 g(n)=1−f_n(n)。g 和每个 f_n 在第 n 位都不同。</p></details>
+<details><summary>显示解答</summary><p>
+反设 f₀,f₁,f₂,… 枚举了全部 {0,1}-值函数。构造 g(n)=1−f_n(n)（翻转第 n 个函数在 n 处的值）。g 是 {0,1}-值函数，但对每个 n 有 g(n)≠f_n(n)，故 g≠f_n 对一切 n——g 不在枚举中，矛盾。此"翻转对角线"是 Cantor 法的标准变体。</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>P. Halmos, Naive Set Theory</strong>（大一友好、不到百页）</p>
+<p>&rarr; <strong>K. Kunen, Set Theory: An Introduction to Independence Proofs</strong></p>
+<p>&rarr; <strong>Jech, Set Theory</strong>（研究生标准教材）</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <strong>实分析</strong>：集合的基数和序型为分析学提供了严格的基础——实数构造（Dedekind分割、Cauchy序列）都建立在集合论之上，不可数性和测度论直接相通。</p>
+<p>&rarr; <strong>Gödel 不完备</strong>：连续统假设的独立性直接启发了不完备性证明的方向——Gödel证明了CH不能从ZFC被否证，Cohen用forcing法证明了CH也不能被证明。</p>
+<p>&rarr; <strong>证明论</strong>：Gentzen用序数分析证明了PA的一致性——序数是集合论的核心概念，而证明论正是将"证明"本身作为数学对象来研究。</p>
+<p>&rarr; <strong>伴随函子</strong>：集合范畴Set是范畴论的逻辑基础——Yoneda引理、极限和余极限、Topos理论都从Set出发做范畴化推广。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/set-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

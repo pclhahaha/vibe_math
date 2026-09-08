@@ -1,0 +1,186 @@
+<section>
+<h3>〇、开场问题——"无穷多个坐标"的向量，怎么算长度？</h3>
+<p>平面向量 (1,2) 的长度是 √5，你一眼会算。现在看这个"无穷坐标"的向量：</p>
+<div class="formula display" data-tex="x=\Big(1,\ \frac12,\ \frac13,\ \frac14,\ \frac15,\ \ldots\Big)."></div>
+<p>它该有多长？最自然的答案是把"勾股定理"推广到无穷项：</p>
+<div class="formula display" data-tex="\|x\|_2=\sqrt{\sum_{n=1}^{\infty}\frac{1}{n^2}}=\sqrt{\frac{\pi^2}{6}}\approx 1.28."></div>
+<p>这个数收敛（Euler：Σ1/n² = π²/6），所以 x 是"有限长"的——它属于 ℓ² 空间。可要是改用另一种"长度"：</p>
+<div class="formula display" data-tex="\|x\|_1=\sum_{n=1}^{\infty}\frac{1}{n}=\infty\qquad(\text{调和级数发散})."></div>
+<p>同一个向量 x，在 ℓ² 的度量下"身长 1.28"，在 ℓ¹ 的度量下"身长无穷"——<strong>结论完全颠倒。</strong>这就是无穷维与有限维的第一个本质区别：<strong>有限维里所有"长度"都等价，无穷维里"长度"的选择决定一切。</strong></p>
+<p>函数也一样。f(x)=x² 在 [0,1] 上，用"最高点"量：‖f‖_∞ = 1；用"能量"量：‖f‖₂ = √(∫₀¹ x⁴ dx) = 1/√5 ≈ 0.447。函数不是"一堆数"，而是一个"点"——这正是泛函分析的核心视角。</p>
+<div class="key-insight">泛函分析 = 无穷维线性代数：把函数、序列当成"点"，用几何（长度、角度、距离）研究它们。只懂核心思想？看到这里就够了：无穷维里"长度"的定义是关键，而要用的"长度"必须满足三条规矩——正定、数乘、三角不等式，见第一节。</div>
+</section>
+
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/real-analysis.html">实分析</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、开场问题」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、赋范空间：把"长度"公理化</h3>
+<p>先回答最根本的问题：<strong>凭什么给函数"量长度"？</strong>因为"长度"只要守三条规矩，就能像真长度一样用。设 X 是线性空间（向量能加、能乘数），函数 ‖·‖: X→[0,∞) 叫<strong>范数</strong>，若：</p>
+<ul>
+<li><strong>正定性：</strong>‖x‖=0 ⟺ x=0（只有零向量长度为零）；</li>
+<li><strong>齐次性：</strong>‖cx‖=|c|‖x‖（放大 c 倍，长度放大 |c| 倍）；</li>
+<li><strong>三角不等式：</strong>‖x+y‖ ≤ ‖x‖+‖y‖（两边之和至少第三边）。</li>
+</ul>
+<p>（X, ‖·‖）就叫<strong>赋范空间</strong>。第三条"为什么重要"？因为它保证由 d(x,y)=‖x−y‖ 定义的<strong>距离</strong>真的是距离——没有它，极限就失去意义。</p>
+<p><strong>例 1（一步步算：验证 ℓ² 范数 + 具体计算）。</strong>ℓ² = {x=(xₙ) : Σ|xₙ|²&lt;∞}，范数 ‖x‖₂ = (Σ|xₙ|²)^{1/2}。验证 x=(1,1/2,1/3,…) 属于 ℓ² 并算范数：</p>
+<p>① <strong>有限性：</strong>‖x‖₂² = Σ_{n≥1}1/n² = π²/6 &lt; ∞，故 x∈ℓ²。</p>
+<p>② <strong>正定/齐次：</strong>显然。① <strong>三角不等式：</strong>由 Cauchy-Schwarz（见例 3 的推广），‖x+y‖₂² = ‖x‖₂²+‖y‖₂²+2Re⟨x,y⟩ ≤ (‖x‖₂+‖y‖₂)²。故 ℓ² 是真赋范空间，‖x‖₂ = π/√6。∎</p>
+<p><strong>例 2（函数空间的三个范数）。</strong>同一个空间 C[0,1]（连续函数）可以有不同范数：sup 范数 ‖f‖_∞=sup|f(x)|（"最高点"），L¹ 范数 ‖f‖₁=∫|f|（"面积"），L² 范数 ‖f‖₂=(∫f²)^{1/2}（"能量"）。f(x)=x² 的三种长度：‖f‖_∞=1、‖f‖₁=1/3、‖f‖₂=1/√5≈0.447。同一个函数三副面孔，<strong>选哪个范数，就是选哪种逼近标准</strong>——这正是"为什么泛函分析里收敛概念多"的根源：sup 收敛要求整条曲线同时贴近，L² 收敛只要求整体能量贴近。</p>
+</section>
+
+<section>
+<h3>二、完备性：Banach 与 Hilbert 空间——为什么分析要"没洞"</h3>
+<p>光有范数还不够。回顾实分析（<a href="/pages/real-analysis.html">实数完备性</a>）：序列自己内部越来越挤（柯西），极限未必存在——有理数里有"洞"。赋范空间同样有洞：</p>
+<div class="formula display" data-tex="\mathbb{Q}^2\subset\mathbb{R}^2:\quad \text{向量}(1,1.4,1.41,\ldots)\text{ 在 }\mathbb{Q}^2\text{ 里柯西，却没有落点}."></div>
+<p>无穷维里洞更多也更隐蔽，所以分析必须住在"没洞"的空间里。</p>
+<p><strong>定义（Banach / Hilbert 空间）。</strong>若 X 的<strong>每个柯西列都收敛</strong>（极限仍在 X 中），称 X 为 <strong>Banach 空间</strong>（完备赋范空间）。若范数还来自<strong>内积</strong> ⟨·,·⟩（‖x‖²=⟨x,x⟩，能谈"角度""正交"），则叫 <strong>Hilbert 空间</strong>（完备内积空间）。</p>
+<p>两者的关系是"梯形"：内积 ⊂ 范数；Hilbert ⊂ Banach。为什么需要 Hilbert？因为有正交——能"投影"、有最佳逼近、有正交基，这些是量子力学和逼近论的核心。</p>
+<p><strong>例 3（一步步算：Cauchy-Schwarz 与内积空间判定）。</strong>在 ℓ² 上验证 ⟨x,y⟩=Σxₙȳₙ 是内积，并证明关键不等式。对任意 λ∈ℂ，‖x+λy‖₂² ≥ 0 展开，取 λ=−⟨x,y⟩/‖y‖₂²（y≠0）消去交叉项，得到</p>
+<div class="formula display" data-tex="|\langle x,y\rangle|\le\|x\|_2\|y\|_2\qquad(\text{Cauchy-Schwarz})."></div>
+<p>它解释了"角度"何以可能：|cosθ| = |⟨x,y⟩|/(‖x‖‖y‖) ≤ 1 永不越界。∎ 完备性（Riesz-Fischer：L²/ℓ² 中柯西列收敛）是测度论里积分论的直接果实——见 <a href="/pages/measure-theory.html">测度论</a> 附：从 Riemann 到 Lebesgue。</p>
+</section>
+
+<section>
+<h3>三、线性算子：无穷维的"矩阵"</h3>
+<p>矩阵是把有限维向量送到有限维向量的线性映射；<strong>算子（operator）</strong>把无穷维空间送到无穷维空间。算子的"大小"用<strong>算子范数</strong>衡量：</p>
+<div class="formula display" data-tex="\|T\|=\sup_{\|x\|\le 1}\|Tx\|=\sup_{x\ne0}\frac{\|Tx\|}{\|x\|}."></div>
+<p>‖T‖&lt;∞ 的线性算子叫<strong>有界算子</strong>。一个关键事实：<strong>在线性算子身上，"有界"与"连续"是同一回事</strong>（‖Tx−Ty‖=‖T(x−y)‖≤‖T‖‖x−y‖；反过来连续可推有界）。这回答了"为什么算子的连续性问题不多讲"——有界就连续。</p>
+<p><strong>例 4（一步步算：对角算子范数 = 1）。</strong>T:ℓ¹→ℓ¹，(Tx)ₙ = xₙ/n。</p>
+<p>① <strong>上界：</strong>‖Tx‖₁ = Σ|xₙ|/n ≤ Σ|xₙ| = ‖x‖₁，故 ‖T‖ ≤ 1。</p>
+<p>② <strong>下界（找一个省不掉的点）：</strong>取 x=e₁=(1,0,0,…)，‖e₁‖₁=1，而 Te₁=(1,0,…)，‖Te₁‖₁=1。故 ‖T‖ ≥ 1。</p>
+<p>③ 合起来 ‖T‖ = 1。∎ 套路：<strong>先三角不等式给上界，再用一个"测试向量"（往往是基向量）顶出下界。</strong></p>
+<p><strong>例 5（一步步算：积分算子的范数 = 1）。</strong>V:C[0,1]→C[0,1]，(Vf)(x)=∫₀^x f(t)dt。</p>
+<p>① <strong>上界：</strong>|(Vf)(x)| ≤ ∫₀^x |f(t)|dt ≤ ‖f‖_∞·x ≤ ‖f‖_∞，故 ‖V‖ ≤ 1。</p>
+<p>② <strong>下界：</strong>取 f≡1，则 (V1)(x)=x，‖V1‖_∞ = sup_{x∈[0,1]} x = 1 = ‖1‖_∞。故 ‖V‖ ≥ 1。</p>
+<p>③ 合起来 ‖V‖ = 1。∎ 这个 V 是经典 Volterra 积分算子，它的谱会在紧算子一节再登场。</p>
+<p><strong>为什么有界性在无穷维里值得大书特书？</strong>因为<strong>无穷维线性映射可以无界</strong>——这是与"矩阵总有界"的致命区别。例：D:C¹[0,1]→C[0,1]，Df=f′。取 fₙ(x)=sin(2πnx)，‖fₙ‖_∞=1 但 ‖Dfₙ‖_∞=2πn→∞。无界算子照样出现（微分是量子力学动量算符的核心），但它们不能当"连续对象"直接用——这正是分布论与自伴算子理论的用武之地。</p>
+</section>
+
+<section>
+<h3>四、三大支柱定理：泛函分析的"宪法"</h3>
+<p>整个学科有三大支柱，它们回答三件看似平凡、实则决定一切的事：<strong>能不能造泛函？有没有自动连续？逆是否自动连续？</strong></p>
+<p><strong>① Hahn-Banach（延拓定理）。</strong>在子空间 Y 上有界线性泛函 f:Y→ℝ（‖f‖&lt;∞），总能<strong>保范延拓</strong>到全空间 X。直觉：一个小范围的"尺子"能无损地扩大成全空间的"尺子"。它由 Zorn 引理证明（见附），直接后果是 X*（对偶空间）极其丰富——对任意 x₀≠0 都存在 x*∈X* 使 x*(x₀)=‖x₀‖ 且 ‖x*‖=1（支撑泛函，见工作题 3）。这是凸分析分离定理的起点。</p>
+<p><strong>② 一致有界原理（Banach-Steinhaus）。</strong>一族算子 {T_α} 若在每个点 x 上都逐点有界（sup_α‖T_αx‖&lt;∞），则<strong>整体一致有界</strong>（sup_α‖T_α‖&lt;∞）。"逐点有界 ⟹ 一致有界"——由 Baire 类别定理一把证出。大白话：<strong>连续就是输入微调、输出也跟着微调、不突然跳变</strong>；该定理说，无穷多个连续映射"在每个点都不爆"，就"处处都不爆"。它的价值：很多结论（傅里叶部分和发散、插值算子的无界性）都靠"若不一致有界，则某点爆掉"的反证。</p>
+<p><strong>③ 开映射定理（含闭图像定理）。</strong>Banach 空间之间的连续线性满射 T:X→Y 是<strong>开映射</strong>（开集映到开集）；于是<strong>连续线性双射的逆自动连续</strong>。"逆自动连续"——在无穷维里这不是免费的，完备性换来的。闭图像定理说：闭图 ⊂ 连续（若 T 的图是闭集，T 自动连续），这是"检查连续"最省事的工具。</p>
+<div class="key-insight">三大支柱定理支撑整个泛函分析：①Hahn-Banach(线性泛函可延拓→凸分析基石)②Banach-Steinhaus(逐点有界⇒一致有界→"自动连续性")③开映射定理(连续线性双射⇒逆自动连续)。<strong>三条都依赖完备性</strong>——这是"为什么必须住进 Banach/Hilbert 空间"最实在的回答。</div>
+</section>
+
+<section>
+<h3>五、对偶空间与弱收敛——"测"向量的另一种方式</h3>
+<p>把全空间 X 上的有界线性泛函收集起来，得到<strong>对偶空间</strong> X* = 𝔅(X,ℂ)。对偶是"探针"：x 和 y 是否不同？用所有探针去测 x*(x)≠x*(y)（Hahn-Banach 保证探针足够多，能分离任意两点）。于是有了新的收敛观念：</p>
+<p><strong>弱收敛</strong>：xₙ ⇀ x ⟺ 对所有 x*∈X*，x*(xₙ)→x*(x)。它比强收敛（‖xₙ−x‖→0）宽松，因为只要求"每个方向上的投影"都收敛，不要求整体距离收敛。<strong>为什么需要这么多种收敛？</strong>因为无穷维里强收敛太苛刻——很多自然出现的序列（如正交基在 0 处"摊开"）只有弱收敛。测度论中 e^{inx} 弱收敛于 0 而不强收敛，正是同一个故事的傅里叶版。</p>
+<p><strong>例 6（一步步算：ℓ² 中强、弱收敛的对照）。</strong>在 ℓ² 中取 eₙ（第 n 个坐标 1，其余 0）。① <strong>弱收敛到 0：</strong>对任意 y=(yₙ)∈ℓ² ≅ (ℓ²)*，⟨eₙ,y⟩=yₙ→0（yₙ 是收敛级数 Σ|yₙ|² 的通项，必趋于 0）。② <strong>不强收敛：</strong>‖eₙ−0‖₂=1 不趋于 0。∎ 于是 (eₙ) 是"弱收敛不强收敛"的活标本——这种序列在紧算子理论里恰恰是特征向量的典型行为。</p>
+<p><strong>常见对偶（都算得出来）：</strong>(c₀)* ≅ ℓ¹，⟨x*,x⟩=Σaₙxₙ；(ℓ¹)* ≅ ℓ^∞；Riesz 表示定理给出 (ℓ²)* ≅ ℓ²（每个泛函由一个序列用内积表示）。注意 (c₀)*=ℓ¹ 但 ℓ^∞ 自身的对偶 ⊋ ℓ¹——需要推广的有限可加积分（大白话：积分就是把无穷多小份贡献加总起来，是求和的连续版）。</p>
+</section>
+
+<section>
+<h3>六、紧算子与谱：无穷维线性代数的核心</h3>
+<p>无穷维空间上的算子太多、太野，值得盯住一类"最像矩阵"的算子——<strong>紧算子</strong>。定义：T 把有界集映成相对紧集（其闭包紧）。直觉：<strong>T 在某种程度上"忘记"了无穷维——把"无限个自由度"压缩成"几乎有限"的输出。</strong></p>
+<p><strong>Fredholm 择一性。</strong>对紧 T、λ≠0：要么 (T−λI) 可逆，要么有非零核——<strong>没有第三种可能</strong>。这和有限维中 det(A−λI)≠0 ⟺ A−λI 可逆完全类似。Fredholm 指标 ind(T)=dim ker−dim coker 在同伦下不变——这是 Atiyah-Singer 指标定理的雏形。</p>
+<p><strong>紧致自伴算子的谱定理。</strong>T 紧 + T 自伴（⟨Tx,y⟩=⟨x,Ty⟩）⟹ 存在 H 的正交基 {eₙ} 和实数 λₙ→0 使得</p>
+<div class="formula display" data-tex="T=\sum\lambda_n\langle\cdot,e_n\rangle e_n."></div>
+<p>非零谱全是特征值，特征空间有限维。这和对称矩阵的 QΛQᵀ 完全一致——只是维数变成无穷。量子力学中束缚态能谱就是这个定理的直接应用。</p>
+<p><strong>例 7（一步步算：紧算子的谱长什么样）。</strong>取对角算子 T:ℓ²→ℓ²，Teₙ = (1/n)eₙ。它紧（对角项 →0 的对角算子总是紧的）。求谱 σ(T)：</p>
+<p>① <strong>非零特征值：</strong>对每个 n，Teₙ=(1/n)eₙ，故 1/n 是特征值，特征向量 eₙ。</p>
+<p>② <strong>0 不是特征值：</strong>若 Tx=0 则 xₙ/n=0 对一切 n，故 x=0，ker T={0}，T 单射。</p>
+<p>③ <strong>0 却在谱里：</strong>T 的逆若是算子，应满足 T⁻¹eₙ = n eₙ，但 sup‖T⁻¹eₙ‖/‖eₙ‖=n→∞，逆无界，T 不可逆。故 0∈σ(T) 但 0∉σ_p(T)。</p>
+<p>④ 于是 σ(T) = {0} ∪ {1/n : n≥1}。∎</p>
+<p>这个例子浓缩了紧算子的全部谱特征：<strong>可数个谱点、唯一聚点 0、0 是谱点却不是特征值</strong>。对照有限维：对称矩阵的谱是有限特征值集、无聚点。</p>
+<p><strong>为什么谱理论对物理那么重要？</strong>能量算符（Hamiltonian）的谱 = 可观测能量值；束缚态 = 特征值（例 7 里 1/n），散射态 = 连续谱（0）。紧自伴算子给出"离散的、可数的一套能量"——这就是原子光谱离散化的数学源头，详见 <a href="/pages/spectral-theorem.html">谱定理课</a> 与 <a href="/pages/hydrogen-atom.html">氢原子课</a>。</p>
+</section>
+
+<section>
+<h3>七、关键公式</h3>
+<div class="formula display" data-tex="\|x\|_2=\Big(\sum|x_n|^2\Big)^{1/2},\quad \|f\|_\infty=\sup|f|,\quad \|f\|_2=\Big(\int|f|^2\Big)^{1/2}"></div>
+<div class="formula display" data-tex="|\langle x,y\rangle|\le\|x\|\,\|y\|\quad\text{(Cauchy-Schwarz)}"></div>
+<div class="formula display" data-tex="\|T\|=\sup_{\|x\|\le1}\|Tx\|,\qquad \text{有界}\iff\text{连续}"></div>
+<div class="formula display" data-tex="\sup_\alpha\|T_\alpha x\|<\infty\ \forall x\in X\ \Longrightarrow\ \sup_\alpha\|T_\alpha\|<\infty\quad\text{(一致有界原理)}"></div>
+<div class="formula display" data-tex="T=\sum\lambda_n\langle\cdot,e_n\rangle e_n\quad\text{(紧致自伴谱定理)}"></div>
+<div class="formula display" data-tex="(c_0)^*\cong\ell^1,\qquad(\ell^1)^*\cong\ell^\infty,\qquad(\ell^2)^*\cong\ell^2"></div>
+</section>
+
+<section>
+<h3>八、试试看（每题附提示）</h3>
+<p><strong>1. 计算范数。</strong>求 x=(1, −1/2, 1/3, −1/4, …) 在 ℓ² 与 ℓ¹ 中的范数。</p>
+<p><em>提示：‖x‖₂² = Σ1/n² = π²/6；‖x‖₁ = Σ1/n = ∞。与〇节的结论对照：这个向量在 ℓ² 里"有限长"，在 ℓ¹ 里"无限长"。</em></p>
+<p><strong>2. 验证范数。</strong>证明 ‖x‖_∞ = maxₙ|xₙ| 是 ℓ^∞ 上的范数。</p>
+<p><em>提示：三条公理逐条验。关键是三角不等式：|xₙ+yₙ| ≤ |xₙ|+|yₙ| ≤ ‖x‖_∞+‖y‖_∞，对 n 取 sup 即得。</em></p>
+<p><strong>3. 算算子范数。</strong>求 S:ℓ²→ℓ²，(Sx)ₙ = xₙ/2ⁿ 的范数。</p>
+<p><em>提示：|xₙ|/2ⁿ ≤ |xₙ|，故 ‖S‖ ≤ 1；取 x=e₁ 得 ‖Se₁‖=1，故 ‖S‖=1。若把 2ⁿ 换成 n，则 sup|1/n| 在 x=eₙ 上趋于……请对比思考：为什么这里仍能取到 1。</em></p>
+<p><strong>4. 弱收敛 vs 强收敛。</strong>在 ℓ^∞ 中，序列 sₙ=(1,1,…,1,0,0,…)（前 n 项为 1）是否强收敛？是否弱收敛？</p>
+<p><em>提示：‖sₙ−sₘ‖_∞=1 不趋于 0，故不强收敛（连柯西都不是）。但 sₙ 逐坐标收敛到 (1,1,1,…)：弱收敛的判断要小心——(ℓ^∞)* 大于 ℓ¹，需用 "逐坐标收敛" 之外的工具；可先用 (c₀)*=ℓ¹ 的探针检查在 c₀ 上弱*收敛。</em></p>
+<p><strong>5. 紧算子的特征值。</strong>说明 T:ℓ²→ℓ²，Teₙ=eₙ/n 的每个特征值 1/n 是"孤立"的（有开邻域不含其他谱点），而 0 不是孤立的。</p>
+<p><em>提示：{1/n} 中任意一点 1/n 到其他谱点的距离 &gt; 0（除有限个近邻外），故孤立；但 0 是 {1/n} 的聚点，任何含 0 的开邻域都含无限多个 1/n。</em></p>
+<p><strong>6. 闭图像定理的应用。</strong>为什么"线性映射的图是闭的"比"连续"更容易验证？给一个直觉解释。</p>
+<p><em>提示：连续要求"对每个输入 x 的所有逼近列"都保持极限，工作量大；闭图只要求"恰好极限存在的列"极限也落在图里。很多算子（如微分算子在恰当定义域上）图天然闭，闭图像定理立刻送给你连续性。</em></p>
+</section>
+
+<section>
+<h3>附：定理证明——一致有界原理（Banach-Steinhaus）</h3>
+<p><strong>陈述。</strong>X 是 Banach 空间，Y 是赋范空间，{T_α}⊂𝔅(X,Y)。若对每个 x∈X 有 sup_α‖T_αx‖ &lt; ∞（逐点有界），则 sup_α‖T_α‖ &lt; ∞（一致有界）。</p>
+<p><strong>证明。</strong>对 n∈ℕ 令</p>
+<div class="formula display" data-tex="E_n=\bigcap_{\alpha}\{x\in X : \|T_\alpha x\|\le n\}."></div>
+<p>每个 Eₙ 是闭集（T_α 连续），且由逐点有界 X = ∪ₙ Eₙ。Baire 类别定理 ⇒ 存在 n₀ 与 x₀、r&gt;0 使 B(x₀,r) ⊂ E_{n₀}。于是对所有 α 与 ‖z‖≤1：</p>
+<div class="formula display" data-tex="\|T_\alpha z\|\le \frac{\|T_\alpha(x_0+rz)\|+\|T_\alpha x_0\|}{r}\le \frac{2n_0}{r}."></div>
+<p>故 sup_α‖T_α‖ ≤ 2n₀/r &lt; ∞。∎</p>
+<div class="key-insight">三条应用：①逐点收敛的有界线性算子列之极限仍是连续线性算子；②傅里叶部分和算子 S_N 在 C[0,2π] 上范数 ~ log N → ∞，故存在连续函数的傅里叶级数在某点发散（du Bois-Reymond 反例的抽象证明）；③"逐点有界集合 = 算子有界集合"即共鸣定理。</div>
+</section>
+
+<section>
+<h3>附：定理证明——开映射定理</h3>
+<p><strong>陈述。</strong>X、Y 是 Banach 空间，T∈𝔅(X,Y) 是满射。则 T 是开映射：对任意开集 U⊂X，T(U)⊂Y 开。特别地，若 T 还是单射（双射），则 T⁻¹ 连续，即"双射 ⇒ 同构"。<strong>完备性不可去掉</strong>（见反例节）。</p>
+<p><strong>证明。</strong></p>
+<p>① <strong>Baire 类别定理。</strong>记 B = B_X(0,1) 为单位开球。T 满射 ⇒ X = ∪ₙ nB ⇒ Y = ∪ₙ n·T(B)。每个 n·T(B) 的闭包都是闭集；Baire 定理（完备度量空间不能是稠密无处集的可数并）给出某个 n 使 \overline{T(B)} 含内点：存在 δ&gt;0 与 y₀ 使 B_Y(y₀,δ) ⊂ \overline{T(B)}。</p>
+<p>② <strong>从闭包到包含。</strong>由 ① 得 B_Y(0,δ) ⊂ \overline{T(B)}。用完备性强化为真包含：取 y∈B_Y(0,δ)，因 y∈\overline{T(B)} 可取 x₁∈B 使 ‖y−Tx₁‖&lt;δ/2；令 y₁=y−Tx₁∈B_Y(0,δ/2)⊂T(B/2)，取 x₂∈B/2 使 ‖y₁−Tx₂‖&lt;δ/4；归纳得 xₙ∈B/2ⁿ⁻¹ 且 Σ‖xₙ‖&lt;2。由 X 完备，x=Σxₙ 收敛且 y=Tx。故 B_Y(0,δ) ⊂ T(B(0,2))，即 B_Y(0,δ/2) ⊂ T(B_X(0,1))。</p>
+<p>③ <strong>开性。</strong>对任意 x₀、r&gt;0：T(B(x₀,r)) = Tx₀ + T(B(0,r)) ⊇ B(Tx₀, rδ/2)。故 T 把开球映为含内点之集，T 是开映射；双射情形下 T⁻¹ 连续。∎</p>
+</section>
+
+<section>
+<h3>附：定理证明——Hahn-Banach 延拓定理（Zorn 引理）</h3>
+<p><strong>陈述（实范数版本）。</strong>设 X 是实赋范空间，Y⊂X 是子空间，f:Y→ℝ 是有界线性泛函。则存在有界线性泛函 F:X→ℝ 使 F|_Y = f 且 ‖F‖ = ‖f‖。更一般地，对任意次线性泛函 p（p(x+y)≤p(x)+p(y)，p(tx)=tp(x) 对 t≥0），只要 f(y) ≤ p(y) 于 Y，就存在 F 延拓 f 且 F(x)≤p(x) 于 X。</p>
+<p><strong>证明。</strong></p>
+<p>① <strong>单步延拓。</strong>设 y₀ ∉ Y，Z = Y + ℝy₀。要延拓 f 到 Z，只需选实数 c 定义 F(y+ty₀) = f(y) + tc。条件 F ≤ p 要求：t&gt;0 时 c ≤ (p(y+ty₀)−f(y))/t，t&lt;0 时 c ≥ (f(y)−p(y+ty₀))/(−t)。由次可加性与正齐性可验证 sup ≤ inf（上确界不超过下确界）：</p>
+<div class="formula display" data-tex="\sup_{y\in Y}\big[f(y)-p(y-y_0)\big]\le c\le \inf_{y\in Y}\big[p(y+y_0)-f(y)\big]."></div>
+<p>故这样的 c 存在，单步延拓完成。</p>
+<p>② <strong>Zorn 化。</strong>令 𝒫 = {(E,g) : Y⊂E⊂X 子空间，g 是 f 的延拓且 g≤p 于 E}，按 (E₁,g₁) ⪯ (E₂,g₂) ⟺ E₁⊂E₂ 且 g₂ 延拓 g₁ 定义偏序。任何全序子链——大白话：链就是偏序里一串"一个能比过下一个"、首尾相接排下去的元素列（像珠串），这里是不断变大、互相包含的延拓串——{(E_α,g_α)} 有上界 (∪_αE_α, ∪_αg_α)，因为并集仍是子空间。由 Zorn 引理，𝒫 有极大元 (Ē, ḡ)。</p>
+<p>③ <strong>极大 ⇒ 全空间。</strong>若 Ē ≠ X，取 x₀ ∈ X∖Ē，由①可把 ḡ 真延拓到 Ē + ℝx₀，与极大性矛盾。故 Ē = X，F = ḡ。</p>
+<p>④ <strong>保范。</strong>取 p(x) = ‖f‖·‖x‖，则 |F(x)| ≤ p(x) = ‖f‖‖x‖，故 ‖F‖ ≤ ‖f‖；反向由延拓性自动成立。复情形以实部 Re F 化归实泛函再还原。∎</p>
+<div class="key-insight">Hahn-Banach 是 Zorn 引理（选择公理）的第一个重大分析后果：X* 极其丰富——对任意 x₀≠0 存在 x*∈X* 使 x*(x₀) = ‖x₀‖，这是分离定理与凸分析支撑面定理的起点。</div>
+</section>
+
+<section>
+<h3>附：反例——非闭子空间与紧算子的谱</h3>
+<p><strong>非闭子空间。</strong>令 c₀₀ = {有限支撑序列} ⊂ ℓ²。c₀₀ 是线性子空间、稠密（有限支撑逼近 ℓ² 元素）但<strong>不闭</strong>：极限点——大白话：极限是一串元素不断逼近、最终趋向的对象；极限点就是"可以被一串点无限逼近"的位置——(1, 1/2, 1/3, …) ∉ c₀₀。更一般地，无穷维 Banach 空间的真稠密子空间必非闭。在 C[0,1] 中多项式全体 𝒫 同理稠密而非闭（Weierstrass 逼近定理）。意义：<strong>闭性</strong>是"线性代数"与"分析"的分界——开映射定理、闭图像定理都要求完备闭子空间。</p>
+<p><strong>紧算子的谱结构。</strong>考虑对角紧算子 T:ℓ²→ℓ²，T eₙ = (1/n)eₙ。则</p>
+<div class="formula display" data-tex="\sigma(T)=\{0\}\cup\{1/n : n\ge 1\},\qquad 0\notin\sigma_p(T)."></div>
+<p>谱集<strong>可数</strong>、唯一聚点为 <strong>0</strong>（有限维中谱是有限集、无聚点），且 0∈σ 却<strong>不是特征值</strong>（T 单射：ker T = {0}；T 紧 ⇒ 不可逆，因为无穷维空间上的紧算子不可能有有界逆）。一般定理：无穷维 Banach 空间上紧算子的谱是含 0 的可数集，非零谱元素全是有限重特征值，聚点只能为 0。对照有限维：紧自伴算子退化为对称矩阵，谱为有限特征值集。</p>
+</section>
+
+<section>
+<h3>附：工作题（带解答）</h3>
+<p><strong>题 1（对偶空间）。</strong>确定下列空间的对偶并给出配对公式：(a) (c₀)*；(b) (ℓ¹)*；(c) (ℓ²)*（用 Riesz 表示定理）。</p>
+<details><summary>显示解答</summary><p>(a) (c₀)* ≅ ℓ¹：任意 x*∈(c₀)* 对应 a=(aₙ)∈ℓ¹，⟨x*,x⟩ = Σaₙxₙ，且 ‖x*‖=‖a‖₁。要点：取测试元 x = (sign(aₙ) 前 N 项) ∈ c₀ 得 ‖x*‖ ≤ ‖a‖₁。(b) (ℓ¹)* ≅ ℓ^∞：⟨x*,x⟩ = Σaₙxₙ，a∈ℓ^∞，‖x*‖=‖a‖_∞（取基向量 x=eₙ）。注意 (c₀)* = ℓ¹ 但 ℓ^∞ 自身的对偶 ⊋ ℓ¹（需推广的有限可加积分——大白话：积分就是把无穷多小份贡献加总起来，是求和的连续版）。(c) Riesz 表示定理——大白话：表示就是把抽象的泛函具体翻译成能算的配对公式，这里就是把每个泛函对应成一个序列用内积配对：(ℓ²)* ≅ ℓ²，对每个 x* 存在唯一 a∈ℓ² 使 ⟨x*,x⟩ = Σaₙxₙ（内积），映射 x*↦a 是共轭线性等距同构。</p></details>
+<p><strong>题 2（算子有界性）。</strong>判断下列线性算子的有界性并求范数（若存在）：(a) T:ℓ¹→ℓ¹, (Tx)ₙ = xₙ/n；(b) S:ℓ²→ℓ², (Sx)ₙ = Σ_{k=1}^n x_k；(c) D:C¹[0,1]→C[0,1], Df = f′（C¹ 取 sup 范数）。</p>
+<details><summary>显示解答</summary><p>(a) 有界：‖Tx‖₁ = Σ|xₙ|/n ≤ Σ|xₙ| = ‖x‖₁，且 ‖T‖ = 1（取 x=e₁）。(b) <strong>无界</strong>：取 xₙ = (−1)ⁿ⁺¹/n ∈ ℓ²，则 (Sx)ₙ = 交替调和部分和 Hₙ = O(1)（收敛于 ln 2），但 ‖Sx‖₂² = Σ|Hₙ|² = ∞，故 sup{‖Sx‖/‖x‖} = ∞。(c) 无界：fₙ(x) = sin(2πnx)，‖fₙ‖_∞ = 1 但 ‖Dfₙ‖_∞ = 2πn → ∞。与有限维矩阵"总有界"的本质区别：无穷维线性映射不一定连续。</p></details>
+<p><strong>题 3（Hahn-Banach 应用）。</strong>设 X 是赋范空间，x₀≠0。证明存在 x*∈X* 使 x*(x₀) = ‖x₀‖ 且 ‖x*‖ = 1（支撑泛函）。</p>
+<details><summary>显示解答</summary><p>取 Y = ℝx₀，定义 f(tx₀) = t‖x₀‖，则 f 有界、‖f‖ = 1（|f(tx₀)| = |t|‖x₀‖，等号取 t=1）。由 Hahn-Banach 保范延拓得 F:X→ℝ 满足 F|_Y = f、‖F‖ = 1。故 F(x₀) = ‖x₀‖。推论：X* 分离点，由此可证"X 等距嵌入 X**"等自反性结果。</p></details>
+</section>
+
+<section><h3>前沿：非交换L^p空间与量子信息</h3><p>Pisier-Xu(2003)发展了非交换L^p空间——将向量值L^p推广到算子代数。这在量子信息(信道容量)和非交换概率(自由概率论)中有重要应用。仍开放:非交换Riesz-Thorin定理的完全推广。</p></section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>W. Rudin, Real and Complex Analysis</strong></p>
+<p>&rarr; <strong>G. Folland, Real Analysis</strong></p>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：同一学科分类「分析」。</p>
+</section>

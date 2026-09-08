@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Δx·Δp ≥ ħ/2——不是测量干扰，是几何" />
+  <meta property="og:title" content="不确定性原理 — Vibe Math" />
+  <meta property="og:description" content="Δx·Δp ≥ ħ/2——不是测量干扰，是几何" />
+  <title>不确定性原理 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎲 不确定性原理 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">Δx·Δp ≥ ħ/2——不是测量干扰，是几何</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='uncertainty',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/hydrogen-atom.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⚛️ 氢原子轨道</a>
+  <a href="/pages/entanglement.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🪢 量子纠缠 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——你不可能同时看清一个粒子的"在哪"和"多快"</h3>
+<p>想同时看一辆车的位子和速度，你一眼就做到。但微观世界像一条松松的橡皮筋：把它按到某一点，另一头就会翘起来。粒子也是——越确定它"在哪"，就越说不准它"跑多快"。这不是我们的仪器不够好，而是世界本来就是这么设计的。</p>
+<p>这东西在干什么：告诉我们微观粒子的位置和速度不能同时精确，是一切量子行为的"地盘规则"。</p>
+<div class="key-insight">位置和速度就像跷跷板两端：压下一头，另一头必翘起。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/functional-analysis.html">泛函分析</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体动机：电子波包的"在哪"与"多快"</h3>
+<p>先放下公式，用数量级感受一下这个"地盘规则"有多猛。核心不等式是</p>
+<div class="formula display" data-tex="\Delta x\cdot\Delta p\ge\frac{\hbar}{2},\qquad \hbar=1.055\times10^{-34}\ \mathrm{J\cdot s}"></div>
+<p>电子质量 m_e=9.11×10⁻³¹ kg。假设我们知道一个电子"在原子里的位置"，不确定度 Δx≈5.3×10⁻¹¹ m（一个玻尔半径）。那么它的动量不确定度至少是</p>
+<div class="formula display" data-tex="\Delta p\ge\frac{\hbar}{2\Delta x}\approx\frac{1.055\times10^{-34}}{2\times5.3\times10^{-11}}\approx9.9\times10^{-25}\ \mathrm{kg\cdot m/s}"></div>
+<p>换成速度：</p>
+<div class="formula display" data-tex="\Delta v=\frac{\Delta p}{m_e}\approx\frac{9.9\times10^{-25}}{9.11\times10^{-31}}\approx1.1\times10^6\ \mathrm{m/s}"></div>
+<p>每秒 110 万米——是氢原子内经典轨道速度（2.2×10⁶ m/s）的一半！<strong>电子的位置不确定性大到让它"根本没法慢下来"。</strong>这就是为什么原子里的电子有 13.6 eV 量级的零点动能、为什么原子是稳定的。</p>
+<p>反过来，换一个宏观物体：m=1 g 的小球，把位置确定到 Δx=1 μm（亚微米精度），</p>
+<div class="formula display" data-tex="\Delta v\ge\frac{\hbar}{2m\Delta x}\approx\frac{1.055\times10^{-34}}{2\times10^{-3}\times10^{-6}}\approx5.3\times10^{-26}\ \mathrm{m/s}"></div>
+<p>每秒五万亿分之一毫米——比蜗牛慢无数亿倍，测量不出来。同一个不等式，微观世界是判决性的，宏观世界形同虚设。</p>
+<div class="key-insight">不确定性原理的两个数量级基准：电子局域在一个原子内（Δx~10⁻¹⁰ m）→ 速度不确定度 ~10⁶ m/s；宏观物体（m~1 g，Δx~1 μm）→ 速度不确定度 ~10⁻²⁵ m/s。不是原理变了，是 ħ 太小了。</div>
+</section>
+
+<section>
+<h3>二、为什么不是测量缺陷：不确定性是态本身的性质</h3>
+<p>最常见的误解："Δx·Δp ≥ ħ/2 是因为测量位置会扰动动量。" <strong>错。</strong>量子不确定性不是测量干扰——即使有完美的测量仪器，不确定性依然存在。这是<strong>态本身的性质</strong>，不是测量技术的局限。</p>
+<p>根本原因：<strong>[x̂, p̂] = iħ</strong>。两个算符不对易 → 不能同时对角化 → 没有共同的特征向量 → 不存在一个量子态同时在 x 和 p 上有精确值。<strong>不是"你不知道"——是大自然本身不确定。</strong></p>
+<p><strong>为什么不对易就决定测量？</strong>算符对应物理量，量子力学的一条基本规则是：两个物理量能够被同时精确确定，当且仅当它们的算符对易。对易意味着可以找到一组"共同本征态"，每个态同时给两个量以确定值；不对易则意味着两者必然互相"抢地盘"——位置定得越死，动量越散。这是数学事实，与仪器好坏无关。</p>
+<div class="key-insight">Robertson 不等式：ΔA·ΔB ≥ ½|⟨[A,B]⟩|。这是 Cauchy-Schwarz 不等式的直接推论——纯数学结果。取 A=x̂, B=p̂ → [x̂,p̂]=iħ → Δx·Δp ≥ ħ/2。证明中<strong>从未出现"测量"这个概念</strong>。</div>
+</section>
+
+<section>
+<h3>三、不对易的几何直觉：为什么"窄"与"快"不可兼得</h3>
+<p>先建立直觉，再谈严格。波函数 ψ(x) 越窄（位置越确定），它的傅里叶变换 φ(p) 就越宽（动量越不确定）——这是数学的普适事实：窄脉冲需要高频分量叠加，宽脉冲则集中在低频。</p>
+<div class="formula display" data-tex="\varphi(p)=\frac{1}{\sqrt{2\pi\hbar}}\int\psi(x)\,e^{-ipx/\hbar}\,dx"></div>
+<p>高斯函数是这条规律的极端体现：它经傅里叶变换仍是高斯，且"时域宽度×频域宽度"取到理论最小值。<strong>直观结论：想要位置精确，就必须用一大堆不同动量的波叠加；想要动量精确，就必须让波铺得很开。二者不可兼得。</strong>这正是"不对易算符"在波层面的含义，也是 [x̂,p̂]=iħ 之所以成立的物理根源——p̂ 本质上是空间平移的生成元。</p>
+</section>
+
+<section>
+<h3>四、完整例题1：用不确定性关系估数量级</h3>
+<p>把第一节的两类数字完整走一遍，练熟"估计"的套路。</p>
+<p><strong>第1步：明确已知与目标。</strong>已知电子的位置不确定度 Δx（典型场景：原子内 Δx≈10⁻¹⁰ m；核内 Δx≈10⁻¹⁵ m），求速度不确定度 Δv。</p>
+<p><strong>第2步：套不等式。</strong>Δp≥ħ/(2Δx)，再除以质量 m_e。</p>
+<p><strong>第3步：算数字。</strong>原子内：Δp≥ħ/(2×10⁻¹⁰)=5.3×10⁻²⁵ kg·m/s，Δv≈5.8×10⁵ m/s。核内：Δp≥ħ/(2×10⁻¹⁵)=5.3×10⁻²⁰ kg·m/s，Δv≈5.8×10¹⁰ m/s——超过光速 c=3×10⁸ m/s 近两百倍！</p>
+<p><strong>第4步：物理判断。</strong>速度不确定度超光速意味着动能发散——电子不可能被囚禁在核内。这定量解释了"电子不塌缩进原子核"（并与氢原子课的例题3 互相印证）。</p>
+<div class="formula display" data-tex="\Delta x\sim10^{-10}\ \mathrm{m}\ \Rightarrow\ \Delta v\gtrsim10^6\ \mathrm{m/s};\qquad \Delta x\sim10^{-15}\ \mathrm{m}\ \Rightarrow\ \Delta v\gtrsim10^{10}\ \mathrm{m/s}&gt;c"></div>
+</section>
+
+<section>
+<h3>五、谐振子基态——宇宙允许的"最确定"状态</h3>
+<p>量子谐振子的基态波函数 ψ₀(x) ∝ e^{-x²/2σ²} 恰好<strong>饱和</strong>不确定关系：Δx·Δp = ħ/2（等号成立）。高斯函数在 Fourier 变换下仍然是高斯——且时域和频域宽度的乘积<strong>取到理论上可能的最小值</strong>。</p>
+<p>这就是为什么谐振子基态被称为"最经典的量子态"——它把不确定性压到了量子力学允许的底线。任何其他量子态都有<strong>更宽</strong>的不确定乘积。基态的"抖动"（零点涨落）不是噪声，而是最小可能的量子波动本身。</p>
+</section>
+
+<section>
+<h3>六、完整例题2：算谐振子基态的不确定积（带数字）</h3>
+<p>把第五节的说法落到具体计算上。基态波函数（记 σ²=ħ/2mω）：</p>
+<div class="formula display" data-tex="\psi_0(x)=\left(\frac{m\omega}{\pi\hbar}\right)^{1/4}e^{-m\omega x^2/2\hbar}"></div>
+<p><strong>第1步：算位置。</strong>⟨x̂⟩=0（奇函数），由高斯积分 ⟨x̂²⟩=ħ/2mω，故</p>
+<div class="formula display" data-tex="\Delta x=\sqrt{\frac{\hbar}{2m\omega}}"></div>
+<p><strong>第2步：算动量。</strong>p̂ψ₀=−iħψ₀′=imωxψ₀，于是 ⟨p̂²⟩=(mω)²⟨x̂²⟩=mωħ/2，⟨p̂⟩=0：</p>
+<div class="formula display" data-tex="\Delta p=\sqrt{\frac{m\omega\hbar}{2}}"></div>
+<p><strong>第3步：相乘。</strong></p>
+<div class="formula display" data-tex="\Delta x\cdot\Delta p=\sqrt{\frac{\hbar}{2m\omega}}\cdot\sqrt{\frac{m\omega\hbar}{2}}=\frac{\hbar}{2}"></div>
+<p><strong>第4步：代入数字。</strong>用谐振子课的弹簧（k=50 N/m，m=0.2 kg，ω≈15.8 rad/s）：Δx≈4.1×10⁻¹⁸ m，Δp≈1.3×10⁻¹⁷ kg·m/s，乘积精确等于 ħ/2。位置不确定度比原子核还小一万倍，动量不确定度同样微小——宏观弹簧的基态波动小到完全看不见，这也是它"看起来经典"的另一个原因。</p>
+</section>
+
+<section>
+<h3>七、能量-时间不确定：时间不是算符</h3>
+<p><strong>ΔE·Δt ≥ ħ/2</strong>。和位置-动量的版本不同——t 不是量子力学的算符（时间不是可观测量，是参数）。这个关系的物理含义：<strong>态演化的速度</strong>。能量越不确定 → 态变化越快。</p>
+<p>最直观的例子：<strong>不稳定粒子的衰变宽度</strong>。Δ⁺⁺(1232) 共振峰宽度 ≈ 117 MeV → 寿命 τ = ħ/Γ ≈ 5.6×10⁻²⁴ 秒。粒子越快衰亡，质量越不确定。</p>
+</section>
+
+<section>
+<h3>八、完整例题3：从共振峰宽度读出粒子寿命</h3>
+<p>实验上，"粒子质量"不是一根精确的线，而是一个有宽度 Γ 的峰。能量-时间不确定关系让我们从宽度直接读出寿命。</p>
+<p><strong>第1步：写出公式。</strong>寿命 τ 与能量（质量）宽度 Γ 满足 τ≈ħ/Γ。用方便的单位 ħ=6.582×10⁻²² MeV·s。</p>
+<p><strong>第2步：代入数字。</strong>对 Δ⁺⁺(1232) 共振：</p>
+<div class="formula display" data-tex="\tau=\frac{\hbar}{\Gamma}=\frac{6.582\times10^{-22}\ \mathrm{MeV\cdot s}}{117\ \mathrm{MeV}}\approx5.6\times10^{-24}\ \mathrm{s}"></div>
+<p><strong>第3步：交叉对比。</strong>稳定的质子（τ&gt;10²⁹ s）宽度几乎为零，谱线窄如刀锋；寿命 ~10⁻²³ s 的强子共振宽度达上百 MeV。两者是同一个关系式的两个极端。</p>
+<p><strong>第4步：推广到原子。</strong>激发态氢原子寿命 τ≈10⁻⁸ s，则能级宽度 ΔE≥ħ/(2τ)≈3.3×10⁻⁸ eV——与能级间隔（~eV）相比小 8 个量级，所以光谱线看似锐利，但实际总有这个"自然线宽"。</p>
+</section>
+
+<section>
+<h3>九、Robertson 不等式：从 Cauchy-Schwarz 到 ħ/2</h3>
+<p>第二、三节讲的是直觉，这里给出严格框架（完整证明见第十二章）。对任意两个自伴算符 Â、B̂ 和任意归一化态 |ψ⟩，有</p>
+<div class="formula display" data-tex="\Delta A\cdot\Delta B\ge\frac{1}{2}\left|\langle[\hat A,\hat B]\rangle\right|"></div>
+<p>其中标准差 ΔA=√(⟨A²⟩−⟨A⟩²)。这个不等式是<strong>Cauchy-Schwarz 不等式在 Hilbert 空间几何中的直接推论</strong>——把 ⟨f|f⟩⟨g|g⟩≥|⟨f|g⟩|² 应用到 f=Â|ψ⟩、g=B̂|ψ⟩ 上，再利用虚部估计即可。它<strong>从头到尾不涉及"测量"</strong>：不确定性是数学结构（内积几何）决定的。</p>
+<p>取 Â=x̂、B̂=p̂，代入 [x̂,p̂]=iħ：</p>
+<div class="formula display" data-tex="\Delta x\cdot\Delta p\ge\frac{1}{2}|\langle i\hbar\rangle|=\frac{\hbar}{2}"></div>
+<p>这就是 Heisenberg 不等式。它的成立不依赖任何具体的态——任何态都必须满足。</p>
+</section>
+
+<section>
+<h3>十、反例与注记：高斯态饱和、相干态为最小不确定态</h3>
+<p><strong>高斯态饱和。</strong>归一化高斯波包 ψ(x) = (πσ²)^{−1/4} exp(−x²/(2σ²))。对称性给出 ⟨x⟩=⟨p⟩=0，且</p>
+<div class="formula display" data-tex="\langle x^2\rangle=\frac{\sigma^2}{2},\qquad \langle p^2\rangle=\frac{\hbar^2}{2\sigma^2},\qquad \Delta x=\frac{\sigma}{\sqrt2},\ \Delta p=\frac{\hbar}{\sqrt2\,\sigma}."></div>
+<p>乘积 Δx·Δp = ħ/2 <strong>精确饱和</strong>，且与 σ 无关——任何高斯波包都取到不确定性原理的等号。</p>
+<p><strong>相干态是最小不确定态。</strong>相干态 |α⟩ 满足 â|α⟩ = α|α⟩（â = (mω/2ħ)^{1/2}x̂ + (i/√(2mωħ))p̂ 是湮灭算符），其位置表象波函数是平移后的高斯：</p>
+<div class="formula display" data-tex="\psi_\alpha(x)=\Big(\frac{m\omega}{\pi\hbar}\Big)^{1/4}\exp\Big(-\frac{m\omega}{2\hbar}(x-\sqrt{\tfrac{2\hbar}{m\omega}}\operatorname{Re}\alpha)^2+i\,(\dots)\Big)."></div>
+<p>直接计算 Δx = √(ħ/2mω)、Δp = √(mωħ/2)，乘积 = ħ/2。更简洁地看：相干态满足 (â−α)|ψ⟩=0，展开成 x̂、p̂ 的线性组合恰为 (B̂−⟨B⟩)|ψ⟩ = λ(Â−⟨A⟩)|ψ⟩——正是 Robertson-Schrödinger 推导中的<strong>等号条件</strong>，因此它自动饱和。量子光学中相干态对应激光的 Glauber 态，其"最接近经典"的性质即来源于此。</p>
+<p><strong>对照：饱和不要求高斯性。</strong>等号条件仅要求 f ∝ g（不必是高斯）——例如压缩态也精确饱和 Robertson-Schrödinger 不等式，但协方差项（Re 部分）非零；高斯性只是位置表象中饱和族的足够条件而非必要条件。</p>
+</section>
+
+<section>
+<h3>十一、推导：[x̂, p̂] = iħ</h3>
+<p>在位置表象中，x̂ 是乘法算符、p̂ 是微分算符：</p>
+<div class="formula display" data-tex="\hat x\,\psi(x)=x\,\psi(x),\qquad \hat p\,\psi(x)=-i\hbar\,\frac{d\psi}{dx}."></div>
+<p>对任意（Schwartz）函数 ψ 计算复合与反序：</p>
+<div class="formula display" data-tex="(\hat x\hat p\,\psi)(x)=-i\hbar\,x\,\psi'(x),"></div>
+<div class="formula display" data-tex="(\hat p\hat x\,\psi)(x)=-i\hbar\,\frac{d}{dx}\big(x\psi(x)\big)=-i\hbar\big(\psi(x)+x\psi'(x)\big)."></div>
+<p>相减：</p>
+<div class="formula display" data-tex="(\hat x\hat p-\hat p\hat x)\psi(x)=i\hbar\,\psi(x)\quad\Longrightarrow\quad [\hat x,\hat p]=i\hbar\,\mathbb{1}."></div>
+<p><strong>附注。</strong>严格地说，p̂ = −iħ d/dx 定义在 L²(ℝ) 的稠密子空间（如 Schwartz 空间或 Sobolev 空间 H¹）上；在此类光滑函数上无边界项，公式对合。由 Weyl 关系 e^{ipa} x̂ e^{−ipa} = x̂ + a 可知 p̂ 是平移的无穷小生成元，[x̂,p̂]=iħ 亦可由 Baker–Campbell–Hausdorff 公式推出——这是坐标平移不变性在量子力学中的直接编码。正是这个非对易性，导致 x 与 p 无法同时对角化，从而不确定性不可避免。</p>
+</section>
+
+<section>
+<h3>十二、定理证明：Robertson-Schrödinger 不等式（完整推导）</h3>
+<p><strong>陈述。</strong>设 Â、B̂ 是自伴（Hermitian）算符，|ψ⟩ 是任意归一化态。记 ⟨A⟩ = ⟨ψ|Â|ψ⟩，标准差 ΔA = √(⟨A²⟩−⟨A⟩²)。则</p>
+<div class="formula display" data-tex="(\Delta A)^2(\Delta B)^2 \ge \left|\tfrac12\langle\{\hat A,\hat B\}\rangle-\langle \hat A\rangle\langle \hat B\rangle\right|^2 + \tfrac14\left|\langle[\hat A,\hat B]\rangle\right|^2."></div>
+<p>丢弃第一项（协方差项）即得 Robertson 不等式 ΔA·ΔB ≥ ½|⟨[A,B]⟩|。</p>
+<p><strong>证明。</strong></p>
+<p>① <strong>中心化与 Cauchy-Schwarz。</strong>令 Ā = Â − ⟨A⟩，B̄ = B̂ − ⟨B⟩，记 f = Ā|ψ⟩，g = B̄|ψ⟩。则 ⟨f|f⟩ = (ΔA)²，⟨g|g⟩ = (ΔB)²。Cauchy-Schwarz 给出 |⟨f|g⟩|² ≤ ⟨f|f⟩⟨g|g⟩。</p>
+<p>② <strong>展开内积。</strong>因 Â、B̂ 自伴，⟨ψ|ĀB̄|ψ⟩ = ⟨AB⟩ − ⟨A⟩⟨B⟩。将 ⟨f|g⟩ 按实部虚部分解：</p>
+<div class="formula display" data-tex="\langle f|g\rangle=\tfrac12\langle\{\hat A,\hat B\}\rangle-\langle \hat A\rangle\langle \hat B\rangle+\frac{i}{2}\langle[\hat A,\hat B]\rangle."></div>
+<p>（直接展开 {A,B} = AB+BA、[A,B] = AB−BA 即得。）</p>
+<p>③ <strong>取模平方。</strong>对任意复数 z = u+iv 有 |z|² = u²+v² ≥ v²，故</p>
+<div class="formula display" data-tex="|\langle f|g\rangle|^2 \ge \frac{1}{4}\left|\langle[\hat A,\hat B]\rangle\right|^2."></div>
+<p>④ <strong>合并。</strong>由 ① 得 (ΔA)²(ΔB)² ≥ |⟨f|g⟩|² ≥ ¼|⟨[A,B]⟩|²，于是 ΔA·ΔB ≥ ½|⟨[A,B]⟩|。取 Â = x̂、B̂ = p̂，[x̂,p̂] = iħ，即 Δx·Δp ≥ ħ/2。∎</p>
+<p><strong>等号条件。</strong>Cauchy-Schwarz 取等 ⟺ f ∝ g，即存在复数 λ 使 (B̂−⟨B⟩)|ψ⟩ = λ(Â−⟨A⟩)|ψ⟩；结合虚部估计还需 ⟨[A,B]⟩ 纯虚。高斯波包与相干态精确满足此条件。</p>
+</section>
+
+<section>
+<h3>十三、熵不确定性——比 Heisenberg 更精确</h3>
+<p>Deutsch(1983) 发现位置和动量的<strong>熵</strong>之和有下限：H(X) + H(Z) ≥ log₂(1/c)，c = max|⟨x|z⟩|²。这是 Heisenberg 不等式在信息论时代的升级版。方差可能被离群值放大——熵不会。熵不确定性是量子密码安全性分析的核心工具。</p>
+</section>
+
+<section>
+<h3>十四、工作题与试试看</h3>
+<p><strong>题 1（对易子计算）。</strong>利用 [x̂,p̂]=iħ 计算：(a) [x̂, p̂²]；(b) [x̂², p̂]；(c) [x̂, p̂ⁿ]。</p>
+<details><summary>提示</summary>
+<p>反复使用 Leibniz 型法则 [A,BC]=[A,B]C+B[A,C]，第 (c) 小题先算 (a) 再归纳。</p>
+</details>
+<details><summary>显示解答</summary><p>(a) 用 Leibniz 型法则 [A,BC]=[A,B]C+B[A,C]：</p><p>[x̂,p̂²] = [x̂,p̂]p̂ + p̂[x̂,p̂] = 2iħp̂。</p><p>(b) [x̂²,p̂] = x̂[x̂,p̂] + [x̂,p̂]x̂ = 2iħx̂。</p><p>(c) 归纳得 [x̂,p̂ⁿ] = n·iħ·p̂ⁿ⁻¹（n≥1）。这是算符微积分的基本恒等式——经典 Poisson 括号 {x,p²}=2p 的量子对应。</p></details>
+<p><strong>题 2（饱和态计算）。</strong>考虑波函数 ψ(x) = (πa²)^{−1/4} e^{−x²/(2a²)}（a&gt;0）。求 Δx、Δp、Δx·Δp，并解释结果为何与 a 无关。</p>
+<details><summary>提示</summary>
+<p>⟨x²⟩ 用高斯积分 ∫x²e^{−βx²}dx=√π/(2β^{3/2})；p̂ψ 是 iħxψ/a² 形式。</p>
+</details>
+<details><summary>显示解答</summary><p>⟨x⟩ = 0（被积函数为奇函数），⟨x²⟩ = (1/√(πa²))∫x²e^{−x²/a²}dx = a²/2，故 Δx = a/√2。p̂ψ = −iħψ′ = iħxψ/a²，⟨p⟩=0，⟨p²⟩ = ħ²⟨x²⟩/a⁴ = ħ²/(2a²)，Δp = ħ/(√2a)。乘积 Δx·Δp = ħ/2——与 a 无关，因为 x 的延展与 p 的延展互为反比（Fourier 对偶）：波包越宽（a 大）动量越确定。这是"高斯函数经 Fourier 变换仍是高斯且面积最小"的量子表述。</p></details>
+<p><strong>题 3（等号条件验证）。</strong>对题 2 的高斯态，验证 Robertson-Schrödinger 不等式的等号条件：存在复数 λ 使 (p̂−⟨p⟩)ψ = λ(x̂−⟨x⟩)ψ。</p>
+<details><summary>提示</summary>
+<p>把 p̂ψ=iħxψ/a² 与 x̂ψ=xψ 对照，找一个纯虚的 λ。</p>
+</details>
+<details><summary>显示解答</summary><p>⟨x⟩=⟨p⟩=0。p̂ψ = iħxψ/a²，x̂ψ = xψ。取 λ = iħ/a²：则 p̂ψ = (iħ/a²)·xψ = λx̂ψ，即 (p̂−⟨p⟩)ψ = λ(x̂−⟨x⟩)ψ 成立。由推导知 |λ|² = (Δp/Δx)² 且 λ 纯虚（⟨[x̂,p̂]⟩ 纯虚），Cauchy-Schwarz 与虚部估计同时取等——故确实饱和。若 λ 非纯虚，则只饱和 Robertson-Schrödinger 而非其 Heisenberg 简化版。</p></details>
+<p><strong>题 4（最小不确定态构造）。</strong>写出使 Δx·Δp = ħ/2 的一族态，并说明为何它们在位置表象中必须是高斯族。</p>
+<details><summary>提示</summary>
+<p>在坐标轴上平移并展宽高斯；"为何必须高斯"看等号条件，它是一阶线性 ODE。</p>
+</details>
+<details><summary>显示解答</summary><p>一族典型态：平移压缩高斯 ψ(x) = (πσ²)^{−1/4} e^{−(x−x₀)²/(2σ²)} e^{ip₀x/ħ}，含平移（x₀、p₀）与展宽 σ 两个自由参数，均饱和：Δx = σ/√2，Δp = ħ/(√2σ)，乘积 ħ/2。相干态是 σ = √(ħ/2mω) 且 (x₀,p₀) 对应经典相空间点的特殊情形。等号条件 (p̂−⟨p⟩)ψ = λ(x̂−⟨x⟩)ψ 是一阶线性 ODE，其解恰好是高斯族——这就是"饱和 ⇒ 高斯"的原因。</p></details>
+
+<p><strong>试试看 · A.</strong> 用不确定性关系判断：电子能"困"在原子核内吗？（核半径 ~1 fm）</p>
+<details><summary>提示</summary>
+<p>Δp≥ħ/(2Δx)，Δv=Δp/m_e，与光速 c=3×10⁸ m/s 比较。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>Δx=10⁻¹⁵ m → Δp≥ħ/(2×10⁻¹⁵)=5.3×10⁻²⁰ kg·m/s → Δv≥5.8×10¹⁰ m/s，是光速的近两百倍。动量与动能不确定性如此之大，电子不可能被囚禁在核内——这与氢原子课的结论互相印证。</p>
+</details>
+<p><strong>试试看 · B.</strong> 一个激发态原子寿命 τ≈10⁻⁸ s，估算它的能级宽度 ΔE（用 eV 表示）。</p>
+<details><summary>提示</summary>
+<p>ΔE≥ħ/(2τ)，1 eV=1.602×10⁻¹⁹ J。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>ΔE≥ħ/(2τ)=1.055×10⁻³⁴/(2×10⁻⁸)=5.3×10⁻²⁷ J≈3.3×10⁻⁸ eV。相对能级间隔（~1 eV）小约 8 个量级，所以光谱线非常锐利，但"自然线宽"永远存在。</p>
+</details>
+<p><strong>试试看 · C.</strong> 一个 m=1 g 的小球，把位置确定到 Δx=1 μm，其速度不确定性多大？这说明了什么？</p>
+<details><summary>提示</summary>
+<p>Δv≥ħ/(2mΔx)，代入 m=10⁻³ kg。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>Δv≥1.055×10⁻³⁴/(2×10⁻³×10⁻⁶)=5.3×10⁻²⁶ m/s——每秒约 5×10⁻²⁶ 米，比最慢的宏观运动还慢十几个量级。宏观物体感受不到不确定性原理，这就是它看起来"完全确定"的原因。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Sakurai, Modern Quantum Mechanics</strong></p>
+<p>&rarr; <strong>D. Griffiths, Introduction to Quantum Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/functional-analysis.html">泛函分析</a>。</p>
+</section>
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/entanglement.html">量子纠缠</a>：纠缠对中，粒子A的Δx和粒子B的Δp联动——EPR悖论的根。</p>
+<p>&rarr; <a href="/pages/fourier-series.html">傅里叶级数</a>：时域越窄 → 频域越宽——<strong>不同版本的同一个数学事实</strong>。</p>
+<p>&rarr; <a href="/pages/harmonic-oscillator.html">谐振子</a>：基态是最小不确定态——为什么真空涨落永不消停。</p>
+<p>&rarr; <a href="/pages/bloch-sphere.html">Bloch球</a> / <a href="/pages/qubit-gates.html">量子门</a>：不对易算符 → Bloch球上的旋转不交换。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/uncertainty.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

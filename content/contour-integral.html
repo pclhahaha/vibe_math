@@ -1,0 +1,308 @@
+<section>
+<h3>〇、一个具体的问题——绕单位圆走一圈，∫ 1/z dz 为什么等于 2πi？</h3>
+<p>先不谈任何抽象理论。给你一个<strong>能直接动手算的积分</strong>：函数 f(z) = 1/z，沿着单位圆 |z| = 1 逆时针走完整的一整圈。我们把"沿着闭合曲线 γ 的积分"记作 ∮<sub>γ</sub> f(z) dz，读作"围道积分"。</p>
+<p>先猜猜它等于几。按实数里的直觉，从起点出发、绕一整圈又回到起点，"收支应该相抵"，积分很可能该是 0。可是——<strong>答案偏偏是 2πi，一个绝非零的数。</strong>这个 2πi 到底从哪冒出来？让我们亲手算一遍，不借助任何玄学。</p>
+<p><strong>第一步：把圆圈写成参数方程。</strong>单位圆上的点可以写成</p>
+<div class="formula display" data-tex="z(t)=e^{it}=\cos t+i\sin t,\qquad 0\le t\le 2\pi,\qquad dz=ie^{it}\,dt"></div>
+<p>t 是"转过的角度"（弧度）：t = 0 时 z = 1，t = 2π 时回到 z = 1，正好一整圈。</p>
+<p><strong>第二步：把积分换成普通的"对 t 积分"。</strong>把 z(t) 与 dz 一起代入被积式：</p>
+<div class="formula display" data-tex="\oint_{|z|=1}\frac{1}{z}\,dz=\int_0^{2\pi}\frac{1}{e^{it}}\cdot ie^{it}\,dt=\int_0^{2\pi}i\,dt"></div>
+<p>看：e<sup>it</sup> 在分子分母里<strong>约掉了</strong>。剩下的被积函数是常数 i，于是</p>
+<div class="formula display" data-tex="\oint_{|z|=1}\frac{1}{z}\,dz=\int_0^{2\pi}i\,dt=2\pi i"></div>
+<p><strong>绕了一整圈，积分是 2πi，不是 0。</strong>这个数字是参数化、代入、积分三步算出来的，确凿无疑。现在真正的问题是：</p>
+<ul>
+<li>闭合曲线，为什么积分可以不等于 0？</li>
+<li>为什么偏偏是 2πi？"绕一圈"这个动作和 2π 有什么关系？</li>
+<li>把半径换成 2、换成 5，答案会变吗？（把 e<sup>it</sup> 换成 Re<sup>it</sup> 你会看到 R 被约掉了——答案不变！）</li>
+</ul>
+<div class="key-insight">一个闭合路径积分居然可以等于 2πi 而非零——这是复分析全部魔力的起点。接下来我们把这个 2πi 彻底搞清楚，再让它长成一套强大的计算方法。</div>
+</section>
+
+<section>
+<h3>一、先把工具造好：复平面上的"路径积分"怎么定义？</h3>
+<p>为了确认上一节的 2πi 不是巧合，先给"沿着曲线的积分"一个严格定义。回忆实数里的黎曼积分：把区间 [a, b] 切成 n 个小区间，在每个小区间里挑一个代表点 x<sub>i</sub><sup>*</sup>，把"代表高度 × 小区间宽度" f(x<sub>i</sub><sup>*</sup>)·Δx<sub>i</sub> 累加，再令 n → ∞ 取极限，得到 ∫<sub>a</sub><sup>b</sup> f(x) dx。复平面上的路径积分是同一个想法，只多了两个差别：</p>
+<p><strong>差别一：路径是一条曲线 γ，不是直线。</strong>复平面（横轴为实部、纵轴为虚部）是二维的，"从 A 到 B"有无穷多条路：直线、半圆、任意弯弯曲曲的路线。我们给曲线一个参数化 z(t)（t 从 α 到 β），它描述每一步落在哪个点。</p>
+<p><strong>差别二：每一步 Δz 是一个复数。</strong>它既带大小（这一步走了多长）也带方向（往哪个方向走）。于是每一步 f(z<sub>i</sub>)·Δz<sub>i</sub> 都是复数，累加后整体仍是复数：</p>
+<div class="formula display" data-tex="\int_\gamma f(z)\,dz=\lim_{\|\Delta z\|\to 0}\sum_{i} f(z_i)\,\Delta z_i"></div>
+<p><strong>实践中的等价定义（更重要）。</strong>把 z = z(t) 代入，dz = z′(t) dt，围道积分就变成一个普通的一元积分：</p>
+<div class="formula display" data-tex="\int_\gamma f(z)\,dz=\int_{\alpha}^{\beta} f\big(z(t)\big)\,z'(t)\,dt"></div>
+<p>这一行是<strong>一切围道积分手算的入口</strong>——上一节我们正是用它（z(t) = e<sup>it</sup>，z′(t) = ie<sup>it</sup>）算出 2πi 的。</p>
+<p><strong>两个立即的推论（整章都要用）。</strong>（1）若把 γ 反向走（倒着走），积分变号：因为 z′(t) 变成 −z′(t)。（2）若把 γ 首尾相接分成 γ₁ 与 γ₂ 两段，积分等于两段积分之和：∫ = ∫<sub>γ₁</sub> + ∫<sub>γ₂</sub>。这两条让"把一条大曲线拆成几段算"永远合法。</p>
+<div class="key-insight">围道积分的"干活版定义"就一句：把 z = z(t) 代进去，∫_γ f dz = ∫ f(z(t)) z′(t) dt。后面所有手算都从这一行开始。</div>
+</section>
+
+<section>
+<h3>二、例题 1（完整推演）：∮ dz/z 沿任意半径的圆——为什么恒等于 2πi？</h3>
+<p><strong>题目。</strong>计算围道积分</p>
+<div class="formula display" data-tex="\oint_{|z|=R}\frac{dz}{z}\qquad(R>0,\ \text{逆时针})"></div>
+<p><strong>解。</strong></p>
+<p><strong>第 1 步：参数化。</strong>半径 R 的圆可写成 z(t) = Re<sup>it</sup>，0 ≤ t ≤ 2π。求导得 z′(t) = iRe<sup>it</sup>，所以 dz = iRe<sup>it</sup> dt。</p>
+<p><strong>第 2 步：代入换元公式。</strong></p>
+<div class="formula display" data-tex="\oint_{|z|=R}\frac{dz}{z}=\int_0^{2\pi}\frac{iRe^{it}}{Re^{it}}\,dt=\int_0^{2\pi}i\,dt"></div>
+<p><strong>第 3 步：约分与积分。</strong>R 被约掉了，i 是常数，直接积分：</p>
+<div class="formula display" data-tex="\int_0^{2\pi}i\,dt=2\pi i"></div>
+<p><strong>答案：对任何半径 R &gt; 0，∮_{|z|=R} dz/z = 2πi。</strong></p>
+<p><strong>四个值得记住的点。</strong></p>
+<ul>
+<li><strong>R 被约掉了</strong>：答案与圆的半径无关。半径为 2、半径为 5，结果都是 2πi——这正是上一节第三个问题的答案。半径只要不是 0，绕得再远，"路径变长"和"函数变小"恰好抵消。</li>
+<li><strong>为什么是 2π？</strong>因为绕一整圈的弧度是 2π。若只绕半圈（t 从 0 到 π），答案就是 πi。也就是说，积分值 = i × (转过的总角度)。"绕一圈得 2πi"本质就是"转角 × i"。</li>
+<li><strong>更一般的幂次。</strong>用同样的参数化可以算（留作练习）出整章最重要的一条单条积分公式：</li>
+</ul>
+<div class="formula display" data-tex="\oint_{|z-a|=r}(z-a)^{n}\,dz=\begin{cases}2\pi i&n=-1\\[2pt]0&n\ne -1\end{cases}\qquad(n\in\mathbb{Z})"></div>
+<p><strong>只有 n = −1（即 1/(z−a)）绕一圈不归零，其余所有幂次都归零。</strong>这条公式是整个留数理论的基石，我们下一节解释它为什么成立。</p>
+</section>
+
+<section>
+<h3>三、为什么闭合积分可以不等于 0？——原函数、多值性与"绕圈数"</h3>
+<p>数学里最老实的工具是<strong>原函数</strong>：如果存在 F 使 F′ = f，那么沿着任意曲线（不闭合也成立）</p>
+<div class="formula display" data-tex="\int_\gamma f(z)\,dz=F(\text{终点})-F(\text{起点})"></div>
+<p>于是闭合路径（终点 = 起点）的积分自动等于 0。这就是"闭合积分归零"的唯一机制。反过来：<strong>闭合积分不归零，说明被积函数找不到单值原函数。</strong></p>
+<p>现在看 1/z。它的"原函数"是 log z。问题是：<strong>log z 在复平面上绕一圈会怎样？</strong></p>
+<p>对 z = Re<sup>it</sup>，log z = log R + it。当 t 从 0 转到 2π，z 回到了原来的点，但 log z 的虚部从 0 长到了 2πi——<strong>没有</strong>回到原来的值。这正是 ∮ dz/z = 2πi 的来历：</p>
+<div class="formula display" data-tex="\oint_{|z|=R}\frac{dz}{z}=\Big[\log z\Big]_{t=0}^{t=2\pi}=(\log R+2\pi i)-(\log R+0)=2\pi i"></div>
+<p>换句话说：<strong>1/z 绕一圈的积分，等于 log z 绕一圈时虚部的总增量 2πi。</strong>多绕一圈就再多贡献 2πi，于是</p>
+<div class="formula display" data-tex="\oint_{\gamma}\frac{dz}{z}=2\pi i\cdot(\text{γ 绕原点的圈数})"></div>
+<p>这个整数圈数有正式名字，叫<strong>卷绕数</strong>（winding number），记 ind(γ, 0)。它回答"闭合曲线把 0 包在中心转了几圈"。而"log z 多值"这件事，正是一切"闭合不归零"的总根源——奇点的存在，破坏了原函数的单值性。</p>
+<p><strong>把一个点换成任意点 a。</strong>同理，1/(z−a) 绕 a 转一圈也是 2πi。若奇点处不只是 1/(z−a)，而是 c·1/(z−a)（c 为某个数），绕一圈就留下 2πi·c。这个 c 就是后文的<strong>留数</strong>。</p>
+<div class="key-insight">闭合积分 ≠ 0 的唯一原因：圈内藏着"奇点"，使被积函数没有单值原函数。绕一圈，每个奇点贡献 2πi × 卷绕数 × 它的"强度"。</div>
+</section>
+
+<section>
+<h3>四、Cauchy 积分定理——圈里没有奇点：绕一圈等于 0</h3>
+<p>第三节给了我们一把尺子：<strong>只要圈内没有奇点（函数处处全纯，处处有单值原函数），闭合积分就必然是 0。</strong>这正是复分析的第一条奇迹定理：</p>
+<p><strong>定理（Cauchy 积分定理）。</strong>设 f 在<strong>单连通区域</strong> Ω（像圆盘那样没有洞、任意闭合曲线都能缩成一个点）上全纯，γ 是 Ω 内任意闭合可求长曲线，则</p>
+<div class="formula display" data-tex="\oint_\gamma f(z)\,dz=0"></div>
+<p><strong>为什么直觉上必然如此？</strong>在单连通区域里，任何闭合曲线都能"缩成一个点"；收缩全程不撞上奇点（全纯），积分可以一路变形而数值不变；缩成一点后积分自然是 0。等价的说法是：单连通区域内全纯函数必有单值原函数 F(z) = ∫<sub>z₀</sub><sup>z</sup> f(ζ) dζ，于是闭合积分 = F(终点) − F(起点) = 0。</p>
+<p><strong>这在实数里没有对应物。</strong>实函数的线积分一般依赖路径、一般不为零。复数里"全纯"这个条件强大到让积分的几何形状无关紧要——<strong>同一起点终点，走什么形状都一样；闭合了就必然归零</strong>。这是全纯函数"刚性"的第一个信号。</p>
+<div class="key-insight">Cauchy 定理等价于：单连通区域内全纯函数有原函数。它把"积分与路径形状无关"变成精确的定理——为后面"绕奇点提取信息"铺好了路。严格的 Goursat 证明见文末附一。</div>
+</section>
+
+<section>
+<h3>五、Cauchy 积分公式——只需知道边界，就能读出内部每一点</h3>
+<p>Cauchy 定理说"圈里没有奇点就归零"。那要是圈里<strong>恰好</strong>有一个奇点呢？我们用第三节的种子：∮ dz/(z−a) = 2πi。把被积函数从 1/(z−a) 推广到 f(z)/(z−a)（其中 f 全纯）。直觉：当 z 接近 a 时 f(z) ≈ f(a)，被积函数 ≈ f(a)·1/(z−a)，绕一圈 ≈ f(a)·2πi。于是：</p>
+<p><strong>定理（Cauchy 积分公式）。</strong>若 f 在含闭圆盘 B̄(a, r) 的区域上全纯，则对圆盘内任一点 a：</p>
+<div class="formula display" data-tex="f(a)=\frac{1}{2\pi i}\oint_{|z-a|=r}\frac{f(z)}{z-a}\,dz"></div>
+<p><strong>这句话的分量。</strong>它说：全纯函数在<strong>内部</strong>任一点的值，完全由它在<strong>边界圆</strong>上的值决定。内部不存在任何"独立信息"。这比 Cauchy 定理更强——不只是"积分为零"，而是"内部每个值都能从边界读出"。</p>
+<p><strong>无穷可微的连锁反应。</strong>对公式两边关于 a 求 n 阶导数（被积函数里只有 1/(z−a) 含 a，求导可换序）：</p>
+<div class="formula display" data-tex="f^{(n)}(a)=\frac{n!}{2\pi i}\oint_{|z-a|=r}\frac{f(z)}{(z-a)^{n+1}}\,dz"></div>
+<p><strong>全纯自动无穷可微</strong>，且各阶导数有统一的积分表示——这在实数分析里是天方夜谭（实函数可微一次不一定可微两次，甚至存在处处连续、处处不可微的函数）。</p>
+<p><strong>例题 2（完整推演）：∮ e^z/(z−a) dz。</strong></p>
+<p><strong>题目。</strong>计算 ∮<sub>|z|=2</sub> e<sup>z</sup>/(z−1) dz。</p>
+<p><strong>解。</strong>e<sup>z</sup> 是整函数（处处全纯）。z = 1 在圆 |z| = 2 的内部。对照 Cauchy 积分公式：f(z) = e<sup>z</sup>，a = 1，半径 r = 2。</p>
+<div class="formula display" data-tex="\oint_{|z|=2}\frac{e^z}{z-1}\,dz=2\pi i\cdot e^1=2\pi i e"></div>
+<p><strong>答：2πie。</strong></p>
+<p><strong>变体 1（奇点在外面）。</strong>∮<sub>|z|=1/2</sub> e<sup>z</sup>/(z−1) dz：此时 z = 1 在圆外，被积函数在闭圆盘 |z| ≤ 1/2 内全纯，Cauchy 定理 ⟹ 积分为 0。</p>
+<p><strong>变体 2（一般位置）。</strong>∮<sub>|z|=R</sub> e<sup>z</sup>/(z−a) dz = 2πi·e<sup>a</sup>（若 |a| &lt; R），否则 = 0。注意留数的记号呼之欲出：</p>
+<div class="formula display" data-tex="\oint_{|z|=R}\frac{e^z}{z-a}\,dz=2\pi i\cdot e^a\quad\Longleftrightarrow\quad \text{奇点 }a\text{ 的强度是 }e^a"></div>
+</section>
+
+<section>
+<h3>六、留数——为什么"绕一圈"只在乎奇点处的一个系数？</h3>
+<p>Cauchy 积分公式只能处理 f(z)/(z−a) 这种"恰好一个 1/(z−a) 因子"的形式。更一般的问题是：f 在奇点附近可以任意复杂（既有 1/(z−a)²、1/(z−a)³ 这种负幂项，也有无数正幂项），绕一圈到底剩什么？</p>
+<p><strong>答案：只剩 1/(z−a) 的系数。</strong>原因我们已经在例题 1 见过了——<strong>只有 1/(z−a) 绕一圈不归零</strong>。</p>
+<p><strong>把 f 在奇点附近"摊开"：Laurent 展开。</strong>在全纯点附近函数能展开成幂级数（全是正幂项）；在孤立奇点 a 附近，展开成"负幂项 + 正幂项"的双边级数：</p>
+<div class="formula display" data-tex="f(z)=\sum_{n=-\infty}^{\infty}c_n(z-a)^n=\cdots+\frac{c_{-2}}{(z-a)^2}+\frac{c_{-1}}{z-a}+c_0+c_1(z-a)+\cdots"></div>
+<p>例如 e<sup>1/z</sup> = 1 + 1/z + 1/(2!z²) + 1/(3!z³) + ⋯，围绕 z = 0 有无穷多负幂项——这类奇点叫<strong>本性奇点</strong>。</p>
+<p><strong>绕一圈后逐项只剩 c₋₁。</strong>用单条积分公式 ∮ (z−a)ⁿ dz = 2πi·δ<sub>n,−1</sub>（例题 1）：</p>
+<div class="formula display" data-tex="\oint f(z)\,dz=\sum_{n=-\infty}^{\infty}c_n\oint(z-a)^n\,dz=c_{-1}\cdot 2\pi i"></div>
+<p>正幂项（n ≥ 0）有原函数、归零；负幂项 n ≤ −2 也有原函数、归零；<strong>唯独 n = −1 的系数 c₋₁ 乘以 2πi 幸存</strong>。</p>
+<p><strong>这个 c₋₁ 就叫留数</strong>（residue），记 Res(f, a)：</p>
+<div class="formula display" data-tex="\mathrm{Res}(f,a):=c_{-1}=\frac{1}{2\pi i}\oint_{|z-a|=r}f(z)\,dz"></div>
+<p><strong>为什么留数只关心奇点？</strong>因为"非奇点部分"——Laurent 展开里所有 n ≥ 0 与 n ≤ −2 的项——在任意闭合曲线上积分恒为 0：它们都能写成某个函数的导数，绕一圈回到起点自动抵消。于是圈里没有奇点时整个积分是 0（Cauchy 定理）；<strong>圈里每藏一个奇点，就多出一条 2πi·Res 的账</strong>。复杂的曲线积分，就这样被压缩成"数几个点、各记一个数"。</p>
+<div class="key-insight">留数定理的美妙之处：把整个围道积分化为求几个点的数——积分变成了"在奇点处求导数的极限"。</div>
+</section>
+
+<section>
+<h3>七、留数定理——整门课的"计算引擎"</h3>
+<p>把第六节的单奇点结论叠加起来，就得到整个复分析最常用的定理：</p>
+<p><strong>定理（留数定理）。</strong>设 f 在正向（逆时针）闭合曲线 γ 内部有孤立奇点 a₁, …, aₙ，且 f 在 γ 上及其内部除这些点外全纯，则</p>
+<div class="formula display" data-tex="\oint_\gamma f(z)\,dz=2\pi i\sum_{k=1}^{n}\mathrm{Res}(f,a_k)"></div>
+<p>（最严格的版本还要给每个留数乘上卷绕数 ind(γ, aₖ)，见附二。）</p>
+<p><strong>把积分变成数数。</strong>原本要做的是整条曲线上的积分；现在只需要：(1) 找出圈内的奇点；(2) 在每个奇点算一个数——留数；(3) 加起来乘 2πi。仅此而已。这就是"计算引擎"的含义。</p>
+<p><strong>怎么算留数？</strong>一阶极点用最常用的极限公式，高阶极点用求导公式（推导见附三）：</p>
+<div class="formula display" data-tex="\text{一阶极点：}\ \mathrm{Res}(f,a)=\lim_{z\to a}(z-a)f(z)"></div>
+<div class="formula display" data-tex="m\text{ 阶极点：}\ \mathrm{Res}(f,a)=\lim_{z\to a}\frac{1}{(m-1)!}\frac{d^{\,m-1}}{dz^{\,m-1}}\Big[(z-a)^{m}f(z)\Big]"></div>
+<p>有理函数还有一个速算法：若 f = P/Q，Q 在 a 有一阶零点（Q′(a) ≠ 0），则 Res(f, a) = P(a)/Q′(a)。</p>
+</section>
+
+<section>
+<h3>八、例题 3（完整推演）：用留数定理算实积分 ∫ dx/(1+x²)</h3>
+<p>这是留数定理最经典的"实战"：算一个<strong>实轴上的积分</strong>，却把问题搬进复平面、绕到上半平面解决。请完整跟一遍，它包含了全部关键套路。</p>
+<p><strong>题目。</strong>计算 I = ∫<sub>−∞</sub><sup>∞</sup> dx/(1+x²)。</p>
+<p><strong>第 0 步：为什么要绕到复平面？</strong>这个积分用 arctan 换元也能算，但思路必须通用——遇到更难的实积分（∫ sin x/x、∫ dx/(x⁴+1)），复平面的"绕道"就不可替代了。套路：把实函数 f(x) 延拓为复函数 f(z)，构造一个<strong>闭合</strong>围道（实轴线段 + 上半平面大圆弧），使实轴部分正好是我们要的积分、圆弧部分趋于 0，然后整圈用留数定理。</p>
+<p><strong>第 1 步：延拓并找出奇点。</strong>取 f(z) = 1/(z²+1) = 1/((z−i)(z+i))。奇点在 z = ±i。上半平面 Im z &gt; 0 里只有<strong>z = i</strong> 一个。</p>
+<p><strong>第 2 步：构造围道。</strong>Γ_R = [−R, R]（实轴线段）+ C_R（上半平面大圆弧，半径 R），R 足够大以保证把 z = i 包在里面：</p>
+<div class="formula display" data-tex="\Gamma_R=[-R,R]\cup C_R,\qquad C_R=\{z=Re^{i\theta}:0\le\theta\le\pi\}"></div>
+<p><strong>第 3 步：算留数。</strong>z = i 是一阶极点（分母在 i 处一阶零点）：</p>
+<div class="formula display" data-tex="\mathrm{Res}(f,i)=\lim_{z\to i}(z-i)\frac{1}{(z-i)(z+i)}=\lim_{z\to i}\frac{1}{z+i}=\frac{1}{2i}=-\frac{i}{2}"></div>
+<p><strong>第 4 步：留数定理。</strong>整圈 Γ_R 内唯一奇点是 z = i：</p>
+<div class="formula display" data-tex="\oint_{\Gamma_R}\frac{dz}{z^2+1}=2\pi i\cdot\frac{1}{2i}=\pi"></div>
+<p><strong>第 5 步：证圆弧部分消失。</strong>在 C_R 上 |z| = R，故 |1/(z²+1)| ≤ 1/(R²−1)（R &gt; 1），弧长为 πR，于是</p>
+<div class="formula display" data-tex="\left|\int_{C_R}\frac{dz}{z^2+1}\right|\le \frac{\pi R}{R^2-1}\ \xrightarrow{\ R\to\infty\ }\ 0"></div>
+<p><strong>第 6 步：令 R → ∞。</strong>整圈积分 = 实轴部分 + 圆弧部分；圆弧部分 → 0，故</p>
+<div class="formula display" data-tex="\lim_{R\to\infty}\int_{-R}^{R}\frac{dx}{1+x^2}=\pi\quad\Longrightarrow\quad \boxed{\ \int_{-\infty}^{\infty}\frac{dx}{1+x^2}=\pi\ }"></div>
+<p><strong>检验。</strong>换元 x = tan θ 直接验证：∫ dx/(1+x²) = arctan x，从 −∞ 到 ∞ 是 π/2 − (−π/2) = π。✓ 与复方法吻合。</p>
+<p><strong>套路总结（请背下来）。</strong>① 延拓到复平面；② 找上半平面奇点；③ 取围道 = 实轴 + 上半圆；④ 算留数、用留数定理；⑤ 证明圆弧部分 → 0（|f| 型用幅角估计，振荡型用 Jordan 引理，见附四）；⑥ 取极限，必要时取实部/虚部。</p>
+</section>
+
+<section>
+<h3>九、例题 4（完整推演）：∫ sin x/x dx = π——用小半圆绕过实轴上的奇点</h3>
+<p>上一个例题里奇点 z = i 在上半平面深处。如果奇点<strong>落在实轴上</strong>呢？经典案例是狄利克雷积分 ∫<sub>−∞</sub><sup>∞</sup> sin x/x dx。被积函数在 0 处其实可去，但复方法给出一条特别干净的路线。</p>
+<p><strong>第 1 步：取 f(z) = e^{iz}/z。</strong>取指数而不是 sin，是因为 sin z = (e<sup>iz</sup> − e<sup>−iz</sup>)/(2i)，而 Jordan 引理只对上半平面的 e<sup>iz</sup> 好使（|e<sup>iz</sup>| = e<sup>−Im z</sup> 在上半平面指数衰减）。最后取虚部拿回 sin。</p>
+<p><strong>第 2 步：构造围道（带"小半圆"）。</strong>z = 0 在实轴上，围道不能直接压过去，用小半圆绕开它：Γ_{R,ε} = [−R, −ε] ∪ [ε, R]（实轴两段，绕开 0）+ 小半圆 C_ε（上半平面，中心 0、半径 ε，顺时针）+ 大半圆 C_R（上半平面，半径 R）。</p>
+<div class="formula display" data-tex="\Gamma_{R,\varepsilon}=[-R,-\varepsilon]\cup C_\varepsilon\cup[\varepsilon,R]\cup C_R"></div>
+<p><strong>第 3 步：上半平面内无奇点 ⟹ 整圈积分为 0。</strong>f 的唯一奇点在 z = 0，而 0 被小半圆绕开、落在围道外，Cauchy 定理给出</p>
+<div class="formula display" data-tex="\oint_{\Gamma_{R,\varepsilon}}\frac{e^{iz}}{z}\,dz=0"></div>
+<p><strong>第 4 步：小半圆的贡献 → −πi。</strong>在 0 附近 e<sup>iz</sup> = 1 + O(z)，故 f(z) = 1/z + O(1)。C_ε 是"整圆的一半"，方向却是顺时针，所以它给出"整圆积分 2πi 的一半、反向"：</p>
+<div class="formula display" data-tex="\int_{C_\varepsilon}\frac{dz}{z}\ \xrightarrow{\ \varepsilon\to0\ }\ -\pi i,\qquad \int_{C_\varepsilon}O(1)\,dz\to 0"></div>
+<p><strong>第 5 步：大半圆贡献 → 0（Jordan 引理）。</strong>C_R 上 |1/z| ≤ 1/R → 0，且 e<sup>iz</sup> 在上半平面指数衰减。Jordan 引理（附四）给出 ∫<sub>C_R</sub> e<sup>iz</sup>/z dz → 0。</p>
+<p><strong>第 6 步：令 R → ∞、ε → 0，对整圈积分拆项。</strong></p>
+<div class="formula display" data-tex="0=\mathrm{P.V.}\int_{-\infty}^{\infty}\frac{e^{ix}}{x}\,dx-\pi i\quad\Longrightarrow\quad \mathrm{P.V.}\int_{-\infty}^{\infty}\frac{e^{ix}}{x}\,dx=\pi i"></div>
+<p>（P.V. 表示柯西主值，因为绕过了 0；等号右边的 −πi 正是小半圆——它替"0 号奇点"付了半个留数的账，符号来自顺时针方向。）</p>
+<p><strong>第 7 步：取虚部。</strong>e<sup>ix</sup> = cos x + i sin x。左边取虚部得 ∫ sin x/x dx（sin x/x 在 0 处可去，主值 = 普通积分）；右边取虚部得 π：</p>
+<div class="formula display" data-tex="\boxed{\ \int_{-\infty}^{\infty}\frac{\sin x}{x}\,dx=\pi\ }"></div>
+<p><strong>小结。</strong>两个新技巧：① 奇点在实轴上时，用小半圆绕过它，代价是付出"半个留数 × 2πi × 定向符号"；② 处理振荡积分时取 f(z) = e<sup>iaz</sup>·g(z)，让指数替你衰减。这两招是留数法的看家本领。</p>
+</section>
+
+<section>
+<h3>十、例题 5：∫ dθ/(a+cos θ)——把三角积分变成单位圆上的围道积分</h3>
+<p>最后一种常见套路：<strong>三角有理积分</strong>。令 z = e<sup>iθ</sup>（θ 从 0 到 2π），则 z 绕单位圆一周，且 cos θ = (z + z⁻¹)/2、dθ = dz/(iz)。于是"角度积分"变成"单位圆上的围道积分"——三角问题秒变代数。完整推演如下。</p>
+<p><strong>题目。</strong>计算 I = ∫₀<sup>2π</sup> dθ/(a + cos θ)，其中 a &gt; 1。</p>
+<p><strong>第 1 步：换元。</strong>令 z = e<sup>iθ</sup>，则 |z| = 1、逆时针，dθ = dz/(iz)，cos θ = (z + z⁻¹)/2：</p>
+<div class="formula display" data-tex="I=\oint_{|z|=1}\frac{1}{a+\frac{z+z^{-1}}{2}}\cdot\frac{dz}{iz}=\oint_{|z|=1}\frac{-2i}{z^2+2az+1}\,dz"></div>
+<p><strong>第 2 步：找单位圆内的极点。</strong>解 z² + 2az + 1 = 0：z = −a ± √(a²−1)。两根乘积为 1，故 |z₁|·|z₂| = 1；又 a &gt; 1 ⟹ |z₁| = a − √(a²−1) &lt; 1 &lt; |z₂| = a + √(a²−1)。<strong>单位圆内只有 z₁ = −a + √(a²−1)。</strong></p>
+<p><strong>第 3 步：留数。</strong>记 z₂ = −a − √(a²−1)，则 z₁ − z₂ = 2√(a²−1)。一阶极点公式：</p>
+<div class="formula display" data-tex="\mathrm{Res}(f,z_1)=\frac{-2i}{z_1-z_2}=\frac{-2i}{2\sqrt{a^2-1}}=\frac{-i}{\sqrt{a^2-1}}"></div>
+<p><strong>第 4 步：留数定理。</strong></p>
+<div class="formula display" data-tex="I=2\pi i\cdot\frac{-i}{\sqrt{a^2-1}}=\boxed{\ \frac{2\pi}{\sqrt{a^2-1}}\ }"></div>
+<p><strong>检验。</strong>取 a → ∞：被积函数 ≈ 1/a，积分 ≈ 2π/a；公式 2π/√(a²−1) ≈ 2π/a，吻合。✓ 取 a = 1：被积函数在 θ = π 处发散，公式中 a²−1 → 0 也发散，方向一致。</p>
+<p><strong>套路总结。</strong>凡形如 ∫₀<sup>2π</sup> R(cos θ, sin θ) dθ 的积分，令 z = e<sup>iθ</sup>，转成单位圆上的围道积分，再用留数定理。三角函数积分，就这样变成了代数留数求和。</p>
+</section>
+
+<section>
+<h3>十一、关键公式</h3>
+<div class="formula display" data-tex="\oint_{|z-a|=r}(z-a)^{n}\,dz=\begin{cases}2\pi i&n=-1\\0&n\ne-1\end{cases}"></div>
+<div class="formula display" data-tex="f(a)=\frac{1}{2\pi i}\oint\frac{f(z)}{z-a}\,dz,\qquad f^{(n)}(a)=\frac{n!}{2\pi i}\oint\frac{f(z)}{(z-a)^{n+1}}\,dz"></div>
+<div class="formula display" data-tex="\oint_\gamma f(z)\,dz=2\pi i\sum_{k=1}^n\mathrm{Res}(f,a_k)"></div>
+<div class="formula display" data-tex="\mathrm{Res}(f,a)=\lim_{z\to a}(z-a)f(z)\quad\text{(一阶极点)}"></div>
+<div class="formula display" data-tex="\int_{-\infty}^{\infty}\frac{dx}{1+x^2}=\pi,\qquad \int_{-\infty}^{\infty}\frac{\sin x}{x}\,dx=\pi,\qquad \int_0^{2\pi}\frac{d\theta}{a+\cos\theta}=\frac{2\pi}{\sqrt{a^2-1}}\ (a>1)"></div>
+</section>
+
+<section>
+<h3>十二、试试看（带提示）</h3>
+<p><strong>1.</strong> 计算 ∮ dz/z 沿半径 = 2 的圆；把半径改成 5，积分值变吗？为什么？<br>
+<em>提示：参数化 z = Re^{it}，R 在分子分母中被约掉。答案不变，都是 2πi。</em></p>
+<p><strong>2.</strong> 用留数定理计算 ∫<sub>−∞</sub><sup>∞</sup> dx/(x²+1)²。z = i 是二阶极点，留数 = ？<br>
+<em>提示：用二阶极点公式 Res(f,i) = lim_{z→i} d/dz[(z−i)²·1/(z²+1)²] = lim_{z→i} d/dz[1/(z+i)²] = −i/4。积分 = 2πi·(−i/4) = π/2。</em></p>
+<p><strong>3.</strong> 计算 ∮<sub>|z|=2</sub> e<sup>z</sup>/((z−1)(z−3)) dz。<br>
+<em>提示：圈内只有 z = 1。留数 Res = lim_{z→1} e^z/(z−3) = e/(−2) = −e/2。答案 2πi·(−e/2) = −πie。</em></p>
+<p><strong>4.</strong> 为什么 Jordan 引理说"上半平面半圆上的积分 → 0"？关键条件是什么？<br>
+<em>提示：|e^{iaz}| = e^{−aR sinθ}，而 sinθ ≥ 2θ/π 在 [0, π/2]，故 R∫₀^π e^{−aR sinθ} dθ 有界（≤ π/a）。关键条件：f 在圆弧上一致趋于 0，且 a &gt; 0。若 a &lt; 0 则指数改为发散，必须换下半圆。</em></p>
+<p><strong>5.</strong> 用 Cauchy 积分公式解释：为什么全纯函数自动无穷可微？<br>
+<em>提示：对公式 f(a) = (1/2πi)∮ f(z)/(z−a) dz 关于 a 求 n 阶导，1/(z−a) 的 n 阶导给出 n!/(z−a)^{n+1}，一致收敛保证换序合法。</em></p>
+<p><strong>6.</strong> 计算 ∫₀<sup>2π</sup> dθ/(2 + cos θ)。<br>
+<em>提示：套用例题 5 的公式，取 a = 2，答案 2π/√(4−1) = 2π/√3。</em></p>
+</section>
+
+<section>
+<h3>附一：Cauchy 积分定理（Goursat 定理）——完整证明</h3>
+<p><strong>定理（Goursat，1900）。</strong>设 f 在开集 Ω ⊂ ℂ 上全纯（复可微，不假设 f′ 连续），γ 是 Ω 内可求长的闭曲线，则</p>
+<div class="formula display" data-tex="\oint_\gamma f(z)\,dz=0"></div>
+<p><strong>证明分三层。</strong></p>
+<p><strong>① 三角形版本（Goursat）。</strong>若 f 在三角形 T 上全纯，则 ∮_{∂T} f dz = 0。思路：四等分 T，取使积分模最大的子三角形 T₁（此时 ∮_{∂T} f dz = 4·∮_{∂T₁} f dz），递归得到三角形序列收缩到一点 z₀。由全纯性 f(z) = f(z₀) + f′(z₀)(z − z₀) + ε(z)(z − z₀)，其中 ε(z) → 0。常数项与线性项的围道积分均为 0（∮ dz = 0、∮ z dz = 0），剩余项随三角形周长缩小而任意小，趋于 0。故原积分为 0。</p>
+<p><strong>② 同伦版本。</strong>由三角形结果推出 f 在凸域上有原函数（F(z) = ∫ f(ζ) dζ 良定义且 F′ = f），进而"同伦形变的闭曲线围道积分不变"——两条同伦曲线围成的带状区域可分成小三角形，边界的公共部分互相抵消，因此积分之差为零。</p>
+<p><strong>③ 一般可求长曲线。</strong>用内接多边形逼近 γ，取极限。∎</p>
+<p><strong>要点。</strong>Goursat 的贡献是删去"f′ 连续"这一多余假设——只要 f 复可微即可。它是全纯函数最纯粹的结构定理，也是后面积分公式与留数定理的基石。</p>
+</section>
+
+<section>
+<h3>附二：留数定理——完整证明（Laurent 展开 + 逐项积分）</h3>
+<p><strong>定理。</strong>Ω 为开集，γ ⊂ Ω 为可求长闭曲线且连同其内部（卷绕数意义下）⊂ Ω；f 在 Ω ∖ {a₁, …, aₙ} 全纯，aₖ 为孤立奇点。则</p>
+<div class="formula display" data-tex="\oint_\gamma f(z)\,dz=2\pi i\sum_{k=1}^{n}\mathrm{ind}(\gamma,a_k)\,\mathrm{Res}(f,a_k)"></div>
+<p><strong>完整证明。</strong>① <strong>留数定义</strong>：对孤立奇点 a，f 在去心邻域 0 &lt; |z−a| &lt; R 上有唯一 Laurent 展开（Laurent 定理保证存在与唯一）：</p>
+<div class="formula display" data-tex="f(z)=\sum_{n=-\infty}^{\infty}c_n(z-a)^n,\qquad \mathrm{Res}(f,a):=c_{-1}"></div>
+<p>② <strong>基本积分公式</strong>：对整数 n 与圆 C_r = {|z−a| = r}，</p>
+<div class="formula display" data-tex="\oint_{C_r}(z-a)^n\,dz=\begin{cases}2\pi i&n=-1\\0&n\ne -1\end{cases}"></div>
+<p>证明：n ≥ 0 时被积函数有原函数 (z−a)^{n+1}/(n+1) ⟹ 积分为 0；n ≤ −2 时设 m = −n ≥ 2，(z−a)^{−m} = d/dz[(z−a)^{1−m}/(1−m)] 有原函数 ⟹ 0；n = −1 时参数化 z = a + re^{it}：∫₀^{2π} re^{it}·i dt/(re^{it}) = 2πi。③ <strong>逐项积分</strong>：Laurent 级数在紧圆环上一致收敛（主部与幂级数部均一致收敛），可逐项积分：</p>
+<div class="formula display" data-tex="\oint_{C_r} f\,dz=\sum_{n=-\infty}^{\infty}c_n\oint_{C_r}(z-a)^n\,dz=c_{-1}\cdot 2\pi i=2\pi i\,\mathrm{Res}(f,a)"></div>
+<p>④ <strong>多个奇点</strong>：用互不相交的小圆盘 D(aₖ, rₖ) 分别绕每个奇点挖洞，在多连通区域（γ 与诸小圆围成）上 f 全纯，Cauchy 定理的多连通版本给出 ∮_γ f dz = Σₖ ∮_{Cₖ} f dz（Cₖ 逆时针）；代入第③步即得，卷绕数 ind(γ, aₖ) 处理 γ 绕 aₖ 的圈数。∎</p>
+<p><strong>推论</strong>：γ 为正向简单闭曲线且所有奇点在内部 ⟹ ∮ = 2πi·Σ Res——计算实积分的总引擎。</p>
+</section>
+
+<section>
+<h3>附三：高阶极点：留数的极限公式</h3>
+<p>若 f 在 a 有 m 阶极点（m ≥ 1），即 (z−a)^m f(z) 在 a 解析且非零，则</p>
+<div class="formula display" data-tex="\mathrm{Res}(f,a)=\lim_{z\to a}\frac{1}{(m-1)!}\frac{d^{m-1}}{dz^{m-1}}\Big[(z-a)^m f(z)\Big]"></div>
+<p><strong>证明。</strong>设 g(z) = (z−a)^m f(z) = Σ_{k=0}^{∞} b_k (z−a)^k 在 a 解析（b₀ = g(a) ≠ 0）。则 f(z) = Σ_k b_k (z−a)^{k−m}。Res(f, a) 是 (z−a)^{−1} 的系数，即 k − m = −1 ⟹ k = m − 1 ⟹ Res(f, a) = b_{m−1} = g^{(m−1)}(a)/(m−1)! = 极限公式右边。∎</p>
+<p><strong>标准应用与陷阱。</strong>① <strong>比值公式</strong>：f = P/Q，Q 在 a 有一阶零点（Q′(a) ≠ 0），则 Res(f, a) = P(a)/Q′(a)。② <strong>陷阱</strong>：(m−1)! 与求导阶数必须严格对应——常见错误是误用 m 阶导数（丢掉因子）。③ 例：f(z) = 1/(z²+1)²，a = i，m = 2：Res(f, i) = lim_{z→i} d/dz[1/(z+i)²] = −2/(2i)³ = −2/(−8i) = 1/(4i) = −i/4。</p>
+</section>
+
+<section>
+<h3>附四：Jordan 引理——衰减与振荡的分离（完整证明）</h3>
+<p><strong>Jordan 引理。</strong>设 f 在上半平面 Im z ≥ 0 的圆弧 C_R = {z = Re^{iθ}: 0 ≤ θ ≤ π} 上满足 f(z) → 0（R → ∞，关于 θ 一致），则对 a &gt; 0：</p>
+<div class="formula display" data-tex="\lim_{R\to\infty}\int_{C_R}e^{iaz}f(z)\,dz=0"></div>
+<p><strong>证明。</strong>参数化 z = Re^{iθ}，|e^{iaz}| = e^{−aR sinθ}。于是</p>
+<div class="formula display" data-tex="\left|\int_{C_R}e^{iaz}f(z)\,dz\right|\le \max_{C_R}|f|\cdot R\int_0^\pi e^{-aR\sin\theta}\,d\theta=2\max_{C_R}|f|\cdot R\int_0^{\pi/2}e^{-aR\sin\theta}\,d\theta"></div>
+<p>用 sinθ ≥ 2θ/π（θ ∈ [0, π/2]）：R∫₀^{π/2} e^{−aR sinθ} dθ ≤ R∫₀^{π/2} e^{−2aRθ/π} dθ = (π/2a)(1 − e^{−aR}) ≤ π/2a。故整个积分 ≤ 2·max|f|·π/2a = π·max|f|/a → 0。∎</p>
+<p><strong>要点。</strong>① 仅需 f → 0，<strong>不需要</strong> R·|f| → 0（强于直接估计）；② 指数因子 e^{iaz} 的振荡与衰减（a &gt; 0）起关键作用——这是处理 ∫ sin x/x、Fourier 变换、Kramers–Kronig 关系时圆弧贡献消失的根本原因；③ 对下半圆（a &lt; 0）改用 e^{−iaz}。</p>
+</section>
+
+<section>
+<h3>附五：标准反例</h3>
+<p><strong>反例 1（非单连通区域需多围道/卷绕数）。</strong>f(z) = 1/z 在 ℂ ∖ {0} 全纯，但该区域不单连通。绕原点 k 圈的闭曲线给出 ∮ dz/z = 2πi·k ≠ 0——单连通条件不可省。在环带 1 &lt; |z| &lt; 2 中，边界由内外两圆组成，积分等于内圆与外圆积分的差，必须按定向逐段相加。</p>
+<p><strong>反例 2（本性奇点 e^{1/z} 的留数）。</strong>f(z) = e^{1/z} 在 z = 0 有本性奇点（Laurent 展开含无穷多负幂项）。展开：</p>
+<div class="formula display" data-tex="e^{1/z}=1+\frac1z+\frac{1}{2!z^2}+\frac{1}{3!z^3}+\cdots\ \Longrightarrow\ \mathrm{Res}(f,0)=1"></div>
+<p>留数仍为单个数 c₋₁ = 1，故 ∮_{|z|=1} e^{1/z} dz = 2πi。要点：本性奇点处留数由 Laurent 展开唯一决定，但函数在该奇点附近没有极点行为——它遍历所有复值（Picard 大定理）。</p>
+</section>
+
+<section>
+<h3>附六：标准反例——本性奇点与无穷远点的留数</h3>
+<p><strong>反例 1（本性奇点的留数由 Laurent 系数定义，与"函数值"无关）。</strong>f(z) = e^{1/z} 在 z = 0 有本性奇点，展开给出 Res(f, 0) = 1（上文已证 ∮_{|z|=1} e^{1/z} dz = 2πi）。但 f 在 0 的任一去心邻域内取到除一个例外外的所有复值（Picard 大定理）——<strong>留数 ≠ 函数"留在"该点的值</strong>，它只是 Laurent 系数 c₋₁。</p>
+<p><strong>反例 2（无穷远点的留数与定向）。</strong>把 ℙ¹ = ℂ ∪ {∞} 视为流形，无穷远点的留数定义为</p>
+<div class="formula display" data-tex="\mathrm{Res}(f,\infty)=-\mathrm{Res}\!\left(\frac{1}{z^2}f\!\left(\frac{1}{z}\right),0\right)"></div>
+<p>（负号来自换坐标 w = 1/z 的定向反转）。例：f(z) = 1/z ⟹ Res(1/z, ∞) = −Res(w²·(1/w), 0) = −Res(w, 0) = 0；但 ∮_{|z|=R} dz/z = 2πi ≠ 0——<strong>∞ 点不在有限区域内部，留数定理必须计及 ∞ 的留数</strong>：∮_γ f dz = 2πi·(Σ_有限 Res + Res(f, ∞))。</p>
+<p><strong>反例 3（留数为零 ≠ 函数消失）。</strong>g(z) = e^{1/z}·(1/z)：Res(g, 0) = 0，但 g 在 0 附近振荡到无穷。留数是<strong>复结构</strong>对象，不是<strong>函数值</strong>对象——本性奇点处留数定理仍适用（按 Laurent 系数），但所有正则性结论（有界性、极限）完全失效。</p>
+</section>
+
+<section>
+<h3>附七：工作题</h3>
+<p><strong>题 1</strong>：用留数定理计算实积分 I = ∫₋∞^∞ dx/(1+x²)。（上半平面半圆围道 + Jordan 引理。）</p>
+<p><strong>题 2</strong>：求 f(z) = 1/(z²+1)² 在 z = i（二阶极点）处的留数，并计算 ∮_{|z|=2} f(z) dz。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：取围道 Γ_R = [−R, R] + 上半圆弧 C_R。f(z) = 1/(z²+1) 在 Im z &gt; 0 内仅有极点 z = i（一阶），Res(f, i) = lim_{z→i} (z−i)/((z−i)(z+i)) = 1/(2i) = −i/2。留数定理：∮ f dz = 2πi·(−i/2) = π。圆弧估计（R &gt; 1）：|f| ≤ 1/(R²−1)，弧长 πR，故 |∫_{C_R} f dz| ≤ πR/(R²−1) → 0。令 R → ∞ 得 ∫₋∞^∞ dx/(1+x²) = π。∎</p>
+<p><strong>题 2</strong>：二阶极点留数公式：Res(f, i) = lim_{z→i} d/dz[(z−i)²·1/(z²+1)²] = lim_{z→i} d/dz[1/(z+i)²] = lim_{z→i} −2/(z+i)³ = −2/(2i)³ = −2/(−8i) = 1/(4i) = −i/4。圆 |z| = 2 内部含两个奇点 i 与 −i：Res(f, −i) = lim_{z→−i} −2/(z−i)³ = −2/(−2i)³ = −2/(8i) = −1/(4i) = i/4。两留数之和为 0 ⟹ ∮_{|z|=2} f dz = 2πi·0 = 0。（若只取上半平面计算实积分：∫₋∞^∞ dx/(x²+1)² = 2πi·Res(f, i) = 2πi·(−i/4) = π/2。）</p>
+</p></details>
+</section>
+
+<section>
+<h3>附八：工作题——∫ sin x/x 与有理函数积分</h3>
+<p><strong>题 1</strong>：用留数方法计算 I = ∫₋∞^∞ sin x/x dx。给出完整围道构造（含绕 z = 0 的小圆弧处理）与每一步的依据。</p>
+<p><strong>题 2</strong>：计算 J = ∫₋∞^∞ dx/((x²+a²)(x²+b²))，其中 a, b &gt; 0 且 a ≠ b。</p>
+<p><strong>题 3</strong>：用锁孔（keyhole）围道证明 ∫₀^∞ x^{s−1}/(1+x) dx = π/sin(πs)，0 &lt; s &lt; 1（留数定理 + 割线）。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：取 f(z) = e^{iz}/z。围道 Γ_{R,ε} = [−R, −ε] ∪ [ε, R]（实轴）+ 小半圆 C_ε（上半平面绕 0，顺时针）+ 大半圆 C_R（上半平面）。① 上半平面内 f 全纯（0 被绕开）⟹ ∮ = 0。② 小半圆：f = e^{iz}/z = 1/z + O(1)，C_ε 绕 0 半圈顺时针，∫_{C_ε} dz/z = −πi ⟹ ∫_{C_ε} f dz → −πi·Res(f, 0) = −πi（O(1) 项积分 → 0）。③ 大半圆：Jordan 引理（a = 1，|f| → 0）⟹ 贡献 → 0。④ 总方程：0 = P.V.∫ e^{ix}/x dx − πi ⟹ P.V.∫ e^{ix}/x dx = πi。取虚部：P.V.∫ sin x/x dx = π；因 sin x/x 在 0 可去，P.V. = 普通积分 ⟹ I = π。∎</p>
+<p><strong>题 2</strong>：上半平面极点为 ia, ib（一阶）。Res(f, ia) = 1/((2ia)(ia−ib)(ia+ib)) = 1/(2ia(b²−a²))；Res(f, ib) = 1/(2ib(a²−b²))。留数定理（上半平面半圆 + Jordan 引理，|f|·R → 0）：J = 2πi[Res(ia) + Res(ib)] = 2πi·[1/(2i(b²−a²))·(1/a − 1/b)] = π/(ab(a+b))。∎</p>
+<p><strong>题 3</strong>：取 f(z) = z^{s−1}/(1+z)，分支割线沿 [0, ∞)，arg z ∈ (0, 2π)。锁孔围道：大小圆弧 + 割线上、下边。① 大圆弧 |f| ≤ R^{s−1}/(R−1) → 0（s &lt; 1）；小圆弧 ~ ε^{s−1}·ε → 0（s &gt; 0）。② 上下边：上边（arg 0）贡献 ∫_ε^R t^{s−1}/(1+t) dt；下边（arg 2π）从 R 到 ε 贡献 −e^{i2π(s−1)}∫_ε^R t^{s−1}/(1+t) dt。③ 内部唯一极点 z = e^{iπ} = −1，Res(f, −1) = e^{iπ(s−1)}。④ 留数定理（ε→0, R→∞）：(1 − e^{i2π(s−1)})·I = 2πi·e^{iπ(s−1)}。因 e^{i2π(s−1)} = e^{i2πs}，左因子 = −2i·e^{iπs}·sin(πs)，右端 = −2πi·e^{iπs}，解得 I = π/sin(πs)。∎</p>
+</p></details>
+</section>
+
+<section><h3>物理应用——Kramers–Kronig 关系</h3><p>因果律要求响应函数 χ(ω) 在上半平面全纯——实部和虚部通过 Hilbert 变换关联：Re χ(ω) = (1/π) P ∫ Im χ(ω′)/(ω′−ω) dω′。这是"因果律 = 复平面上半平面全纯性"的物理表达——留数定理在物理学中最优雅的应用之一。</p></section>
+
+<section><h3>前沿：多重围道积分与费曼积分</h3><p>多圈费曼积分 = 多重围道积分。Cutkosky 规则（1960）将虚部与物理阈值关联。现代"微分方程方法"（Henn 2013）将费曼积分化简为 Chen 迭代积分的线性组合。仍开放：超越标准模型的五圈计算和椭圆多对数的一般理论。</p></section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>L. Ahlfors, Complex Analysis</strong></p>
+<p>&rarr; <strong>J. Conway, Functions of One Complex Variable</strong></p>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/complex-plane.html">🔄 复平面与全纯函数</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/several-complex-variables.html">🪞 多复变</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：分析核心链。</p>
+</section>

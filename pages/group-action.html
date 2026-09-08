@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="对称操作——旋转三角形" />
+  <meta property="og:title" content="群作用 — Vibe Math" />
+  <meta property="og:description" content="对称操作——旋转三角形" />
+  <title>群作用 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🔺 群作用 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">对称操作——旋转三角形</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='group-action',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/gravitational-lens.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔭 引力透镜</a>
+  <a href="/pages/lie-algebra.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔄 李代数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——"对称"就是一套可以做的操作</h3>
+<p>一个等边三角形，转 120° 还是老样子。这些"转完还是原样"的操作放在一起，就像一张舞步清单：转、转、翻、翻。一套操作作用在一堆东西上，看能变出多少种花样，就叫"群作用"。再具体一点：正方体有 24 种不同的旋转都让它保持原样——这 24 个操作排成一队，就是一个群作用的故事。</p>
+<p>科学家靠它数出：一串项链有多少种不同戴法、一块晶体里有几种不同的原子位置、物理里哪些量会守恒。原本玄乎的"对称"，变成了一套可以数、可以算的数学工具。</p>
+<div class="key-insight">一句话：群作用 = 用一套"对称操作"翻来翻去，数能变出几种花样。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/abstract-algebra.html">抽象代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——正方体的 24 种旋转："对称"就是一套操作</h3>
+<p>先数一数正方体的旋转到底有几种。按住正方体在空间里转动，转完它跟原来完全重合：</p>
+<ul>
+  <li>恒等旋转（不动）：1 种；</li>
+  <li>绕穿过两个相对面中心的轴转 90°/180°/270°：3 根轴 × 3 个角度 = 9 种；</li>
+  <li>绕穿过两条相对棱中点的轴转 180°：6 根轴 = 6 种；</li>
+  <li>绕穿过两个相对顶点的轴转 120°/240°：4 根轴 × 2 个角度 = 8 种。</li>
+</ul>
+<p>合计 1 + 9 + 6 + 8 = <strong>24 种</strong>。这 24 个旋转构成一个群：两个旋转连续做仍是旋转（封闭性），有恒等元、有逆元。等边三角形的对称群 D₃ 有 6 个操作（3 个旋转 + 3 个反射），正四面体旋转群有 12 个，正二十面体旋转群有 60 个。数字越大，几何体越"对称"。</p>
+<p><strong>群作用登场：</strong>这些旋转不是静态收藏品，而是要"作用"在物体上的——转一下，顶点到顶点、面对到面。给每个群元素分配一个"对物体各部分的搬动方式"，就是<strong>群作用</strong>。D₃ 作用在三角形的 3 个顶点上，正方体旋转群作用在它的 8 个顶点、6 个面、4 条体对角线上。</p>
+</section>
+
+<section>
+<h3>二、群作用的定义——为什么需要这两条公理</h3>
+<p>设 G 为群（单位元 e），X 为非空集合。一个（左）<strong>群作用</strong>是一个映射</p>
+<div class="formula display" data-tex="G\times X\to X,\quad (g,x)\mapsto g\cdot x"></div>
+<p>满足两条公理：</p>
+<ul>
+  <li><strong>相容性：</strong>对任意 g, h ∈ G 与 x ∈ X，有 g·(h·x) = (gh)·x；</li>
+  <li><strong>单位性：</strong>对任意 x ∈ X，有 e·x = x。</li>
+</ul>
+<p><strong>为什么是这两条？</strong> 群抽象出"操作的组合规则"，作用就得遵守这条规则。相容性说"先做 h 再做 g"与"直接做 gh"效果相同——操作的先后不能乱来；单位性说"什么都不做"就是不改变任何东西。有了这两条，每个 g ∈ G 都诱导 X 的一个<strong>双射</strong>（逆为 g⁻¹ 诱导的映射），从而群作用等价于一个群同态 G → Sym(X)（Sym(X) 是 X 上全体置换）。换句话说：<strong>作用 = 把抽象的群元素翻译成具体的搬动</strong>。</p>
+</section>
+
+<section>
+<h3>三、轨道与稳定子——为什么"轨道 + 稳定子"就够了</h3>
+<p>记</p>
+<div class="formula display" data-tex="G_x=\{g\in G : g\cdot x = x\},\qquad G\cdot x = \{g\cdot x : g\in G\}"></div>
+<p>分别为 x 的<strong>稳定子</strong>与<strong>轨道</strong>。</p>
+<p><strong>为什么这两个概念就够用？</strong> 三个理由。(1) 轨道把 X 分成互不相交的等价类（x~y ⟺ y = g·x），理解作用 = 理解每条轨道。(2) 每条轨道上的"位置关系"完全一样：y = g·x 时，从 x 到 y 的搬运方式与从 g⁻¹x 到任意点相同——轨道是"均匀"的 G-空间。(3) 每个点 x 的"内在对称性"（有哪些操作把 x 钉住不动）恰由稳定子 G_x 刻画。轨道告诉你能走到哪，稳定子告诉你有多少"冗余"；两者一乘就等于整个群的大小。这就是群论中最基本也最深刻的<strong>计数公式</strong>。</p>
+<p><strong>定理（轨道-稳定子定理）。</strong> 对任意 x ∈ X，稳定子 G_x 是 G 的子群，且轨道 G·x 与陪集空间 G/G_x 之间有一一对应；对有限群取基数即得</p>
+<div class="formula display" data-tex="|G\cdot x| = [G:G_x] = \frac{|G|}{|G_x|}"></div>
+<p><strong>完整证明：</strong></p>
+<p><strong>（1）G_x 是子群：</strong>若 g, h ∈ G_x，则 (gh)·x = g·(h·x) = g·x = x，故 gh ∈ G_x；且 g⁻¹·x = x（对等式 g·x = x 两边同时作用 g⁻¹），故 g⁻¹ ∈ G_x。非空性由 e·x = x 保证，e ∈ G_x。</p>
+<p><strong>（2）建立双射 φ: G/G_x → G·x，gG_x ↦ g·x。</strong></p>
+<ul>
+  <li><strong>良定义：</strong>若 g₁G_x = g₂G_x，则 g₂ = g₁h（h ∈ G_x），于是 g₂·x = (g₁h)·x = g₁·(h·x) = g₁·x，故 φ(g₁G_x) = φ(g₂G_x)。</li>
+  <li><strong>满射：</strong>G·x 中每个元素形如 g·x = φ(gG_x)，平凡成立。</li>
+  <li><strong>单射：</strong>若 φ(g₁G_x) = φ(g₂G_x)，即 g₁·x = g₂·x，则 (g₂⁻¹g₁)·x = x，故 g₂⁻¹g₁ ∈ G_x，即 g₁G_x = g₂G_x。</li>
+</ul>
+<p>故 φ 是双射，|G·x| = [G : G_x]。对有限群：|G| = [G : G_x]·|G_x|（Lagrange 定理），故 |G·x| = |G|/|G_x|。□</p>
+<p><strong>推论（可迁作用的刻画）：</strong>作用可迁（G·x = X）⟺ |X| = |G|/|G_x|。共轭作用 g·x = gxg⁻¹ 的稳定子恰为 x 的中心化子 C_G(x) = {g : gx = xg}——类方程即由此而来。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="|\mathrm{Orb}(x)|\cdot|\mathrm{Stab}(x)| = |G|"></div>
+<div class="formula display" data-tex="D_3 = \{e, r, r^2, s, sr, sr^2\},\quad |D_3| = 6"></div>
+<div class="formula display" data-tex="|\mathrm{Orbit}(X)| = \frac{1}{|G|}\sum_{g\in G}|\mathrm{Fix}(g)|\quad\text{(Burnside)}"></div>
+</section>
+
+<section>
+<h3>五、例题 1——正方体旋转群 ≅ S₄：轨道-稳定子定理完整演练</h3>
+<p><strong>题目。</strong> 设 G 为正方体的旋转群（|G| = 24），作用在 4 条体对角线上。求每条对角线的稳定子，验证轨道-稳定子定理，并说明 G ≅ S₄。</p>
+<p><strong>解。</strong></p>
+<p><strong>(1) 作用可迁。</strong> 任何一条对角线都能通过适当旋转被送到任何另一条（旋转群已在空间里连接所有"朝向"），故轨道只有一条，|G·d| = 4。</p>
+<p><strong>(2) 稳定子。</strong> 固定一条体对角线 d（连接顶点 A 与相对顶点 G）。哪些旋转把 d 送回到自身（作为直线，允许两端互换）？绕 d 本身的轴旋转：3 种（0°、120°、240°）；另外有 3 个 180° 旋转（绕穿过与 d 垂直的棱中点的轴），它们把 A 与 G 互换但保持直线 d。共 1 + 2 + 3 = 6 个，即 G_d ≅ S₃，|G_d| = 6。</p>
+<p><strong>(3) 验证。</strong> 轨道-稳定子定理：|G·d|·|G_d| = 4 × 6 = 24 = |G| ✓。</p>
+<p><strong>(4) G ≅ S₄。</strong> 作用在 4 条对角线上的置换给出同态 G → S₄。它是单射（只有恒等旋转固定所有 4 条对角线——若非恒等旋转固定 4 条对角线，则它固定正方体本身，只能恒等），故 G 是 S₄ 的 24 阶子群，而 |S₄| = 24，所以 G ≅ S₄。∎</p>
+<p><strong>收获。</strong> 这一题把抽象定理用成了计数工具：不动直接数 24 个旋转，而是通过"轨道 × 稳定子 = 群大小"互相校验；顺带发现正方体旋转群就是 S₄（4 条对角线的置换）。这就是"群作用 = 轨道 + 稳定子"的威力。</p>
+</section>
+
+<section><h3>共轭作用与类方程</h3><p>G 作用在自己上（共轭作用）：g·x = gxg<sup>−1</sup>。轨道 = 共轭类，稳定子 = 中心化子 C<sub>G</sub>(x) = {g : gx = xg}。类方程：</p>
+<div class="formula display" data-tex="|G|=|Z(G)|+\sum_{i}[G:C_G(x_i)]\quad\text{(类方程)}"></div>
+<p><strong>为什么共轭作用重要？</strong> 共轭类把群元素按"本质行为"分组：同一共轭类里的元素，在任何一个作用里表现都相同（g·x = x ⟺ hgh⁻¹ 也钉住 h·x）。从类方程可以推出 p 群有非平凡中心——这是 Sylow 定理证明的核心工具。</p></section>
+
+<section>
+<h3>Burnside 引理——用不动点计数轨道</h3>
+<p><strong>定理（Burnside 引理）：</strong>设有限群 G 作用于有限集合 X，记 Fix(g) = {x ∈ X : g·x = x} 为 g 的不动点集，则轨道数目</p>
+<div class="formula display" data-tex="|\mathrm{Orbit}(X)| = \frac{1}{|G|}\sum_{g\in G}|\mathrm{Fix}(g)|"></div>
+<p>即：<strong>轨道数 = 所有群元素不动点个数的平均值</strong>。</p>
+<p><strong>为什么平均不动点数等于轨道数？</strong> 因为每个轨道对"不动点计数"的贡献是均匀的。看关联集合</p>
+<div class="formula display" data-tex="S = \{(g,x)\in G\times X : g\cdot x = x\}"></div>
+<p><strong>完整证明（双计数）：</strong></p>
+<p><strong>按群元素计数：</strong>对固定 g，与之配对的 x 恰为 Fix(g)，故 |S| = Σ_{g∈G}|Fix(g)|。</p>
+<p><strong>按轨道计数：</strong>对固定 x，满足 g·x = x 的 g 恰为稳定子 G_x，共 |G_x| 个。同一轨道上所有点的稳定子大小相等：若 y = g·x，则 G_y = gG_xg⁻¹（直接验证：h·y = y ⟺ hg·x = g·x ⟺ g⁻¹hg·x = x ⟺ g⁻¹hg ∈ G_x ⟺ h ∈ gG_xg⁻¹），故 |G_y| = |G_x|。于是对每条轨道 O：贡献 Σ_{x∈O}|G_x| = |O|·|G_x| = |G|（轨道-稳定子定理）。故 |S| = |Orbit(X)|·|G|。</p>
+<p>两式相等：|Orbit(X)|·|G| = Σ_{g∈G}|Fix(g)|，除以 |G| 即得。□</p>
+<p><strong>项链问题：</strong>用 k 种颜色给 n 颗珠子的圆形项链着色，旋转等价下有多少种不同着色？这正是轨道计数——Burnside 引理秒算。物理中：晶体中不等价格点数、分子中不等价原子数，都是群作用的轨道计数问题。</p></section>
+
+<section>
+<h3>例题 2——2 色 4 珠项链 = 6 种：逐步计算</h3>
+<p><strong>题目。</strong> 用 2 种颜色给 4 颗珠子的项链着色，旋转视为等价。求本质不同的着色数。</p>
+<p><strong>解。</strong> 旋转群 G = C₄ = {e, r, r², r³} 作用在 2⁴ = 16 个着色方案上。逐个数不动点：</p>
+<ul>
+  <li>Fix(e) = 16（恒等元固定一切）；</li>
+  <li>Fix(r)：旋转 90° 后不变 ⟹ 4 颗全同色，共 2 种；</li>
+  <li>Fix(r²)：旋转 180° 后不变 ⟹ 对位同色，2² = 4 种；</li>
+  <li>Fix(r³)：同 r，2 种。</li>
+</ul>
+<p>轨道数 = (16 + 2 + 4 + 2)/4 = 24/4 = <strong>6</strong>。故项链恰有 6 种本质上不同的着色。∎</p>
+<p><strong>为什么能这样算？</strong> Burnside 把"数轨道"换成"数每个旋转钉住多少着色"——后者的每一个都只要看"哪些位置必须同色"，是纯粹的局部检查，远好过硬列 16 种方案再归类。</p>
+</section>
+
+<section><h3>Cayley 定理——每个群都是置换群</h3><p>任何群 G <strong>同构</strong>于（同构 = 本质上是同一个东西，只是换了名字或写法）S_{|G|} 的一个子群——通过左乘作用 G → Sym(G)。每个群都"是"一个置换群。凯莱定理是最基本的群表示定理（表示 = 把抽象的群元素翻译成具体的置换或矩阵，从而可以动手算）——每个抽象群可以在置换的"具体"世界中实现。这印证了第二章的定义：作用 G → Sym(X) 是群的"体现"方式，而左乘作用是最标准的体现。</p></section>
+
+<section>
+<h3>例题 3——骰子计数 = 30 种：用"非恒等元不动点为 0"巧算</h3>
+<p><strong>题目。</strong> 一枚立方体骰子有 6 个面，用 6 种不同颜色各染一面。利用立方体旋转群（24 个元素）求本质上不同的骰子数。</p>
+<p><strong>解。</strong> 6 色各染一面，着色方案总数 6! = 720。对非恒等旋转 g ≠ e：它把某个面送到另一面；若固定一个"每色一面"的着色，必须该面同色——不可能，故 Fix(g) = 0。恒等元 Fix(e) = 720。Burnside：</p>
+<div class="formula display" data-tex="\frac{1}{24}\bigl(720 + 0 + \cdots + 0\bigr) = \frac{720}{24} = 30"></div>
+<p>轨道数 = <strong>30</strong>。∎</p>
+<p><strong>直观验证。</strong> 固定骰子在空间中的位置后，24 个旋转把"同一个着色"变成 24 个"标号不同"的着色，故本质不同者 = 720/24。这里的妙处：24 个群元素里 23 个的不动点数都是 0，计算退化成一次除法。</p>
+</section>
+
+<section>
+<h3>反例辨析——自由、忠实与非自由作用</h3>
+<p><strong>定义：</strong>群作用称为<strong>自由的</strong>，若对一切 x ∈ X 都有 G_x = {e}（除恒等外无元素固定任何点）。称为<strong>忠实的</strong>，若群同态 G → Sym(X) 是单射（不同群元素诱导不同置换）。</p>
+<p><strong>反例 1（非自由但忠实的标准例子）：</strong>S₃ 自然作用在 {1, 2, 3} 上。这是忠实的（6 个置换全部不同），但<strong>不是自由的</strong>：对换 (1 2) 固定元素 3，故 G₃ = {e, (1 2)} ≅ C₂。三个元素的稳定子分别为 G₁ = {e, (2 3)}、G₂ = {e, (1 3)}、G₃ = {e, (1 2)}，均为 2 阶子群。轨道-稳定子定理的验证：|G·1| = |G|/|G₁| = 6/2 = 3，而 G·1 = {1, 2, 3} 确有 3 个元素——作用可迁（单轨道）。</p>
+<p><strong>反例 2（非自由亦非忠实的例子）：</strong>S₃ 通过"丢符号"作用在 2 元素集 {+, −} 上：偶置换（A₃）固定一切，奇置换交换两元素。这不是忠实的（A₃ 的 3 个元素作用相同），也不是自由的（每个元素都有不动点——偶置换固定全部两点）。</p>
+<p><strong>反例 3（自由且忠实——对比基准）：</strong>G 在自身上的左乘作用 g·x = gx。若 g·x = x 即 gx = x ⟹ g = e，稳定子恒为 {e}，作用自由；它也是忠实的（Cayley 定理）。这显示"自由"严格强于"忠实"。</p>
+<p><strong>S₃ 作用结构的完整分析：</strong>在 {1,2,3} 上：1 条轨道，稳定子为 2 阶子群（3 个互不相同）。在全体 2-子集 {{1,2},{1,3},{2,3}} 上：仍可迁（1 条轨道），此时 2-子集 {1,2} 的稳定子 = {e, (1 2)}，同样验证 |G·{1,2}| = 6/2 = 3。在"全部标号"上（X = S₃ 自身，左乘）：可迁，1 条轨道，稳定子 {e}。</p>
+</section>
+
+<section>
+<h3>Noether 定理——物理学的元定理</h3>
+<p>每个<strong>连续对称群</strong>（连续 = 参数能平滑变化、没有台阶，比如能转任意小的角度）对应一个<strong>守恒量</strong>（过程前后数值不改变的量）。时间平移不变 → <strong>能量守恒</strong>。空间平移不变 → <strong>动量守恒</strong>。旋转不变 → <strong>角动量守恒</strong>。U(1)<strong>规范</strong>不变（规范 = 给"相位刻度"重新编号的自由，怎么改物理结果都不变）→ <strong>电荷守恒</strong>。这是物理学中最接近"元定理"的陈述——<strong>对称性</strong>（做完某操作还跟原来一样）⇒ 守恒律。</p>
+<p><strong>与群作用的关系。</strong> 物理系统的"状态集合"是 X，"允许做的操作"是群 G（平移群、旋转群、U(1)），对称性正是 G 在 X 上的一个群作用，且每条轨道上的运动被同一守恒量约束。群作用给 Noether 定理提供了坐标系：不同对称群作用 → 不同守恒量。</p>
+</section>
+
+<section><h3>前沿：群作用与扩张图(Expanders)</h3><p>SL(3,ℤ) 在齐性空间上的作用产生了"高维扩张器"——随机游走比经典 2D 快得多的图。Lubotzky-Phillips-Sarnak (1988) 用 Ramanujan 图给出了最优扩张性。仍开放：高维扩张器的显式构造和 Ramanujan 猜想。</p></section>
+
+<section><h3>工作题</h3>
+<p><strong>题 1（轨道数计算）：</strong>考虑 C₄ = {e, r, r², r³} 作用在顶点集 {v₀, v₁, v₂, v₃} 上（r: vᵢ ↦ vᵢ₊₁）。列出每条轨道与每个顶点的稳定子，并用轨道-稳定子定理验证 |G·vᵢ|·|G_{vᵢ}| = 4。</p>
+<p><strong>题 2（Burnside 计数）：</strong>用 3 种颜色给正方形的 4 个顶点着色。分别在旋转群 C₄ 与旋转+反射群 D₄ 作用下，各有多少种本质上不同的着色？</p>
+<p><strong>题 3（骰子计数）：</strong>一枚立方体骰子有 6 个面，用 6 种不同颜色各染一面。利用立方体旋转群（24 个元素）求本质上不同的骰子数。</p>
+<p><strong>题 4（轨道公式的模 p 应用）：</strong>群 G 阶为素数 p，作用在集合 X 上且 |X| = p + 2。利用"轨道大小整除 |G|"证明 G 至少固定 X 中的两个点。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1：</strong>作用可迁，仅一条轨道：G·v₀ = {v₀, v₁, v₂, v₃}。稳定子 G_{v₀}：需 rᵏ·v₀ = v₀，即 k ≡ 0 (mod 4)，故 G_{v₀} = {e}。其余顶点的稳定子同为 {e}。验证：|G·v₀|·|G_{v₀}| = 4·1 = 4 = |C₄| ✓。此作用自由且可迁。</p>
+<p><strong>题 2：</strong>着色总数 3⁴ = 81。旋转情形 G = C₄：Fix(e) = 81；Fix(r)、Fix(r³)：4 顶点全同色，各 3；Fix(r²)：对位同色，3² = 9。轨道数 = (81 + 3 + 9 + 3)/4 = 96/4 = <strong>24</strong>。旋转+反射情形 G = D₄（|D₄| = 8）：恒等 81；旋转 r、r³ 各 3；旋转 r² 为 9；过对边中点的反射（2 个）：对边两对各自同色，3² = 9 各；过对角线的反射（2 个）：对角线顶点固定可独立选色、另一对角同色，3³ = 27 各。轨道数 = (81 + 3 + 9 + 3 + 2·9 + 2·27)/8 = (96 + 72)/8 = 168/8 = <strong>21</strong>。</p>
+<p><strong>题 3：</strong>6 色各不相同，任何非恒等旋转都把某个面送到另一面，若要保持"每色一面"必须该面同色——不可能，故非恒等元不动点数为 0：Fix(g) = 0（g ≠ e），Fix(e) = 6! = 720。轨道数 = 720/24 = <strong>30</strong>。直观：固定骰子在空间中的位置后，24 个旋转把"同一个着色"变成 24 个"标号不同"的着色，故本质不同者 = 720/24。</p>
+<p><strong>题 4：</strong>轨道公式 |X| = Σ|Oᵢ|，每条轨道大小整除 |G| = p，故轨道大小 ∈ {1, p}。对大小 p 的轨道，其贡献 ≡ 0 (mod p)；单点轨道恰为不动点。故 |X| ≡ |Fix(G)| (mod p)。已知 |X| = p + 2 ≡ 2 (mod p)，故 |Fix(G)| ≡ 2 (mod p)。Fix(G) 是全部不动点集合，其大小 ≡ 2 (mod p)，不可能为 0 或 1，故至少 2。□</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（正四面体）。</strong> 正四面体旋转群（12 个元素）作用在 4 个顶点上，求轨道与稳定子。<strong>提示：</strong>可迁；顶点稳定子 = 绕"该顶点到对面中心"的轴的 3 个旋转；验证 4×3 = 12。</p>
+<p><strong>试试看 2（正二十面体）。</strong> 正二十面体旋转群（60 个元素）作用在 12 个顶点上。<strong>提示：</strong>过每个顶点的轴有 5 个旋转（0°/72°/144°/216°/288°），验证 12×5 = 60。</p>
+<p><strong>试试看 3（2 色正方体面）。</strong> 用 2 种颜色给正方体 6 个面着色，旋转等价下有几种？<strong>提示：</strong>对 24 个旋转逐个数不动着色：恒等 2⁶；面心轴 90° 型要求相对两面对应同色，按旋转类型分组求和再平均。</p>
+<p><strong>试试看 4（共轭类的检验）。</strong> 对 S₃，验证类方程 |S₃| = 1 + 3 + 2。<strong>提示：</strong>共轭类为 {e}、{(12),(13),(23)}、{(123),(132)}，分别对应中心化子大小 6、2、3。</p>
+<p><strong>试试看 5（模 p 强化）。</strong> 把工作题 4 改到 |X| = p+2 为素数，说明为何结论不再成立。<strong>提示：</strong>试 p 阶群自由作用在 p+2 个点上：轨道均为 p 长，|X| ≡ 2 (mod p) 仍要求至少 2 个不动点，但若 |X| 本身是素数则轨道分解受阻。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Artin, Algebra</strong></p>
+<p>&rarr; <strong>J.-P. Serre, Linear Representations of Finite Groups</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/abstract-algebra.html">抽象代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：群作用是群论的核心概念——抽象代数提供了群、环、域的全景框架，群作用则是群"体现自己"的方式。</p>
+<p>&rarr; <a href="/pages/lie-algebra.html">🔄 李代数</a>：连续群（李群）在流形上的作用由李代数的表示论刻画——无穷小对称生成元的代数结构决定了群作用的局部行为，Noether 定理正是群作用到守恒律的桥梁。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：伽罗瓦群在多项式根的集合上作用——方程的可解性完全由这个群作用的轨道-稳定子结构决定，是群作用最深刻的经典应用。</p>
+<p>&rarr; <a href="/pages/category-theory-adjoint.html">🔀 伴随函子</a>：群作用本质上是函子 G→Set——范畴论提供了群作用的最抽象视角，伴随函子定理则为"自由作用"等构造给出了存在性判据。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/group-action.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="点击边走一笔画：七桥谜题、欧拉回路与四色问题" />
+  <meta property="og:title" content="图论与网络 — Vibe Math" />
+  <meta property="og:description" content="点击边走一笔画：七桥谜题、欧拉回路与四色问题" />
+  <title>图论与网络 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🕸️ 图论与网络 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">点击边走一笔画：七桥谜题、欧拉回路与四色问题</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='graph-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/additive-combinatorics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ➕ 加性组合学</a>
+  <a href="/pages/set-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📐 集合论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——柯尼斯堡的七座桥：一座城市的日常难题如何诞生了一门数学</h3>
+<p>1736 年的普鲁士城市柯尼斯堡（今俄罗斯加里宁格勒），普雷格尔河穿城而过，河心有两座岛，七座桥把两座岛与两岸连接起来。市民之间流传着一个周末消遣：<strong>能不能一次不重复地走遍全部七座桥，最后回到出发点？</strong>（后来放宽为：不必回到出发点，但每座桥仍只能走一次。）</p>
+<p>当时最伟大的数学家欧拉（Euler）用一篇题为 <em>"关于位置几何问题的解答"</em> 的论文回答：<strong>不能。</strong> 他的理由非常朴素，朴素到几乎不需要计算：把每块陆地缩成一个点、每座桥缩成一条线，问题就变成一个"一笔画"问题——而一个能一笔画完并回到起点的图，<strong>每个点被"走进"多少次就必须被"走出"多少次</strong>，所以每个点的"桥数"（度数）都必须是偶数。柯尼斯堡的四个点度数分别是 3、3、3、5——全是奇数，当场判死刑。</p>
+<p>这个故事常被当作图论的起点，但它真正的遗产不是"七桥无解"这个答案，而是那个<strong>把地图抽象成"点与线"的动作</strong>。欧拉称这类问题属于 <em>geometria situs</em>——"位置几何"，与度量无关，只关心"谁连着谁"。两百多年后，这个"谁连着谁"的学问长成了现代数学最庞大的分支之一：图论，以及它的后裔——网络科学、组合优化与理论计算机科学。</p>
+<div class="key-insight">洞察：图论的本质是"丢弃度量、保留连接"。七桥问题的解只用了"每个点有几条边"这一个量——抽象的力量在于，把地图变成图之后，度量信息（桥长、河流形状）全部扔掉也不影响答案。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/combinatorics.html">组合数学</a>（或至少熟悉集合与基础计数）。本课不需要微积分；学完后可作为通往 <a href="/pages/eigenvectors.html">谱图论</a>、随机图与网络科学、算法复杂性的跳板。</p></div>
+
+<section>
+<h3>一、一个具体问题——1736 年欧拉到底证明了什么</h3>
+<p>把七桥问题严格化。四块陆地记为 <strong>K</strong>（柯尼斯堡的大岛，河心）、<strong>N</strong>（北岸）、<strong>S</strong>（南岸）、<strong>L</strong>（小岛）。七座桥的分布是：K 与 N 之间 2 座，K 与 S 之间 2 座，K 与 L 之间 1 座，N 与 L 之间 1 座，S 与 L 之间 1 座（这正是史实的分布，大岛 K 独占 5 座桥）。</p>
+<div class="formula display" data-tex="\deg K=5,\quad \deg N=3,\quad \deg S=3,\quad \deg L=3"></div>
+<p><strong>欧拉的论证分三步：</strong></p>
+<ul>
+<li><strong>第 1 步（必要条件——回路）：</strong> 若存在一条从某点出发、走遍每条边恰一次、回到出发点的路线（今日称<strong>欧拉回路</strong>），那么每经过一个中间点一次，就"进来一次、出去一次"，消耗该点两条边；起点在最后还要再"回来一次"。于是<strong>每个点的度数都必须是偶数</strong>。柯尼斯堡有四个奇度点，立即排除回路。</li>
+<li><strong>第 2 步（放宽——路径）：</strong> 若只要求走遍每条边一次、不要求回到原点（今日称<strong>欧拉路径</strong>），则至多有两个点可以是奇度——它们只能是起点和终点（起点出去多一次、终点进来多一次）。柯尼斯堡有<strong>四个</strong>奇度点，仍然无解。</li>
+<li><strong>第 3 步（一般判据）：</strong> 欧拉更进一步断言：连通图中，奇度点个数为 0 ⟺ 有欧拉回路；奇度点恰为 2 ⟺ 有欧拉路径（以两个奇点为端点）。这个"双向"结论后来成为图论第一个真正的定理——<strong>欧拉定理</strong>。</li>
+</ul>
+<div class="key-insight">七桥问题第一次让"存在性问题"成为数学对象：欧拉没有构造任何走法，而是证明了"任何走法都不可能存在"——证明不存在，是图论最早的手艺。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——握手引理：为什么"奇点必须成双成对"</h3>
+<p>上一节里七桥图的奇点是 4 个（3、3、3、5 全奇）。注意：任何图里，<strong>奇度点的个数都必然是偶数</strong>。这不是巧合，而是数两遍的必然结果：</p>
+<p>想象一次聚会上大家握手，每握一次手，两个人各自的握手次数各 +1。<strong>所有握手次数的总和，等于握手总次数的两倍，必为偶数。</strong> 在图论语言里，"握手"就是一条边，它的两个端点各贡献 1 个度数：</p>
+<div class="formula display" data-tex="\sum_{v\in V}\deg(v)\;=\;2\,|E|\quad\Longrightarrow\quad \#\{\,v:\deg(v)\text{ 为奇数}\,\}\equiv 0 \pmod 2"></div>
+<p>这个"数两遍"（double counting）技巧看似平凡，却是组合数学的万能钥匙。例题 2 里我们会看到它的威力。现在先记住它的第一个推论：<strong>欧拉判据里的"0 个或 2 个奇点"从来不会出现"1 个奇点"这种病态情况</strong>——判据本身因此是自洽的。</p>
+<p>要真正理解"为什么全偶就一定能走成回路"，靠直觉是不够的。下面用例子验证判据，再在第五节给出严格的构造性证明（Hierholzer 算法）。</p>
+</section>
+
+<section>
+<h3>三、例题 1——用欧拉判据判定三个图（一步步算完）</h3>
+<p><strong>题目。</strong> 对下面三个图，分别计算每个顶点的度数、数出奇点个数，并判定是否存在欧拉回路 / 欧拉路径：</p>
+<p><strong>(a) 柯尼斯堡七桥图</strong>（顶点 K、N、S、L，边如第一节）：</p>
+<p><strong>第一步：逐点度数。</strong> deg(K)=5（连着 2+2+1 座桥）、deg(N)=3、deg(S)=3、deg(L)=3。</p>
+<p><strong>第二步：奇点个数。</strong> 四个点全是奇度：奇点个数 = 4。</p>
+<p><strong>第三步：判定。</strong> 4 ≠ 0 且 4 ≠ 2，所以既无欧拉回路也无欧拉路径。∎</p>
+<p><strong>(b) "双层方形"：</strong> 顶点 A、B、C、D 排成正方形，每条边都"拉两条线"（共 8 条边，模拟现实里双向双车道桥）。</p>
+<p><strong>第一步：度数。</strong> 每个顶点连着 4 条边，deg(A)=deg(B)=deg(C)=deg(D)=4。</p>
+<p><strong>第二步：奇点个数 = 0。</strong></p>
+<p><strong>第三步：判定。</strong> 全偶且连通 ⟹ 存在欧拉回路，可以一次不重复走完全部 8 条边并回到起点。∎</p>
+<p><strong>(c) "三角加尾巴"：</strong> 顶点 A、B、C 构成三角形，再从 C 接一条悬边到 D。</p>
+<p><strong>第一步：度数。</strong> deg(A)=2、deg(B)=2、deg(C)=3（两条三角形边 + 悬边）、deg(D)=1。</p>
+<p><strong>第二步：奇点个数 = 2</strong>（C 与 D）。</p>
+<p><strong>第三步：判定。</strong> 恰有两个奇点 ⟹ 存在欧拉路径，且<strong>任何这样的路径必须以 C 或 D 为起点、另一个为终点</strong>（悬边只能被"路过一次"：走进去就出不来，所以它必须是路线的终点所在边）。∎</p>
+<p>欧拉判据还告诉你<strong>从哪下笔</strong>：奇点为 2 时起点必在奇点；全偶时从任意点出发都能成功。这就是画布上"自动求解"按钮背后 Hierholzer 算法的正确性来源。</p>
+</section>
+
+<section>
+<h3>四、例题 2——握手引理的两个应用：奇点成对 &amp; 树的边数（一步步算完）</h3>
+<p><strong>题目 1。</strong> 证明：任意图 G=(V,E) 中，奇度顶点的个数为偶数。</p>
+<p><strong>第一步：双计数。</strong> 数"顶点—边"关联对 (v,e)（v 是 e 的端点）有两种数法：按边数，每条边贡献 2 个关联，总数 = 2|E|；按顶点数，顶点 v 贡献 deg(v) 个，总数 = Σdeg(v)。于是 Σdeg(v) = 2|E|。</p>
+<p><strong>第二步：模 2 看。</strong> 2|E| 是偶数，故 Σdeg(v) ≡ 0 (mod 2)。偶数个奇数相加才是偶数，所以奇度顶点必须成双成对。∎</p>
+<p><strong>为什么这救了七桥论证？</strong> 欧拉判据里的"0 个或 2 个奇点"是一个封闭的选项集：你永远不会遇到"只有 1 个奇点"的图来质疑判据的完整性。</p>
+<p><strong>题目 2。</strong> 证明：一棵有 n 个顶点的树（连通且无圈的图）恰有 n−1 条边。</p>
+<p><strong>第一步（归纳法）。</strong> n=1 时 0 条边，成立。</p>
+<p><strong>第二步：找叶子。</strong> 先证明 n≥2 的树必有<strong>叶子</strong>（度数为 1 的顶点）：树中最长路径的两个端点，它们的邻居不可能在路径之外（否则路径能延长），而在路径之内又会产生圈，故它们在路径内除唯一邻居外再无其他邻居，即度数为 1。∎（这个引理本身就是工作题 2 的答案。）</p>
+<p><strong>第三步：剥叶子。</strong> 摘掉一片叶子 v（及其唯一那条边），剩下的图仍连通（v 的邻居 w 与任何点之间原来的路不经过 v？——经过 v 的路只有一条且 v 是端点，删掉 v 不影响 w 到其他点的连通）且无圈，仍是树，顶点数 n−1。由归纳假设它有 (n−1)−1 条边，加回被摘的 1 条边，共 n−1 条。∎</p>
+<p><strong>双计数视角（另一种证法）。</strong> 用握手引理 + "树连通无圈 ⟹ 每摘一片叶子减少恰好 1 边 1 点"也能推出同一结论。事实上可以证明更强的 Cayley 公式：n 个标号顶点的树共有 <strong>n<sup>n−2</sup></strong> 棵（n=3 时 3 棵，n=4 时 16 棵——可以自己数数验证）。这个公式是"数树"这一整个领域的起点，也解释了为什么通信网络设计（生成树）里"最少边连通"恰好是 n−1。</p>
+<p><strong>最小生成树的直觉。</strong> n 个城市要铺 n−1 条路恰好全部连通且不冗余——树的边数定理告诉你这是下界；Kruskal/Prim 算法则告诉你如何用最省钱的方式达到这个下界。图论是组合优化的语法。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——图论核心定理（带证明概要）</h3>
+<p><strong>定义。</strong> 一个（简单）图 G=(V,E) 由顶点集 V 与边集 E ⊆ { {u,v} : u≠v ∈ V } 组成；允许两点间多条边的称为<strong>多重图</strong>（七桥图就是多重图）；允许自环的更一般对象本书用不到。顶点 v 的度数 deg(v) 是含 v 的边数。路径/回路/连通/树/二部图/平面图沿用标准定义。</p>
+<p><strong>定理 A（欧拉定理，1736）。</strong> 设 G 连通。则 G 有欧拉回路 ⟺ 所有顶点度为偶；G 有欧拉路径 ⟺ 恰有 0 或 2 个奇度顶点。</p>
+<p><strong>必要性证明概要：</strong> 回路每"进入"一顶点必"离开"，故度数为 2·(经过次数)（起点还要 +1 次"回来"，仍是偶数）；路径除两端外同理。∎</p>
+<p><strong>充分性证明概要（Hierholzer 1873 的算法化证明）：</strong> 全偶时，从任意点出发随意走，只要不走重复边，就一定能回到出发点（每次进入新点都还有边可出，直到回到起点）——得到一个回路。若回路已含所有边，结束；否则因图连通，回路外仍有边与回路共享顶点 v，从 v 再走一个回路并"嫁接"进原回路，扩张之。重复至含所有边。∎ 画布上的"自动求解"就是把这段证明逐字实现。</p>
+<p><strong>定理 B（平面图欧拉公式，Euler 1750 / 1758）。</strong> 连通平面图若把平面分成 F 个面（含外面），则</p>
+<div class="formula display" data-tex="V-E+F=2"></div>
+<p><strong>证明概要（撕面法）：</strong> 从一个顶点出发不断删除"不破坏连通性"的边（删一条边使 E 和 F 各减 1，V−E+F 不变），最后剩一棵树；对树从一片叶子开始剥：每剥一条边减 1 个顶点 1 条边，V−E 不变、F=1 恒成立，最后剩单点 V−E+F = 1−0+1 = 2。∎</p>
+<p><strong>推论 C（非平面性的第一条生产线）。</strong> 由定理 B 可推出：简单平面图满足 |E| ≤ 3|V|−6（每个面的边界至少 3 条边，双计数 2|E| ≥ 3F）；若还二部，则 |E| ≤ 2|V|−4（面边界至少 4 条边）。于是：<strong>K₅</strong>（5 顶点完全图）有 10 条边 &gt; 3·5−6 = 9，非平面；<strong>K₃,₃</strong>（"三户三井"图）有 9 条边 &gt; 2·6−4 = 8，非平面。而 Kuratowski 定理（1930）给出完整刻画：<strong>图可平面 ⟺ 不含 K₅ 或 K₃,₃ 的细分</strong>。</p>
+<p><strong>定理 D（五色定理，Heawood 1890）。</strong> 每个平面图可用 ≤5 种颜色给顶点着色，使相邻顶点异色。</p>
+<p><strong>证明概要（这是全节最值得亲手走一遍的归纳）：</strong> 由推论 C，简单平面图必有度数 ≤5 的顶点 v（否则 6|V| ≤ Σdeg ≤ 2(3|V|−6)，矛盾）。归纳：删 v，对 G−v 用 5 色。若 v 的邻居用了 ≤4 色，直接给 v 上第 5 色。麻烦的是 v 的 5 个邻居用满 5 色且各不相同——这时用 Kempe 链技巧：看其中两个颜色（如红蓝）在 G−v 中诱导的子图，若 v 的红邻居与蓝邻居不在同一红蓝连通块，就把红邻居所在块整块红蓝互换，v 的邻居腾出蓝色，v 涂蓝；若在同一块，则红蓝块 + v 围成一个圈，把 v 的另一个邻居（绿/黄）所在的相应块互换即可。两种情形都成功。∎ 四色定理（"4 就够"）直到 1976 年才由 Appel–Haken 用计算机证明——<strong>五色定理的人工证明与四色定理的机器证明之间的那 86 年差距</strong>，本身就是图论史上最著名的张力之一。</p>
+<p><strong>定理 E（König 1931 / Hall 1935）。</strong> 二部图中最大匹配大小 = 最小点覆盖大小（König）；且存在饱和 X 中每个顶点的匹配 ⟺ 对任意 S⊆X，|N(S)| ≥ |S|（Hall 婚姻定理）。这是"图论 ↔ 组合优化 ↔ 线性规划对偶"三者统一的入口。</p>
+<p><strong>定理 F（Ramsey 定理的经典情形）。</strong> 任意 6 个人中，必有 3 个两两相识或 3 个两两不相识：R(3,3)=6。</p>
+<p><strong>证明（鸽巢 + 对称性，最漂亮的 3 行证明之一）：</strong> 固定一人 P。其余 5 人与 P 要么相识要么不相识，鸽巢原理保证至少 3 人同类。若这 3 人两两相识，完成；若其中两人相识，则此二人与 P 构成三人相识组；若这 3 人两两不相识，直接完成。∎</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\sum_{v}\deg(v)=2|E|\qquad \#\{\text{奇点}\}\text{ 为偶数}"></div>
+<div class="formula display" data-tex="\text{欧拉回路}\iff \deg(v)\text{ 全偶};\qquad \text{欧拉路径}\iff \text{奇点恰 }0\text{ 或 }2"></div>
+<div class="formula display" data-tex="V-E+F=2\qquad(\text{连通平面图});\qquad |E|\le 3|V|-6\quad(\text{简单平面图})"></div>
+<div class="formula display" data-tex="|E_{\text{树}}|=n-1;\qquad \#\{\text{标号树}\}=n^{n-2}\quad(\text{Cayley})"></div>
+<div class="formula display" data-tex="R(3,3)=6;\qquad K_5,\,K_{3,3}\ \text{非平面};\qquad \text{平面图 }\le 5\text{-可着色}"></div>
+<div class="formula display" data-tex="G(n,p):\ \text{连通阈值 }p\sim\frac{\ln n}{n};\qquad \lambda_2(L)\text{ 越大越“连通”}\ (\text{Cheeger})"></div>
+</section>
+
+<section>
+<h3>七、延伸——从七座桥到现代网络：随机图、谱图论与网络科学</h3>
+<p>欧拉之后两百年，图论从"一笔画的消遣"长成现代数学的枢纽。三条路值得一提，它们分别通向本项目的另外三门课：</p>
+<p><strong>(1) 随机图——Erdős–Rényi 的相变。</strong> 1960 年代 Erdős 与 Rényi 研究 G(n,p)：n 个顶点、每条边以概率 p 独立出现。他们发现图的性质随 p 增长会<strong>突然</strong>出现——最著名的是连通性在 p ≈ (ln n)/n 处发生相变，而"巨大连通分支"早在 p ≈ 1/n 就诞生。随机图是概率论与组合学的接口，也直接启发了后来网络科学的所有工作。→ 见 <a href="/pages/probability.html">概率论</a>。</p>
+<p><strong>(2) 谱图论——线性代数进场。</strong> 把图的邻接矩阵/拉普拉斯矩阵的特征值当成图的"频谱"，你会发现：拉普拉斯矩阵的第二小特征值 λ₂（Fiedler 值）衡量图的"连通刚度"，Cheeger 不等式把 λ₂ 与"割断图所需的最少边数"定量挂钩。这一支让 <a href="/pages/eigenvectors.html">特征值</a> 成为研究网络结构的语言，也是 expander 图、随机游走混合时间、谱聚类（机器学习里最常用的聚类算法之一）的共同地基。图论教科书和谱聚类教程因此总是成对出现。</p>
+<p><strong>(3) 网络科学——图论走向社会。</strong> Milgram（1967，"六度分隔"小世界实验）、Watts–Strogatz（1998，小世界模型：局部聚类 + 长程捷径）与 Barabási–Albert（1999，无标度网络：富者愈富的优先连接）把图论从纯数学带进了社会网络与互联网研究。普林斯顿数学指南第七部分"数学的影响"里，图论正是"数学如何渗透进社会科学"的主角之一。注意：这些模型的"图"绝大多数是巨大的随机/演化对象，分析工具正是上面的 (1)(2) 两支——<strong>现代图论 = 组合直觉 + 概率 + 线性代数</strong>。</p>
+</section>
+
+<section>
+<h3>八、反例与陷阱——"显然"为什么靠不住</h3>
+<p><strong>陷阱 1："每个顶点度数都是偶数，就一定能一笔画成回路"——还要连通！</strong> 反例：两个互不相连的三角形并在一起，所有顶点度数为 2（全偶），但显然不可能用一条路走完两个分量。欧拉定理的前提"连通"不是装饰：<strong>判据是三段论的小前提，漏了它结论全错</strong>。判定时永远先查连通性。</p>
+<p><strong>陷阱 2："四个点度数是 3、3、3、5，所以无解"——但为什么没有"3、3、3、3、1"这种更快的反例？</strong> 握手引理（例题 2 题 1）回答了：奇点个数恒为偶数，所以合法的奇点集合只能是 0、2、4、6……个。欧拉判据里的"0 或 2"之外，下一个可能情形就是 4——而 4 个奇点已经足以判死刑。柯尼斯堡恰好是"最小可能失败配置再送一档"。</p>
+<p><strong>陷阱 3："K₄ 画出来中间有个点，所以平面图必须"看起来"没有交叉？</strong> K₄（4 个顶点的完全图）用正方形加两条对角线画会有交叉，但把其中一个顶点挪到三角形内部重画，就完全没有交叉——所以 K₄ 是平面图。<strong>"能不能重画"才是平面性的定义</strong>；"我画不出来"不是证明。真正非平面要拿出 K₅/K₃,₃ 或欧拉公式的计数论证（推论 C）——画布之外的第一课，是学会区分"我的画法有交叉"与"任何画法都有交叉"。</p>
+<p><strong>陷阱 4："R(3,3)=6 说 6 人必有三人相识或不相识，那 5 人为什么不行？"</strong> 因为可以构造 5 人的反例：把 5 人排成五边形，相邻相识、不相邻不相识——圈 C₅ 及其补图都无三角形，于是既无三人全相识也无三人全不相识。R(3,3)=6 的"=6"之所以精确，正是因为存在这个 5 顶点反例；<strong>上界用鸽巢、下界靠构造，Ramsey 数两边都要证</strong>。</p>
+</section>
+
+<section>
+<h3>九、当前状态——开放问题与活跃方向</h3>
+<ol>
+<li><strong>Ramsey 数 R(5,5)：</strong> 目前只知道 43 ≤ R(5,5) ≤ 48。Erdős 有句名言：若外星人威胁地球、要我们在一年内算出 R(5,5)，我们应集中全人类算力；若要 R(6,6)，则应集中全人类算力<strong>攻击外星人</strong>。巨大的下界（43）由计算机搜索证明，上界（48）由分析证明——两边都是当代前沿。</li>
+<li><strong>Hadwiger 猜想（1943）：</strong> 若图 G 不能 k-着色，则 G 含 K_k 的一个<strong>子式</strong>（由删点/删边/收缩边得到的图）。k≤6 均已证（k=6 等价于四色定理！），k≥7 开放。它把"着色"与"子式结构"两个看似无关的概念强行焊在一起，是图子式理论（Robertson–Seymour）最耀眼的靶子。</li>
+<li><strong>图同构的复杂性：</strong> 图同构问题（GI）既不在 P 也未被证明 NP 完全，是复杂性理论里最孤独的"中间地带"居民。Babai（2015/16）给出准多项式算法 exp((log n)^O(1))，但仍不知是否多项式。→ 见 <a href="/pages/p-vs-np.html">P vs NP</a> 课的亲缘问题。</li>
+<li><strong>四色定理的"人工证明"：</strong> 1976 年 Appel–Haken 的证明依赖 1936 个不可约构形的计算机检查，Gonthier 2005 年在证明助手 Coq 中给出完全形式化的验证。至今没有不依赖大规模枚举的简洁证明——寻找"为什么恰好是 4"的概念性解释仍是开放的。</li>
+<li><strong>大网络的数学：</strong> 现实网络（互联网、脑网络、社交网络）普遍呈现无标度与小世界特征，但对"社区结构"等概念至今缺乏被广泛接受的<strong>严格数学定义</strong>——图论与数据科学的边界地带仍是一片未完全开垦的荒野。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Euler (1736)</strong>：<em>"Solutio problematis ad geometriam situs pertinentis"</em>, <em>Comment. Acad. Sci. Petropol.</em> 8, 128–140——七桥问题与欧拉定理，公认的图论与拓扑学起点。</li>
+<li><strong>Kuratowski (1930)</strong>：<em>"Sur le problème des courbes gauches en topologie"</em>, <em>Fund. Math.</em> 15, 271–283——平面图 = 无 K₅/K₃,₃ 细分，平面性的完美刻画。</li>
+<li><strong>Ramsey (1930)</strong>：<em>"On a problem of formal logic"</em>, <em>Proc. London Math. Soc.</em> 30, 264–286——Ramsey 定理的诞生：完全无序中必然隐藏有序。</li>
+<li><strong>König (1931)</strong>：<em>"Gráfok és mátrixok"</em>, <em>Mat. Fiz. Lapok</em> 38, 116–119——二部图最大匹配 = 最小覆盖（König 定理），组合优化的第一块基石。</li>
+<li><strong>Erdős–Rényi (1959)</strong>：<em>"On random graphs I"</em>, <em>Publ. Math. Debrecen</em> 6, 290–297——随机图理论的奠基，相变现象的数学化。</li>
+<li><strong>Appel–Haken (1976)</strong>：<em>"Every planar map is four colorable"</em>, <em>Bull. AMS</em> 82, 711–712——四色定理的计算机证明，数学史上第一次大规模机器辅助证明。</li>
+<li><strong>Robertson–Seymour (1983–2004)</strong>：<em>"Graph minors I–XXIII"</em>——二十卷的图子式理论，证明图在子式序下是良拟序，深刻重塑了结构图论。</li>
+<li><strong>Watts–Strogatz (1998)</strong>：<em>"Collective dynamics of 'small-world' networks"</em>, <em>Nature</em> 393, 440–442——小世界网络模型，网络科学的里程碑。</li>
+<li><strong>Barabási–Albert (1999)</strong>：<em>"Emergence of scaling in random networks"</em>, <em>Science</em> 286, 509–512——无标度网络与优先连接。</li>
+<li><strong>Babai (2016)</strong>：<em>"Graph isomorphism in quasipolynomial time"</em>, <em>Proc. STOC</em>——图同构的准多项式算法，四十年停滞后的突破。</li>
+<li><strong>Gonthier (2005)</strong>：<em>"Formal proof—the four-color theorem"</em>, <em>Notices AMS</em> 55, 1382–1393——在 Coq 中形式化验证四色定理。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——度数算术、树与平面性</h3>
+<p><strong>题 1（奇点必须成对）。</strong> 一次聚会上共握了 15 次手，每个人可能握了任意多次。说明为什么"握了奇数次手的人数"必然是偶数。<strong>提示：</strong>把每个人看作顶点，握手看作边，直接用 Σdeg = 2|E|。</p>
+<p><strong>题 2（叶子存在性）。</strong> 证明：顶点数 n≥2 的树至少有两片叶子（度数 1 的顶点）。<strong>提示：</strong>取最长路径，考察两个端点（见例题 2 第二步的论证）。</p>
+<p><strong>题 3（欧拉公式的应用）。</strong> 用 |E| ≤ 3|V|−6 证明：没有平面图每个顶点度数都 ≥6。<strong>提示：</strong>若全 ≥6 则 2|E| = Σdeg ≥ 6|V|，与 2|E| ≤ 6|V|−12 矛盾。</p>
+<p><strong>题 4（Hall 定理的直觉）。</strong> 三个女生与三个男生配对跳舞，女生们各自认识的男生集合为：A→{1,2}，B→{1,2}，C→{2,3}。问能否让每个女生都找到认识的舞伴且不重复？<strong>提示：</strong>A、B 两人认识的男生并集只有 {1,2}，大小 2 &lt; 2？不，恰好等于 2——再检查 C：{1,2,3}？A∪B∪C = {1,2,3} 大小 3 ≥ 3。真正失败的是哪一步？尝试构造匹配：A→1，B→2，C→3，成功。再试一个会失败的例子：把 C 的集合改成 {2}。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：握手图里 Σdeg = 2·15 = 30 为偶数；奇数个奇数相加为奇数，故奇度顶点数为偶数。∎</p>
+<p><strong>题 2</strong>：取树中最长路径 P = v₀v₁…v_k。若 v₀ 有 P 外的邻居 w，则 wv₀v₁…v_k 是更长路径，矛盾；若 v₀ 在 P 内有两个邻居，则它们与 v₀ 构成圈，矛盾。故 v₀ 的邻居恰为 v₁，deg(v₀)=1；同理 v_k 也是叶子。∎</p>
+<p><strong>题 3</strong>：反设所有顶点度数 ≥6。则 2|E| = Σdeg ≥ 6|V|，即 |E| ≥ 3|V|；但推论 C 说 |E| ≤ 3|V|−6，矛盾。所以平面图必有度数 ≤5 的顶点——这正是五色定理归纳的关键一步。∎</p>
+<p><strong>题 4</strong>：能。匹配 A→1、B→2、C→3 即可（B→1、C→2 也可行但 A 就无人可配，注意顺序）。若把 C 的集合改为 {2}，则 A、B、C 认识的人并集 = {1,2}，大小 2 &lt; 3 = |{A,B,C}|，Hall 条件失败，无法全配对。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（七桥变体）。</strong> 若柯尼斯堡的桥被轰炸掉一座，四块陆地度数变成什么？现在能一笔画吗？<strong>提示：</strong>删去一条边使两个奇点各减 1（例如删去 K 与 S 之间的一座桥：deg K: 5→4，deg S: 3→2），剩下两个奇点 N、L——存在欧拉路径，从 N 走到 L。1736 年若有桥被炸，市民的游戏就有解了。</p>
+<p><strong>试试看 2（用画布验证）。</strong> 在画布上打开"全偶图"预设，点"自动求解"，观察 Hierholzer 输出的顶点序列；再手动走一遍，体会"每次进入都能离开"直到回到起点。然后打开"七桥"预设手动走——记下你第几步开始无路可走、还剩几条边，验证 4 个奇点时无论如何都会卡住。</p>
+<p><strong>试试看 3（五色定理的边界）。</strong> 找一个必须用 4 种颜色、但 3 种不够的平面图（提示：K₄ 或两个共享一条边的 K₄）。这说明五色定理不是紧的——紧的版本（4 色）正是四色定理。</p>
+<p><strong>试试看 4（R(3,3) 下界）。</strong> 画出 5 个顶点排成五边形的图，验证它的补图（把"相识"当边）也没有三角形——从而 5 人不保证有三人组。这就是 R(3,3) ≥ 6 的构造。提示：五边形 C₅ 的补图也是 C₅（自补图），两者都无三角形。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>R. Diestel, Graph Theory</strong>（Springer，网上免费开放，现代图论的标准读本，含本课所有定理的严格证明）</p>
+<p>&rarr; <strong>D. West, Introduction to Graph Theory</strong>（习题与广度极佳）</p>
+<p>&rarr; <strong>B. Bollobás, Modern Graph Theory</strong></p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.6（图论）</strong>：本项目课程地图的蓝本之一</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/combinatorics.html">组合数学</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/combinatorics.html">🧮 组合数学</a>：图论是组合学的核心分支，计数与极值方法互通。</p>
+<p>&rarr; <a href="/pages/eigenvectors.html">🎯 特征值与特征向量</a>：谱图论把本课的连通性问题翻译成矩阵特征值。</p>
+<p>&rarr; <a href="/pages/probability.html">🎲 概率论基础</a>：随机图 G(n,p) 的相变是图论与概率的接口。</p>
+<p>&rarr; <a href="/pages/kalman-filter.html">📈 Kalman 滤波</a>：图/网络上的估计与滤波是同一思想在工程里的延伸。</p>
+<p>&rarr; <a href="/pages/set-theory.html">📐 集合论</a>：图 = 顶点集 + 边集，集合语言是图论的地基。</p>
+<p>&rarr; <a href="/pages/p-vs-np.html">⏳ P vs NP 与 NP 完备性</a>：独立集/哈密顿回路等图问题是 NP 完备性的发源地。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/graph-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

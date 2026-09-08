@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="点击真值表行：验证一行与扫描 2ⁿ 行，差距何在" />
+  <meta property="og:title" content="P vs NP 与 NP 完备性 — Vibe Math" />
+  <meta property="og:description" content="点击真值表行：验证一行与扫描 2ⁿ 行，差距何在" />
+  <title>P vs NP 与 NP 完备性 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⏳ P vs NP 与 NP 完备性 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">点击真值表行：验证一行与扫描 2ⁿ 行，差距何在</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='p-vs-np',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/turing-machine.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📝 图灵机</a>
+  <a href="/pages/fourier-series.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎵 傅里叶级数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一张能秒验的试卷，为什么可能永远批不完</h3>
+<p>想象一张数学试卷：<strong>检查</strong>一个给出的答案是否正确，通常很容易——代入、求导、验算几步即可；但<strong>做出</strong>这个答案可能极难。数独、拼图、解方程、找最短路线，全都是这个模式：解的存在可以被快速验证，解本身却可能要用尽洪荒之力才找得到。</p>
+<p>1971 年，Stephen Cook 把这个日常观察变成了计算机科学最深刻的问题。用图灵机（<a href="/pages/turing-machine.html">图灵机</a> 课）精确化"计算"后，他定义了两类问题：</p>
+<div class="formula display" data-tex="P=\{\text{能在多项式时间内\textbf{求解}的问题}\}\qquad NP=\{\text{解能在多项式时间内被\textbf{验证}的问题}\}"></div>
+<p>P 与 NP 的关系一目了然的只有一半：能快速求解当然就能快速验证，所以 <strong>P ⊆ NP</strong>。另一半——"每个能快速验证的问题，是否都存在快速求解算法？"——即 P = NP？——悬而未决至今超过半个世纪，是克雷数学研究所悬赏一百万美元的千禧年七大问题之一。</p>
+<p>直觉上 P ≠ NP：验证一份答案与独立发明它，难度显然不同。但"显然"在数学里一文不值。五十多年来，成千上万的数学家与计算机科学家攻而不克，反而在这过程中锻造出整个<strong>计算复杂性理论</strong>：NP 完备性、随机化、密码学基础、量子计算的分界，全都长在这一个问题周围。</p>
+<div class="key-insight">洞察：P vs NP 不是"某个难题解不解得开"，而是<strong>关于'找'与'验'这两种基本认知活动是否等价</strong>的元问题。若 P=NP，则一切"验证容易"的谜题都能被机器快速解开——世界会彻底改变（公钥密码崩溃、自动证明成真）；若 P≠NP，则数学与密码学的日常经验获得了一个无比深刻的确认。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/turing-machine.html">图灵机</a>（计算模型）、<a href="/pages/godel.html">Gödel 不完备</a>（可判定性背景）。若学过 <a href="/pages/graph-theory.html">图论与网络</a>（独立集问题在例题 2 出场）会有帮助。</p></div>
+
+<section>
+<h3>一、一个具体问题——1971 年 Cook 到底证明了什么</h3>
+<p>Cook 的论文标题平淡无奇：<em>"The Complexity of Theorem-Proving Procedures"</em>。他在其中做了两件事：</p>
+<p><strong>第一件：把"验证容易"严格化。</strong> 一个判定问题 L ⊆ {0,1}* 属于 NP，若存在多项式时间算法 V 和常数 c，使</p>
+<div class="formula display" data-tex="x\in L\iff \exists w,\ |w|\le |x|^{c}\ \text{且}\ V(x,w)=1"></div>
+<p>w 叫<strong>证书（certificate）</strong>或"谜底"：长度多项式、验证多项式。例：合数判定 x ∈ COMPOSITE 的证书就是它的一个真因子（验证：做一次除法）；哈密顿回路问题的证书就是那条回路本身。</p>
+<p><strong>第二件（真正的炸弹）：证明存在"NP 中最难"的问题。</strong> Cook 构造了<strong>可满足性问题 SAT</strong>（一个布尔公式 φ(x₁,…,xₙ) 是否存在使 φ=1 的赋值），并证明：</p>
+<div class="formula display" data-tex="\text{对任意 }L\in NP:\qquad L\le_p \text{SAT}\qquad(\text{多项式时间归约})"></div>
+<p>意思是：任何 NP 问题的实例都能在多项式时间内被"翻译"成一个等价的 SAT 实例——若能快速解 SAT，就能快速解<strong>一切</strong> NP 问题。这种问题叫 <strong>NP 完备（NP-complete）</strong>。同年，苏联的 Levin 独立得到同样的结论（他的论文 1973 年才发表）；次年 Karp 把 Cook 的单个例子扩成 21 个（独立集、团、顶点覆盖、背包、图着色……），NP 完备性从此成为一门工业。</p>
+<p>理解 Cook 证明的关键，是把"图灵机运行"本身看成一个可被布尔公式编码的<strong>巨大但多项式的对象</strong>——例题 1 走一遍这个编码。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——NP 的三副面孔，其实是同一个东西</h3>
+<p>NP 的定义有三种等价的说法，混用它们能让直觉与严格互相印证：</p>
+<ul>
+<li><strong>谜题视角（验证器）：</strong> x ∈ L ⟺ 存在长度多项式的证书 w 使 V(x,w) 多项式时间接受。对应日常经验："给我答案我马上能验"。</li>
+<li><strong>天使视角（非确定图灵机）：</strong> NP = 非确定图灵机多项式时间内可判定的语言。非确定机每次岔路"猜"一位，只要有一条接受路径就算接受。两种定义等价：猜的路径 = 证书；验证器换成"猜完再验"的机器即可。这解释了名字：NP = Nondeterministic Polynomial。</li>
+<li><strong>存在量化视角（逻辑）：</strong> L ∈ NP ⟺ 存在多项式 p 与可快速检验的谓词 R，使 x ∈ L ⟺ ∃y，|y|≤p(|x|) ∧ R(x,y)。这是"存在一个多项式长度的证据"的纯逻辑表述，也是与 <a href="/pages/proof-theory.html">证明论</a> 对接的接口：NP 语言的成员性 = 存在短证明。</li>
+</ul>
+<p><strong>为什么"多项式"是分界线？</strong> 因为多项式时间算法族有很好的封闭性：多项式个多项式步仍是多项式步（组合、循环都封闭）；而指数时间没有这种稳定性。更实际的理由：n³ 与 2ⁿ 在 n 大时有天壤之别——2⁶⁰ ≈ 1.15×10¹⁸ 次运算，即使每秒十亿亿次也要跑一年多；而任何多项式在 n=60 时都只是"多等一会"。复杂性理论把"快速"约定为"多项式"，是把工程直觉数学化的一个（有争议但极有用的）选择。</p>
+<div class="key-insight">NP 的三种定义 = 一把钥匙的三个齿。做题时用验证器定义（找证书），证明时用非确定机定义（画计算树），做逻辑连接时用存在量化定义。它们的等价本身（Cook 之前的 1960 年代就已清楚）是 P vs NP 问题能被精确陈述的前提。</div>
+</section>
+
+<section>
+<h3>三、例题 1——Cook–Levin 的核心：把"图灵机运行"写成一个布尔公式（思路走完）</h3>
+<p><strong>题目。</strong> 说明为什么任意 L ∈ NP 都能多项式归约到 SAT——即为什么"计算"可以被布尔公式"问出来"。</p>
+<p><strong>第一步：固定机器与输入。</strong> 设 N 是判定 L 的非确定图灵机，输入 x（长 n）。N 在多项式时间 T=p(n) 内停机，纸带只用到前 T 个格子，格局（状态 + 带头位置 + 纸带内容）可用 O(T) 比特描述。</p>
+<p><strong>第二步：把运行画成一张"时间表"。</strong> 整个计算是 T×T 的表格：cell(i,t) = 时刻 t 时第 i 格的内容（字母或"带头在此且机器处于状态 q"）。表中共 O(T²) 个格子，每个格子取值来自有限字母表——所以可用 O(T²) 个布尔变量编码整个表。</p>
+<p><strong>第三步：写子句，让"存在合法运行"变成"公式可满足"。</strong> 逐条翻译机器的规则：</p>
+<ul>
+<li><strong>起始子句：</strong> 时刻 0 的格局恰为"输入 x、初始状态、带头在最左"。这是若干单文字子句。</li>
+<li><strong>局部一致性：</strong> 纸带的演化是局部的——cell(i,t+1) 只依赖 cell(i−1,t)、cell(i,t)、cell(i+1,t)（转移表只动带头附近三格）。对每个 (i,t) 和每个"违反转移表"的三格组合，写一个禁止它的子句（每个禁止 = 一个至多 3 文字的子句，可机械化为 3 个子句）。</li>
+<li><strong>接受子句：</strong> 存在某时刻某格出现接受状态。O(T²) 个子句取或。</li>
+<li><strong>互斥与恰一：</strong> 每个格子同时只能有一种内容——每个格子"至多一个字母为真"用两两互斥子句表达，规模 O(T²)。</li>
+</ul>
+<p><strong>第四步：规模核算。</strong> 变量与子句数都是 O(T²) = O(p(n)²)，多项式！于是</p>
+<div class="formula display" data-tex="\varphi_N(x)\ \text{可满足}\iff N\text{ 接受 }x\qquad\text{（构造时间多项式，故 }L\le_p SAT\text{）}\qquad\blacksquare"></div>
+<p><strong>为什么这令人震惊？</strong> 一个<strong>固定的</strong>布尔公式，把"这台机器在这份输入上会不会接受"完整地问了出来——计算被翻译成了逻辑。可满足性问题因此是"一切 NP 问题的母问题"；反过来，若有人找到 SAT 的多项式算法，把它套在这条归约上，就得到所有 NP 问题的多项式算法。</p>
+<p><strong>为什么要 3SAT 而不是 SAT？</strong> 把长子句 (ℓ₁∨…∨ℓ_k) 用辅助变量 y 拆成 (ℓ₁∨ℓ₂∨y)∧(¬y∨ℓ₃∨…∨ℓ_k) 递归——保持可满足性不变，任何 SAT 实例多项式等价于一个 3SAT 实例。于是 3SAT 也是 NP 完备的，而它成了后续所有归约最喜欢的起点。</p>
+</section>
+
+<section>
+<h3>四、例题 2——Karp 的招牌动作：3SAT ≤ 独立集（一步步构造）</h3>
+<p><strong>题目。</strong> 把 3SAT 归约到独立集问题：给定 3CNF 公式 φ，构造图 G 与整数 m，使 φ 可满足 ⟺ G 有大小 ≥ m 的独立集（两两不相邻的顶点集）。</p>
+<p><strong>第一步：每个子句一个三角形。</strong> φ 有 m 个子句，每子句 C_j = (ℓ_{j1}∨ℓ_{j2}∨ℓ_{j3})。对每个子句造三个顶点（对应三个文字），把同子句的三点两两连边成三角形——三角形里最多取 1 个点，强迫"每个子句至少选一个代表"。令 m = 子句数。</p>
+<p><strong>第二步：互补文字连边。</strong> 若文字 ℓ 与 ℓ′ 互为否定（x 与 ¬x），在它们之间连一条"冲突边"。这样独立集里不会同时选中 x 与 ¬x——强迫赋值一致。</p>
+<p><strong>第三步：正方向（可满足 ⟹ 独立集）。</strong> 取满足赋值中每个子句里为真的一个文字，收集对应顶点。每子句恰好取 1 个（三角形限制），共 m 个；同一变量的 x 与 ¬x 不可能同时为真，所以没有冲突边被跨——是独立集。∎</p>
+<p><strong>第四步：反方向（独立集 ⟹ 可满足）。</strong> 有 m 个顶点的独立集：每个三角形至多贡献 1 个点，m 个点 ⟹ 每个三角形恰取 1 点。令文字 x 被选中时赋值 x=真、¬x 被选中时 x=假；冲突边保证不矛盾。于是每个子句都有被选中的真文字——公式可满足。∎</p>
+<p><strong>第五步：具体例子走一遍。</strong> φ = (x₁∨x₂∨¬x₃) ∧ (¬x₁∨¬x₂∨x₃)（m=2）。画两个三角形，补上冲突边 x₁—¬x₁、x₂—¬x₂、x₃—¬x₃。找大小 2 的独立集：选 (x₁ 所在顶点, ¬x₁?不行，冲突)……试 (第一三角形的 x₁，第二三角形的 ¬x₁?) 冲突；正确答案之一：第一三角形选 x₁、第二三角形选 ¬x₂? ¬x₂ 与 x₁ 不冲突——但还需覆盖…手工枚举：赋值 x₁=1,x₂=0,x₃=1：第一子句 (1∨0∨0)=真，第二子句 (0∨1∨1)=真。对应选点：第一三角选 x₁、第二三角选 ¬x₂ 或 x₃——独立（无冲突边相连），大小 2 ✓。这就是归约的完整双向验证。∎</p>
+<p>从此，独立集、团、顶点覆盖、图着色……一长串问题逐个被"3SAT ≤ 某某"钉上 NP 完备的十字架——Karp 1972 年用 21 个这样的归约建立了一个互通的困难问题王国。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——复杂性版图与结构性定理</h3>
+<ul>
+<li><strong>定义回顾：</strong> P = 确定性多项式时间；NP = 非确定性多项式时间（= 多项式可验证）；NPC = NP ∩ NP-hard，其中 A 是 NP-hard 若 ∀L∈NP: L ≤_p A。</li>
+<li><strong>Cook–Levin 定理（1971/73）：</strong> SAT 与 3SAT 是 NP 完备的。Karp（1972）补充 21 个。</li>
+<li><strong>基本事实：</strong> P ⊆ NP；若 NPC 中任何一员 ∈ P，则 P = NP；SAT 的补（永假公式）∈ coNP。P = NP ⟺ P = coNP 且 NP = coNP。</li>
+<li><strong>Ladner 定理（1975）：</strong> 若 P ≠ NP，则存在语言 L ∈ NP∖P 且 L 非 NP 完备——NP 内部在"多项式可解"与"完备"之间存在<strong>中间地带</strong>。候选者：图同构 GI、整数分解（的判定形式）、离散对数。已知：若 GI 或分解是 NP 完备的，则多项式层级 PH 塌缩到第二层——所以它们"几乎不可能是 NPC"（除非大爆炸）。</li>
+<li><strong>证明复杂性连接：</strong> coNP = NP ⟺ 存在"强证明系统"（对每个永假公式都有多项式长反驳）——把 P vs NP 的一支变成"是否存在万能的短证明"问题，直通 <a href="/pages/proof-theory.html">证明论</a>。</li>
+<li><strong>层级与封闭：</strong> 时间层级定理保证存在需要任意高多项式次数的问题（P 内部也有严格层级）；EXP ≠ P；若 P = NP 则多项式层级全部塌缩。</li>
+</ul>
+<p><strong>直觉坐标：</strong> 本课画布让你亲手体会"验证一行 vs 扫描 2ⁿ 行"。注意一个微妙点：SAT 求解器（DPLL/CDCL，工业级）每天在解含百万变量的实例——但那是在<strong>实际分布</strong>上的平均/典型表现；P vs NP 问的是<strong>最坏情形</strong>。理论保证与工程奇迹之间的这个落差，本身就是复杂性理论最迷人的现象之一。</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="x\in L\iff\exists w\ (|w|\le |x|^{c},\ V(x,w)=1)\qquad L\in NP"></div>
+<div class="formula display" data-tex="\forall L\in NP:\ L\le_p \mathrm{SAT}\qquad(\text{Cook–Levin})\qquad \mathrm{NPC}\cap P\ne\varnothing\iff P=NP"></div>
+<div class="formula display" data-tex="\mathrm{3SAT}\le_p \text{独立集}\le_p \text{团}\le_p \text{顶点覆盖}\le_p\cdots\qquad(\text{Karp 链})"></div>
+<div class="formula display" data-tex="P\ne NP\ \Longrightarrow\ \exists L\in (NP\setminus P)\setminus NPC\qquad(\text{Ladner})"></div>
+</section>
+
+<section>
+<h3>七、延伸——为什么全世界都在乎这一个问题</h3>
+<ul>
+<li><strong>密码学。</strong> RSA 与离散对数密码的安全性建立在"分解/取对数没有多项式算法"之上；更一般地，<strong>单向函数</strong>（易算难逆）的存在蕴涵 P ≠ NP。反方向不成立：P ≠ NP 并不保证单向函数存在（Rudich 的结果说明需要更强假设）——"密码学需要比 P≠NP 更多的困难"是必须记住的微妙处。且密码学需要<strong>平均情形</strong>困难，P vs NP 只是<strong>最坏情形</strong>——两者之间隔着 Impagliazzo 的"五个世界"。</li>
+<li><strong>量子计算。</strong> 量子计算机（BQP）能快速分解整数（Shor 算法），但没人知道 BQP 与 NP 的关系；普遍猜想 NP ⊄ BQP——量子计算机也解不了 NP 完备问题。P vs NP 若被证明 P=NP，则"量子优势"在复杂性层面就基本失去意义；若 P≠NP，量子计算与经典计算的关系依然是开放前沿。→ <a href="/pages/qubit-gates.html">量子门</a> 课。</li>
+<li><strong>自动定理证明与数学实践。</strong> 若 P=NP，则机器能自动搜索一切"短证明"——数学家的许多工作将被自动化（Gödel 1956 年致 von Neumann 的信中已经预见到这一点："若真有二次时间算法，那将带来最重大的后果"）。这与 <a href="/pages/godel.html">Gödel</a>、<a href="/pages/proof-theory.html">证明论</a> 两课直接相连。</li>
+<li><strong>算法设计与启发式。</strong> 哪怕 P≠NP，SAT 求解器、整数规划、近似算法仍是工程支柱——NP 完备性不阻止人类解决实际困难实例，它只说明不存在"通吃所有实例"的快速算法。理解这个边界，是理论计算机科学给工程师最重要的礼物。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——四个最常见的误解</h3>
+<p><strong>陷阱 1："NP = 非多项式（Non-Polynomial）时间"？</strong> 错得离谱但流传极广。NP 的 N 是 Nondeterministic，与"非多项式"无关。NP 里的问题可能很容易（P ⊆ NP），只是我们<strong>不知道</strong>它们是否都能多项式求解。用验证器而非"难度"来想 NP，是正确姿势。</p>
+<p><strong>陷阱 2："SAT 是 NP 完备的，所以 SAT 很'难'"？</strong> "难"要限定在最坏情形。绝大多数随机 3SAT 实例在某个密度阈值（相变点）以下几乎都可满足且易解；工业实例更是被 CDCL 求解器大规模攻克。NP 完备性说的是：<strong>如果 SAT 有最坏情形多项式算法，则 P=NP</strong>——它不承诺每个实例都难，正如随机图论里"阈值现象"与最坏情形的分野。</p>
+<p><strong>陷阱 3：归约方向搞反。</strong> 想证明问题 A 是 NP 难的，必须构造 <strong>已知难问题 ≤ A</strong>（把难问题翻译成 A 的实例）。若你把 A 归约到已知难问题（A ≤ 难问题），只说明 A 不比难问题更难——完全没用。初学者最常犯的错，就是把这个箭头画反。例题 2 的箭头方向（3SAT ≤ 独立集）务必记牢：<strong>"翻译方向 = 困难传递方向"</strong>。</p>
+<p><strong>陷阱 4："P ≠ NP 已经被证明了"？</strong> 没有。P vs NP 仍是千禧年七大开放问题之一（其余六个已解决或部分解决：庞加莱已证，其余悬而未决或已证伪——本问题的悬赏至今无人领取）。每年都有"证明"，但都在审稿中被发现漏洞；复杂性理论的"障碍结果"（相对化、自然证明、代数化）解释了为什么常见证明策略注定失效——见第九节。</p>
+<p><strong>陷阱 5："NPC 问题 = NP 里最难的问题"？</strong> 若 P≠NP，按 Ladner 定理 NP 里有非完备的中间问题——它们不比 NPC 简单却也不是 NPC。此外 NP 之外还有 NP-hard 但不在 NP 里的更硬问题（如停机问题的受限版、EXPTIME 完备问题）。"完备"是精确的数学概念，不是"最难"的同义词。</p>
+</section>
+
+<section>
+<h3>九、当前状态——五十年攻坚与三大"障碍"</h3>
+<ol>
+<li><strong>未解状态。</strong> P vs NP 自 1971 年提出至今未决；主流共识（近乎全体研究者）相信 P ≠ NP，但没有任何证明框架被公认有希望。每年大量预印本自称解决，全部失败——这本身就是值得研究的现象。</li>
+<li><strong>障碍 1：相对化（Baker–Gill–Solovay，1975）。</strong> 存在预言机 A 使 P^A = NP^A，也存在预言机 B 使 P^B ≠ NP^B——任何"在预言机下仍然成立"的证明都不可能解决本问题（因为两个方向都有相对化一致的模型）。所以对角线化这类"纯粹组合"方法被判死刑。</li>
+<li><strong>障碍 2：自然证明（Razborov–Rudich，1997）。</strong> 任何能证明电路下界的"自然"方法，都能被用来构造伪随机发生器、从而破坏伪随机性——与广泛相信的密码学假设矛盾。这宣判了"简单组合电路下界"路线的死刑，也解释了为什么证明 P≠NP 需要全新思想（如代数几何/表示论工具）。</li>
+<li><strong>障碍 3：代数化（Aaronson–Wigderson，2008）。</strong> 把相对化推广到代数域：任何"代数化"证明同样失败。三大障碍合起来说明：<strong>解决 P vs NP 需要的不是技巧升级，而是新的证明范式</strong>——这正是它作为千禧年问题的魅力。</li>
+<li><strong>积极的支线。</strong> 几何复杂性理论（Mulmuley–Sohoni）试图用表示论与代数几何证明永久行列式 vs 永久积的分离；平均情形复杂性与 Impagliazzo 的"五个世界"厘清了不同困难假设的谱系；而电路下界近年（RNS 2021，常数深度电路的奇偶性下界）有了令人振奋的进展——支线在推进，主线依旧紧闭。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Cook (1971)</strong>：<em>"The Complexity of Theorem-Proving Procedures"</em>, <em>Proc. STOC</em>——SAT 的 NP 完备性，P vs NP 问题的正式提出。</li>
+<li><strong>Levin (1973)</strong>：<em>"Universal search problems"</em>——独立发现（苏联），同一结论的另一种表述。</li>
+<li><strong>Karp (1972)</strong>：<em>"Reducibility among combinatorial problems"</em>——21 个 NP 完备问题的归约网络，NP 完备性成为"工业标准"。</li>
+<li><strong>Baker–Gill–Solovay (1975)</strong>：<em>"Relativization of the P=?NP question"</em>, <em>SIAM J. Comput.</em>——相对化障碍：对角线化类方法失效。</li>
+<li><strong>Ladner (1975)</strong>：<em>"On the structure of polynomial time reducibility"</em>——若 P≠NP 则存在 NP 中间问题（Ladner 定理）。</li>
+<li><strong>Impagliazzo (1995)</strong>：<em>"A personal view of average-case complexity"</em>——"五个世界"：从 Algorithmica 到 Cryptomania 的困难谱系。</li>
+<li><strong>Razborov–Rudich (1997)</strong>：<em>"Natural proofs"</em>, <em>J. Comput. Syst. Sci.</em>——自然证明障碍：电路下界与伪随机性的深刻冲突。</li>
+<li><strong>Aaronson–Wigderson (2008)</strong>：<em>"Algebrization: a new barrier"</em>——代数化障碍，三大障碍合龙。</li>
+<li><strong>Cook (2000)</strong>：<em>"The P versus NP Problem"</em>（Clay 数学研究所官方陈述）——千禧年问题的标准参考文献。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——验证器、归约与方向感</h3>
+<p><strong>题 1（验证器练习）。</strong> 用"证书 + 多项式验证"的语言，说明下列问题 ∈ NP：图着色（k 色）、最长路径、子集和、合数判定。<strong>提示：</strong>证书分别是：k-着色方案本身（验相邻异色）、路径本身（验简单且长 ≥ k）、子集本身（验和 = 目标）、真因子（验整除）。</p>
+<p><strong>题 2（归约方向辨析）。</strong> 下面两句话哪句能证明 A 是 NP 难的？(a) A ≤_p 3SAT；(b) 3SAT ≤_p A。<strong>提示：</strong>(b)。(a) 只说明 A 不比 3SAT 难。</p>
+<p><strong>题 3（补一个归约）。</strong> 独立集 ≤ 团：证明 G 有大小 k 的独立集 ⟺ 补图 Ḡ 有大小 k 的团。<strong>提示：</strong>独立集 = 两两无边；团 = 两两有边。同一顶点集在 G 中两两不相邻 ⟺ 在 Ḡ 中两两相邻。归约本身一行。</p>
+<p><strong>题 4（Cook 编码的规模直觉）。</strong> 若机器 T = n⁵ 步内停机，编码 SAT 实例大约多大（用 n 的多项式表示）？<strong>提示：</strong>变量 O(T²) = O(n¹⁰)，子句同阶——规模 ~ n¹⁰，仍是多项式。这就是"多项式归约"的宽容度：允许把运行表整个展开。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：均见提示。注意"合数"的证书是因子，验证即一次除法——证明合数性容易；素性则是另一回事（2002 年 AKS 证明素性 ∈ P 之前，素性已知 ∈ NP∩coNP）。∎</p>
+<p><strong>题 2</strong>：(b)。NP 难的"翻译方向"是把已知难问题映射到 A。∎</p>
+<p><strong>题 3</strong>：对任意顶点集 S：S 在 G 中独立 ⟺ 无边跨 S ⟺ S 在补图中全连接 = 团。双向成立，归约是恒等映射。∎</p>
+<p><strong>题 4</strong>：格局表 T×T 需要 O(T²) 个布尔变量与 O(T²) 个子句；T=poly(n) ⟹ 规模 poly(n)。归约的"多项式膨胀"是 Cook 证明能成立的余量所在。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布）。</strong> 打开"不可满足"预设：点击几行试试——每行都失败；点"暴力搜索"看它扫描完全部 2ⁿ 行才肯罢休。再切到"可满足"预设，找一条绿色行（证书），对比：验证它只要常数步，而暴力搜索在最坏情形要查 2ⁿ−1 行才发现它。</p>
+<p><strong>试试看 2（规模直觉）。</strong> 用计算器体会 2ⁿ 的残酷：2³⁰≈10⁹、2⁶⁰≈10¹⁸、2⁸⁰≈10²⁴。若一纳秒验一行，2⁶⁰ 行要 30 年；若一秒验 10⁹ 行也要 30 年。而验证一行只要几十纳秒——"验"与"找"的差距不是常数倍，是 n 出现在指数上的差距。</p>
+<p><strong>试试看 3（相变现象）。</strong> 3SAT 在子句/变量比 ≈ 4.26 处发生可满足性相变（与 <a href="/pages/graph-theory.html">随机图</a> 的连通性相变同族）。小于阈值几乎都可满足（好解），大于阈值几乎都不可满足（也好判定！）——最难的是阈值附近。用画布的"多数解"与"长链少解"预设感受"少解但不难"与"无解"的差别。</p>
+<p><strong>试试看 4（NP∩coNP 的居民）。</strong> 整数分解的判定形式（"n 有 ≤k 的真因子吗"）已知 ∈ NP∩coNP：NP 侧证书是因子；coNP 侧证书是……？提示：完整的素因子分解 + 每个因子的素性证明（Pratt 证书），验证 = 相乘核对 + 素性验证。这解释了为什么分解"几乎不可能是 NPC"。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>S. Arora, B. Barak, Computational Complexity: A Modern Approach</strong>（现代标准教材，含三大障碍的完整证明）</p>
+<p>&rarr; <strong>M. Sipser, Introduction to the Theory of Computation</strong>（第 7–10 章，图灵机 → NP 完备性的黄金路线）</p>
+<p>&rarr; <strong>C. Papadimitriou, Computational Complexity</strong>（经典）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.8（计算复杂性）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/turing-machine.html">图灵机</a>、<a href="/pages/godel.html">Gödel 不完备</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/turing-machine.html">🎰 图灵机</a>：NP 的形式定义建立在图灵机之上。</p>
+<p>&rarr; <a href="/pages/godel.html">📜 Gödel 不完备</a>：可判定性 → 可计算性 → 复杂性的逻辑主线。</p>
+<p>&rarr; <a href="/pages/proof-theory.html">🗂️ 证明论</a>：NP=coNP 与"短证明系统"是同一问题的两面。</p>
+<p>&rarr; <a href="/pages/graph-theory.html">🕸️ 图论与网络</a>：独立集/团/着色等 NP 完备问题全在图论里出生。</p>
+<p>&rarr; <a href="/pages/qubit-gates.html">⚛️ 量子门</a>：BQP 与 NP 的关系是量子计算的核心开放问题。</p>
+<p>&rarr; <a href="/pages/y combinator.html">🍥 Y Combinator</a>：递归与自指——计算理论的血缘近亲。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/p-vs-np.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

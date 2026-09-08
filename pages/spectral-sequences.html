@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="逐页逼近同调：Leray–Serre 从纤维与底算出全空间" />
+  <meta property="og:title" content="谱序列与同伦论 — Vibe Math" />
+  <meta property="og:description" content="逐页逼近同调：Leray–Serre 从纤维与底算出全空间" />
+  <title>谱序列与同伦论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🛰️ 谱序列与同伦论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">逐页逼近同调：Leray–Serre 从纤维与底算出全空间</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='spectral-sequences',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/homology.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⛓️ 同调代数</a>
+  <a href="/pages/algebraic-geometry.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔷 代数几何 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——计算同调像"逐层筛出真相"：每一轮问更细的问题</h3>
+<p>给定一个拓扑空间，怎样算它的同调/上同调（→ <a href="/pages/homology.html">同调</a>、<a href="/pages/algebraic-topology-homology.html">代数拓扑</a> 课）？直接拆胞腔可以，但很多空间有自然的分层结构——纤维化、过滤、双复形——"一刀切"会浪费结构。20 世纪 40–50 年代（Leray 战时工作、Koszul、Serre）发展出答案：<strong>谱序列（spectral sequence）</strong>——一套<strong>逐页逼近</strong>的计算引擎。</p>
+<div class="formula display" data-tex="E_{r+1}=H(E_r,d_r),\qquad d_r:E_r^{p,q}\to E_r^{p+r,q-r+1};\qquad E_2\ \Rightarrow\ H^{*}(E)"></div>
+<p>直观：你有一堆"候选同调类"（E₁ 页），每轮用一条"差分 d_r"删除假候选、保留真类；轮次 r 越大，删除规则越"长程"。经过有限/可数轮后到达 E_∞：目标空间的（分次）同调。最著名的实例是 <strong>Leray–Serre 谱序列</strong>：给定纤维化 F→E→B，</p>
+<div class="formula display" data-tex="E_2^{p,q}=H^{p}(B;H^{q}(F))\ \Rightarrow\ H^{p+q}(E)"></div>
+<p>——"全空间的上同调由底与纤维算出"是纤维丛理论（→ <a href="/pages/fiber-bundle.html">纤维丛</a> 课）最重要的计算武器。谱序列也是稳定同伦（Adams）、代数几何（Leray for 层上同调、动机上同调）、表示论（群上同调）里的通用引擎——它把"难算的对象"换成"逐轮可跟踪的表格"。</p>
+<div class="key-insight">洞察：谱序列 = "带记忆的迭代同调"：E_r 已经是"考虑过前 r−1 类障碍后的剩余"，d_r 编码"长度 r 的障碍"。两个认识点让新手少走弯路：(1) <strong>真正的功夫在算 differential d_r</strong>（教科书同调论里最难的活）；(2) 收敛常有 <strong>extension problem</strong>——E_∞ 只给 associated graded，非平凡扩张仍需最后一击。画布用 Hopf 纤维化 S³→S² 展示一页页"Z 消失、真类浮现"的过程。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/algebraic-topology-homology.html">同调论</a>、<a href="/pages/homology.html">同调代数</a>（复形与导出函子）、<a href="/pages/fiber-bundle.html">纤维丛</a>（纤维化的几何）。Künneth/万有系数定理会反复出现。</p></div>
+
+<section>
+<h3>一、一个具体问题——从"过滤"到"逐页收敛"</h3>
+<p><strong>过滤是谱序列的种子。</strong> 给复形 C 一个递减过滤 ⋯⊇F^pC⊇F^{p+1}C⊇⋯（如"按胞腔维数"或"按纤维的预像"）。过滤诱导目标同调上的滤子，而谱序列从"过滤的逐层切片"开始：</p>
+<div class="formula display" data-tex="E_0^{p,q}=F^{p}C^{p+q}/F^{p+1}C^{p+q};\qquad E_1^{p,q}=H^{p+q}(E_0^{p,*})\ (\text{切片层的同调})"></div>
+<p><strong>页面游戏。</strong> E_{r+1}=H(E_r,d_r)：r=1 处理切片内边界、r=2 之后处理"跨层"的障碍。若过滤有限（bounded），谱序列<strong>收敛</strong>：对每个 (p,q)，E_r^{p,q} 从某页起稳定为 E_∞^{p,q}，且</p>
+<div class="formula display" data-tex="\operatorname{gr}^{p}H^{p+q}(C)\cong E_\infty^{p,q}\qquad(\text{associated graded 与 }E_\infty\text{ 相等})"></div>
+<p><strong>为什么值得？</strong> 直接算 H(E) 可能要面对巨大复形；谱序列把计算分解成"每轮只读一层结构"，且常常在第 2 页就坍缩（所有差分零 ⟹ E₂=E_∞），此时结论就是 Künneth/万有系数型的干净公式。困难集中在少数非零差分——如 Hopf 纤维化（例题 2）。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——页面、差分与"坍缩"</h3>
+<p><strong>E_r 的几何读法。</strong> 第一象限谱序列把 E_r^{p,q} 画成格点：(p,q) 越靠外总度 p+q 越高。差分 d_r 把 (p,q) 送到 (p+r, q−r+1)——总度 +1，但"斜度"随 r 变大而变平。E_r 中"不被任何 d_r 打中/打空"的格点进入下一轮。</p>
+<p><strong>收敛与 extension。</strong> 收敛到 H^n 意味着 H^n 有一个过滤，其商 E_∞^{p,n−p}。若过滤的 successive quotients 相加恰好给出 H^n（无扩张），问题解决；否则有非平凡的"扩张"（如 ℤ/4 与 ℤ/2⊕ℤ/2 同 graded 不同构）——这是谱序列的"最后一公里"。</p>
+<p><strong>坍缩是最常遇到的幸福结局。</strong> 若 E₂ 页只有一条非零行/列，或所有可能差分都因度（总度或支撑）被迫为零，则 E₂=E_∞：H(E) 的过滤平凡。例：乘积空间（纤维化平凡）⟹ Künneth；代数 Künneth 定理本质上就是"纤维化谱序列坍缩"。</p>
+</section>
+
+<section>
+<h3>三、例题 1——过滤复形的第一页：S¹（一步步算完）</h3>
+<p><strong>题目。</strong> 用胞腔过滤（skeleton 过滤）跑 S¹ 的谱序列。</p>
+<p><strong>第一步：过滤与切片。</strong> S¹ 的胞腔分解：0-胞腔 e⁰、1-胞腔 e¹。切片 E₀^{p,q} 只在 p=0（e⁰）与 p=1（e¹）有"层"。</p>
+<p><strong>第二步：E₁ 与 d₁。</strong> E₁ 是各切片"自己"的复形；胞腔边界 d₁:e¹→e⁰ 给出 E₂ 中的同调：E₂^{0,0}=ℤ、E₂^{1,0}=0（上同调，1-胞腔的边界映射 1:ℤ→ℤ 是单射的同调对偶 ⟹ 商为零）。</p>
+<p><strong>第三步：更高差分。</strong> r≥2 的差分目标 (p+r,q−r+1) 越出支撑（或回到已空行）⟹ d_r=0 ⟹ E₂=E_∞：H⁰(S¹)=ℤ、H¹(S¹)=ℤ。∎</p>
+<p><strong>第四步：读方法。</strong> E₁=胞腔层、E₂=组合上同调、高轮无事发生——胞腔上同调本身可以看作"一步坍缩的谱序列"。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——Hopf 纤维化 S¹→S³→S²（一步步算完）</h3>
+<p><strong>题目。</strong> 用 Leray–Serre 谱序列算 H*(S³;ℤ)。</p>
+<p><strong>第一步：E₂ 页。</strong> E₂^{p,q}=H^p(S²;H^q(S¹))：H^q(S¹)=ℤ（q=0,1）；H^p(S²)=ℤ（p=0,2）。非零格点四个：</p>
+<div class="formula display" data-tex="E_2:\ (0,0),(0,1),(2,0),(2,1)\qquad(\text{各一个 }\mathbb Z)"></div>
+<p><strong>第二步：可能的差分。</strong> d_r 把 (p,q) 送到 (p+r,q−r+1)；唯一可能非零的是 r=2：d₂:(0,1)→(2,0)。</p>
+<p><strong>第三步：d₂ 必须同构。</strong> 若 d₂=0，则 H¹(S³)、H²(S³) 都含 ℤ——但 S³ 是 3-流形，H¹=H²=0。故 d₂ 必须把 (0,1) 的生成元打到 (2,0) 的生成元：</p>
+<div class="formula display" data-tex="d_2:(0,1)\to(2,0)\ \text{同构}\quad\Rightarrow\quad E_3=E_\infty:\ (0,0)\ \text{与}\ (2,1)\ \text{各一个 }\mathbb Z"></div>
+<p><strong>第四步：收敛。</strong> H⁰(S³)=ℤ（(0,0)）、H³(S³)=ℤ（(2,1)，总度 3）、其余为零。∎</p>
+<p><strong>第五步：transgression。</strong> d₂ 把纤维类的像跨界送到底类——精确编码 Hopf 纤维化的非平凡性（若 d₂=0，S³ 会"像"S²×S¹，而 Hopf 不是乘积）。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心事实清单</h3>
+<ul>
+<li><strong>存在性：</strong> 过滤复形（bounded）给出收敛谱序列 E_r^{p,q} ⇒ gr^pH^{p+q}（构造经 exact couple 或双复形行列双路）。</li>
+<li><strong>Leray–Serre：</strong> Serre 纤维化（如纤维丛，B 道路连通且好）⟹ E₂^{p,q}=H^p(B;H^q(F)) ⇒ H^{p+q}(E)（局部系系数版本同理）。</li>
+<li><strong>坍缩：</strong> E₂ 只一条非零行/列 ⟹ E₂=E_∞；推论：平凡纤维化 ⟹ Künneth。</li>
+<li><strong>双复形：</strong> 两个方向的谱序列收敛到同一全复形同调——Künneth 谱序列等许多同构的来源。</li>
+<li><strong>Atiyah–Hirzebruch：</strong> 广义上同调理论（K 理论）的 E₂^{p,q}=H^p(B;K^q(pt)) ⇒ K^{p+q}(B)。</li>
+<li><strong>同伦的谱序列化：</strong> 同伦群无同调型不能直接上谱序列；稳定同伦的 Adams 谱序列承担此任。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="E_{r+1}=H(E_r,d_r),\quad d_r:E_r^{p,q}\to E_r^{p+r,q-r+1};\qquad \operatorname{gr}^p H^{p+q}=E_\infty^{p,q}"></div>
+<div class="formula display" data-tex="\text{Serre: }E_2^{p,q}=H^p(B;H^q(F))\Rightarrow H^{p+q}(E);\qquad \text{Hopf: }d_2:\mathbb Z_{(0,1)}\xrightarrow{\sim}\mathbb Z_{(2,0)}"></div>
+</section>
+
+<section>
+<h3>七、延伸——谱序列的现代足迹</h3>
+<ul>
+<li><strong>稳定同伦与 Adams。</strong> Adams 谱序列（E₂=Ext_{Steenrod}）算稳定同伦群；Novikov/Adams–Novikov 用 MU 版本——谱序列是稳定同伦的基础设施。</li>
+<li><strong>代数几何（→ <a href="/pages/schemes.html">概形</a> 课的现代语境）。</strong> Grothendieck 的 Leray 谱序列、超上同调谱序列；étale/动机上同调的计算几乎全是谱序列。</li>
+<li><strong>群上同调。</strong> Lyndon–Hochschild–Serre：群扩张 1→N→G→Q→1 ⟹ H*(G)=H*(Q;H*(N))——表示论与代数 K 理论的常备工具。</li>
+<li><strong>K 理论。</strong> AHSS 把拓扑 K 理论写成"上同调+修正项"——与 <a href="/pages/algebraic-K-theory.html">代数 K 理论</a> 课成镜像。</li>
+<li><strong>动机与 chromatic。</strong> 现代稳定同伦把谱序列组织成"色层"语言（Morava K 理论、层谱序列）——同伦论的分形图景。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"谱序列想当然"</h3>
+<p><strong>陷阱 1："谱序列自动给出 H(E)"？</strong> 只给 associated graded，且有 extension problem：E_∞ 相同 ≠ 同调相同（ℤ/4 vs ℤ/2⊕ℤ/2）。"收敛"与"答案"之间常差一个非平凡扩张。</p>
+<p><strong>陷阱 2："高轮差分通常为零"？</strong> 相反，d₂ 就常非零（Hopf 例全靠它）。算 differential 是方法的真正难度——每个非零 d 的确定常常是杰作级工作。</p>
+<p><strong>陷阱 3："E₂ 有几个 Z，H 就有几份"？</strong> 那是坍缩假设；非坍缩时格点被杀死/配对。只有 E_∞ 是答案，E₂ 只是候选清单。</p>
+<p><strong>陷阱 4："任何过滤都能用"？</strong> 收敛需要过滤合适（bounded/有限），弱/强收敛要核对。乱加过滤会得到"不收敛到想要对象"的谱序列。</p>
+<p><strong>陷阱 5："谱序列能直接算同伦群"？</strong> 同伦群非 Abel 无同调型；先稳定化再用 Adams 等。把谱序列绑到"一切代数不变量"是过度乐观。</p>
+</section>
+
+<section>
+<h3>九、当前状态——谱序列的前沿</h3>
+<ol>
+<li><strong>稳定同伦计算。</strong> 谱序列 + 计算机辅助把稳定同伦群算到很高维；chromatic 谱序列把稳定同伦按素数色层分层——仍在扩张。</li>
+<li><strong>动机谱序列。</strong> 动机上同调（Voevodsky）的 AHSS 型谱序列连接代数 K 理论与上同调——代数几何与同伦论合流。</li>
+<li><strong>导出代数化。</strong> ∞-范畴语言里谱序列被"后向极限谱序列"吸收——老工具获得新语法。</li>
+<li><strong>自动化。</strong> Sage/专门包处理页间差分——手算页变机器跑页，数学理解仍靠人类。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Leray (1946)</strong>：层上同调与谱序列的原始形式。</li>
+<li><strong>Koszul (1947)</strong>：双复形谱序列（Koszul 复形）。</li>
+<li><strong>Serre (1951)</strong>：<em>"Homologie singulière des espaces fibrés"</em>——Leray–Serre 谱序列。</li>
+<li><strong>Atiyah–Hirzebruch (1961)</strong>：广义上同调的 AHSS。</li>
+<li><strong>Adams (1958)</strong>：Adams 谱序列——稳定同伦计算引擎。</li>
+<li><strong>Grothendieck (1957)</strong>：层上同调 Leray 谱序列与导出函子框架。</li>
+<li><strong>Novikov (1967) / Quillen</strong>：Adams–Novikov 谱序列（复杂协边）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——页面手算</h3>
+<p><strong>题 1（坍缩判断）。</strong> 平凡纤维化 F×B→B：说明为何 Serre 谱序列坍缩并给出 Künneth。<strong>提示：</strong>F×B→B 有截面；域系数下 d_r 全为零（格点支撑+分层），E₂=E_∞；乘法结构 ⟹ Künneth。</p>
+<p><strong>题 2（Hopf 核对）。</strong> 若 d₂=0，H*(S³) 会怎样？为何不可能？<strong>提示：</strong>会得到 H¹、H² 含 ℤ——与 H¹(S³)=H²(S³)=0 矛盾。</p>
+<p><strong>题 3（extension）。</strong> 举例：E_∞ 相同但同调不同。<strong>提示：</strong>0→ℤ/2→ℤ/4→ℤ/2→0 与 ℤ/2⊕ℤ/2 的 graded 相同。</p>
+<p><strong>题 4（transgression）。</strong> Hopf 的 d₂:(0,1)→(2,0) 总度为何合法、r=3 为何不可能？<strong>提示：</strong>d_r 总度 +1：1→2 ✓；r=3 目标 (3,−1) 出第一象限。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示。∎</p>
+<p><strong>题 2</strong>：见提示（矛盾 H¹）。∎</p>
+<p><strong>题 3</strong>：ℤ/4 vs ℤ/2⊕ℤ/2。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布翻页）。</strong> 在 Hopf 谱序列上从 E₂ 翻到 E₃：看 (0,1) 与 (2,0) 的 Z 被 d₂ 配对消除，留下 (0,0)、(2,1) 成为 H⁰、H³。</p>
+<p><strong>试试看 2（与纤维丛联动）。</strong> 在 <a href="/pages/fiber-bundle.html">纤维丛</a> 课复习 Hopf/主丛；在 <a href="/pages/differential-forms.html">微分形式</a> 课想 de Rham 版 Leray 谱序列（Bott–Tu 的书正是从这入手）。</p>
+<p><strong>试试看 3（Künneth 反刍）。</strong> 把 Künneth 定理（→ <a href="/pages/homology.html">同调代数</a>）当作"坍缩的 Serre 谱序列"重读：乘积=平凡纤维化。提示：这就是 Künneth 先于谱序列被记住的原因。</p>
+<p><strong>试试看 4（同伦之难）。</strong> 想为什么谱序列不直接给 πₙ(S²)。提示：同伦群无同调型；稳定化后 Adams 谱序列登场——"先稳定，再谱序列"。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>R. Bott, L. Tu, Differential Forms in Algebraic Topology</strong>（谱序列最友好入口）</p>
+<p>&rarr; <strong>J. McCleary, A User's Guide to Spectral Sequences</strong>（综合手册）</p>
+<p>&rarr; <strong>A. Hatcher, Spectral Sequences in Algebraic Topology</strong>（网上讲义）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.18（代数拓扑）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/algebraic-topology-homology.html">同调论</a>、<a href="/pages/homology.html">同调代数</a>、<a href="/pages/fiber-bundle.html">纤维丛</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/homology.html">🔗 同调代数</a>：复形、导出函子与谱序列的代数地基。</p>
+<p>&rarr; <a href="/pages/algebraic-topology-homology.html">🕳️ 同调论</a>：E₂ 页 = 组合同调的胞腔版本。</p>
+<p>&rarr; <a href="/pages/fiber-bundle.html">🧵 纤维丛</a>：Leray–Serre 的几何舞台（Hopf/主丛）。</p>
+<p>&rarr; <a href="/pages/algebraic-K-theory.html">🔧 代数 K 理论</a>：AHSS/Künneth 型谱序列的代数亲戚。</p>
+<p>&rarr; <a href="/pages/differential-forms.html">🌀 微分形式</a>：de Rham 侧的 Leray 谱序列与 Bott–Tu 路线。</p>
+<p>&rarr; <a href="/pages/schemes.html">🌾 概形语言</a>：Grothendieck/Leray 谱序列在代数几何的现代语境。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/spectral-sequences.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

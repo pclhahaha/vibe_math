@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="H_n=ker/im——n维洞的代数检测" />
+  <meta property="og:title" content="同调论 — Vibe Math" />
+  <meta property="og:description" content="H_n=ker/im——n维洞的代数检测" />
+  <title>同调论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🕳️ 同调论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">H_n=ker/im——n维洞的代数检测</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='algebraic-topology-homology',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/galois-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔗 伽罗瓦理论</a>
+  <a href="/pages/category-theory-adjoint.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔀 伴随函子 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——数一数形状里到底有几个"洞"</h3>
+<p>甜甜圈和咖啡杯在橡皮泥眼里是同一个东西，因为它们都有一个洞。同调论就是数学家的"数洞工具"：它告诉你一个形状里藏着一维洞（像吸管）、二维洞（像空心的球壳）各有多少个。</p>
+<p>它能区分"看起来差不多其实差很多"的形状，是数学里辨认形状"体型"的身份证。</p>
+<div class="key-insight">一句话：同调用"边界=0"的算账法数出形状里的洞。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/fundamental-group.html">基本群</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——甜甜圈和球面各自有几个洞？数一数</h3>
+<p>先给两个具体答案，再问"怎么算出来的"。</p>
+<p><strong>球面 S²（篮球的表面）。</strong> b₀ = 1（一整块）、b₁ = 0（没有一维洞：任何绕在球上的橡皮筋都能滑到一点）、b₂ = 1（中间是空心的，裹着一个二维洞）。Betti 数 (1,0,1)。</p>
+<p><strong>环面 T²（甜甜圈表面）。</strong> b₀ = 1、b₁ = 2（两条独立的绕法：绕"腰"一圈、绕"孔"一圈，互不相干）、b₂ = 1（同样裹着一个空心）。Betti 数 (1,2,1)。</p>
+<p><strong>为什么球面(1,0,1)和环面(1,2,1)就是不同的？</strong> 因为 b₁ 一个是 0 一个是 2——"一维洞"的个数不同。同调论的任务就是把"有几类洞、每类几个"做成一套严格的代数，使得：① 每个空间 X 都配上一串阿贝尔群 H₀(X), H₁(X), H₂(X), …；② 每个连续映射都对应一串群同态（函子性）；③ 同胚/同伦等价的空间得到同构的同调群（不变量）。有了这三条，数洞就从直觉变成了可验证的数学。</p>
+<p><strong>先记住我们的目的地。</strong> 本课会一步步算出 H_*(S¹)=(ℤ,ℤ,0,…)、H_*(S²)=(ℤ,0,ℤ)、H_*(T²)=(ℤ,ℤ²,ℤ)，还会遇到更怪的：H₁(ℝP²)=ℤ/2、H₁(K)=ℤ⊕ℤ/2——同调群会携带<strong>扭</strong>，那才是它最敏锐的时刻。</p>
+</section>
+
+<section>
+<h3>二、奇异链、边界算子与 ∂²=0——为什么"边界的边界是零"</h3>
+<p>把一个空间 X 分解成"砖块"：<strong>n-单形</strong>是 n 维三角形（0 维=点、1 维=线段、2 维=三角形、3 维=四面体）。一个<strong>奇异 n-单形</strong>是连续映射 σ: Δⁿ → X（把标准 n-单形"铺"到空间里）。它们的有限形式和 Σnᵢσᵢ（系数在 ℤ）构成<strong>奇异链群</strong> C_n(X)。</p>
+<p><strong>边界算子 ∂_n: C_n → C_{n-1}</strong> 把每个单形送成它各面的交替和（取掉第 i 个顶点，配 (−1)ⁱ 号）。直觉上：∂ 取"外皮"。</p>
+<div class="formula display" data-tex="H_n=\ker\partial_n/\mathrm{im}\,\partial_{n+1},\quad\partial^2=0"></div>
+<p><strong>为什么 ∂²=0？</strong> 用几何来理解：一个三角形的边界是三条边；这三条边的边界是六个端点，但每条边贡献两个端点且号相反，两两相消——所以"边界的边界"恒为零。一般地，取掉两个顶点有两种顺序，交替号恰好让它们抵消。于是 im ∂_{n+1} ⊆ ker ∂_n，可以取商 H_n = ker/im：</p>
+<ul>
+  <li><strong>H₀(X)</strong> = 连通分支数（0-维洞 = 多少块）。</li>
+  <li><strong>H₁(X)</strong> = 1 维洞（圈圈），且 H₁ = π₁(X) 的阿贝尔化。</li>
+  <li><strong>H₂(X)</strong> = 2 维空洞（封闭曲面裹着的空腔）。</li>
+</ul>
+<div class="key-insight">同调在数学中无处不在：代数拓扑(空间的洞)、代数几何(Koszul复形,层上同调)、表示论(群上同调H^n(G,M))、李代数(李代数上同调)。∂²=0是数学中最深层、最普适的代数结构之一。</div>
+</section>
+
+<section>
+<h3>三、关键公式</h3>
+<div class="formula display" data-tex="H_n(X)=\ker\partial_n/\mathrm{im}\,\partial_{n+1},\qquad \partial^2=0"></div>
+<div class="formula display" data-tex="H_1(X)\cong \pi_1(X)^{\mathrm{ab}},\qquad H_n(S^m)=\mathbb Z\ (n=0,m),\ 0\ \text{otherwise}"></div>
+<div class="formula display" data-tex="H^k(M)\cong H_{n-k}(M)\quad(\text{紧定向 }n\text{-流形, Poincar}\acute{\mathrm e}\ \text{对偶})"></div>
+</section>
+
+<section>
+<h3>四、例题 1——圆 S¹ 的同调群：从三角剖分一步步算（一步步算完）</h3>
+<p><strong>题目。</strong> 把圆三角剖分成三条边（顶点 v₀,v₁,v₂；边 e₀=[v₀v₁], e₁=[v₁v₂], e₂=[v₂v₀]），用定义直接计算 H_n(S¹)。</p>
+<p><strong>第一步：写链群。</strong> C₂=0；C₁=ℤ³（基 e₀,e₁,e₂）；C₀=ℤ³（基 v₀,v₁,v₂）。</p>
+<p><strong>第二步：写边界。</strong> ∂₁(e₀)=v₁−v₀，∂₁(e₁)=v₂−v₁，∂₁(e₂)=v₀−v₂。</p>
+<p><strong>第三步：H₁ = ker ∂₁。</strong> 设 a e₀+b e₁+c e₂ ∈ ker ∂₁。∂₁ 的像 = (c−a)v₀+(a−b)v₁+(b−c)v₂=0 ⟺ a=b=c。故 ker ∂₁ = ℤ·(e₀+e₁+e₂)，<strong>H₁(S¹) ≅ ℤ</strong>，生成元是"绕一整圈的闭链"。</p>
+<p><strong>第四步：H₀ = C₀/im ∂₁。</strong> im ∂₁ 由 v₁−v₀、v₂−v₁、v₀−v₂ 生成（所有顶点差），商掉后 v₀=v₁=v₂，<strong>H₀(S¹) ≅ ℤ</strong>。</p>
+<p><strong>第五步：H₂ 及以上。</strong> C₂=0 ⟹ H₂=0；同样对 n≥2 全为零。</p>
+<p><strong>结论。</strong> H₀=ℤ、H₁=ℤ、H_n=0(n≥2)。几何解读：一个洞、一块连通体。用约化同调写就是 H̃₀=0、H̃₁=ℤ。∎</p>
+<p><strong>为什么"闭合链/边界"这一对术语是关键？</strong> ker ∂₁ 的元素叫 1-<strong>闭链</strong>（闭合的圈），im ∂₂ 在这里为空、一般情形下是"自己就是某东西边界"的圈。商掉边界的意义：<strong>两个差一个边界的闭链视为同一个洞</strong>——这正是"洞的本质"的代数化。</p>
+</section>
+
+<section>
+<h3>五、例题 2——射影平面 ℝP² 的同调：二维洞换出 2-扭（一步步算完）</h3>
+<p><strong>题目。</strong> 射影平面 ℝP² = D²/（边界对径点粘合）。求其同调群。</p>
+<p><strong>第一步：确定胞腔分解。</strong> 把边界圆 S¹ 对径粘合后，边界的像是一条"绕两次"的闭路，整个 ℝP² 有一个 0-胞腔 v、一个 1-胞腔 a（边界圆折成的一圈）、一个 2-胞腔（圆盘本体）。链群：C₂=ℤ（2-胞腔）、C₁=ℤ（a）、C₀=ℤ（v）。</p>
+<p><strong>第二步：写边界。</strong> ∂₂(2-胞腔) = 2a（附贴映射是 2 次的，边界在 a 上绕两圈）；∂₁(a) = v−v = 0。</p>
+<p><strong>第三步：算各级同调。</strong></p>
+<div class="formula display" data-tex="H_2=\ker(\times 2)=0,\qquad H_1=\ker\partial_1/\operatorname{im}\partial_2=\mathbb Z/2\mathbb Z,\qquad H_0=\mathbb Z"></div>
+<p><strong>逐项解释。</strong> H₂=0：2-胞腔的边界是 2a ≠ 0，它不是闭链，裹不出二维洞。H₁=ℤ/2：a 是闭链（∂₁a=0），但 2a = ∂₂(2-胞腔) 是边界，故 a 的阶为 2——<strong>2-扭</strong>。H₀=ℤ：连通。</p>
+<p><strong>结论。</strong> H₀=ℤ、H₁=ℤ/2、H₂=0。<strong>关键教训：</strong>扭部分来自不可定向性。对照定向闭流形的 Poincaré 对偶 H_k ≅ H^{n−k}，ℝP² 不可定向，于是扭冒了出来。b₁=0（扭不算入 Betti 数），但 H₁ 明明是 ℤ/2≠0——<strong>只看 Betti 数会漏掉整个扭世界</strong>。∎</p>
+</section>
+
+<section>
+<h3>六、例题 3——Klein 瓶 K 的同调：自由部分 + 扭部分并存（一步步算完）</h3>
+<p><strong>题目。</strong> Klein 瓶 K = 正方形按对边粘合（一对直粘、一对反向粘，粘合字为 abab⁻¹ 或 aba⁻¹b）。求其同调群。</p>
+<p><strong>第一步：胞腔分解。</strong> 一个 0-胞腔 v；两个 1-胞腔 a、b（两条边各粘成一圈）；一个 2-胞腔（正方形本体）。链群 C₂=ℤ、C₁=ℤ⊕ℤ、C₀=ℤ。</p>
+<p><strong>第二步：写边界。</strong> ∂₁(a)=∂₁(b)=0（每条 1-胞腔首尾都粘到同一个 v）。∂₂(2-胞腔)：边界字中 a 出现两次、b 出现两次，其中 b 两次方向相反，在同调（阿贝尔化）里相消，留下 <strong>∂₂ = a + b + a − b = 2a</strong>。</p>
+<p><strong>第三步：算同调。</strong></p>
+<div class="formula display" data-tex="H_2=\ker\partial_2=0,\qquad H_1=(\mathbb Z\oplus\mathbb Z)/\langle 2a\rangle=\mathbb Z\oplus\mathbb Z/2\mathbb Z,\qquad H_0=\mathbb Z"></div>
+<p><strong>结论。</strong> H₁(K) = ℤ ⊕ ℤ/2。<strong>自由部分</strong> ℤ（生成元 b：一圈自由的基本圈）与<strong>扭部分</strong> ℤ/2（a：两倍就是边界）同时存在。若只看 Betti 数 b₁=1，会误以为 K 与圆、或与某个简单空间同调相同——<strong>扭部分是不可定向性的本质拓扑不变量</strong>。∎</p>
+<p><strong>三个例题连起来看。</strong> S¹：纯自由 (ℤ)；ℝP²：纯扭 (ℤ/2)；K：自由+扭 (ℤ⊕ℤ/2)。同调群 = "自由部分 ⊕ 扭部分"的完整结构，这一结构定理是有限生成阿贝尔群的分解定理在同调里的化身。</p>
+</section>
+
+<section>
+<h3>七、奇异同调与函子性——为什么它能成为"身份证"</h3>
+<p>把上面的做法公理化：对每个空间 X 有链复形 (C_n(X), ∂_n)，同调 H_n(X)。<strong>奇异同调是 Top → Ab 的函子</strong>：连续映射 f: X→Y 把每个奇异单形 σ 送到 f∘σ，故诱导链映射 f_♯: C_*(X)→C_*(Y)，进而诱导 f_*: H_*(X)→H_*(Y)，且 (f∘g)_* = f_*∘g_*、id_* = id。</p>
+<p><strong>为什么"函子性"是身份证的保证？</strong> 若 X ≅ Y（同胚），则 id = h∘h⁻¹ 给出同调逆映射，H_*(X) ≅ H_*(Y)——同调群是同胚不变量。更妙的是同伦不变：同伦的映射诱导相同的同调同态，故 H_* 甚至是<strong>同伦不变量</strong>，同伦等价的空间有同构的同调。这就是为什么"甜甜圈和咖啡杯是同一个东西"能被数学地证明：两者同伦等价，H_*(T²) = H_*(咖啡杯)。</p>
+<p><strong>Mayer-Vietoris 序列</strong> 是计算的主力工具：把 X 切成 U∪V，长正合序列把 X 的同调与 U、V、U∩V 的同调联系起来——这和 Seifert-van Kampen（基本群版）完全对偶。</p>
+</section>
+
+<section>
+<h3>八、证明——H₀ 与道路连通分量同构</h3>
+<p><strong>定理</strong> 对拓扑空间 X，H₀(X)≅ℤ^c，其中 c 为 X 的道路连通分量个数。</p>
+<p><strong>证明。</strong></p>
+<p><strong>第一步：描述边界映射。</strong> 设 C₀(X) 为 0-链（点集的形式整数组合），∂₁: C₁(X)→C₀(X) 把 1-单形（道路段）σ: Δ¹→X 映为 ∂₁σ=σ(e₁)−σ(e₀)（端点差）。于是 H₀(X)=C₀(X)/im ∂₁。</p>
+<p><strong>第二步：im ∂₁ 由道路给出。</strong> 若 x,y 由道路 γ 连接，则 γ∈C₁(X) 且 ∂₁γ=y−x，故 y−x∈im ∂₁。反之，若 z=Σnᵢxᵢ∈im ∂₁，则各分量的"净系数"为零。于是同一道路连通分量内的点差全部落入 im ∂₁。</p>
+<p><strong>第三步：定义计数同态。</strong> 记 X=⊔Xᵢ 为道路连通分量分解。定义 ε: C₀(X)→ℤ^c, ε(Σnᵢxᵢ)=(对每个 Xᵢ 求和系数 n)。道路段两端在同一分量，故 ε∘∂₁=0，ε 诱导同态 \bar ε: H₀(X)→ℤ^c。</p>
+<p><strong>第四步：满射与单射。</strong> 满射：每分量取一点 xᵢ，[xᵢ] 映为第 i 个单位向量。单射：若 ε([z])=0，则 z=Σzᵢ 各分量净系数为零；因 Xᵢ 道路连通，每个 zᵢ 的"净和为零的组合"可写成连接道路链的边界，故 z∈im ∂₁，即 [z]=0。</p>
+<div class="formula display" data-tex="H_0(X)\cong \mathbb Z^{c},\qquad c=\#\{X\text{ 的道路连通分量}\}"></div>
+<p>特别地：X 道路连通 ⟺ H₀(X)≅ℤ。约化同调定义为 \tilde H₀(X)=ker ε，故 \tilde H₀(道路连通空间)=0——这是约化同调"消掉 ℤ 一项"的结构来源。</p>
+</section>
+
+<section>
+<h3>九、约化同调与 Mayer-Vietoris 序列</h3>
+<p><strong>定义（约化同调）。</strong> 用增广映射 ε: C₀(X)→ℤ（每点映为 1，Σnᵢxᵢ↦Σnᵢ）构造增广链复形</p>
+<div class="formula display" data-tex="\cdots \to C_1(X)\xrightarrow{\partial_1} C_0(X)\xrightarrow{\varepsilon}\mathbb Z\to 0"></div>
+<p>其同调即约化同调 \tilde H_n(X)。对 n≥1 有 \tilde H_n(X)≅H_n(X)，且 \tilde H₀(X)⊕ℤ≅H₀(X)。关键性质：\tilde H_n(pt)=0 对一切 n（基点空间约化同调平凡），使正合序列处理连通性时免去 ℤ 项修正。</p>
+<p><strong>定理（Mayer-Vietoris 长正合序列，陈述）。</strong> 设 X=U∪V 为开覆盖，则</p>
+<div class="formula display" data-tex="\cdots\to\tilde H_n(U\cap V)\xrightarrow{i_*}\tilde H_n(U)\oplus\tilde H_n(V)\xrightarrow{j_*}\tilde H_n(X)\xrightarrow{\partial}\tilde H_{n-1}(U\cap V)\to\cdots"></div>
+<p>是正合的，其中 i_*=(u_*, −v_*)（u: U∩V→U, v: U∩V→V 为包含），j_* 为两包含映射同调的"差/和"，∂ 为连接同态。</p>
+<p><strong>证明概要。</strong> 构造链复形短正合列</p>
+<div class="formula display" data-tex="0\to C_*(U\cap V)\xrightarrow{(i,-i)} C_*(U)\oplus C_*(V)\xrightarrow{j} C_*(U+V)\to 0"></div>
+<p>其中 C_*(U+V) 为"小单形"链子复形（单形若完全落在 U 或完全落在 V 中）。<strong>关键引理（小单形定理）：</strong> 当 {U,V} 是 X 的开覆盖时，包含映射 C_*(U+V)↪C_*(X) 是链同伦等价（用重心剖分 barycentric subdivision 证明），故 H_*(U+V)≅H_*(X)。对该短正合列取同调并应用蛇形引理，即得长正合序列；连接同态 ∂ 来自蛇形引理，几何意义是"分解边界"。对非约化版本，同一序列对 n≥1 成立，n=0 处需在末端修正 ℤ 项。</p>
+</section>
+
+<section>
+<h3>十、Poincaré 对偶——同调和上同调的"对仗"</h3>
+<p>紧致定向n-流形:H^k(M)=H_{n-k}(M)。k维上同调=n-k维同调。这是"通过交配对偶"的拓扑体现——和流形的整体定向结构密切相关。在代数几何中Serre对偶是Poincare对偶的推广。</p>
+<p><strong>为什么叫"对仗"？</strong> 上同调（有乘法的对偶对象）原本是"独立于同调的另一套数据"，但 Poincaré 对偶说：对紧定向流形，两者在互补维度上一一对应——k 维的"上洞"就是 n−k 维的"洞"。一个立刻的数值后果：χ(M) = Σ(−1)ᵏ bᵏ = Σ(−1)ᵏ b_{n−k}，Euler 数对维度"倒着数"也不变。ℝP² 的扭（例题 2）正是对偶的边界情形：不定向 ⟹ 对偶破缺 ⟹ 扭出现。</p>
+</section>
+
+<section>
+<h3>十一、反例——射影空间与环面的同调群</h3>
+<p><strong>反例 1：射影空间 ℝP²。</strong> H₁(ℝP²)=ℤ/2ℤ（完整计算见例题 2）。这是同调群含有限扭部分的第一个标准例子：2-扭来自射影平面的不可定向性。对比：定向闭流形满足 Poincaré 对偶 H_k≅H^{n−k}，而 ℝP² 不可定向，故出现扭。</p>
+<p><strong>反例 2：环面 T²=S¹×S¹。</strong> H₀=ℤ, H₁=ℤ⊕ℤ, H₂=ℤ，其余为 0。H₁=ℤ² 的两个生成元是两个独立方向的基本圈——这正是 Künneth 公式</p>
+<div class="formula display" data-tex="H_1(T^2)\cong H_1(S^1)\otimes H_0(S^1)\ \oplus\ H_0(S^1)\otimes H_1(S^1)\cong \mathbb Z\oplus\mathbb Z"></div>
+<p>的直接体现。</p>
+<p><strong>反例 3（关键教训）：自由部分+扭部分。</strong> Klein 瓶 K 满足 H₁(K)=ℤ⊕ℤ/2ℤ——既有自由部分又有扭部分。若只看 Betti 数 b₁=1 会丢失扭信息。同调群是"自由部分⊕扭部分"的完整结构，扭部分是不可定向性的本质拓扑不变量。</p>
+</section>
+
+<section><h3>前沿：motivic同伦论与Voevodsky的遗产</h3>
+<p>Voevodsky用代数簇上的同伦论构造了motivic上同调——代数几何版的奇异上同调。Morel-Voevodsky(1999)的A^1同伦论统一了拓扑和代数几何。仍开放:motivic稳定同伦群的计算——比经典球面谱序列更复杂。</p>
+<p><strong>为什么代数几何需要"同伦论"？</strong> 代数簇上点太少、拓扑太差，直接搬奇异同调会失灵。Voevodsky 的妙招是仿照拓扑学的标准套路：把区间 [0,1] 换成仿射线 A¹，用 A¹ 同伦论重造一遍链复形与同调，得到 motivic 上同调——它在代数几何里扮演着"奇异上同调"在拓扑里的角色。代价：计算难度陡增（motivic 稳定同伦群至今算不出几个），这正是一个学科"年轻"的证明。</p></section>
+
+<section>
+<h3>工作题——计算圆、球、环面的同调群</h3>
+<p><strong>工作题 1（圆）。</strong> 计算 S¹ 的奇异同调群 H_n(S¹)。<strong>提示：</strong>S¹ 道路连通 ⟹ H₀≅ℤ；基本圈 [γ] 生成 H₁≅ℤ；S¹ 无 2-维单形故 H_n=0(n≥2)。</p>
+<p><strong>工作题 2（球面）。</strong> 计算 S² 的同调群。<strong>提示：</strong>用 Mayer-Vietoris，U,V 取南北开半球（各 ≃ 点），U∩V ≃ S¹；在 n=2 处得 H₂(S²)≅ℤ，在 n=1 处由正合性得 H₁=0。</p>
+<p><strong>工作题 3（环面）。</strong> 计算 T²=S¹×S¹ 的同调群并指出 H₁ 的生成元。<strong>提示：</strong>Künneth 公式对自由 ℤ 模无扭，H_n(T²)=⊕_{i+j=n}H_i(S¹)⊗H_j(S¹)；H₁ 的两个生成元是"水平圈"与"垂直圈"。</p>
+<details><summary>显示解答</summary><p>
+<strong>工作题 1：</strong> S¹ 道路连通 ⟹ H₀(S¹)≅ℤ。基本圈 [γ]（Δ¹→S¹ 绕一圈）生成 H₁(S¹)≅ℤ。S¹ 无 2-维单形，∂₂=0，故 H_n(S¹)=0（n≥2）。<br>
+用约化同调：\tilde H₀=0（S¹ 连通），\tilde H₁=ℤ，其余 0。也可用 Mayer-Vietoris（U,V 为两段开弧，U∩V 两个点）得到同一结果。</p>
+<p><strong>工作题 2：</strong> H₀=ℤ（连通）。用 Mayer-Vietoris：U,V 为南北开半球（U,V≃点，U∩V≃S¹）。<br>
+n=2：0=H₂(U)⊕H₂(V)→H₂(S²)→H₁(U∩V)=ℤ→H₁(U)⊕H₁(V)=0，故 H₂(S²)≅ℤ。<br>
+n=1：H₁(U∩V)=ℤ→H₁(U)⊕H₁(V)=0→H₁(S²)→H₀(U∩V)=ℤ→H₀(U)⊕H₀(V)=ℤ⊕ℤ→H₀(S²)=ℤ→0，由正合性 H₁(S²)=0。<br>
+结论：H₀=H₂=ℤ, H₁=0。一般地，对 m≥1：H_n(S^m)=ℤ 若 n∈{0,m}，否则 0。</p>
+<p><strong>工作题 3：</strong> S¹ 的 H_* 是自由 ℤ 模（无 Tor 项），故 Künneth 无扭：H_n(T²)=⊕_{i+j=n}H_i(S¹)⊗H_j(S¹)。<br>
+n=0：H₀⊗H₀=ℤ。n=1：H₁⊗H₀⊕H₀⊗H₁=ℤ⊕ℤ。n=2：H₁⊗H₁=ℤ。其余 0。<br>
+生成元 a=[S¹×{pt}]（水平圈）与 b=[{pt}×S¹]（垂直圈）给出 H₁(T²)=ℤ⊕ℤ——环面上两个独立的洞方向。</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（楔和）。</strong> 计算 H_n(S¹∨S¹) 对一切 n。<strong>提示：</strong>S¹∨S¹ 的 H₁ = ℤ⊕ℤ（两个独立圈各贡献一个生成元，两圈只交于一点互不干扰），H₀=ℤ，H_n=0(n≥2)；用 Mayer-Vietoris（取两圆的互不相交小邻域）验证。</p>
+<p><strong>试试看 2（ℝP²∨ℝP²）。</strong> 求 H₁(ℝP²∨ℝP²)。<strong>提示：</strong>楔和满足 H_n(X∨Y)≅H_n(X)⊕H_n(Y)（n≥1），答案 ℤ/2⊕ℤ/2——两个独立的 2-扭各住各的。</p>
+<p><strong>试试看 3（同伦不变的应用）。</strong> 证明 H_n(S¹)≅H_n(S¹×[0,1]) 对一切 n。<strong>提示：</strong>圆柱 S¹×[0,1] 同伦等价于 S¹（收缩到任一截面），同调是同伦不变量。</p>
+<p><strong>试试看 4（K 的变体）。</strong> 计算 H_*(K∨S²)。<strong>提示：</strong>H_n(K∨S²) = H_n(K)⊕H_n(S²)（n≥1），答案 H₁=ℤ⊕ℤ/2、H₂=ℤ。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>A. Hatcher, Algebraic Topology</strong></p>
+<p>&rarr; <strong>E. Spanier, Algebraic Topology</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/fundamental-group.html">基本群</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/homology.html">⛓️ 同调代数</a>：同一学科分类「代数拓扑」。</p>
+<p>&rarr; <a href="/pages/abstract-algebra.html">🧮 抽象代数</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/commutative-algebra.html">💍 交换代数</a>：代数核心链。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：代数核心链。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/algebraic-topology-homology.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

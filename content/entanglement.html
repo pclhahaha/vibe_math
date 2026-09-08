@@ -1,0 +1,138 @@
+<section>
+<h3>〇、直觉入门——拿一个具体的纠缠态，算一次具体测量</h3>
+<p>先写下一个带数字的具体纠缠态：</p>
+<div class="formula display" data-tex="|\Phi^+\rangle=\frac{|00\rangle+|11\rangle}{\sqrt{2}}"></div>
+<p>这是两个量子比特的态：第一个位置放 Alice 的比特，第二个位置放 Bob 的比特。|00⟩ 表示"Alice 的比特是 0、Bob 的比特也是 0"；|11⟩ 表示"两个都是 1"。现在 Alice 测量自己的比特，会发生什么？</p>
+<p>按量子力学的规则，这个态以 1/2 的概率投影到 |00⟩、以 1/2 的概率投影到 |11⟩——也就是说：<strong>Alice 得到 0 的概率是 50%，而且一旦她得到 0，Bob 的比特就必然是 0；她得到 1 的概率也是 50%，一旦她得到 1，Bob 的比特就必然是 1</strong>。测量关联的数字写全：P(00)=1/2、P(11)=1/2、P(01)=0、P(10)=0——两个比特的结果<strong>永远一致</strong>，从不一错。</p>
+<p>这就像你左手和右手各戴一只手套，分开八千里路，打开左手的盒子发现是左手套，立刻知道右手拿的是右手套——但手套的配对是发货时就安排好的，这不神奇。量子纠缠比这更奇妙：|00⟩ 和 |11⟩ 这两个"选项"同时叠加在一起，在测量之前，两个比特连"各自是什么"都谈不上，而测量一个，另一个的状态瞬间确定。</p>
+<p>这东西在干什么：纠缠是量子计算机和"隐形传态"的原料，让信息可以不走寻常路地传递；下面你会看到，纠缠甚至能用具体数字打败任何"早就安排好的配对"。</p>
+<div class="key-insight">两个粒子一旦纠缠，就成为一个不可分割的整体，测量其中一半就能确定另一半，但你不能用它超光速通信。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/uncertainty.html">不确定性原理</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、什么是纠缠？——为什么 |Φ⁺⟩ 不能写成张量积</h3>
+<p>量子力学的世界像一个乐高积木盒。两个独立系统各有一个状态，把它们放在一起时，合法的组合方式是它们的<strong>张量积</strong>：</p>
+<div class="formula display" data-tex="(a|0\rangle+b|1\rangle)\otimes(c|0\rangle+d|1\rangle)=ac|00\rangle+ad|01\rangle+bc|10\rangle+bd|11\rangle"></div>
+<p>也就是说：如果 Alice 的态是"a 分像 0、b 分像 1"，Bob 的态是"c 分像 0、d 分像 1"，那么组合后的四个成分 |00⟩、|01⟩、|10⟩、|11⟩ 的系数分别是 ac、ad、bc、bd——<strong>四个系数由 a、b、c、d 四个数相乘得到</strong>，不是随便四个数都行。</p>
+<p>现在问：|Φ⁺⟩ = (|00⟩+|11⟩)/√2 能写成这种乘积吗？试着匹配系数。如果 |Φ⁺⟩ = (a|0⟩+b|1⟩)⊗(c|0⟩+d|1⟩)，则必须同时满足</p>
+<div class="formula display" data-tex="ac=\frac{1}{\sqrt2},\quad ad=0,\quad bc=0,\quad bd=\frac{1}{\sqrt2}"></div>
+<p>ad=0 要求 a=0 或 d=0。但 ac=1/√2≠0 告诉我们 a≠0，所以必须有 d=0；而 bd=1/√2≠0 又要求 b≠0 且 d≠0。矛盾。<strong>因此 |Φ⁺⟩ 不可能写成两个单比特态的乘积</strong>——它属于"整体"而非"两个部分的拼合"。这种不可分解的两体态就叫<strong>纠缠态</strong>。</p>
+<p>为什么这一点重要？因为不可分解意味着：<strong>你不能单独描述 Alice 的比特"是什么"</strong>——除非你把它和 Bob 的比特放在一起作为一个整体。它的两个比特之间没有"各自的独立身份"，只有"联合的身份"。这正是 EPR（Einstein–Podolsky–Rosen, 1935）当年觉得不能接受的地方：爱因斯坦认为每个粒子总该有自己确定的状态，量子力学却坚持这两个粒子只有联合状态，所以他称纠缠为"鬼魅般的超距作用"。</p>
+<p>还有一句话要钉在墙上：<strong>叠加是纠缠的必要原料</strong>。|00⟩ 或 |11⟩ 单独拿出来都是平凡的可分解态；是"|00⟩ 和 |11⟩ 叠在一起"这件事，制造了不可分解性。</p>
+</section><div class="key-insight">John Bell 1964年终结了这个争论：他导出了一个<strong>任何局域隐变量理论必须满足</strong>的不等式。量子力学预测违反CHSH不等式（|S| ≤ 2 vs 量子预测 |S| = 2√2 ≈ 2.828）。2015年三个独立实验同时关闭所有漏洞。2022年Nobel物理学奖——Aspect, Clauser, Zeilinger。<strong>局域实在论不是宇宙的正确描述。</strong></div>
+
+<section>
+<h3>二、测量关联——纠缠在实验里怎么"看"出来（完整例题 1）</h3>
+<p>上一节我们"算"出了纠缠，但实验中怎么观察它？答案：测量<strong>关联</strong>——比较两个比特结果的吻合程度。先把直觉讲透，再用数字严格算。</p>
+<p><strong>直觉。</strong>一对"心灵感应"的硬币：抛一次，两个结果要么都正面、要么都反面，从不一正一反。你可以统计"两个结果一致的频率"来验证它们的关联。量子纠缠的关联更奇特：你在<strong>两个互相垂直的测量方向</strong>上，都能看到这种完美关联——而任何"预先配好的对"只能在一个方向上做到。</p>
+<p><strong>严格计算。完整例题 1：对 |Φ⁺⟩ 做两组不同的测量，算关联数字。</strong></p>
+<p>第一步，两个人都按"Z 方向"测量（把结果记为 +1 对应 |0⟩、−1 对应 |1⟩）。由 Born 规则：</p>
+<div class="formula display" data-tex="P(00)=\frac12,\quad P(11)=\frac12,\quad P(01)=0,\quad P(10)=0"></div>
+<p>关联函数 E(Z<sub>A</sub>Z<sub>B</sub>) = Σ 结果之积 × 概率 = (+1)(+1)·½ + (−1)(−1)·½ + 0 + 0 = <strong>1</strong>。即：完全正相关。</p>
+<p>第二步，两个人都换成"X 方向"测量。X 的本征态是 |+⟩=(|0⟩+|1⟩)/√2（对应 X=+1）和 |−⟩=(|0⟩−|1⟩)/√2（对应 X=−1）。关键一步：把 |Φ⁺⟩ 改写进 X 基。逐项展开验证</p>
+<div class="formula display" data-tex="|\Phi^+\rangle=\frac{|++\rangle+|--\rangle}{\sqrt{2}}"></div>
+<p>核对：|++⟩+|−−⟩ = ½(|00⟩+|01⟩+|10⟩+|11⟩) + ½(|00⟩−|01⟩−|10⟩+|11⟩) = |00⟩+|11⟩，✓。于是 X 方向测量同样完美相关：P(++)=P(−−)=1/2，P(+−)=P(−+)=0，故</p>
+<div class="formula display" data-tex="E(X_A X_B)=(+1)(+1)\cdot\tfrac12+(-1)(-1)\cdot\tfrac12=1"></div>
+<p>两个数字摆在面前：<strong>E(Z<sub>A</sub>Z<sub>B</sub>) = 1 且 E(X<sub>A</sub>X<sub>B</sub>) = 1</strong>。一个共享的经典随机比特（预先约定同为 0 或同为 1）只能保证第一个方向完全相关；在互补的 X 方向，经典比特的"X 值"是随机且互不相关的。量子纠缠却能<strong>同时</strong>在两个互补方向上都达到完美关联——这是经典"配对"做不到的，也正是第五节 CHSH 不等式用数字把它钉死的地方。</p>
+</section>
+
+<section>
+<h3>三、纠缠如何度量？——von Neumann 熵（完整例题 2）</h3>
+<p>纠缠不是"有"或"没有"的开关，而是<strong>连续的</strong>量——你可以有 0.3 个单位的纠缠，也可以有 1 个单位的纠缠。要度量它，需要一个工具：<strong>约化密度矩阵</strong>。</p>
+<p><strong>直觉。</strong>你只有 Alice 的半个系统，想知道"只看 A 时还有多少不确定"。如果 A 和 B 纠缠得很紧，那么 B 的信息全"写"在 A 里，看 A 仍然一头雾水（不确定性最大）；如果 A 和 B 根本没纠缠，看 A 就清清楚楚（不确定性为零）。</p>
+<p><strong>严格定义。</strong>设 AB 处于纯态 |ψ⟩。把 B 的自由度"平均掉"，得到只描述 A 的矩阵：</p>
+<div class="formula display" data-tex="\rho_A=\operatorname{Tr}_B|\psi\rangle\langle\psi|,\qquad S(\rho_A)=-\operatorname{Tr}(\rho_A\log\rho_A)"></div>
+<p>S 叫 <strong>von Neumann 纠缠熵</strong>，是量子版的 Shannon 熵，衡量"只看 A 时还剩多少不确定"。纯态 S=0（无纠缠）；最大纠缠态 S=ln 2=1 bit。</p>
+<p><strong>完整例题 2：算 |Φ⁺⟩ 的约化密度矩阵与纠缠熵。</strong></p>
+<p>第一步，写出整体密度矩阵并展开：</p>
+<div class="formula display" data-tex="\rho_{AB}=|\Phi^+\rangle\langle\Phi^+|=\tfrac12\big(|00\rangle\langle00|+|00\rangle\langle11|+|11\rangle\langle00|+|11\rangle\langle11|\big)"></div>
+<p>第二步，对 B 求迹。规则：Tr<sub>B</sub>(|a⟩⟨b|⊗|c⟩⟨d|) = |a⟩⟨b|·⟨d|c⟩。于是交叉项消失（⟨0|1⟩=0），只有两个对角项存活：</p>
+<div class="formula display" data-tex="\rho_A=\tfrac12\big(|0\rangle\langle0|+|1\rangle\langle1|\big)=\tfrac12 I_2"></div>
+<p>第三步，判定与计算。Tr(ρ<sub>A</sub>²) = Tr(¼I₂) = ½ &lt; 1（纠缠判据，见第七节）；熵</p>
+<div class="formula display" data-tex="S(\rho_A)=-\operatorname{Tr}\big(\tfrac12 I_2\ln\tfrac12 I_2\big)=-\big(\tfrac12\ln\tfrac12+\tfrac12\ln\tfrac12\big)=\ln 2\approx 0.693\ \text{nats}=1\ \text{bit}"></div>
+<p>ρ<sub>A</sub> 是最大混合态 ½I₂——"只看 A，啥也看不出来"，这正是最大纠缠的标志。纠缠熵就是量子信息处理的<strong>资源</strong>：像石油是工业的油，纠缠是做量子计算和量子通信的"油"。</p>
+</section>
+
+<section>
+<h3>四、量子隐形传态——用量子纠缠传输量子态（完整例题 3）</h3>
+<p>Alice 手里有一个量子态 |ψ⟩ 要传给 Bob，但她不能直接送过去，也不能测量它（一测就破坏）。怎么传？答案是：<strong>先共享一对纠缠比特，再补两条经典信息</strong>。</p>
+<p><strong>协议。</strong>(1) Alice 把她要传的 |ψ⟩ 与她的半个 Bell 对放到一起，做一个<strong>Bell 测量</strong>（把两个比特整体投影到 Bell 基上）→ 得到 2 个经典比特。(2) Alice 通过经典信道把这 2 比特发给 Bob。(3) Bob 按收到的比特施加 X 和/或 Z 门 → 他的比特恢复成 |ψ⟩。</p>
+<p><strong>完整例题 3：具体传一个态，把每一步的数字算完。</strong>取</p>
+<div class="formula display" data-tex="|\psi\rangle=\frac{\sqrt3}{2}|0\rangle+\frac12|1\rangle,\qquad \text{共享 }|\Phi^+\rangle_{12}"></div>
+<p>初始三比特态为 |ψ⟩₃ ⊗ |Φ⁺⟩₁₂。把它按第 1、2 个比特的 Bell 基重新展开（这是本题唯一要动笔的一步）：</p>
+<div class="formula display" data-tex="|\psi\rangle_3|\Phi^+\rangle_{12}=\tfrac12\Big[|\Phi^+\rangle_{12}|\psi\rangle+|\Phi^-\rangle_{12}Z|\psi\rangle+|\Psi^+\rangle_{12}X|\psi\rangle+|\Psi^-\rangle_{12}XZ|\psi\rangle\Big]"></div>
+<p>代入 |ψ⟩ = (√3/2)|0⟩+(1/2)|1⟩。假设 Alice 的 Bell 测量结果落到 |Φ⁻⟩₁₂（编码为经典比特 01）。那么 Bob 的比特立刻"坍缩"为</p>
+<div class="formula display" data-tex="Z|\psi\rangle=\frac{\sqrt3}{2}|0\rangle-\frac12|1\rangle"></div>
+<p>Bob 查看收到的比特 01，查表（00→I、01→Z、10→X、11→XZ），施加 Z 门：</p>
+<div class="formula display" data-tex="Z\Big(\frac{\sqrt3}{2}|0\rangle-\frac12|1\rangle\Big)=\frac{\sqrt3}{2}|0\rangle+\frac12|1\rangle=|\psi\rangle\ \checkmark"></div>
+<p>传态成功。<strong>资源账：1 个 qubit = 2 个经典比特 + 1 个纠缠对（ebit）。</strong>注意两个要点：(i) 原始态在 Bell 测量时被<strong>摧毁</strong>了——所以这不违反<strong>不可克隆定理</strong>（量子态无法精确复制；若原始态还在，就等于白得了一份拷贝）；(ii) Bob 在收到经典比特之前，手里只是一个"看似随机的混合态"，无法独自提取 |ψ⟩——所以没有超光速通信。隐形传态是量子互联网的基本原语，量子中继器靠它接力来扩展量子网络的范围。</p>
+</section>
+<section>
+<h3>五、Bell 不等式(CHSH)的严格推导——局域隐变量理论能做什么</h3>
+<p>设 Alice 在测量设置 a 下得到结果 A(a,λ) ∈ {±1}，Bob 在设置 b 下得到 B(b,λ) ∈ {±1}。局域隐变量(局部实在论)理论断言：存在隐藏参数 λ(分布 q(λ))，使观测关联只是 λ 的统计平均</p>
+<div class="formula display" data-tex="E(a,b)=\int q(\lambda)\,A(a,\lambda)\,B(b,\lambda)\,d\lambda,\qquad A,B\in\{\pm1\}"></div>
+<p>这是"局域性"的数学化：A 只依赖 Alice 的设置与 λ，B 只依赖 Bob 的设置与 λ——分离的测量互不影响。考虑组合 S(λ) = A(a,λ)B(b,λ) + A(a',λ)B(b,λ) + A(a,λ)B(b',λ) − A(a',λ)B(b',λ)。重排得</p>
+<div class="formula display" data-tex="S(\lambda)=A(a,\lambda)\bigl[B(b,\lambda)+B(b',\lambda)\bigr]+A(a',\lambda)\bigl[B(b,\lambda)-B(b',\lambda)\bigr]"></div>
+<p>因 B(b,λ), B(b',λ) ∈ {±1}，二者要么相等要么相反：相等时 B(b,λ)−B(b',λ)=0 而 |B(b,λ)+B(b',λ)|=2；相反时 B(b,λ)+B(b',λ)=0 而 |B(b,λ)−B(b',λ)|=2。结合 |A|≤1 得 |S(λ)| ≤ 2 对每个 λ 成立。取平均并利用三角不等式：</p>
+<div class="formula display" data-tex="\left|E(a,b)+E(a',b)+E(a,b')-E(a',b')\right|\le \int q(\lambda)\,|S(\lambda)|\,d\lambda\le 2"></div>
+<p>此即 <strong>CHSH 不等式</strong>：任何局域隐变量理论必须满足 |S| ≤ 2。</p>
+</section>
+<section>
+<h3>六、量子力学违反 CHSH——证明 |S|=2√2</h3>
+<p>对 singlet Bell 态 |ψ⁻⟩ = (|01⟩ − |10⟩)/√2，测量 A=σ·a、B=σ·b，量子力学给出关联</p>
+<div class="formula display" data-tex="E(a,b)=\langle\psi^-|(\sigma\cdot a)\otimes(\sigma\cdot b)|\psi^-\rangle=-\cos\theta_{ab}"></div>
+<p>其中 θ<sub>ab</sub> 是 a 与 b 的夹角(singlet 是总自旋为 0 的旋转不变态，故关联只依赖相对方向)。选取 Alice 方向 a=0°、a'=90°，Bob 方向 b=45°、b'=−45°，则各夹角为 45° 或 135°，于是</p>
+<div class="formula display" data-tex="S_q=-\cos45^\circ-\cos45^\circ-\cos45^\circ+\cos135^\circ=-4\cdot\frac{\sqrt2}{2}=-2\sqrt2"></div>
+<p>即 |S_q| = 2√2 ≈ 2.828 &gt; 2。<strong>局域隐变量理论与量子力学数值不相容</strong>。2015 年三个漏洞全关闭的实验确认量子预言 2√2——局域实在论被排除(2022 Nobel 奖)。</p>
+</section>
+<section>
+<h3>七、纠缠判据——约化密度矩阵的纯度</h3>
+<p>设 AB 处于纯态 |ψ⟩ ∈ H<sub>A</sub> ⊗ H<sub>B</sub>。A 的<strong>约化密度矩阵</strong>通过对 B 求迹得到 ρ<sub>A</sub> = Tr<sub>B</sub>|ψ⟩⟨ψ|。作 <strong>Schmidt 分解</strong>（把两体态展开成"正交基之积"的规范形式）|ψ⟩ = Σᵢ √pᵢ |eᵢ⟩ ⊗ |fᵢ⟩(pᵢ&gt;0, Σpᵢ=1)，则 ρ<sub>A</sub> = Σ pᵢ |eᵢ⟩⟨eᵢ|，故</p>
+<div class="formula display" data-tex="|\psi\rangle\ \text{纠缠}\iff \mathrm{Tr}(\rho_A^2)=\sum_i p_i^2<1\iff S(\rho_A)=-\mathrm{Tr}(\rho_A\log\rho_A)>0"></div>
+<p><strong>推导。</strong>Tr(ρ<sub>A</sub>²)=Σpᵢ²=1 当且仅当只有一项 p₁=1(其余为 0)，即 |ψ⟩=|e₁⟩⊗|f₁⟩ 是纯可分离态；此时 ρ<sub>A</sub>=|e₁⟩⟨e₁| 为秩 1 投影，S=0。反之只要有两个 pᵢ&gt;0 就有 Σpᵢ²&lt;1 且 S&gt;0，态不可分离，即纠缠。故对纯态，纠缠 ⟺ 约化密度矩阵非纯。</p>
+</section>
+<section>
+<h3>八、标准反例：可分离态也有关联——相关 ≠ 纠缠</h3>
+<p>考虑混合态 ρ = ½|00⟩⟨00| + ½|11⟩⟨11|。它可显式写成量子比特态的<strong>凸组合</strong>（按概率加权混合）ρ = ½(|0⟩⟨0|⊗|0⟩⟨0|) + ½(|1⟩⟨1|⊗|1⟩⟨1|)，因而是<strong>可分离态</strong>，不含纠缠。但测量两个比特仍 100% 相关：要么同为 0，要么同为 1。这证明经典关联 ≠ 量子纠缠——纠缠需要<strong>量子叠加</strong>。</p>
+<p>另一反例：纯可分离态 |ψ⟩ = |0⟩ ⊗ (|0⟩+|1⟩)/√2 的约化密度矩阵 ρ<sub>A</sub>=|0⟩⟨0| 是纯态，S(ρ<sub>A</sub>)=0，无纠缠。严格判据：ρ 可分离 ⟺ ρ=Σₖ pₖ ρₖᴬ ⊗ ρₖᴮ(本反例的混合态满足此式)。</p>
+</section>
+<section>
+<h3>九、关键公式</h3>
+<div class="formula display" data-tex="|\Phi^+\rangle=\frac{|00\rangle+|11\rangle}{\sqrt2},\quad E(Z_A Z_B)=E(X_A X_B)=1"></div>
+<div class="formula display" data-tex="\rho_A=\operatorname{Tr}_B|\psi\rangle\langle\psi|,\qquad S(\rho_A)=-\operatorname{Tr}(\rho_A\log\rho_A)"></div>
+<div class="formula display" data-tex="|S|\le 2\ (\text{CHSH}),\qquad |S_q|=2\sqrt2\ (\text{量子})"></div>
+<div class="formula display" data-tex="1\ \text{qubit}=2\ \text{经典比特}+1\ \text{ebit}"></div>
+</section>
+<section>
+<h3>十、试试看（带提示）</h3>
+<p>1. 证明 |Ψ⁻⟩=(|01⟩−|10⟩)/√2 也是纠缠态。<br>提示：设它等于 (a|0⟩+b|1⟩)⊗(c|0⟩+d|1⟩)，展开得 ac=bd=0、ad=1/√2、bc=−1/√2。ad≠0 与 bc≠0 推出 a,b,c,d 全非零，与 ac=0 矛盾。捷径：算 ρ<sub>A</sub>=½I₂，Tr(ρ<sub>A</sub>²)=½&lt;1。</p>
+<p>2. 计算 |Ψ⁺⟩=(|01⟩+|10⟩)/√2 的约化密度矩阵与纠缠熵。<br>提示：ρ<sub>AB</sub> 的交叉项 |01⟩⟨10| 求迹时乘 ⟨0|1⟩=0 消失，剩下 ½(|0⟩⟨0|+|1⟩⟨1|)=½I₂；S=ln 2=1 bit。四个 Bell 态全是最大纠缠。</p>
+<p>3. 验证四个 Bell 态两两正交。<br>提示：例如 ⟨Φ⁺|Φ⁻⟩=½(⟨00|00⟩−⟨00|11⟩+⟨11|00⟩−⟨11|11⟩)=½(1−0+0−1)=0；⟨Φ⁺|Ψ⁺⟩ 则每个内积都是 ⟨00|01⟩=0 之类。</p>
+<p>4. 对直积态 |0⟩|+⟩ 计算 E(Z<sub>A</sub>Z<sub>B</sub>) 和 E(X<sub>A</sub>X<sub>B</sub>)，与 Bell 态对比。<br>提示：直积态关联可分解 E(Z<sub>A</sub>Z<sub>B</sub>)=⟨Z<sub>A</sub>⟩⟨Z<sub>B</sub>⟩=1·0=0；⟨X<sub>A</sub>⟩=0、⟨X<sub>B</sub>⟩=1 给出 E(X<sub>A</sub>X<sub>B</sub>)=0。直积态完全没有关联——关联要么来自纠缠（第二节），要么来自经典混合（第八节反例）。</p>
+<p>5. 隐形传态：若 Alice 的 Bell 测量结果是 |Ψ⁺⟩（编码 10），Bob 应施加什么门恢复 |ψ⟩=(√3/2)|0⟩+(1/2)|1⟩？<br>提示：查第四节表格，|Ψ⁺⟩→X 门。此时 Bob 的态是 X|ψ⟩=(1/2)|0⟩+(√3/2)|1⟩，再施加 X 得 (√3/2)|0⟩+(1/2)|1⟩=|ψ⟩ ✓。</p>
+<p>6. 为什么 Alice 测完 Bell 对、Bob 的态"瞬间确定"，却不能用它超光速通信？<br>提示：Bob 单独测量自己的比特，得到 0 或 1 各占 50%——和从没有纠缠的无关量子比特测量结果完全一样，Bob 无法分辨 Alice 是否已经测量；要真正得到 |ψ⟩，必须等经典比特送到。关联是真实存在的，但<strong>因果性的信息传递</strong>仍受光速限制。</p>
+</section>
+<section>
+<h3>十一、工作题：Bell 态 |Φ⁺⟩ 的纠缠熵</h3>
+<p><strong>题目。</strong>给定 Bell 态 |Φ⁺⟩ = (|00⟩ + |11⟩)/√2 ∈ ℂ²⊗ℂ²。(1) 求约化密度矩阵 ρ<sub>A</sub> = Tr<sub>B</sub>|Φ⁺⟩⟨Φ⁺|；(2) 验证 Tr(ρ<sub>A</sub>²) = ½ &lt; 1(纠缠判据)；(3) 计算 von Neumann 纠缠熵 S(ρ<sub>A</sub>)，分别用自然对数 ln 与 log₂ 给出。</p>
+<details><summary>显示解答</summary><p>(1) ρ<sub>AB</sub> = |Φ⁺⟩⟨Φ⁺| = ½(|00⟩⟨00| + |00⟩⟨11| + |11⟩⟨00| + |11⟩⟨11|)。对 B 求迹：Tr<sub>B</sub>(|00⟩⟨00|)=|0⟩⟨0|，Tr<sub>B</sub>(|00⟩⟨11|)=|0⟩⟨1|·⟨0|1⟩=0(交叉项消失)，对称地 Tr<sub>B</sub>(|11⟩⟨00|)=0，Tr<sub>B</sub>(|11⟩⟨11|)=|1⟩⟨1|。故 ρ<sub>A</sub> = ½(|0⟩⟨0|+|1⟩⟨1|) = ½I₂，最大混合态。(2) ρ<sub>A</sub>²=¼I₂，故 Tr(ρ<sub>A</sub>²)=½&lt;1——判据确认 |Φ⁺⟩ 为最大纠缠态。(3) S(ρ<sub>A</sub>) = −Tr(½I₂·ln(½I₂)) = −(½ln½+½ln½) = ln 2 ≈ 0.693(nats)。用 log₂：S = −(½log₂½+½log₂½) = 1 bit。两单位相差因子 ln 2：1 bit = ln 2 nats。∎</p></details>
+<p><strong>题目 2。</strong>对 singlet |Ψ⁻⟩=(|01⟩−|10⟩)/√2 重做 (1)–(3)。</p>
+<details><summary>显示解答</summary><p>ρ<sub>AB</sub>=|Ψ⁻⟩⟨Ψ⁻|=½(|01⟩⟨01|−|01⟩⟨10|−|10⟩⟨01|+|10⟩⟨10|)。交叉项 |01⟩⟨10| 求迹时给出 |0⟩⟨1|·⟨0|1⟩=0，同样消失，故 ρ<sub>A</sub>=½(|0⟩⟨0|+|1⟩⟨1|)=½I₂。Tr(ρ<sub>A</sub>²)=½，S=ln 2=1 bit。所有 Bell 态都是最大纠缠态。∎</p></details>
+</section>
+<section><h3>十二、Bell 实验的历程——从 Aspect 到 Nobel</h3><p>Aspect(1982)首次在实验室中严格违反Bell不等式。但三个"漏洞"需要逐一关闭：(1)定域性漏洞——测量设备之间的信号可能超光速？→ 2015年Delft实验室用1.3km光纤间距关闭。(2)探测漏洞——只检测到部分光子可能不是随机的？→ 2015年NIST和维也纳同时关闭。(3)自由选择漏洞——粒子源和测量设置之间可能有"阴谋"？→ 2018年用来自遥远类星体的随机光设置了测量。全关。</p></section><section><h3>十三、前沿：量子互联网与纠缠蒸馏</h3><p>长途传输中噪声会降低纠缠质量。Bennett等(1996)提出的纠缠蒸馏：从多份低质量纠缠对中提取少量高质量纠缠对——<strong>纯化</strong>。量子中继器 = 纠缠交换 + 纠缠蒸馏。2024年中国"墨子号"量子科学实验卫星已实现4600公里量子密钥分发。仍开放：纠缠蒸馏的最优速率公式。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Sakurai, Modern Quantum Mechanics</strong></p>
+<p>&rarr; <strong>D. Griffiths, Introduction to Quantum Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/uncertainty.html">不确定性原理</a>。</p>
+</section>
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/bloch-sphere.html">Bloch 球</a>：单 qubit 态的几何表示——纠缠态需要两个 Bloch 球之间的关联。</p>
+<p>&rarr; <a href="/pages/qubit-gates.html">量子门</a>：Bell 态可以通过 Hadamard + CNOT 制备。</p>
+<p>&rarr; <a href="/pages/entropy.html">熵与信息</a>：纠缠熵是 Shannon 熵的量子推广——信息论的共同语言。</p>
+<p>&rarr; <a href="/pages/uncertainty.html">不确定性原理</a>：纠缠和不确定性共享同样的数学根源——算符不对易。</p>
+</section>

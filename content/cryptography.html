@@ -1,0 +1,155 @@
+<section>
+<h3>〇、直觉入门——一把任何人都能锁、只有你能开的锁</h3>
+<p>几千年来，密码学有个死穴：<strong>发信人与收信人必须先共享一个秘密（密钥）</strong>。凯撒密码、恩尼格玛机、AES 全都如此——可两个陌生人隔着互联网，怎么安全地共享秘密？1976 年 Diffie 与 Hellman 在论文 <em>"New Directions in Cryptography"</em> 中提出一个颠覆性想法：<strong>公钥密码</strong>。每个人公开一把"锁"（公钥），任何人都能用它把消息锁进箱子；但开锁的"钥匙"（私钥）只有你一个人有。不需要事先共享任何秘密，陌生人都能给你寄密信。</p>
+<p>1977 年 Rivest、Shamir、Adleman 给出了第一个实用公钥方案——RSA，它建筑在一个教科书般的算术事实上：</p>
+<div class="formula display" data-tex="\text{乘法容易：}p\cdot q=n\quad(\text{快})\qquad\qquad \text{分解难：}n\to p,q\quad(\text{没有多项式算法已知})"></div>
+<p>把两个大素数乘起来，一秒钟；把乘积分解回素数，人类最好的算法（数域筛法）也要指数时间。这就是<strong>单向函数</strong>的候选：正着算容易、反着算极难。RSA 的妙处在于它还有一扇"后门"：<strong>如果你知道 p、q（私钥），解密就变得容易</strong>——这种"带陷门的单向函数"叫陷门置换。公钥 = 锁 + 广告；私钥 = 那对素数 p、q。</p>
+<div class="key-insight">洞察：RSA 的正确性是一行欧拉定理（m^{ed}≡m mod n），安全性是一个未证假设（分解困难）。它是"数学能做密码"的第一次成功示范：把"难"建立在数论问题的<strong>平均情形</strong>困难上——与 P≠NP（最坏情形）相关但不等价（→ <a href="/pages/p-vs-np.html">P vs NP</a> 课）。而 1994 年 Shor 证明量子计算机能多项式时间分解——"数学锁"第一次在物理面前露出裂痕（→ <a href="/pages/qubit-gates.html">量子门</a> 课）。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/sieve.html">素数筛</a>（素数与整除）、<a href="/pages/abstract-algebra.html">抽象代数</a>（模 n 的环与单位群）、<a href="/pages/group-action.html">群作用</a>（可选：欧拉定理的群论视角）。安全性讨论需要 <a href="/pages/p-vs-np.html">P vs NP</a> 与 <a href="/pages/qubit-gates.html">量子门</a> 的背景。</p></div>
+
+<section>
+<h3>一、一个具体问题——1977 年 RSA 到底做了什么</h3>
+<p><strong>密钥生成。</strong> 选两个大素数 p、q，令 n=pq，并计算 φ(n)=(p−1)(q−1)。选加密指数 e（与 φ(n) 互素），解 ed≡1 (mod φ(n)) 得私钥 d。公开 (e,n)，保密 d（以及 p、q、φ）。</p>
+<p><strong>加密与解密。</strong> 消息 m（看成小于 n 的数）：</p>
+<div class="formula display" data-tex="c\equiv m^{e}\pmod n\qquad(\text{加密})\qquad\qquad m\equiv c^{d}\pmod n\qquad(\text{解密})"></div>
+<p><strong>为什么解密能还原？</strong> ed=1+kφ(n)，故 c^d = m^{ed} = m^{1+kφ(n)}。由欧拉定理 m^{φ(n)}≡1 (mod n)（gcd(m,n)=1 时），于是 m^{ed}≡m。若 m 与 n 不互素（m 恰是 p 或 q 的倍数——实际概率 ~1/p 可忽略），用中国剩余定理补全同一结论（第五节）。</p>
+<p><strong>为什么这"安全"？</strong> 攻击者知道 n、e、c，要恢复 m 或私钥 d。最直接路线是分解 n（得 φ 与 d）。至今没有多项式时间分解算法；公认最快的通用算法是数域筛法（GNFS），运行时间约</p>
+<div class="formula display" data-tex="O\Bigl(\exp\bigl(c\,(\ln n)^{1/3}(\ln\ln n)^{2/3}\bigr)\Bigr)\qquad(\text{次指数但超多项式})"></div>
+<p>n 取 2048 位时这在工程上不可行。<strong>诚实声明：</strong>RSA 的"安全性"是一个假设（RSA 假设：求 e 次根模 n 困难），它<strong>没有被证明等价于分解困难</strong>——数学上仍可能有不需要分解就破解 RSA 的方法。密码学现代理论（Goldwasser–Micali 1984 起）把这类假设做成精确的"归约安全"体系。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——"乘方取模"为何又慢又快到正好</h3>
+<p><strong>计算 m^e mod n 其实很快。</strong> 用"平方-乘"（反复平方）法：把 e 写成二进制，从低位起反复平方底数、按位乘入结果——只需 O(log e) 次乘法，每次 O((log n)²) 位运算。e 有 2048 位，整个过程毫秒级。指数运算是"看着吓人、算着飞快"的典型。</p>
+<p><strong>而"求离散对数/分解"没有已知捷径。</strong> 关键在于模运算"搅乱"了结构：m^e mod n 的表观随机性来自乘法群 ℤ_n* 的循环行为。密码学赌的就是：<strong>正向（幂）在群结构里是便宜的，反向（根/对数）在群结构里没有统一捷径</strong>。</p>
+<p><strong>单向函数与 P vs NP 的精确关系。</strong> 单向函数存在 ⟹ P≠NP（若 P=NP，反演多项式可解，没有单向函数）；但反过来 P≠NP 是否给出单向函数<strong>未知</strong>——因为密码学需要的是<strong>平均情形</strong>困难与可采样分布，而 P≠NP 只承诺最坏情形。这就是为什么"分解难"目前只是一个假设而非定理（尽管它已被赌了几十年）。</p>
+<div class="key-insight">正确性 = 数论定理（免费）；安全性 = 计算复杂性假设（付费）。RSA 把"数学之美"与"工程之赌"缝在一起：欧拉定理保证锁一定能开，GNFS/量子算法决定锁能撑多久。理解这个结构，才算理解现代密码学。</div>
+</section>
+
+<section>
+<h3>三、例题 1——手算一套完整的微型 RSA（一步步算完）</h3>
+<p><strong>题目。</strong> p=5、q=11。加密消息 m=7，再解密验证。</p>
+<p><strong>第一步：公开参数。</strong> n=pq=55；φ(n)=(5−1)(11−1)=40；选 e=3（gcd(3,40)=1）。</p>
+<p><strong>第二步：私钥。</strong> 解 3d≡1 (mod 40)：3·27=81≡1 ⟹ d=27。</p>
+<p><strong>第三步：加密 m=7。</strong> 用平方-乘：7²=49≡49；7⁴=49²=2401≡2401−43·55=2401−2365=36？算：55·43=2365，2401−2365=36；c=7³=7²·7≡49·7=343≡343−6·55=13。</p>
+<div class="formula display" data-tex="c=7^{3}\bmod 55=343-330=13\qquad\blacksquare"></div>
+<p><strong>第四步：解密 c=13。</strong> 求 13²⁷ mod 55：13²=169≡4；13⁴=16；13⁸=16²=256≡36；13¹⁶=36²=1296≡1296−23·55=31。故</p>
+<div class="formula display" data-tex="13^{27}=13^{16}\cdot13^{8}\cdot13^{2}\cdot13\equiv 31\cdot36\cdot4\cdot13\bmod 55"></div>
+<p>逐乘：31·36=1116≡16；16·4=64≡9；9·13=117≡7 = m ✓ 解密成功。∎</p>
+<p><strong>第五步：画布检查。</strong> 本课画布用这套参数（p=5,q=11,e=3,m=7）会自动得到 c=13、解密回 7；你可以换参数亲手"跑一遍密码"。真实 RSA 的差别只在位数：p、q 是 1024 位的素数（n 2048 位），上面的算术原样进行，只是数更大。</p>
+</section>
+
+<section>
+<h3>四、例题 2——Diffie–Hellman 密钥交换手算（一步步算完）</h3>
+<p><strong>题目。</strong> 公开素数 p=23 与生成元 g=5。Alice 取 a=6，Bob 取 b=15。双方如何得到共享密钥？窃听者 Eve 看到什么？</p>
+<p><strong>第一步：Alice 发 A。</strong> A=g^a=5⁶ mod 23：5²=25≡2、5⁴=4，故 A=5⁶=5⁴·5²≡4·2=8。Alice 公开 A=8。</p>
+<p><strong>第二步：Bob 发 B。</strong> B=g^b=5¹⁵ mod 23：5⁸=5⁴·5⁴=16、16·5⁴=64≡18、18·5²=36≡13、13·5=65≡19，故 B=19。Bob 公开 B=19。</p>
+<p><strong>第三步：各算共享密钥。</strong> Alice 算 B^a=19⁶ mod 23：19²=361≡16、19⁴=3，故 19⁶=19⁴·19²≡3·16=48≡2。Bob 算 A^b=8¹⁵：8²=64≡18、8⁴=2、8⁸=4，故 8¹⁵=8⁸·8⁴·8²·8≡4·2·18·8：4·2=8、18·8=144≡6、8·6=48≡2。两人都得到 <strong>s=2</strong>。∎</p>
+<div class="formula display" data-tex="\text{Alice: }A=g^{a}\to \text{Bob }B\ \Rightarrow\ s=B^{a}=g^{ab};\qquad \text{Bob: }s=A^{b}=g^{ab}"></div>
+<p><strong>第四步：Eve 的困境。</strong> Eve 看到 p=23、g=5、A=8、B=19，但不知道 a=6 或 b=15；要算 g^{ab} 需要解<strong>离散对数</strong>（从 8 反推 a）。模 23 太小她一试便知；但 p 取 2048 位素数时，离散对数（CDH/DDH 假设）被视为不可行——DH 的安全性就赌在这里。∎</p>
+<p><strong>第五步：实战结构。</strong> 实际互联网不用"教科书 DH 裸奔"：现代协议（TLS）用 ECDHE（椭圆曲线版，→ <a href="/pages/elliptic-curves.html">椭圆曲线</a> 课）协商密钥，再用 AES 等对称加密传输数据（混合加密）——公钥只用来"握手"，对称密码负责"干活"。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——本课核心事实清单</h3>
+<ul>
+<li><strong>完美保密（Shannon 1949）：</strong> 一次性便签（OTP）——密钥与消息等长且真随机时，密文与消息统计独立，信息论意义不可破；代价是密钥分发（鸡生蛋问题）——这正是公钥要解决的。</li>
+<li><strong>RSA 正确性：</strong> ed≡1 (mod φ(n)) ⟹ m^{ed}≡m (mod n)（欧拉定理 + CRT 处理 m 与 n 不互素的情形）。</li>
+<li><strong>素数判定 ∈ P（AKS 2002）：</strong> 判定 n 是否素数是多项式时间的——生成大素数容易；分解 n 却没有多项式算法已知——"验证难易不对称"是公钥的全部赌注。</li>
+<li><strong>分解的最好算法：</strong> 数域筛法（GNFS，Lenstra 等），次指数时间 exp(O((ln n)^{1/3}(lnln n)^{2/3}))；量子：Shor 算法 O((log n)³) 多项式——量子计算机威胁 RSA/DH/ECC（公钥），对 AES 仅 Grover 二次加速。</li>
+<li><strong>假设体系：</strong> 分解假设、RSA 假设、CDH/DDH——现代密码学把每个方案归约到明确的困难问题（Goldwasser–Micali 1984 语义安全；随机预言机模型）。</li>
+<li><strong>实现注意（教科书 RSA 不安全）：</strong> 需 OAEP 填充（防低指数/广播攻击、Coppersmith）、签名需哈希+PSS；随机数质量差会导致共享素数（批量 GCD 攻击）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="n=pq,\quad \varphi(n)=(p-1)(q-1),\quad ed\equiv1\pmod{\varphi(n)}"></div>
+<div class="formula display" data-tex="c\equiv m^{e},\quad m\equiv c^{d}\pmod n;\qquad m^{ed}\equiv m\ (\text{欧拉/CRT})"></div>
+<div class="formula display" data-tex="\text{DH: } A=g^{a},\ B=g^{b},\ s=B^{a}=g^{ab}=A^{b};\qquad \text{离散对数：已知 }A,g,\ \text{求 }a"></div>
+<div class="formula display" data-tex="\text{GNFS: }\exp(c\,(\ln n)^{1/3}(\ln\ln n)^{2/3});\qquad \text{Shor: }O((\log n)^3)"></div>
+</section>
+
+<section>
+<h3>七、延伸——从 RSA 到现代密码前线</h3>
+<ul>
+<li><strong>椭圆曲线密码（ECC）。</strong> 同样的公钥框架搬到椭圆曲线群的离散对数上（→ <a href="/pages/elliptic-curves.html">椭圆曲线与 Wiles</a> 课）：256 位 ECC ≈ 3072 位 RSA 的安全性——你手机里的 TLS 早已是 ECDHE 的天下。</li>
+<li><strong>量子威胁与后量子密码。</strong> Shor 算法宣告 RSA/DH/ECC 在量子计算机前失效；NIST 后量子竞赛 2022/2024 选定格基方案（Kyber/ML-KEM、Dilithium）——安全性建立在<strong>格上带错误学习（LWE）</strong>问题上，它与"最短向量问题"（SVP）一样没有已知量子捷径。→ <a href="/pages/qubit-gates.html">量子门</a> 课。</li>
+<li><strong>全同态加密（Gentry 2009）。</strong> 在加密的数据上直接计算：E(m₁)+E(m₂)=E(m₁+m₂)。隐私计算、联邦学习的数学引擎——"把计算搬进密文里"的二十年工程化。</li>
+<li><strong>数字签名与区块链。</strong> 签名 = 私钥"签署"消息、公钥验证；哈希链把交易串成账本——比特币/以太坊的安全支柱是 ECDSA/哈希，全部站在本课的概念上。</li>
+<li><strong>理论密码学。</strong> 混淆（iO）的候选构造、可验证延迟函数、安全多方计算（MPC）——"一群互不信任的人共同计算一个函数而不泄露输入"是理论计算机给密码学的最新玩具。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"密码想当然"</h3>
+<p><strong>陷阱 1："RSA 安全已被证明 = 分解困难"？</strong> 没有。RSA 假设（求 e 次根）与分解假设是<strong>两个不同假设</strong>；存在理论模型说明"分解难 ⟹ RSA 难"未必成立。工程上大家都赌它们都难，但数学上两者关系仍开放。</p>
+<p><strong>陷阱 2："教科书 RSA（直接 m^e）够用"？</strong> 不够。e=3 且消息小时 m^e&lt;n，开三次方即破（低指数攻击）；同消息发给 e 个接收者可广播攻击恢复 m；Coppersmith 定理对"已知部分消息"的攻击更致命。填充（OAEP）不是装饰，是安全性的组成部分。</p>
+<p><strong>陷阱 3："n 够大就绝对安全"？</strong> 安全还依赖实现：随机数生成器坏了（两个用户共享一个素数 → 批量 GCD 秒破）、侧信道（计时/功耗泄露 d）、以及"先记录后解密"（量子崛起后历史流量可被回溯破解）。"密钥大小"只是安全链的一环。</p>
+<p><strong>陷阱 4："签名 = 私钥加密的朴素版"？</strong> 教科书 RSA 签名（s=m^d）不安全（存在性伪造：s₁s₂ 是 m₁m₂ 的合法签名）。现代签名需要哈希 + 概率填充（PSS）。"公钥加密"与"数字签名"是<strong>两种</strong>原语，不能互相朴素替代。</p>
+<p><strong>陷阱 5："量子计算机来了，密码学全完"？</strong> Shor 只摧毁<strong>公钥</strong>（RSA/DH/ECC 的代数结构）；对称 AES 只受 Grover 二次加速（密钥长度翻倍即可）；后量子格密码（Kyber/Dilithium）已经标准化。密码学在迁移，不是终结。</p>
+</section>
+
+<section>
+<h3>九、当前状态——密码学的地图边界</h3>
+<ol>
+<li><strong>后量子迁移。</strong> NIST 已定稿 ML-KEM/ML-DSA（Kyber/Dilithium，2024 标准）；全球基础设施（TLS 1.3 混合模式）正在迁移——这是未来十年最大的密码工程。</li>
+<li><strong>基础假设仍未解。</strong> 单向函数是否存在？它与 P≠NP 的确切关系？分解/离散对数是否有经典亚指数以下算法？——50 年来这些问题纹丝不动，是理论计算机最深的地基之一。</li>
+<li><strong>同态与隐私计算。</strong> 全同态加密从"存在性证明"走向"硬件加速的实用系统"；多方的安全计算在联邦学习、医疗数据共享落地。</li>
+<li><strong>密码学与量子纠缠。</strong> 量子密钥分发（QKD）用物理定律换安全（窃听必扰动）；与"计算假设"路线互补——"物理安全"与"数学安全"的争论是当代密码学的文化前沿。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Shannon (1949)</strong>：<em>"Communication theory of secrecy systems"</em>——完美保密与信息论密码学奠基。</li>
+<li><strong>Diffie–Hellman (1976)</strong>：<em>"New directions in cryptography"</em>, <em>IEEE Trans. IT</em>——公钥密码的宣言。</li>
+<li><strong>Rivest–Shamir–Adleman (1978)</strong>：<em>"A method for obtaining digital signatures and public-key cryptosystems"</em>——RSA。</li>
+<li><strong>Goldwasser–Micali (1984)</strong>：语义安全与概率加密——现代可证明安全起点。</li>
+<li><strong>Shor (1994)</strong>：<em>"Algorithms for quantum computation"</em>——多项式时间分解/离散对数，公钥密码的量子威胁。</li>
+<li><strong>Agrawal–Kayal–Saxena (2004)</strong>：<em>"PRIMES is in P"</em>, <em>Ann. of Math.</em>——素数判定的多项式算法（AKS）。</li>
+<li><strong>Gentry (2009)</strong>：全同态加密的第一个构造（格基，理想格→模格）。</li>
+<li><strong>NIST FIPS 203/204 (2024)</strong>：ML-KEM (Kyber) 与 ML-DSA (Dilithium) 后量子标准。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——小参数手算与概念辨析</h3>
+<p><strong>题 1（RSA 全套）。</strong> p=7、q=13：算 n、φ(n)；取 e=5，求 d。<strong>提示：</strong>n=91、φ=72；5d≡1 (mod 72) ⟹ d=29（5·29=145≡1）。</p>
+<p><strong>题 2（加密一步）。</strong> 用上题的 (e,n)=(5,91) 加密 m=10。<strong>提示：</strong>c=10⁵ mod 91：10²=100≡9、10⁴=81、10⁵=810≡82。c=82。</p>
+<p><strong>题 3（为什么 e 要互素）。</strong> 若 gcd(e,φ(n))≠1，为什么解密必然失败？<strong>提示：</strong>需要 ed≡1 (mod φ(n))；e 不互素时模 φ 无逆元，幂映射 m↦m^e 不再可逆（欧拉定理的指数运算要求 e 在模 φ 的单位群里）。</p>
+<p><strong>题 4（欧拉定理验证）。</strong> 验证 2^{φ(35)}≡1 (mod 35)（φ(35)=24）。<strong>提示：</strong>2⁴=16、2⁸=256≡11、2¹⁶=121≡16、2²⁴=2¹⁶·2⁸=16·11=176≡1。✓</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：n=91、φ=72、d=29。∎</p>
+<p><strong>题 2</strong>：c=82。∎</p>
+<p><strong>题 3</strong>：e 不在单位群 ⟹ 无逆 ⟹ 解密指数不存在；RSA 的加解密互为逆映射的前提崩塌。∎</p>
+<p><strong>题 4</strong>：176 mod 35 = 1 ✓。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布跑 RSA）。</strong> 在画布选 (5,11) 预设并输入 m=7：验证 c=13、解密回 7。再试 e=3 与 m=1、2 等小消息——想"为什么小消息没被 e=3 攻破"？（提示：m^e&lt;n 时开方即可；55 太小 m=7 时 343&gt;55 已取模，实战里 OAEP 填充防的正是 m^e&lt;n 那类。）</p>
+<p><strong>试试看 2（试除法动画）。</strong> 点"暴力分解"：对 (5,11) 立即试到 5；对 (61,53) 要试 53 步；n 每大一位试除成本翻倍——把步数换算成 2¹⁰²⁴ 就明白 2048 位 RSA 为何"试除不可行"。</p>
+<p><strong>试试看 3（与量子课联动）。</strong> 在 <a href="/pages/qubit-gates.html">量子门</a> 课回想 Shor 的三步（周期发现→连分数→分解）：本课 RSA 的 n 越大，量子优势越明显——2048 位 RSA 在量子计算机上"几分钟"。提示：这是 2024 年 NIST 后量子标准出台的直接原因。</p>
+<p><strong>试试看 4（共享素数攻击）。</strong> 想象两家机构各自随机选素数建 RSA，结果其中一家复用了一家用过的 p。窃听者只需对两个公钥 n₁=pq₁、n₂=pq₂ 求 gcd——一行 Euclid 算法即得 p，两家全破。提示：这正是 2012 年真实发生的"批量 GCD"大规模攻击（Lenstra 等扫描全网公钥）。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J. Katz, Y. Lindell, Introduction to Modern Cryptography</strong>（现代可证明安全的标准教材）</p>
+<p>&rarr; <strong>D. Boneh, V. Shoup, A Graduate Course in Applied Cryptography</strong>（网上免费，工程与理论的桥梁）</p>
+<p>&rarr; <strong>J. Hoffstein, J. Pipher, J. Silverman, An Introduction to Mathematical Cryptography</strong>（数学视角，含格密码）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.3（计算数论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/sieve.html">素数筛</a>、<a href="/pages/abstract-algebra.html">抽象代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/elliptic-curves.html">🗝️ 椭圆曲线与 Wiles</a>：ECC = 公钥密码的椭圆曲线版（更小密钥）。</p>
+<p>&rarr; <a href="/pages/qubit-gates.html">⚛️ 量子门</a>：Shor 算法是 RSA 的量子克星。</p>
+<p>&rarr; <a href="/pages/p-vs-np.html">⏳ P vs NP 与 NP 完备性</a>：单向函数与 P≠NP 的关系（平均 vs 最坏）。</p>
+<p>&rarr; <a href="/pages/sieve.html">🕸️ 素数筛</a>：素数与整除是 RSA 的算术地基。</p>
+<p>&rarr; <a href="/pages/svd.html">📉 奇异值分解</a>：随机性与密钥生成/密码分析中的线性代数。</p>
+<p>&rarr; <a href="/pages/high-dim-geometry.html">📦 高维几何与测度集中</a>：格密码的几何直觉（最短向量问题）。</p>
+</section>

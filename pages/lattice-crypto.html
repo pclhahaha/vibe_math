@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖二维格看最短向量：量子时代密码改赌 SVP/LWE" />
+  <meta property="og:title" content="格与后量子密码 — Vibe Math" />
+  <meta property="og:description" content="拖二维格看最短向量：量子时代密码改赌 SVP/LWE" />
+  <title>格与后量子密码 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🧊 格与后量子密码 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">拖二维格看最短向量：量子时代密码改赌 SVP/LWE</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='lattice-crypto',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/cryptography.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔐 密码学：RSA 与公钥</a>
+  <a href="/pages/hilbert-problems.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📋 Hilbert 23个问题 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——量子计算机来了，密码学把赌注押在哪？</h3>
+<p>1994 年 Shor 证明量子计算机能在多项式时间内分解整数、解离散对数——RSA、Diffie–Hellman、ECC（→ <a href="/pages/cryptography.html">RSA 与公钥</a>、<a href="/pages/elliptic-curves.html">椭圆曲线</a> 课）的代数结构在量子面前全部失效。要"后量子"地活下来，需要一个<strong>没有已知量子捷径</strong>的困难问题。数学给出现成的候选——<strong>格（lattice）</strong>：</p>
+<div class="formula display" data-tex="\mathcal L=B\mathbb Z^{n}=\Bigl\{\sum_{i}z_i b_i:\ z_i\in\mathbb Z\Bigr\}\qquad(\text{格 = 整系数线性组合的点阵})"></div>
+<p>格是晶体学与 <a href="/pages/algebraic-number-theory.html">几何数论</a> 里的老对象（Minkowski 的凸体定理），也是现代密码的新宠。它的招牌难题是<strong>最短向量问题（SVP）</strong>：给定格（一组基），找长度最短的非零格向量。二维的 SVP 几分钟可解（Gauss 归约），而 500 维的 SVP 让最好的算法（LLL、BKZ）望洋兴叹——<strong>维度升高时，SVP 的难度爆炸</strong>，且量子计算机目前也只能"干瞪眼"。</p>
+<p>但密码学不直接用 SVP 本身，而用它的"带噪声"表亲 <strong>LWE（带错误学习）</strong>：解一组带小噪声的线性方程。给一串方程 bᵢ≈aᵢ·s (mod q)，噪声把解"模糊化"，恢复秘密 s 与解格中最短向量一样难（Regev 2005 的量子归约）。NIST 2022/2024 选定 Kyber（ML-KEM）与 Dilithium（ML-DSA）为后量子标准——它们正是建立在 LWE/模块格上的。</p>
+<div class="key-insight">洞察：格的密码价值 = "平均情形困难有最坏情形保证"。破解 Kyber ⟹ 解某个 worst-case 格问题（量子归约），而不仅仅是一个"碰巧难"的实例——这是 RSA（分解假设无归约）所没有的理论强度。几何上它美得惊人：<strong>最短向量 = 高维空间里"看不见的短基"</strong>；画布上你会看到 2D 里它一目了然，而想象 1000 维时它藏进指数深度的黑暗中。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/cryptography.html">RSA 与公钥</a>（公钥密码的框架与量子威胁）、<a href="/pages/high-dim-geometry.html">高维几何与测度集中</a>（维度直觉）、<a href="/pages/algebraic-number-theory.html">代数数论</a>（几何数论同源）。</p></div>
+
+<section>
+<h3>一、一个具体问题——从 Ajtai 到 NIST：三十年造一条"困难之链"</h3>
+<p><strong>问题家族的谱系。</strong></p>
+<ul>
+<li><strong>SVP（最短向量）：</strong> 求格中非零最短向量。精确与多项式近似因子内 NP-hard（Ajtai 1998）；但密码学需要的是"中间 regime"——归约理论保证：若平均情形 LWE 可破，则最坏情形格问题可解（在量子归约意义下）。</li>
+<li><strong>CVP（最近向量）与 SIS（短整数解）：</strong> 找离目标最近的格点 / 找模方程组的短非零解——SIS 是哈希/签名（Dilithium）的地基，LWE 是 KEM（Kyber）的地基。</li>
+<li><strong>LLL（1982）：</strong> 多项式时间的"短基"算法（2^{(n−1)/2}-近似）——不够破密码，但能破 1980s 的背包密码，宣告"必须用高维 + 精心参数"。</li>
+</ul>
+<p><strong>三条定理搭出骨架（→ <a href="/pages/p-vs-np.html">P vs NP</a> 课的复杂性语言）：</strong></p>
+<div class="formula display" data-tex="\text{Ajtai 1996: SIS 平均情形困难}\Rightarrow\text{单向函数存在};\qquad \text{Regev 2005: 破 LWE}\Rightarrow_{\text{量子}}\text{最坏情形 SIVP 易}"></div>
+<p>Regev 的量子归约把"密码难"与"数学难"用<strong>量子步骤</strong>连接——技术上不寻常（用到了量子算法做中间步骤），却把格密码的信任建立在最坏情形困难上。自此 LWE 成为后量子密码的"标准赌注"。</p>
+<p><strong>NIST 的时间线。</strong> 2016 征集后量子方案 → 2022 选定 Kyber（KEM）与 Dilithium（签名，另有 Falcon）→ 2024 发布 FIPS 203（ML-KEM）与 FIPS 204（ML-DSA）。两者都工作在"模块格"（向量/矩阵在多项式环 R=ℤ_q[X]/(Xⁿ+1) 上），参数对应 128/192/256 位安全强度。互联网基础设施（TLS）正以"混合模式"（经典+后量子并用）迁移。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——为什么"带噪声的线性代数"会难</h3>
+<p><strong>无噪声：一秒钟。</strong> 若给精确方程组 As=b (mod q)，高斯消元立即解出 s。密码必须把"可解"变成"不可解"——唯一的出路是<strong>隐藏信息</strong>：不给 b 精确值，只给 b=As+e (mod q)，e 是秘密的小噪声向量。</p>
+<p><strong>有噪声：候选爆炸。</strong> 对任意候选 s′，残差 b−As′ (mod q) 都是某个值；只有真实 s 使残差"小"。但没有小残差的候选与有小残差的候选之间没有可计算的判据——要区分它们，等价于在高维格（由 A 的行生成的陪集格）里找<strong>最近向量</strong>（CVP）。噪声把"线性代数"变成"格问题"。</p>
+<div class="formula display" data-tex="\text{LWE: 给定 }(A,\ b=As+e\bmod q),\ e\leftarrow\chi_{小}\qquad \text{求 }s\qquad(\text{困难})"></div>
+<p><strong>为什么噪声不能太小也不能太大？</strong> 太小：格归约/线性化攻击直接恢复；太大：多个候选都"可行"，或解密误差积累导致失败。噪声宽度与模数 q 的比值、样本数 m 与维数 n 的比值，是方案设计里最精妙的平衡（例题 2 用 n=1 展示这个平衡的雏形）。</p>
+</section>
+
+<section>
+<h3>三、例题 1——2D 格与最短向量：为什么 2D 简单、高维爆炸（一步步算完）</h3>
+<p><strong>题目。</strong> 格 L=⟨(2,0),(1,2)⟩⊂ℝ²：验证最短非零向量长度 2，并说明为什么"枚举长度 &lt;r 的向量"在高维失败。</p>
+<p><strong>第一步：格点结构。</strong> 一般元 = a(2,0)+b(1,2)=(2a+b, 2b)。纵坐标恒为偶数。</p>
+<p><strong>第二步：排除更短向量。</strong> 长度 &lt;2 的候选只有 (±1,0)、(0,±1)、(±1,±1)：(1,0) 需 2b=0、2a=1（无解）；(0,1) 需 2b=1（无解）；(1,1) 需 2b=1（无解）。而 (2,0)=1·(2,0)+0·(1,2)∈L，长度 2：<strong>λ₁=2</strong>。∎</p>
+<p><strong>第三步：几何为什么有用。</strong> det L=det[[2,1],[0,2]]=4；Minkowski 界给 λ₁≤√n·(det)^{1/n}=√2·2≈2.83——界只松一点点。二维里"找最短"可用<strong>Gauss 归约</strong>：反复做 v₂←v₂−⌊⌈v₁,v₂⌉/‖v₁‖²⌋v₁ 并按长交换，几步收敛到最短基（画布演示）。∎</p>
+<p><strong>第四步：高维爆炸。</strong> 枚举"长度 &lt;r 的向量"需检查的候选数随维数指数增长（体积 ~rⁿ）；LLL/BKZ 的近似因子随 n 指数恶化。n=2 肉眼可见的最短向量，在 n=500 时藏在 2^{O(n)} 深的组合海里——这就是格密码"高维=安全"的直觉来源。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——LWE 的 n=1 玩具：噪声如何制造"模糊"（一步步算完）</h3>
+<p><strong>题目。</strong> q=31、秘密 s=7、噪声 e=1。公开 a=9 与 b≡9·7+1≡64≡2 (mod 31)。攻击者看到 (9,2)，能确定 s 吗？若噪声 e∈{0,±1,±2} 呢？</p>
+<p><strong>第一步：精确时唯一。</strong> 若 e=0：2≡9s (mod 31)，9⁻¹≡7（9·7=63≡1），s≡14。唯一。∎</p>
+<p><strong>第二步：e 未知、界 |e|≤2。</strong> 对每个候选 s′=0,…,30 计算残差 b−9s′ mod 31（归一化到 [−15,15]）是否落在 [−2,2]：s′=0→2 ✓、s′=7→1 ✓、s′=14→0 ✓、s′=21→−1 ✓、s′=28→−2 ✓——<strong>噪声把 1 个解变成 5 个候选</strong>。∎</p>
+<p><strong>第三步：第二样本收窄。</strong> 再来一个样本 (a′=3, b′≡3·7−1=20)：只有真实 s=7 同时满足两个方程的小残差条件（画布会列出交集）——样本数增多 ⟹ 候选唯一，但攻击者仍需穷举/解格。∎</p>
+<p><strong>第四步：设计权衡。</strong> q 越大、噪声越小，秘密越"唯一"但也越易被格攻击；噪声宽度、q、样本数、维数共同决定"模糊程度"。真实 LWE 取 n≈500–1000、q 约几十比特——候选数 ~qⁿ，爆炸到不可穷举。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>定义：</strong> 格 L、行列式 det L（基本域体积）、连续最小 λ₁…λₙ、对偶格 L*；SVP/CVP/SIS/LWE 的标准形式（模 q、错误分布 χ 为离散高斯/均匀小值）。</li>
+<li><strong>Minkowski 定理（几何数论）：</strong> 中心对称凸体体积 &gt; 2ⁿdet L ⟹ 含非零格点；λ₁ ≤ √n (det L)^{1/n}——"格必有短向量"但<strong>找</strong>它是另一回事。</li>
+<li><strong>LLL（1982）：</strong> 多项式时间输出 2^{(n−1)/2}-近似最短向量（BKZ 变体更好）；对固定维多项式时间精确（枚举），维数进指数则失效。</li>
+<li><strong>NP 困难：</strong> 精确 SVP 与常数近似因子在随机归约下 NP-hard（Ajtai 1998）——在最坏情形复杂性下。</li>
+<li><strong>Ajtai（1996）：</strong> SIS 的平均情形困难 ⟹ 单向函数存在——格密码的可证明安全起点。</li>
+<li><strong>Regev（2005/09）：</strong> 破 LWE（平均情形、多项式样本）⟹ 量子算法解最坏情形 SIVP/BDD 的近似版本；Peikert（2009）给出部分经典归约。</li>
+<li><strong>NIST 标准：</strong> ML-KEM（Kyber，module-LWE）、ML-DSA（Dilithium，module-SIS/Fiat–Shamir）；FIPS 203/204（2024）；安全强度 128/192/256。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\mathcal L=B\mathbb Z^{n};\qquad \det\mathcal L=|\det B|;\qquad \lambda_1\le\sqrt n\,(\det\mathcal L)^{1/n}\ (\text{Minkowski})"></div>
+<div class="formula display" data-tex="b=As+e\pmod q,\ e\ \text{小}\ (\text{LWE});\qquad Az\equiv0\pmod q,\ z\ne0\ \text{短}\ (\text{SIS})"></div>
+<div class="formula display" data-tex="\text{LLL: } \|\tilde b_1\|\le2^{(n-1)/2}\lambda_1;\qquad \text{破 LWE}\Rightarrow_{\text{量子}}\text{SIVP}\ \text{易}"></div>
+</section>
+
+<section>
+<h3>七、延伸——格的现代足迹</h3>
+<ul>
+<li><strong>几何数论与代数数论。</strong> Minkowski 的格点定理统治 <a href="/pages/algebraic-number-theory.html">代数数论</a> 的类数有限性；代数整数环的"理想格"是 NTRU 与部分同态方案的结构来源——两条课线在此汇合。</li>
+<li><strong>同态加密。</strong> 格是"加密状态下计算"的载体：Gentry（2009）的第一个全同态方案基于理想格，现代 BGV/BFV/CKKS 全部建筑在（环）LWE 上——隐私计算的后量子地基。</li>
+<li><strong>LLL 的应用。</strong> 分解有理多项式、破背包密码（1982）、Wiener 型 RSA 攻击、整数规划——"短基算法"是密码分析与算法数论的头号工具（→ <a href="/pages/cryptography.html">RSA</a>）。</li>
+<li><strong>抗量子哈希与更多。</strong> SIS 给出抗量子哈希候选；NTRU（1996）是最老的实用格方案；2022 年同源密码 SIKE 被经典攻击击破（Castryck–Decru）——后量子候选的"淘汰赛"仍在进行，格是目前的领跑者而非终点。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"格密码想当然"</h3>
+<p><strong>陷阱 1："格密码 = 直接加密 SVP 实例"？</strong> 不是。真实方案基于 LWE/SIS 的<strong>平均情形</strong>；SVP 出现在"破解方案 ⟹ 解最坏情形格问题"的归约里。直接拿一个 SVP 实例当密钥会坏（没有单向结构）。</p>
+<p><strong>陷阱 2："SVP 在 500 维也 NP-hard ⟹ 一定安全"？</strong> NP 困难是最坏情形；近似因子很大（LLL 类）时可解。密码取"中间近似 regime"，安全来自"恰好难"的参数——不是 SVP 的普遍困难。</p>
+<p><strong>陷阱 3："破解 Kyber = 解任意 SVP"？</strong> 破解 Kyber = 破 module-LWE；归约方向是"破 LWE ⟹（量子）解最坏情形格问题"。它把安全锚定在最坏情形假设上——方向别搞反。</p>
+<p><strong>陷阱 4："抗量子 = 免疫一切攻击"？</strong> 格密码只是"没有已知多项式量子算法"；格攻击每年都有改进，侧信道、实现错误、混合迁移的组合风险仍在。抗量子 ≠ 永不被破。</p>
+<p><strong>陷阱 5："噪声 e 是可有可无的小参数"？</strong> e 是安全的核心：e=0 则高斯消元秒破；e 太大则解密失败或攻击者可接受多个候选。噪声分布、宽度、模数、维数是同一枚硬币的安全面与可用面。</p>
+</section>
+
+<section>
+<h3>九、当前状态——后量子时代的第一现场</h3>
+<ol>
+<li><strong>标准化与迁移。</strong> FIPS 203/204 已定稿；TLS/SSH/信号协议以混合模式迁移——"先记录后解密"的量子威胁让迁移带有时限。</li>
+<li><strong>攻击研究。</strong> LWE 的算法攻击（BKW、格归约+解码、代数方法）与参数安全评估（lattice estimator 生态）持续迭代——NIST 的再评估流程保证方案在攻击下更新参数。</li>
+<li><strong>理论归约的边界。</strong> Regev 的量子归约仍是核心工具；"无量子步骤的经典归约"（Peikert 部分成果）与更紧的参数映射是理论侧重点。</li>
+<li><strong>百花齐放。</strong> 码基（McEliece）、多变量、哈希签名（SPHINCS⁺）作为格方案的替代/备份并存——后量子不是一统天下，而是多数学结构的竞争与互补。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Lenstra–Lenstra–Lovász (1982)</strong>：LLL 算法——格基约化的起点。</li>
+<li><strong>Ajtai (1996)</strong>：SIS 平均情形困难 ⟹ 单向函数。</li>
+<li><strong>Goldreich–Goldwasser–Halevi (1997)</strong>：基于 CVP 的密码候选（早期尝试）。</li>
+<li><strong>Ajtai (1998)</strong>：SVP 近似到常数因子的 NP-困难。</li>
+<li><strong>Regev (2005/2009)</strong>：<em>"On lattices, learning with errors..."</em>——LWE 与量子归约（STOC/JACM）。</li>
+<li><strong>Peikert (2009)</strong>：部分经典归约与更实用的 LWE 框架。</li>
+<li><strong>Bos 等 (Kyber) / Ducas 等 (Dilithium)</strong>：NIST 第三轮最终方案论文（2020）。</li>
+<li><strong>NIST FIPS 203 / 204 (2024)</strong>：ML-KEM 与 ML-DSA 后量子标准。</li>
+<li><strong>Castryck–Decru (2022)</strong>：同源密码 SIKE 的经典攻破（警示）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——2D 手算</h3>
+<p><strong>题 1（最短向量）。</strong> 格 ⟨(3,1),(1,2)⟩：找最短非零向量并给出 Gauss 归约一步。<strong>提示：</strong>v₂−v₁=(−2,1)（√5）；(3,1) 长 √10——最短 √5（det=5，无更短可验证）。</p>
+<p><strong>题 2（Minkowski 界核对）。</strong> 例题 1 的格：λ₁=2 与 √n(det)^{1/n} 谁大？<strong>提示：</strong>2 &lt; 2√2≈2.83，界不紧但方向正确。</p>
+<p><strong>题 3（LWE 候选）。</strong> q=31、a=9、b=2，噪声 |e|≤1：列出候选 s′。<strong>提示：</strong>残差 2−9s′ 归一到 [−15,15]：s′=7→1 ✓、14→0 ✓、21→−1 ✓（s′=0→2 与 28→−2 超界）——三个候选。</p>
+<p><strong>题 4（为什么高维难）。</strong> 用"半径 r 球内整点数量级"解释枚举法维度爆炸。<strong>提示：</strong>体积 ~rⁿ：n=2 的枚举是 O(r²)，n=500 是 O(r⁵⁰⁰)——指数的维度诅咒正是格密码的安全来源。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：最短 √5。∎</p>
+<p><strong>题 2</strong>：2 ≤ 2.83。∎</p>
+<p><strong>题 3</strong>：s′=7、14、21 三个候选。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布 Gauss 归约）。</strong> 切几个基（含"极坏"的斜基）：点"归约"看短基逐步出现；对比归约前后向量长度与夹角。二维里"找最短"几乎免费——把维数想成 500，最短向量就消失在大数深处。</p>
+<p><strong>试试看 2（LWE 模糊条）。</strong> 把 q 拖大：单方程候选数约 (2T+1) 个，两个方程交集恢复唯一但仍需穷举 qⁿ。体会"噪声模糊 + 高维穷举"的双保险。</p>
+<p><strong>试试看 3（与 RSA 对照）。</strong> 在 <a href="/pages/cryptography.html">RSA</a> 课并排两套假设：分解（无归约，平均情形赌注）vs LWE（量子归约到最坏情形格问题）——"假设的强度"不同正是格密码的理论卖点。</p>
+<p><strong>试试看 4（几何数论连线）。</strong> Minkowski 凸体定理在 <a href="/pages/algebraic-number-theory.html">代数数论</a> 证明类数有限、在密码课保证"格必有短向量"——同一颗几何种子结出两种果实。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>D. Micciancio, O. Regev, Lattice-based Cryptography（post-quantum 讲义，网上免费）</strong></p>
+<p>&rarr; <strong>C. Peikert, A Decade of Lattice Cryptography（Found. Trends 讲义）</strong></p>
+<p>&rarr; <strong>J. Hoffstein, J. Pipher, J. Silverman, An Introduction to Mathematical Cryptography</strong></p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.3（计算数论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/cryptography.html">密码学：RSA 与公钥</a>、<a href="/pages/high-dim-geometry.html">高维几何与测度集中</a>、<a href="/pages/algebraic-number-theory.html">代数数论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/cryptography.html">🔐 密码学 RSA</a>：公钥框架与量子威胁，本课的直接前传。</p>
+<p>&rarr; <a href="/pages/algebraic-number-theory.html">🏰 代数数论</a>：Minkowski 几何数论与理想格同源。</p>
+<p>&rarr; <a href="/pages/high-dim-geometry.html">📦 高维几何与测度集中</a>：维度诅咒 = 格难题的直觉来源。</p>
+<p>&rarr; <a href="/pages/p-vs-np.html">⏳ P vs NP</a>：SVP 的 NP-困难与近似 regime 的语言。</p>
+<p>&rarr; <a href="/pages/qubit-gates.html">⚛️ 量子门</a>：Shor 摧毁经典代数密码，格却"抗量子"。</p>
+<p>&rarr; <a href="/pages/svd.html">📉 奇异值分解</a>：格归约与矩阵分解的数值亲缘。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/lattice-crypto.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

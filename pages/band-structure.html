@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Bloch 定理——导体 vs 绝缘体" />
+  <meta property="og:title" content="能带结构 — Vibe Math" />
+  <meta property="og:description" content="Bloch 定理——导体 vs 绝缘体" />
+  <title>能带结构 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📶 能带结构 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">Bloch 定理——导体 vs 绝缘体</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='band-structure',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/navier-stokes.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🌪️ Navier-Stokes 流场</a>
+  <a href="/pages/standard-model.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🧩 标准模型 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——同为碳，导电性差 10²⁵ 倍</h3>
+<p>铜线能送电，木头不行。但更极端的对比是：金刚石和石墨烯都是碳原子组成的，前者的电导率约 \(10^{-18}\,\mathrm{S/m}\)，铜约 \(5.96\times10^{7}\,\mathrm{S/m}\)，<strong>差 25 个数量级</strong>；而同为半导体，硅的带隙 1.12 eV、锗 0.67 eV、砷化镓 1.42 eV、金刚石却高达 5.5 eV。</p>
+<div class="formula display" data-tex="\sigma_{\mathrm{Cu}}\approx5.96\times10^{7}\,\mathrm{S/m},\qquad \sigma_{\mathrm{Si}}\ (\text{本征})\approx10^{-3}\,\mathrm{S/m},\qquad \sigma_{\mathrm{diamond}}\approx10^{-18}\,\mathrm{S/m}"></div>
+<p>差别不在电子的多少——铜里每个原子只贡献约 1 个"自由电子"，金刚石里每个原子贡献 4 个价电子，电子反而更多。<strong>差别在电子"能住的能量楼层"长什么样。</strong>把电子的能量想成一座公寓的楼层，每栋材料的"公寓楼层"长得不一样：有的楼层连成一条通天走廊（金属），有的楼层被"空档"隔开（绝缘体）。</p>
+<p><strong>能带结构</strong>就是给这座"能量公寓"画楼层图——它告诉我们哪些能量层电子能住、哪些是空档、电子只在允许的层里活动。它存在是为了回答一个具体问题：<strong>为什么有的材料导电、有的不导电、有的像"开关"一样可被电场开关（半导体）？</strong></p>
+<div class="key-insight">材料的导电性由电子的"能量楼层图"决定：能级连成带→电子可自由流动→导体；能带被带隙（空档）隔开→电子被困→绝缘体。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/hydrogen-atom.html">氢原子轨道</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、开场问题」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、为什么周期势会"劈"出带隙——数字与直觉</h3>
+<p>先看一块真实金属的数字。铜的电子密度 \(n=8.5\times10^{22}\,\mathrm{cm^{-3}}\)，自由电子气体模型给出：</p>
+<div class="formula display" data-tex="k_F=(3\pi^2 n)^{1/3}\approx1.36\times10^{10}\,\mathrm{m^{-1}},\qquad E_F=\frac{\hbar^2 k_F^2}{2m}\approx7.0\,\mathrm{eV},\qquad v_F\approx1.6\times10^{6}\,\mathrm{m/s}"></div>
+<p>费米能 \(E_F\approx7\,\mathrm{eV}\) 是电子填充的最高能量。问题来了：如果电子完全自由，能级连续铺满，铜为什么只有 7 eV 而不是无限多？答案是：<strong>原子核的周期势把"连续"切成"带"</strong>。</p>
+<p><strong>直觉第一步：N 个原子，N 条轨道，能量"展宽"成带。</strong>想象氢原子一个孤立能级 \(E_0\)。把两个原子靠近，两个相同能级会劈裂成两个；三个劈成三个；N 个原子排成一维链，\(E_0\) 展宽成 N 个密排的能级——宏观 N≈\(10^{23}\)，密到连成一条<strong>能带</strong>。带内相邻能级间隔约 \(E_F/N\sim10^{-22}\,\mathrm{eV}\)，完全可以当作连续。</p>
+<p><strong>直觉第二步：为什么带与带之间会出现"空档"（带隙）？</strong>这是本课的核心"为什么"。直观说法：电子波在周期势中传播，当波长恰好等于晶格周期的整数倍时（Bragg 条件），沿正反方向传播的波发生<strong>共振简并</strong>——两个传播方向相同的平面波能量相等，像两个同频的钟摆被微扰耦合，必然一升一降地<strong>劈裂</strong>。能量"弹开"了，中间就没有能级，带隙由此打开。</p>
+<p><strong>直觉第三步：带隙如何决定导电性。</strong>电子只能在带内移动。若费米能级落在带中央（如铜），顶部还有大量空态，电场一推电子就动——<strong>导体</strong>。若费米能级恰好落进带隙（如金刚石），要导电必须先跳过 5.5 eV 的"楼梯坎"——常温下 \(kT\approx0.025\,\mathrm{eV}\) 根本翻不过去——<strong>绝缘体</strong>。硅的 1.12 eV 比金刚石低 5 倍，室温下已有少量电子被热激发跳过，于是有微弱的导电——<strong>半导体</strong>。</p>
+<div class="key-insight">一句话记住全部直觉：<strong>带隙=周期势在 Bragg 共振处"弹开"能级留下的空档；费米能级落在带里→导电，落在空档→绝缘。</strong>接下来的数学，就是把这个直觉钉死。</div>
+</section>
+
+<section>
+<h3>二、Bloch 定理——周期性的严格后果</h3>
+<p>单电子薛定谔方程 \(H\psi=[-\frac{\hbar^2}{2m}\nabla^2+V(\mathbf r)]\psi=E\psi\)，势满足晶格周期性 \(V(\mathbf r+\mathbf R)=V(\mathbf r)\)，\(\mathbf R\) 是任意格矢。Bloch 定理断言：</p>
+<div class="formula display" data-tex="\psi_k(\mathbf r)=e^{i\mathbf k\cdot\mathbf r}u_k(\mathbf r),\qquad u_k(\mathbf r+\mathbf R)=u_k(\mathbf r)"></div>
+<p>即：<strong>周期势中的电子波函数=平面波 \(e^{i\mathbf k\cdot\mathbf r}\) × 周期包络 \(u_k\)</strong>。直观上，"平面波×周期函数"就是"在格点上有个波包、整体还有个前进相位"——电子在晶体里既像波一样传播（\(e^{i\mathbf k\cdot\mathbf r}\)），又保留每个原胞内的形状（\(u_k\)）。</p>
+<p>这个定理的数学证明很短但很漂亮，我们把它做成例题 1。</p>
+<p>定理还有一个重要推论——<strong>Brillouin 区</strong>：波矢 \(\mathbf k\) 可以平移任意倒格矢 \(\mathbf G\) 而不改变物理态（\(e^{i\mathbf G\cdot\mathbf R}=1\)），所以只需研究第一 Brillouin 区（一维为 \(-\pi/a\le k\le\pi/a\)）。能带图 \(E(k)\) 就在这个区域内画出。</p>
+</section>
+
+<section>
+<h3>三、教科书例题 1——Bloch 定理的完整证明</h3>
+<p><strong>问题：</strong>证明周期势中的本征态一定是 Bloch 形式。</p>
+<p><strong>第 1 步：定义平移算符。</strong>设 \((T_R\psi)(\mathbf r)=\psi(\mathbf r+\mathbf R)\)。因为势满足 \(V(\mathbf r+\mathbf R)=V(\mathbf r)\)：</p>
+<div class="formula display" data-tex="[T_R,H]=0,\qquad T_{R_1}T_{R_2}=T_{R_1+R_2}"></div>
+<p>所以 \(T_R\) 与 \(H\) 对易，可以<strong>同时对角化</strong>；且 \(T_R\) 是幺正算符，本征值模为 1。</p>
+<p><strong>第 2 步：确定本征值的形式。</strong>因为平移群是交换群（阿贝尔群），本征值按群的乘法表相乘：若 \(T_R\psi=\lambda_R\psi\)，则 \(\lambda_{R_1}\lambda_{R_2}=\lambda_{R_1+R_2}\)。满足这一乘法关系的幺模复数必形如</p>
+<div class="formula display" data-tex="\lambda_R=e^{i\mathbf k\cdot\mathbf R}\qquad(\text{存在某个矢量 }\mathbf k)"></div>
+<p><strong>第 3 步：构造 Bloch 函数。</strong>定义 \(u_k(\mathbf r)=e^{-i\mathbf k\cdot\mathbf r}\psi_k(\mathbf r)\)，验证周期性：</p>
+<div class="formula display" data-tex="u_k(\mathbf r+\mathbf R)=e^{-i\mathbf k\cdot(\mathbf r+\mathbf R)}\psi_k(\mathbf r+\mathbf R)=e^{-i\mathbf k\cdot\mathbf r}e^{-i\mathbf k\cdot\mathbf R}\cdot e^{i\mathbf k\cdot\mathbf R}\psi_k(\mathbf r)=u_k(\mathbf r)\quad\blacksquare"></div>
+<p><strong>第 4 步：读出结论。</strong>于是本征态必为</p>
+<div class="formula display" data-tex="\psi_k(\mathbf r)=e^{i\mathbf k\cdot\mathbf r}u_k(\mathbf r),\qquad u_k(\mathbf r+\mathbf R)=u_k(\mathbf r)"></div>
+<p>证毕。∎ 注意第 2 步的"存在矢量 \(\mathbf k\)"其实有规范自由度：\(\mathbf k\to\mathbf k+\mathbf G\)（\(\mathbf G\) 为倒格矢）给出同一个 \(\lambda_R\)，因为 \(e^{i\mathbf G\cdot\mathbf R}=1\)——这就是 Brillouin 区概念的严格来源。</p>
+<div class="key-insight">证明的全部要点只有两条：<strong>① 平移算符和哈密顿量对易→可以同时对角化；② 阿贝尔群的一维表示必然是相位 \(e^{i\mathbf k\cdot\mathbf R}\)。</strong>其余全是代入。Bloch 定理不是近似，它是周期性的精确后果。</div>
+</section>
+
+<section>
+<h3>四、近自由电子模型——带隙从何而来</h3>
+<p>现在回答"为什么有带隙"。把弱周期势的 Fourier 分量 \(V_G\) 当作对自由电子平面波的微扰。</p>
+<p><strong>远离 Brillouin 区边界</strong>：非简并二阶微扰论给出能量修正</p>
+<div class="formula display" data-tex="E(\mathbf k)=\frac{\hbar^2 k^2}{2m}+\sum_{G'}\frac{|V_{G'}|^2}{E_k-E_{k-G'}}"></div>
+<p>修正很小，能带基本还是抛物线的自由电子形。</p>
+<p><strong>在边界 \(k=\pm G/2\) 处</strong>：平面波 \(e^{ikx}\) 与 \(e^{i(k-G)x}\) 能量相等（Bragg 共振：\(k^2=(k-G)^2\)），两个态简并。微扰论此时失效，要解 \(2\times2\) 久期方程：</p>
+<div class="formula display" data-tex="\begin{vmatrix}E_k^0-E & V_G\\ V_G^* & E_k^0-E\end{vmatrix}=0\;\Rightarrow\;E=E_k^0\pm|V_G|"></div>
+<p>两个简并能级被势的 Fourier 分量 \(V_G\) <strong>劈开</strong>，中间留下空档——这就是带隙：</p>
+<div class="formula display" data-tex="E_g=2|V_G|\qquad(G=2\pi/a,\ 1D)"></div>
+<p><strong>为什么边界处简并？</strong>回到第一节的直觉：波长为 \(2a\) 的波在周期为 \(a\) 的晶格上满足 Bragg 条件，正、反向行波构成驻波（波峰分别落在原子核上/间隙上），两个驻波的能量天然不同——一个"爬上"原子核（势能高），一个"躲进"间隙（势能低）。"劈开"的物理本质，是电子在晶格上的两种驻波能量不同。</p>
+<div class="key-insight">带隙公式 \(E_g=2|V_G|\) 是"为什么有带隙"的最终答案：<strong>带隙不是近似捏造，它是 Bragg 共振处简并态被周期势劈开的必然结果，大小正比于势的 Fourier 分量。</strong></div>
+</section>
+
+<section>
+<h3>五、教科书例题 2——一个真实的一维势：算带隙</h3>
+<p><strong>问题：</strong>一维晶体晶格常数 \(a=0.4\,\mathrm{nm}\)，周期势为 \(V(x)=2U\cos(2\pi x/a)\)，其中 \(U=2\,\mathrm{eV}\)。求 Brillouin 区边界 \(k=\pm\pi/a\) 处的带隙，以及带边位置的能量。</p>
+<p><strong>第 1 步：找出 Fourier 分量 \(V_G\)。</strong>用欧拉公式展开：</p>
+<div class="formula display" data-tex="V(x)=2U\cos(Gx)=U\,e^{iGx}+U\,e^{-iGx},\qquad G=\frac{2\pi}{a}"></div>
+<p>所以势只有一对 Fourier 分量，且 \(V_G=V_{-G}=U=2\,\mathrm{eV}\)。</p>
+<p><strong>第 2 步：代入带隙公式。</strong></p>
+<div class="formula display" data-tex="E_g=2|V_G|=2\times2\,\mathrm{eV}=4\,\mathrm{eV}"></div>
+<p><strong>第 3 步：算边界处的自由电子能量（带隙的中心位置）。</strong>在 \(k=\pi/a\) 处，\(E_k^0=\hbar^2 k^2/2m\)：</p>
+<div class="formula display" data-tex="E_k^0=\frac{\hbar^2}{2m}\left(\frac{\pi}{a}\right)^2=\frac{1.113\times10^{-68}\,(7.85\times10^9)^2}{2\times9.11\times10^{-31}}\,\mathrm{J}\approx2.35\,\mathrm{eV}"></div>
+<p><strong>第 4 步：读出带边位置。</strong>劈开后两个能级在 \(2.35\,\mathrm{eV}\) 上下各移 \(2\,\mathrm{eV}\)：</p>
+<div class="formula display" data-tex="E_-=2.35-2.0=0.35\,\mathrm{eV},\qquad E_+=2.35+2.0=4.35\,\mathrm{eV}"></div>
+<p>带隙为两者之差 \(4.35-0.35=4\,\mathrm{eV}\) ✓。</p>
+<p><strong>第 5 步：对照真实材料。</strong>这个"模型晶体"的带隙 4 eV 介于砷化镓（1.42 eV）和金刚石（5.5 eV）之间——说明只需把 \(U\)（原子势的 Fourier 分量）调大调小，就能从半导体变成绝缘体。<strong>同一套公式 \(E_g=2|V_G|\) 既解释了硅为什么是半导体，也解释了金刚石为什么是绝缘体。</strong>∎</p>
+</section>
+<section>
+<h3>六、紧束缚近似——能带的另一视角</h3>
+<p>近自由电子模型假设势很弱；紧束缚模型反过来假设电子<strong>局域在原子上</strong>，几乎不怎么动，只是偶尔"跳"到邻居家。用原子轨道 \(\varphi(\mathbf r)\) 构造 Bloch 和（按晶格叠加出满足 Bloch 定理的态）：</p>
+<div class="formula display" data-tex="\psi_k(\mathbf r)=\sum_{\mathbf R}e^{i\mathbf k\cdot\mathbf R}\varphi(\mathbf r-\mathbf R)"></div>
+<p>跃迁积分 \(t\) 描述电子在相邻原子间跳跃的"票价"：</p>
+<div class="formula display" data-tex="t=-\int\varphi^*(\mathbf r)\big[V(\mathbf r)-V_{at}(\mathbf r)\big]\varphi(\mathbf r-\mathbf R)\,d^3r"></div>
+<p>只保留最近邻时，一维能带为</p>
+<div class="formula display" data-tex="E(k)=E_0-2t\cos(ka),\qquad W=4t\ (\text{带宽})"></div>
+<p>三维立方格给出 \(E(\mathbf k)=E_0-2t(\cos k_x a+\cos k_y a+\cos k_z a)\)。\(E_0=-\langle\varphi|V|\varphi\rangle\) 为原子能级，\(t&gt;0\) 使带宽有限。</p>
+<p>直觉对比：近自由电子模型说"能带≈抛物线+劈隙"，紧束缚模型说"能带≈余弦形"。<strong>两者在带边附近给出相同的结论——能带底都像抛物线</strong>（这正是下一节有效质量的基础）。它们从"电子几乎自由"和"电子几乎局域"两个极端出发，殊途同归。</p>
+</section>
+
+<section>
+<h3>七、教科书例题 3——有效质量：从能带到导电性</h3>
+<p><strong>问题：</strong>紧束缚一维链 \(t=1\,\mathrm{eV}\)、\(a=0.3\,\mathrm{nm}\)。(1) 求带宽 W；(2) 在带底 \(k=0\) 附近展开 \(E(k)\)，求有效质量 \(m^*\)（以自由电子质量 \(m_0\) 表示）；(3) 用有效质量解释为什么砷化镓比硅导电"更快"。</p>
+<p><strong>第 1 步：带宽。</strong></p>
+<div class="formula display" data-tex="W=4t=4\times1\,\mathrm{eV}=4\,\mathrm{eV}"></div>
+<p><strong>第 2 步：带底展开，定义有效质量。</strong>把余弦展开到二阶：\(\cos(ka)\approx1-\frac12(ka)^2\)，</p>
+<div class="formula display" data-tex="E(k)\approx E_0-2t+ta^2k^2"></div>
+<p>与自由电子 \(E=\hbar^2 k^2/2m^*\) 对比系数：</p>
+<div class="formula display" data-tex="m^*=\frac{\hbar^2}{2ta^2}"></div>
+<p>代入 \(t=1\,\mathrm{eV}=1.602\times10^{-19}\,\mathrm{J}\)、\(a=0.3\times10^{-9}\,\mathrm{m}\)、\(\hbar^2=1.113\times10^{-68}\,\mathrm{J^2\,s^2}\)：</p>
+<div class="formula display" data-tex="m^*=\frac{1.113\times10^{-68}}{2\times1.602\times10^{-19}\times9\times10^{-20}}\,\mathrm{kg}=\frac{1.113\times10^{-68}}{2.88\times10^{-38}}\approx3.86\times10^{-31}\,\mathrm{kg}\approx0.42\,m_0"></div>
+<p><strong>第 3 步：有效质量的物理。</strong>把带底附近的电子当作"质量变了的自由电子"。由 \(m^*=\hbar^2/(2ta^2)\) 看出规律：<strong>带宽越窄（t 小）、晶格越疏（a 大），有效质量越大</strong>——电子越"沉"，越难被电场加速。反过来，\(t\) 大的材料（如砷化镓，GaAs）能带宽、电子轻。</p>
+<p><strong>第 4 步：对照真实材料与导电性数字。</strong>砷化镓导带电子有效质量 \(m^*=0.067\,m_0\)，室温迁移率 \(\mu_e\approx8500\,\mathrm{cm^2/(V\cdot s)}\)；硅 \(m^*\approx0.2\,m_0\)，\(\mu_e\approx1350\,\mathrm{cm^2/(V\cdot s)}\)。<strong>电子轻 3 倍，迁移率却高 6 倍</strong>（还有散射机制差异）——这就是为什么雷达、5G 高频芯片偏爱砷化镓。而金属铜：费米面附近的电子有效质量约 \(1.0\,m_0\)，密度高达 \(8.5\times10^{22}\,\mathrm{cm^{-3}}\)，导电性 \(\sigma=ne\mu\approx5.96\times10^7\,\mathrm{S/m}\)。</p>
+<p><strong>第 5 步：为什么半导体"半"导。</strong>本征硅室温载流子密度 \(n_i\approx1.5\times10^{10}\,\mathrm{cm^{-3}}\)，与铜的 \(8.5\times10^{22}\,\mathrm{cm^{-3}}\) 相差约 <strong>\(5.7\times10^{12}\) 倍</strong>——即使乘上迁移率差异，导电性仍差约 10 个数量级。这 \(5.7\times10^{12}\) 的倍数不是天意，它来自玻尔兹曼因子：\(n_i\propto e^{-E_g/2kT}\)，\(E_g=1.12\,\mathrm{eV}\)，\(2kT\approx0.05\,\mathrm{eV}\)，\(e^{-22.4}\approx2\times10^{-10}\)。∎</p>
+<div class="key-insight">三个数字记住本例题：<strong>带宽 W=4t（电子能跳多远），有效质量 \(m^*=\hbar^2/(2ta^2)\)（电子有多"沉"），载流子密度指数律 \(n_i\propto e^{-E_g/2kT}\)（带隙如何决定导电性）。</strong>金属、半导体、绝缘体的差别，全在这三个量里。</div>
+</section>
+
+<section>
+<h3>八、反例——能带交叉：石墨烯的 Dirac 锥</h3>
+<p>"每个 Brillouin 区边界都打开带隙"是近自由电子模型的断言，但<strong>不总是成立</strong>。若在边界处简并两态之间的耦合矩阵元 \(V_G\) 因对称性为零，则能带直接交叉而不开隙。最著名的反例是<strong>石墨烯</strong>：六角晶格 Brillouin 区角 K 处两个能带以 Dirac 锥形式接触，\(E_g=0\)——这源自两个子格的螺旋对称性（手征对称），使有效耦合消失，电子表现为无质量 Dirac 费米子。更一般地，Wigner–von Neumann 不交叉规则指出：同对称性的带不交叉，但对称性不同的带可交叉；当交叉被微扰打开时才出现 Weyl/Dirac 点。</p>
+<p>对照一下例题 2：那里势的 Fourier 分量 \(V_G=2\,\mathrm{eV}\neq0\)，所以带隙必然打开；而石墨烯在 K 点，\(V_G\) 因两个子格对称性恰好为零，带隙被"保护"为零。<strong>同样的公式 \(E_g=2|V_G|\)，一头打开带隙（绝缘体），一头不打开（Dirac 半金属）——差别就在 \(|V_G|\) 是否为 0。</strong>这也是"拓扑/对称性保护"概念的最朴素起点。</p>
+</section>
+
+<section><h3>九、石墨烯——Dirac 锥与拓扑物态</h3><p>单层碳六角晶格：\(E=\pm v_F|\mathbf k|\)——无质量 Dirac 费米子。Novoselov-Geim (2004) 用胶带剥离出单层石墨烯→2010 年 Nobel 奖。Berry 相位=π——拓扑物态的早期原型。</p></section>
+<section><h3>十、前沿：魔角石墨烯与强关联拓扑</h3><p>两层石墨烯旋转 ~1.1°（"魔角"）——能带变得极平——电子动能几乎为零——库仑作用主导——出现超导和 Mott 绝缘体。这是"强关联拓扑"的全新平台。仍开放：魔角超导的配对机制（非 BCS?）和多体相的完整相图。</p></section>
+<section>
+<h3>十一、关键公式</h3>
+<div class="formula display" data-tex="\psi_k(\mathbf r)=e^{i\mathbf k\cdot\mathbf r}u_k(\mathbf r),\qquad u_k(\mathbf r+\mathbf R)=u_k(\mathbf r)"></div>
+<div class="formula display" data-tex="E(k)=E_0-2t\cos(ka),\qquad E_g=2|V_G|"></div>
+<div class="formula display" data-tex="W=4t,\qquad m^*=\frac{\hbar^2}{2ta^2}=\hbar^2\left(\frac{d^2E}{dk^2}\right)^{-1},\qquad n_i\propto e^{-E_g/2kT}"></div>
+</section>
+
+<section>
+<h3>十二、试试看（每题附提示）</h3>
+<p>1. 硅的带隙 \(E_g=1.12\,\mathrm{eV}\)。用近自由电子公式反推，在 \(k=\pi/a\) 边界处它的势 Fourier 分量 \(|V_G|\) 约为多少？</p>
+<p><em>提示：\(E_g=2|V_G|\)，所以 \(|V_G|=0.56\,\mathrm{eV}\)。注意这个值远小于例题 2 里的 2 eV——所以硅是半导体而金刚石（5.5 eV，\(|V_G|\approx2.75\,\mathrm{eV}\)）是绝缘体。</em></p>
+<p>2. 一维紧束缚链 \(t=2\,\mathrm{eV}\)、\(a=0.5\,\mathrm{nm}\)，求带宽 W 和带底有效质量 \(m^*\)。</p>
+<p><em>提示：\(W=4t=8\,\mathrm{eV}\)；\(m^*=\hbar^2/(2ta^2)=1.113\times10^{-68}/(2\times2\times1.602\times10^{-19}\times2.5\times10^{-19})=1.113\times10^{-68}/1.602\times10^{-37}\approx0.07\,m_0\)。带宽大→电子轻。</em></p>
+<p>3. 用费米能级判据解释：为什么铜（每个原子约 1 个价电子）是金属，而金刚石（4 个价电子填满价带）是绝缘体？</p>
+<p><em>提示：铜的能带半满——费米能级落在带内，顶部空态多，电子可自由移动；金刚石价带全满、导带全空，费米能级落进 5.5 eV 的带隙中央，要导电必须先跳 5.5 eV，而 \(kT\approx0.025\,\mathrm{eV}\)，完全跳不过。</em></p>
+<p>4. 为什么石墨烯在 K 点没有带隙（Dirac 点），而一维近自由电子模型在边界必有带隙？</p>
+<p><em>提示：带隙 \(E_g=2|V_G|\) 只有在耦合矩阵元 \(V_G\neq0\) 时才打开；石墨烯两个子格（A/B）的螺旋对称性使 K 点有效耦合为零——这是 Wigner–von Neumann 不交叉规则的特例：对称性不同的带允许交叉。</em></p>
+<p>5. 由 \(n_i\propto e^{-E_g/2kT}\) 估算：若把硅的带隙从 1.12 eV 降到 0.6 eV，室温本征载流子浓度大约变为原来的几倍？</p>
+<p><em>提示：\(\Delta E_g/2kT=(1.12-0.6)/(2\times0.0259)\approx10\)，所以浓度放大 \(e^{10}\approx2.2\times10^4\) 倍。这就是锗（0.67 eV）比硅更容易导电的原因——也是为什么早期的二极管用锗做。</em></p>
+</section>
+
+<section>
+<h3>附：工作题</h3>
+<p>(1) 一维晶体晶格常数 a=0.4 nm，势的 Fourier 分量 |V_G|=2 eV（G=2π/a）。求布里渊区边界 k=±π/a 处的带隙 E_g。</p>
+<p>(2) 紧束缚一维链 t=1 eV、a=0.3 nm。求带宽 W；并在带底 k=0 附近展开 E(k)，求有效质量 m*（以自由电子质量 m₀ 表示；ℏ=1.055×10⁻³⁴ J·s，1 eV=1.602×10⁻¹⁹ J）。</p>
+<details><summary>显示解答</summary><p>(1) E_g=2|V_G|=2×2 eV=4 eV。（这正是例题 2 用 \(V(x)=2U\cos(2\pi x/a)\) 算出的同一个结果——两种表述等价，因为余弦势的 Fourier 分量就是 U。）<br>(2) 带宽 W=4t=4 eV。带底展开 cos(ka)≈1−k²a²/2 ⇒ E≈E₀−2t+ta²k²，故 m*=ℏ²/(2ta²)=1.113×10⁻⁶⁸/(2×1.602×10⁻¹⁹×9×10⁻²⁰)=1.113×10⁻⁶⁸/2.88×10⁻³⁸≈3.86×10⁻³¹ kg≈0.42 m₀。（这正是例题 3 的完整过程。）</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>N. Ashcroft &amp; N. Mermin, Solid State Physics</strong></p>
+<p>&rarr; <strong>C. Kittel, Introduction to Solid State Physics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/hydrogen-atom.html">氢原子轨道</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/ising-model.html">Ising 模型</a>：能带理论和 Ising 模型都研究周期晶格上的涌现行为——前者是单电子近似下的电子能谱，后者是自旋-自旋相互作用下的相变，共享了平移对称性的数学框架。</p>
+<p>&rarr; <a href="/pages/harmonic-oscillator.html">谐振子</a>：周期势中电子的运动由 Bloch 波函数展开——紧束缚模型 \(E(k)=E_0-2t(\cos k_x a+\cos k_y a)\) 是谐振子链能谱的晶格离散化版本。</p>
+<p>&rarr; <a href="/pages/homology.html">同调论</a>：拓扑绝缘体的 Chern 数由 Bloch 波函数的 Berry 曲率在 Brillouin 区上的积分给出——这与同调论中的示性类计算同源，∂²=0 结构保证了拓扑不变量的良定性。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/band-structure.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

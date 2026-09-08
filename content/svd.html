@@ -1,0 +1,216 @@
+<section>
+<h3>〇、直觉入门——把任何一张"变形地图"拆成"转一下、拉一下、再转一下"</h3>
+<p>想象一张印着方格的地图被人揉捏变形了。SVD 说：不管你揉成什么奇怪形状，都可以看成三步——先转个方向，再沿着上下左右把格子拉长压扁，最后再转一次方向。就像整理一块橡皮泥：先换个角度，压扁，再转回来看。</p>
+<p>这一步在干什么？任何"把东西变个样"的操作，SVD 都能帮你自动找到"最省事"的拆法，并且告诉你是沿哪些方向、拉了多少。下面我们会先问一个带数字的具体问题——某个变换到底把单位圆拉成了什么——然后一步步发现：答案永远是"某个方向被拉得最长"，而 SVD 就是把这些方向和倍数整理成表格的机器。</p>
+<div class="key-insight">再乱的变形也能拆成"转+拉+转"，而"拉多长"就是它的核心秘密——如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、一个具体的问题：[[3,1],[1,3]] 把单位圆拉成了什么样的椭圆？</h3>
+<p>先不抽象，直接盯住一个具体的矩阵 A=[[3,1],[1,3]]（它把 (x,y) 送到 (3x+y, x+3y)）。问题是：<strong>如果取所有长度为 1 的向量（单位圆），A 把它们送到哪些位置？哪个方向被拉得最长？拉长了几倍？</strong></p>
+<p>先算两个好算的方向：</p>
+<div class="formula display" data-tex="(1,0)\mapsto(3,1),\quad \|A(1,0)\|=\sqrt{3^2+1^2}=\sqrt{10}\approx3.16"></div>
+<div class="formula display" data-tex="(0,1)\mapsto(1,3),\quad \|A(0,1)\|=\sqrt{1^2+3^2}=\sqrt{10}\approx3.16"></div>
+<p>两个坐标方向都被拉长约 3.16 倍。但直觉告诉我们：对角线方向可能更夸张。试试 v=(1,1)/√2（右上对角线方向）：</p>
+<div class="formula display" data-tex="A\left(\frac{1,1}{\sqrt2}\right)=\frac{(4,4)}{\sqrt2},\qquad \left\|A\left(\frac{1,1}{\sqrt2}\right)\right\|=\frac{4\sqrt2}{\sqrt2}=4"></div>
+<p>拉长了整整 <strong>4 倍</strong>！再试试与它垂直的方向 v=(1,−1)/√2：</p>
+<div class="formula display" data-tex="A\left(\frac{1,-1}{\sqrt2}\right)=\frac{(2,-2)}{\sqrt2},\qquad \left\|A\left(\frac{1,-1}{\sqrt2}\right)\right\|=2"></div>
+<p>只拉了 <strong>2 倍</strong>。于是答案浮出水面：单位圆被 A 变成了一个<strong>椭圆</strong>，长半轴 4、沿 (1,1) 方向；短半轴 2、沿 (1,−1) 方向。</p>
+<p>这两个数 4 和 2 就是 A 的<strong>奇异值</strong>，这两个方向就是 A 的"自然拉伸轴"。SVD 的全部内容，就是回答这个例子里的两个问题：<strong>① 方向是谁？（V 的列）② 拉几倍？（Σ 的对角元）</strong>，并且证明对<strong>任何</strong>矩阵都能这样问、这样答。</p>
+</section>
+
+<section>
+<h3>二、"分解矩阵"是什么意思？——把复杂变换拆成简单步骤</h3>
+<p>第一节我们已经尝到甜头：A 在坐标方向上的行为不透明（都拉 3.16 倍），但在 (1,1)、(1,−1) 这两个方向上是清清楚楚的纯拉伸（4 倍、2 倍）。这就是"分解"的动机。</p>
+<p><strong>分解矩阵</strong>（matrix factorization）的意思，就是把一个复杂的变换拆成几个<strong>简单、看得懂</strong>的变换，让它们依次进行。就像一支复杂的舞蹈，可以拆成"转身、迈步、挥手"这些基本动作，逐个学会，组合起来就是整支舞。</p>
+<p>用记号写出来就是：</p>
+<div class="formula display" data-tex="A = \text{简单变换 1}\times\text{简单变换 2}\times\text{简单变换 3}"></div>
+<p>注意<strong>矩阵乘法</strong>（把两个变换依次执行）的顺序很重要：最右边的变换先作用，再依次向左，所以"×"不是普通数字相乘，而是"先做右边、再做左边"。第一节的例子想表达的就是：与其直接研究 A 那个"歪着拉"的怪兽，不如把它翻译成"先转 45° → 沿坐标轴拉 4 倍和 2 倍 → 转回去"。</p>
+<p>为什么要拆？因为简单变换好分析：拉伸一眼能看出拉了多少倍，旋转一眼能看出转了多少度。把复杂矩阵拆成这些"零件"后，难题（比如压缩图像、找出数据的主要方向）就变得好算了。</p>
+</section>
+
+<section>
+<h3>三、旋转 vs 拉伸——两种最简单的变换</h3>
+<p>在所有变换里，有两种最简单、最"干净"的，SVD 全靠它们拼装而成。</p>
+<p><strong>旋转</strong>：把整个平面绕原点转一个角度，不改变任何长度和面积，只是换个朝向。比如逆时针转 90° 的矩阵：</p>
+<div class="formula display" data-tex="R=\begin{bmatrix}0&-1\\1&0\end{bmatrix}\quad(\text{逆时针转 }90^\circ)"></div>
+<p>验证一下：点 (1,0) 被 R 送到 (0,1)（向右的箭头转成向上的箭头），点 (0,1) 被送到 (−1,0)——整个平面转了 90°。</p>
+<p>旋转矩阵有个漂亮性质：它是<strong>正交矩阵</strong>，即"转置等于逆"。<strong>转置</strong>（记作 ᵀ）就是把矩阵的行和列互换；<strong>逆矩阵</strong>就是"撤销这个变换"的矩阵。验证 RᵀR=I：</p>
+<div class="formula display" data-tex="R^TR=\begin{bmatrix}0&1\\-1&0\end{bmatrix}\begin{bmatrix}0&-1\\1&0\end{bmatrix}=\begin{bmatrix}1&0\\0&1\end{bmatrix}=I"></div>
+<p>（任何正交矩阵 Q 都满足 QᵀQ=I，它不改变长度和面积——这正是"旋转"的代数刻画。）</p>
+<p><strong>拉伸</strong>：只沿着坐标轴把东西拉长或压扁，不改变方向。它对应一个<strong>对角矩阵</strong>——对角线上的数可以随便取，其余位置全是 0：</p>
+<div class="formula display" data-tex="\Sigma=\begin{bmatrix}3&0\\0&0.5\end{bmatrix}\quad(\text{横向拉 }3\text{ 倍，纵向压成一半})"></div>
+<p>对角矩阵的作用最直观：单位正方形变成矩形，两条边分别放大 3 倍和 0.5 倍，面积放大 3×0.5=1.5 倍。</p>
+<p>记住这两块积木：<strong>正交矩阵 Q（旋转）</strong>和<strong>对角矩阵 Σ（拉伸）</strong>。SVD 要证明的是：任何 A 都只是这两块积木的乘积。</p>
+</section>
+
+<section>
+<h3>四、SVD 说了什么？——任何矩阵 = 旋转→拉伸→旋转</h3>
+<p>把上面两种零件拼起来，就是本课最重要的结论。</p>
+<p><strong>定理（SVD，奇异值分解）。</strong>任何矩阵 A（不要求方阵、不要求对称、不要求可逆）都可以写成：</p>
+<div class="formula display" data-tex="A = U\Sigma V^T"></div>
+<p>其中 U、V 是旋转（正交矩阵），Σ 是沿坐标轴的拉伸（对角矩阵，非负对角元）。翻译成人话：<strong>任何线性变换都可以分成三步——先旋转一下（Vᵀ），再沿坐标轴拉伸（Σ），最后再旋转一下（U）</strong>。</p>
+<p>先看一个最简单的例子。A=[[3,0],[0,0.5]] 本身已经是对角矩阵，只有拉伸、不用旋转，所以 U、V 都是恒等变换（记作 I，就是"什么都不做"）：</p>
+<div class="formula display" data-tex="\begin{bmatrix}3&0\\0&0.5\end{bmatrix} = I\begin{bmatrix}3&0\\0&0.5\end{bmatrix}I^T"></div>
+<p>再看第一节那个例子——它需要一个真正非平凡的分解（下面第五节会带你自己一步步算出来）：</p>
+<div class="formula display" data-tex="\begin{bmatrix}3&1\\1&3\end{bmatrix}=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\begin{bmatrix}4&0\\0&2\end{bmatrix}\left(\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\right)^T"></div>
+<p>最右边的矩阵把平面旋转 45°（这里 U=V，因为 A 对称）；中间的 Σ 沿两个坐标轴分别拉伸 4 倍和 2 倍——正是第一节算出的两个奇异值；最左边的 U 再转回来看。三步合起来，正好等于原来的 A。</p>
+<p>Σ 对角线上的数 σ₁≥σ₂≥…≥0 叫<strong>奇异值</strong>（singular values），它们告诉你每个方向的拉伸倍数；V 的列向量告诉你"该沿哪个方向拉"。SVD 的"奇异"之处就在这里：<strong>任何</strong>矩阵都藏着这样一套干净的方向和倍数，而且它自动帮你找到"最省事"的拆法。</p>
+<div class="key-insight">如果你想理解核心思想，看到这里就够了：任何矩阵都能拆成"旋转→沿坐标轴拉伸→旋转"三步，每步都简单明白；沿哪些方向拉、拉多少倍，就是 SVD 交给你的全部秘密。</div>
+</section>
+
+<section>
+<h3>五、为什么 SVD 等于旋转→拉伸→旋转？——完整推演</h3>
+<p>第四节是"听说了结论"，本节回答最关键的"为什么"。这是本课的重点，我们一步步推，每一步都能自己验证。</p>
+<p>核心疑点：一个任意矩阵通常"又转又拉又歪斜"，凭什么总能分成"正转→纯拉伸→反转"？<strong>"歪斜"跑哪去了？</strong>答案藏在第一节的例子里：歪斜只是假象——换个角度看，A 只是做了纯粹的轴向拉伸。现在把这个直觉做成严格的构造。</p>
+
+<p><strong>第 1 步：先找到"最被拉长的方向"。</strong></p>
+<p>在所有单位向量 x（‖x‖=1）中，找一个让 ‖Ax‖ 最大的。这个最大的放大倍数记作 σ₁，取到它的单位向量记作 v₁。这是合法的：‖Ax‖ 是 x 的连续函数，定义域是紧集（单位球面），所以最大值一定取得到。</p>
+
+<p><strong>第 2 步：v₁ 为什么是个"好方向"？——拉格朗日乘子。</strong></p>
+<p>把目标函数平方一下好求导：最大化 ‖Ax‖² = xᵀ(AᵀA)x，约束是 xᵀx=1。拉格朗日乘子法说：在约束最优处，目标函数的梯度（=2AᵀAx）必须平行于约束的梯度（=2x）：</p>
+<div class="formula display" data-tex="A^TA v_1=\lambda_1 v_1,\qquad \lambda_1=\sigma_1^2=\|Av_1\|^2"></div>
+<p>也就是说，v₁ 是<strong>对称矩阵 AᵀA 的特征向量</strong>，对应的特征值就是最大拉伸倍数的平方 σ₁²。这个推理可以无限重复：每找到 vᵢ，就在与它垂直的方向里继续找下一个最大的（第 3 步保证能继续）。</p>
+
+<p><strong>第 3 步：为什么"与 v₁ 垂直"仍然能继续？——不变子空间。</strong></p>
+<p>AᵀA 是对称矩阵。对称矩阵有一个基本性质：不同特征值的特征向量自动正交；同一个特征值的特征子空间也取标准正交基即可。于是 AᵀA 有标准正交的特征基 v₁,…,vₙ，按特征值非增排列：AᵀAvᵢ=λᵢvᵢ，λ₁≥λ₂≥…≥λₙ≥0（半正定，所以特征值非负）。令 σᵢ=√λᵢ≥0，恰有 r=rank(A) 个正奇异值。</p>
+<p>注意：vᵢ 由 AᵀA 的特征值给出，<strong>而 ‖Avᵢ‖²=vᵢᵀAᵀAvᵢ=λᵢ</strong>，所以 σᵢ=‖Avᵢ‖ 确实是"第 i 个方向的拉伸倍数"。这正是第一节例子里"4 倍、2 倍"的来历。</p>
+
+<p><strong>第 4 步：定义 uᵢ = Avᵢ/σᵢ，验证它们互相垂直——"歪斜"消失的地方。</strong></p>
+<p>对 σᵢ&gt;0，令 uᵢ=Avᵢ/σᵢ（这是单位向量，因为 ‖Avᵢ‖=σᵢ）。现在检查不同 uᵢ、uⱼ 的内积：</p>
+<div class="formula display" data-tex="u_i\cdot u_j=\frac{1}{\sigma_i\sigma_j}v_i^{T}A^{T}Av_j=\frac{\lambda_j}{\sigma_i\sigma_j}\,v_i\cdot v_j=\delta_{ij}"></div>
+<p>中间用了 AᵀAvⱼ=λⱼvⱼ，最后用了 vᵢ·vⱼ=δᵢⱼ（标准正交）。结论：<strong>{u₁,…,uᵣ} 是标准正交组。</strong></p>
+<p>这个内积为 0 就是"没有歪斜"的代数证明。<strong>歪斜（剪切）的本质是"正交的输入被映射成不正交的输出"</strong>；而这里恰恰相反——A 把正交的 vᵢ 逐个送到正交的 uᵢ。因为 v₁,…,vₙ 是一组正交坐标轴，而它们的像 u₁,…,uᵣ 也是正交的，A 在这两组正交轴之间只做"逐轴缩放"，没有任何方向间的串扰。这就是为什么中间必须是"纯拉伸"。</p>
+
+<p><strong>第 5 步：把正交组补成矩阵，写成分解。</strong></p>
+<p>把 {u₁,…,uᵣ} 扩充成 ℝᵐ 的标准正交基 {u₁,…,uₘ}（Gram–Schmidt），令 U=(u₁,…,uₘ)、V=(v₁,…,vₙ)、Σ 是 m×n "矩形对角阵"（主对角 σ₁,…,σᵣ，其余 0）。逐列验证：对 i≤r，A vᵢ=σᵢuᵢ=(UΣVᵀ)vᵢ；对 i&gt;r，‖Avᵢ‖²=λᵢ=0 故 Avᵢ=0，而 (UΣVᵀ)vᵢ=0。两个线性变换在基 {vᵢ} 上逐列相等 ⟹ <strong>A=UΣVᵀ</strong>。∎</p>
+
+<p><strong>把推演读成几何。</strong></p>
+<p>完整的一句话版本：<strong>AᵀA 的谱定理给出"最被拉伸的方向" v₁,…,vₙ 和"拉伸倍数" σ₁,…,σₙ；由 uᵢ=Avᵢ/σᵢ 得到"被拉向的方位" u₁,…,uₘ；于是 A 的每一次作用 = 先转到 v 坐标（Vᵀ）→ 沿坐标轴放大 σᵢ（Σ）→ 再转到 u 坐标（U）。</strong>单位圆 → 椭圆的那张图现在可以读懂了：球面上指向 v₁ 的点被拉到最长 σ₁，落在长轴上 u₁；指向 vᵢ 的点落在第 i 根轴上 uᵢ。中间的旋转 Vᵀ 负责把"自然拉伸轴"对准坐标轴，末尾的 U 负责把拉伸完的椭圆摆正到最终位置。</p>
+</section>
+
+<section>
+<h3>六、完整例题——三个例子一步步算</h3>
+<p>推演要变成手感，还得亲手算。教科书风格：每一步展开，不跳步。</p>
+
+<p><strong>例 1：A=[[3,1],[1,3]] 的 SVD（对称矩阵，对应第一节的直觉）。</strong></p>
+<p>第 1 步：算 AᵀA。因为 A 对称，AᵀA=A²：</p>
+<div class="formula display" data-tex="A^TA=A^2=\begin{bmatrix}3&1\\1&3\end{bmatrix}\begin{bmatrix}3&1\\1&3\end{bmatrix}=\begin{bmatrix}10&6\\6&10\end{bmatrix}"></div>
+<p>第 2 步：求特征值与特征向量。特征方程 (10−λ)²−36=0 ⟹ λ=16 或 λ=4。λ=16 对应特征向量 (1,1)ᵀ（归一化 v₁=(1,1)ᵀ/√2）；λ=4 对应 v₂=(1,−1)ᵀ/√2。故奇异值 σ₁=√16=4、σ₂=√4=2。</p>
+<p>第 3 步：因为 A 对称，可取 U=V（左、右奇异向量重合）：</p>
+<div class="formula display" data-tex="U=V=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}"></div>
+<p>第 4 步：验证 A=UΣVᵀ：</p>
+<div class="formula display" data-tex="U\Sigma V^T=\frac12\begin{bmatrix}1&1\\1&-1\end{bmatrix}\begin{bmatrix}4&0\\0&2\end{bmatrix}\begin{bmatrix}1&1\\1&-1\end{bmatrix}=\begin{bmatrix}3&1\\1&3\end{bmatrix}\ \checkmark"></div>
+<p>第 5 步：几何读图。单位圆 → 长半轴 4（沿 u₁=(1,1)/√2）、短半轴 2（沿 u₂=(1,−1)/√2）的椭圆——与第一节手工算出的答案完全一致。</p>
+
+<p><strong>例 2：A=[[1,1],[0,0]] 的 SVD（非对称、秩亏，σ₂=0 的情形）。</strong></p>
+<p>这个矩阵把 (x,y) 送到 (x+y, 0)——一切都被压到 x 轴上。第 1 步：</p>
+<div class="formula display" data-tex="A^TA=\begin{bmatrix}1&0\\1&0\end{bmatrix}\begin{bmatrix}1&1\\0&0\end{bmatrix}=\begin{bmatrix}1&1\\1&1\end{bmatrix}"></div>
+<p>第 2 步：特征方程 trace=2、det=0 ⟹ λ=2,0。v₁=(1,1)ᵀ/√2（λ=2）、v₂=(1,−1)ᵀ/√2（λ=0）。故 σ₁=√2、σ₂=0。被拉得最长（√2 倍）的方向是 (1,1)/√2——合理：沿它走两步的横坐标增长最快。</p>
+<p>第 3 步：u₁=Av₁/σ₁=(√2,0)/√2=(1,0)。u₂ 只需与 u₁ 正交，可取 u₂=(0,1)，于是 U=I₂。</p>
+<div class="formula display" data-tex="U\Sigma V^T=\begin{bmatrix}1&0\\0&1\end{bmatrix}\begin{bmatrix}\sqrt2&0\\0&0\end{bmatrix}\frac1{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}=\begin{bmatrix}1&1\\0&0\end{bmatrix}\ \checkmark"></div>
+<p>几何读图：σ₂=0 表示与 v₂ 平行的方向被完全压平——零奇异值的个数 n−rank(A)=1 正是零空间的维数。注意此时分解有自由度（u₂ 可任取垂直于 u₁ 的方向）：SVD 在出现 0 奇异值（或相等奇异值）时不唯一，这是正常现象。</p>
+
+<p><strong>例 3：验证 σᵢ²=λᵢ(AᵀA) 的关系。</strong></p>
+<p>沿用例 1。已经算出 σ₁=4、σ₂=2，所以 σ₁²=16、σ₂²=4。而 AᵀA=[[10,6],[6,10]] 的特征值正是 16 和 4。逐一对应：<strong>奇异值的平方 = AᵀA 的特征值</strong>。这不是巧合——它就是第五节第 2 步"vᵢ 是 AᵀA 的特征向量、λᵢ=σᵢ²"的直接结果。这也是手算 SVD 的实用入口：先求 AᵀA 的特征值取根号得 σ，再取特征向量得 V，最后 uᵢ=Avᵢ/σᵢ 得 U。</p>
+</section>
+
+<section><h3>七、为什么 SVD 统治数据科学</h3>
+<p><strong>PCA (主成分分析)</strong>：数据中心化 → 对数据矩阵 X 做 SVD。V 的列 = 主成分方向。Σ²/n = 各主成分解释的方差。第一主成分 = v₁ = 数据变化最大的方向。这直接继承第一节的发现：<strong>v₁ 就是"被拉得最长的方向"，也就是数据波动最大的方向</strong>。</p>
+<p><strong>图像压缩</strong>：一张 1000×1000 的灰度图 = 1000×1000 的矩阵。保留前 50 个奇异值，A₅₀ = Σ σᵢuᵢvᵢᵀ 只有 50×(2001) ≈ 10 万个参数（原来的 1/10），肉眼几乎看不出差别。</p>
+<p><strong>推荐系统</strong>：Netflix 用户-电影评分矩阵 → SVD 发现"隐藏因子"。用户 i 对电影 j 的预测评分 = uᵢ·vⱼ（低维隐空间中的点积）。</p>
+</section>
+
+<section><h3>八、截断 SVD = 最优低秩近似</h3>
+<p>Eckart-Young 定理：Aₖ = Σᵢ₌₁ᵏ σᵢ uᵢ vᵢᵀ 是<strong>所有秩 ≤ k 的矩阵中在 Frobenius 范数下最接近 A 的</strong>（秩：矩阵"有效"的维度，等于非零奇异值的个数，也就是这个变换真正保留的独立方向数）。你不可能找到更好的 k-秩近似。</p>
+<p>这就是为什么 SVD 在压缩、降噪、特征提取中不可替代——它给你"在给定信息预算下的最优表示"。图像压缩里"只留前 50 个奇异值"不是拍脑袋，而是 Eckart-Young 定理保证的最优取舍。</p>
+<div class="formula display" data-tex="A = U\Sigma V^T,\quad U^TU = I,\ V^TV = I"></div>
+<div class="formula display" data-tex="\Sigma = \mathrm{diag}(\sigma_1,\ldots,\sigma_r),\ \sigma_1 \ge \sigma_2 \ge \cdots > 0"></div>
+<div class="formula display" data-tex="A_k = \sum_{i=1}^k \sigma_i u_i v_i^T\quad\text{(秩-k 最优近似)}"></div>
+<div class="formula display" data-tex="\kappa(A) = \sigma_1 / \sigma_r\quad\text{(条件数)}"></div>
+</section>
+
+<section><h3>九、条件数与数值稳定性</h3>
+<p>条件数 κ(A)=σ_max/σ_min=σ₁/σᵣ。κ≈1 → <strong>良态</strong>（各方向缩放均匀，解 Ax=b 对噪声不敏感）；κ≫1 → <strong>病态</strong>（最大与最小拉伸差几个数量级，解对输入误差极度敏感）。</p>
+<p>为什么？如果某个方向被拉到 σᵣ 而另一个被拉到 σ₁，比值 κ 就是"误差最多被放大多少倍"。SVD 让你一目了然地看到矩阵的"健康程度"——这是任何数值线性代数库内部都在用的核心诊断工具。也可以说：条件数是奇异值几何的直接读数，第二节那张"椭圆有多扁"的图就是 κ 的可视化。</p>
+</section>
+
+<section><h3>十、SVD vs 谱分解 vs 特征分解</h3>
+<p><strong>谱分解</strong>（A=Aᵀ）：A=QΛQᵀ，特征向量正交、特征值实数。要求对称。<strong>SVD</strong>（任何矩阵）：A=UΣVᵀ，左、右奇异向量分别在两个不同空间。当 A 对称半正定时 U=V、Σ=Λ——<strong>SVD 和谱分解重合</strong>。</p>
+<div class="formula display" data-tex="A=Q\Lambda Q^{T}\ \ (\text{谱分解}),\qquad A=U\Sigma V^{T}\ \ (\text{SVD})"></div>
+<p>三者之中 SVD 最通用——不需要对称，不需要方阵，甚至不需要可逆。特征分解只对"能对角化的方阵"存在，而 SVD 对<strong>每一个</strong>矩阵都存在（第五节已经构造完毕）。这是 SVD 在数据科学里无可替代的根本原因：真实数据矩阵几乎从不方、从不对称，但永远有 SVD。</p>
+</section>
+
+<section><h3>十一、SVD 的存在性证明概要</h3>
+<p>AᵀA 是半正定对称矩阵 → 谱定理 → AᵀA = VΛVᵀ，Λ=diag(λᵢ)，λᵢ≥0。令 σᵢ=√λᵢ，uᵢ=(1/σᵢ)Avᵢ（对 i=1,...,r）。验证 uᵢ 互相正交：</p>
+<div class="formula display" data-tex="u_i\cdot u_j=\frac{1}{\sigma_i\sigma_j}v_i^{T}A^{T}Av_j=\frac{\lambda_j}{\sigma_i\sigma_j}\delta_{ij}=\delta_{ij}"></div>
+<p>扩充 {u₁,...,uᵣ} 到 ℝᵐ 的正交基，验证 A = UΣVᵀ——两边在基 V 上作用相同。QED。第五节就是这份概要的逐字展开版。</p></section>
+
+<section><h3>十二、前沿：随机 SVD 与大规模矩阵</h3>
+<p>经典 SVD 复杂度 O(min(mn², m²n))——对十亿级矩阵不可行。Halko-Martinsson-Tropp（2011）提出<strong>随机 SVD</strong>：用随机投影将矩阵压缩到低维子空间，再在那个小空间里做经典 SVD——复杂度降到 O(mn log k)。这是现代大规模 PCA 和推荐系统的核心技术。</p>
+<p>直觉：不需要先精确看到整张矩阵才知道"哪个方向最重要"——随机取几个方向探一探，就能八九不离十地猜出主奇异方向，再修正。仍开放的问题：最优随机投影分布的选择（高斯？稀疏？结构化？），不同分布在不同矩阵上各有胜负。</p>
+</section>
+
+<section>
+<h3>十三、试试看（带提示）</h3>
+<p>1. 当 A 是对称矩阵时，U=V——SVD 和谱分解重合。找一个对称矩阵，看左右奇异向量是否相同。<br>提示：对称时 AᵀA=A²，特征向量就是 A 的特征向量，且 uᵢ=Avᵢ/σᵢ=λᵢvᵢ/σᵢ 与 vᵢ 平行。例 1 就是见证。</p>
+<p>2. 奇异值和 AᵀA 的特征值的关系：σᵢ²=λᵢ(AᵀA)。取 A=[[3,1],[1,3]]，手算验证。<br>提示：AᵀA=[[10,6],[6,10]]，特征方程 (10−λ)²−36=0 得 λ=16,4，开方得 σ=4,2——与例 1 相同。这通常是手算 SVD 最快的入口。</p>
+<p>3. 如果 A = [[3,0],[0,0.5]]（已经对角化），SVD 的三个组件 U, Σ, V 分别是什么？<br>提示：已经是沿坐标轴的纯拉伸，U=V=I、Σ=A。但注意奇异值必须按非增排列，所以严格说 Σ=diag(3,0.5)，两个都为正。</p>
+<p>4. 单位圆在 A=[[1,1],[0,0]] 下变成什么？（例 2 的矩阵）<br>提示：一切都被压到 x 轴上，圆变成一条长度 2σ₁=2√2 的线段。σ₂=0 就是"压成线段"的代数信号。</p>
+<p>5. 若 A 的所有奇异值都等于 1，A 是什么？<br>提示：σᵢ≡1 ⟹ Σ=I ⟹ A=UIVᵀ=UVᵀ，正交矩阵——纯旋转（可带镜像）。"各方向均匀拉伸 1 倍"就是"不动长度"。</p>
+</section>
+
+<section>
+<h3>附：SVD 存在性定理的严格证明</h3>
+<p><strong>定理。</strong>设 A 是 m×n 实矩阵，则存在正交矩阵 U（m 阶）、V（n 阶）和对角矩阵 Σ（m×n）使 A=UΣVᵀ，其中 Σ 的主对角线为 σ₁≥⋯≥σᵣ&gt;0（r=rank(A)），其余为 0。</p>
+<div class="formula display" data-tex="A=U\Sigma V^T,\quad \Sigma=\mathrm{diag}(\sigma_1,\ldots,\sigma_r,0,\ldots,0)"></div>
+<p><strong>证明（从 AᵀA 的谱分解构造）。</strong></p>
+<p><strong>第 1 步：构造 V。</strong>AᵀA 对称且半正定：对一切 x∈ℝⁿ，xᵀAᵀAx=‖Ax‖²≥0。由谱定理存在正交矩阵 V=(v₁,…,vₙ) 使 AᵀA=VΛVᵀ，Λ=diag(λ₁,…,λₙ)，λᵢ≥0。按非增序重排 λᵢ 并令 σᵢ=√λᵢ。因 rank(AᵀA)=rank(A)=r，恰有 r 个 σᵢ&gt;0，其余为 0。</p>
+<p><strong>第 2 步：构造 U 的前 r 列。</strong>对 i=1,…,r 定义 uᵢ=(1/σᵢ)Avᵢ。验证标准正交性：</p>
+<div class="formula display" data-tex="\langle u_i,u_j\rangle=\frac{v_i^TA^TAv_j}{\sigma_i\sigma_j}=\frac{v_i^TV\Lambda V^Tv_j}{\sigma_i\sigma_j}=\frac{\lambda_j}{\sigma_i\sigma_j}\delta_{ij}=\delta_{ij}"></div>
+<p><strong>第 3 步：扩充。</strong>把 {u₁,…,uᵣ} 扩充（Gram–Schmidt / 正交补）成 ℝᵐ 的标准正交基 {u₁,…,uₘ}，令 U=(u₁,…,uₘ)。</p>
+<p><strong>第 4 步：验证 A=UΣVᵀ。</strong>对 j≤r：(UΣVᵀ)vⱼ=σⱼuⱼ=Avⱼ；对 j&gt;r：AᵀAvⱼ=λⱼvⱼ=0 ⟹ ‖Avⱼ‖²=vⱼᵀAᵀAvⱼ=0 ⟹ Avⱼ=0，而 (UΣVᵀ)vⱼ=0。两线性变换在基 {v₁,…,vₙ} 上逐列相等，故 A=UΣVᵀ。∎</p>
+<p>注：证明依赖谱定理（对称矩阵的正交对角化），而谱定理本身又可视为对称半正定矩阵的 SVD 特殊情形——两者互为支撑。</p>
+</section>
+
+<section>
+<h3>附：奇异值与特征值的关系 σᵢ²=λᵢ(AᵀA)</h3>
+<p><strong>命题。</strong>A 的奇异值正是 AᵀA 的特征值的算术平方根；A 的非零奇异值之平方也等于 AAᵀ 的非零特征值（两者非零谱完全相同）。</p>
+<p><strong>证明。</strong>由 SVD A=UΣVᵀ 得 AᵀA=VΣᵀUᵀUΣVᵀ=V(ΣᵀΣ)Vᵀ。这是 AᵀA 的正交对角化，故其特征值恰为 ΣᵀΣ=diag(σ₁²,…,σᵣ²,0,…,0)。同理 AAᵀ=U(ΣΣᵀ)Uᵀ，其非零特征值同为 σ₁²,…,σᵣ²。∎</p>
+<div class="formula display" data-tex="\sigma_i^2=\lambda_i(A^TA)=\lambda_i(AA^T),\quad i=1,\ldots,r;\qquad \|A\|_2=\sigma_1=\sqrt{\lambda_{\max}(A^TA)}"></div>
+<p>推论：谱范数（2-范数）‖A‖₂=σ₁=√λ_max(AᵀA)，是矩阵沿最拉伸方向的增益；这是数值分析中条件数的来源，也呼应第五节第 1 步——σ₁ 本来就是"最大拉伸倍数"。</p>
+</section>
+
+<section>
+<h3>附：标准反例</h3>
+<p><strong>反例 1（非方阵）</strong>：A=[[1,0],[0,1],[0,0]]（3×2）。AᵀA=I₂，故 σ₁=σ₂=1，V=I₂，可取 U=I₃。Σ 是 3×2 的对角阵：</p>
+<div class="formula display" data-tex="A=\begin{bmatrix}1&0\\0&1\\0&0\end{bmatrix}=I_3\begin{bmatrix}1&0\\0&1\\0&0\end{bmatrix}I_2,\qquad U\neq V\text{（维数不同）}"></div>
+<p>要点：非方阵的 U、V 属于不同空间；左奇异向量在 ℝ³、右奇异向量在 ℝ²，没有"特征向量"可谈——这正是 SVD 比特征分解更普适的证据。</p>
+<p><strong>反例 2（秩亏矩阵出现零奇异值）</strong>：A=[[1,1],[2,2]]（秩 1）。AᵀA=[[5,5],[5,5]] 的特征值为 10,0，故 σ₁=√10、σ₂=0。</p>
+<div class="formula display" data-tex="A=\begin{bmatrix}1&1\\2&2\end{bmatrix},\quad \lambda(A^TA)=\{10,0\}\ \Longrightarrow\ \sigma_1=\sqrt{10},\ \sigma_2=0"></div>
+<p>几何意义：一个方向被完全压平（像只是一维直线）。零奇异值的个数=n−rank(A)=1，正是零空间维数。SVD 把"秩亏""不可逆""病态"一次性可视化为 Σ 中对角元为 0。</p>
+</section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：计算 A=[[3,1],[1,3]] 的 SVD。提示：先求 AᵀA 的特征值与特征向量确定 V、σ；因 A 对称且半正定，可取 U=V。</p>
+<p><strong>题 2</strong>：用 SVD 求 A=[[1,1],[1,1]] 的 Moore–Penrose 伪逆 A⁺。提示：A⁺=VΣ⁺Uᵀ，Σ⁺ 将非零奇异值取倒数、零奇异值保持为 0。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：AᵀA=A²=[[10,6],[6,10]]，特征方程 (10−λ)²−36=0 ⟹ λ=16,4。故 σ₁=4、σ₂=2。v₁=(1,1)ᵀ/√2（λ=16），v₂=(1,−1)ᵀ/√2（λ=4）。A 对称且特征值非负，取 U=V，则 A=U diag(4,2) Vᵀ。验证：UΣVᵀ=(1/2)[[1,1],[1,−1]]·[[4,0],[0,2]]·(1/2)[[1,1],[1,−1]]ᵀ=[[3,1],[1,3]] ✓。</p>
+<p><strong>题 2</strong>：AᵀA=[[2,2],[2,2]] 的特征值为 4,0 ⟹ σ₁=2、σ₂=0；v₁=(1,1)ᵀ/√2、v₂=(1,−1)ᵀ/√2；A 对称取 U=V。Σ⁺=diag(1/2,0)，故 A⁺=V diag(1/2,0) Vᵀ=(1/4)[[1,1],[1,1]]。验证四条 Moore–Penrose 条件：AA⁺A=(1/2)[[1,1],[1,1]]·A=A ✓，A⁺AA⁺=A⁺ ✓，AA⁺ 与 A⁺A 均对称 ✓。</p>
+</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Axler, Linear Algebra Done Right (4th ed.)</strong></p>
+<p>&rarr; <strong>K. Hoffman & R. Kunze, Linear Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/eigenvectors.html">特征值与特征向量</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/linear-transform.html">📐 线性变换</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/eigenvectors.html">🎯 特征值与特征向量</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/determinant.html">📏 行列式</a>：同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/spectral-theorem.html">🌈 谱定理</a>：同一学科分类「线性代数」。</p>
+</section>

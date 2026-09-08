@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Monge-Kantorovich——沙堆的最小搬运成本" />
+  <meta property="og:title" content="最优传输 — Vibe Math" />
+  <meta property="og:description" content="Monge-Kantorovich——沙堆的最小搬运成本" />
+  <title>最优传输 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🚚 最优传输 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Monge-Kantorovich——沙堆的最小搬运成本</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='optimal-transport',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/laplace-eigenvalue.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🥁 拉普拉斯特征值与鼓的形状</a>
+  <a href="/pages/convex-optimization.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⚖️ 凸优化与梯度流 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把一堆沙子搬到另一堆，怎么搬最省钱</h3>
+<p>想象你要把客厅的一堆沙子搬去院子里，堆成另一个形状。你可以一铲一铲地搬，问题是：每一铲沙子该搬到哪儿，才能让所有人搬的路加起来最短？这就是"最优传输"想解决的问题。</p>
+<p>它专门研究"怎么把一堆东西变成另一堆东西、花的路费最少"，搬家、送货、把一种图像变成另一种图像，都用得上它。</p>
+<div class="key-insight">一句话：给定起点和终点两堆"沙子"，找到让总搬运距离最短的搬法。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/probability.html">概率论基础</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——三座沙场给两个工地供沙（例题 1：成本表 + 手算最优计划）</h3>
+<p>先把抽象的"两堆沙子"换成一张会算账的表。城里有三座沙场 A₁、A₂、A₃，分别库存 30、50、20 铲沙子；两个工地 B₁、B₂ 分别需要 60、40 铲。一铲沙从沙场 <em>i</em> 运到工地 <em>j</em> 的运费（元/铲）如下表：</p>
+<table style="width:100%;border-collapse:collapse;font-size:.9em;margin:12px 0;">
+<tr style="background:#f3f3f3;"><th style="border:1px solid #ddd;padding:6px 8px;">运费 c_ij</th><th style="border:1px solid #ddd;padding:6px 8px;">B₁（需 60）</th><th style="border:1px solid #ddd;padding:6px 8px;">B₂（需 40）</th><th style="border:1px solid #ddd;padding:6px 8px;">库存</th></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">A₁</td><td style="border:1px solid #ddd;padding:6px 8px;">4</td><td style="border:1px solid #ddd;padding:6px 8px;">2</td><td style="border:1px solid #ddd;padding:6px 8px;">30</td></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">A₂</td><td style="border:1px solid #ddd;padding:6px 8px;">1</td><td style="border:1px solid #ddd;padding:6px 8px;">6</td><td style="border:1px solid #ddd;padding:6px 8px;">50</td></tr>
+<tr><td style="border:1px solid #ddd;padding:6px 8px;">A₃</td><td style="border:1px solid #ddd;padding:6px 8px;">3</td><td style="border:1px solid #ddd;padding:6px 8px;">5</td><td style="border:1px solid #ddd;padding:6px 8px;">20</td></tr>
+</table>
+<p><strong>题目。</strong> 求一个搬运计划：每座沙场全部清空、每个工地刚好收满，使总运费最小。</p>
+<p><strong>第一步：找"便宜路"。</strong> 表里最便宜的两条路是 A₂→B₁（单价 1）和 A₁→B₂（单价 2）。直觉上应尽量多走这两条。</p>
+<p><strong>第二步：先喂最便宜的。</strong> 让 A₂ 全力供 B₁：A₂→B₁ = 50（A₂ 就这么多），剩 10 铲 B₁ 的需求。这 10 铲谁送最便宜？A₃→B₁ 单价 3、A₁→B₁ 单价 4，故选 A₃→B₁ = 10。此时 A₁ 还剩 30 铲，B₂ 还需要 40 铲。</p>
+<p><strong>第三步：补齐需求。</strong> 给 B₂ 供货：A₁→B₂ = 30（单价 2），A₃→B₂ = 10（单价 5）。四个工地全部满足。</p>
+<p><strong>第四步：算总账并核对最优性。</strong> 总运费 = 50·1 + 10·3 + 30·2 + 10·5 = 50 + 30 + 60 + 50 = <strong>190 元</strong>。</p>
+<p><strong>为什么它是最优的？</strong> 设 x = A₂→B₁ 的量、y = A₃→B₁ 的量，则 A₁→B₁ = 60−x−y，A₁→B₂ = x+y−30，A₂→B₂ = 50−x，A₃→B₂ = 20−y。总运费是关于 (x,y) 的线性函数，整理得</p>
+<div class="formula display" data-tex="\text{cost}=580-7x-4y"></div>
+<p>最小化 cost ⟺ 最大化 7x+4y。约束是 x≤50、y≤20、x+y≤60、x+y≥30。取 x=50（能取的最大值）、y=10（此时 x+y=60 顶格）得 7·50+4·10=390，故最小 cost = 580−390 = 190，与上面的计划吻合。∎</p>
+<p><strong>这一步的价值。</strong> 这个问题 1781 年就被 Monge 提出（"沙堆搬运"），但直到 1942 年 Kantorovich 才找到正确写法。它的本质是：<strong>只要允许"一座沙场可以同时供两个工地"（即允许劈分），问题就是一个线性规划，可以手算、可以上机解</strong>。全课的抽象框架就是从这个具体的表里提炼出来的。</p>
+</section>
+
+<section>
+<h3>二、Monge 与 Kantorovich——"整铲搬运"为何要改成"任意劈分"</h3>
+<p>把沙场与工地变成数学对象：沙场的分布是 <strong>μ</strong>（每个位置上有多少沙），工地的分布是 <strong>ν</strong>。一铲沙从 x 运到 y 的运费是 c(x,y)（如距离的 p 次方 |x−y|<sup>p</sup>）。</p>
+<p><strong>Monge（1781）原问题。</strong> 找"搬运映射" T：把 x 处的沙子整铲送到 T(x)，要求把所有沙送到目标分布：</p>
+<div class="formula display" data-tex="T_\#\mu=\nu\ \Rightarrow\ \min_T\int c(x,T(x))\,d\mu(x)"></div>
+<p>T 是"函数"，每一处只有唯一去向。这是<strong>非线性</strong>约束（T#μ=ν），很难处理。</p>
+<p><strong>Kantorovich（1942）放松。</strong> 允许"劈分"：与其规定 x 去哪，不如规定"多少沙从 x 到 y"——即给出 X×Y 上的联合分布 π，它的两个边缘分布恰是 μ、ν。π 称为 <strong>耦合（coupling）</strong>，所有耦合的集合记作 Π(μ,ν)。问题变成</p>
+<div class="formula display" data-tex="\inf_{\pi\in\Pi(\mu,\nu)}\int_{X\times Y} c(x,y)\,d\pi(x,y)"></div>
+<p>这是一个<strong>线性</strong>问题（对 π 线性）——Kantorovich 因此把它变成线性规划，并获 1975 年诺贝尔经济学奖。</p>
+<p><strong>为什么必须允许劈分？看一个具体反例。</strong> 设 μ = δ₀（沙全在 0 点），ν = (δ₁ + δ₋₁)/2（目标是一半在 1、一半在 −1）。任何函数 T 只能把 0 送到<strong>一个</strong>点，无法同时变成 1 和 −1——Monge 问题<strong>无解</strong>。而耦合 π 可以写 π = (δ_{(0,1)} + δ_{(0,−1)})/2，把质量 1/2 分给 1、1/2 分给 −1——Kantorovich 问题<strong>有解</strong>。这就是"劈分"不可省的原因：<strong>映射太僵硬，耦合才足够灵活</strong>。</p>
+</section>
+
+<section>
+<h3>三、Wasserstein 距离——分布世界"最合理的尺子"</h3>
+<p>取成本 c(x,y) = |x−y|<sup>p</sup>（p ≥ 1），并限制在 p 阶矩有限的测度空间 P_p(ℝⁿ) = {μ : ∫|x|^p dμ &lt; ∞} 上。定义</p>
+<div class="formula display" data-tex="W_p(\mu,\nu)=\left(\inf_{\pi\in\Pi(\mu,\nu)}\int|x-y|^p\,d\pi\right)^{1/p}"></div>
+<p><strong>为什么它配叫"距离"？</strong> 四条度量公理逐条可证：</p>
+<ul>
+  <li><strong>对称性与正定性</strong>：W_p ≥ 0，且 W_p(μ,ν) = 0 ⟺ μ = ν（因为 |x−y|^p = 0 仅当 x=y，此时最优耦合把质量全部"原地不动"）。</li>
+  <li><strong>三角不等式</strong>：W_p(μ,ν) ≤ W_p(μ,ρ) + W_p(ρ,ν)——把 μ→ρ 的最优耦合与 ρ→ν 的最优耦合用 <strong>gluing lemma</strong> 沿 ρ 拼起来，得到 μ→ν 的耦合，Minkowski 不等式给出距离估计。</li>
+  <li><strong>完备性</strong>：(P_p(ℝⁿ), W_p) 是 Polish 空间；紧性 ⟺ p 阶矩一致有界（Villani 定理 6.18）。</li>
+  <li><strong>与弱收敛的关系</strong>：μₖ → μ 在 W_p 意义下 ⟺ 弱收敛且 p 阶矩收敛。</li>
+  <li><strong>测地性</strong>：McCann 位移插值 μ_t = ((1−t)id + tT)#μ 是 W₂-测地线（见"Otto 几何"一节）。</li>
+</ul>
+<p><strong>为什么别的"距离"不行？</strong> 全变差距离与弱收敛不相容：δ_{1/n} 到 δ₀ 的全变差距离恒为 2，但 δ_{1/n} 却弱收敛到 δ₀——它"看不见"支撑在缓慢漂移。KL 散度不对称、不满足三角不等式，且对支撑不交的分布取 ∞。Wasserstein 距离"连续度量支撑漂移"：把一个分布连续变形为另一个时，W_p 连续变化。这正是它在统计与生成建模中备受青睐的根本原因。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="W_p(\mu,\nu)=\left(\inf_{\gamma}\int d(x,y)^p\,d\gamma\right)^{1/p}"></div>
+<div class="formula display" data-tex="W_1(\mu,\nu)=\sup_{\|f\|_{\mathrm{Lip}}\le 1}\int f\,d(\mu-\nu)\quad(\text{Kantorovich-Rubinstein})"></div>
+<div class="formula display" data-tex="T=\nabla\varphi\ \ (\text{Brenier, 二次成本}),\qquad \det(D^2\varphi)=\frac{\mu(x)}{\nu(\nabla\varphi(x))}\ (\text{Monge-Ampère})"></div>
+</section>
+
+<section>
+<h3>五、例题 2——一维排序：W₂ 的具体计算（一步步算完）</h3>
+<p><strong>题目。</strong> 在实数轴上，μ = U([0,1])（均匀铺在 [0,1]），ν = U([0,2])。计算 W₂(μ,ν)。</p>
+<p><strong>第一步：猜最优配对方式。</strong> 直觉：把 x 处的沙送到 T(x)，T 应该"保序"——最左的沙去最左的空位。这就是<strong>单调重排</strong>：若 T 把 [0,1] 单调地拉伸铺满 [0,2]，则任何两条沙（x₁ &lt; x₂）不会交叉，位移最省。</p>
+<p><strong>第二步：用分布函数写 T。</strong> 一般地，一维最优传输由分位数函数给出：</p>
+<div class="formula display" data-tex="T=F_\nu^{-1}\circ F_\mu,\qquad F_\mu(x)=\int_{-\infty}^x d\mu\ \text{为分布函数}"></div>
+<p>这里 F_μ(x) = x（x∈[0,1]），F_ν 的逆为 F_ν^{-1}(t) = 2t（t∈[0,1]）。故</p>
+<div class="formula display" data-tex="T(x)=2x"></div>
+<p>把 [0,1] 均匀拉伸成 [0,2]。为什么这样对？因为 T 把 μ 的每个区间都等比拉伸，保持顺序，正是"不交叉"的唯一选择。</p>
+<p><strong>第三步：算位移。</strong> 每一点 x 的位移 |T(x)−x| = x。于是</p>
+<div class="formula display" data-tex="W_2^2=\int_0^1 |T(x)-x|^2\,d\mu(x)=\int_0^1 x^2\,dx=\frac{1}{3}"></div>
+<p><strong>第四步：结论。</strong></p>
+<div class="formula display" data-tex="W_2(\mu,\nu)=\frac{1}{\sqrt{3}}\approx 0.577"></div>
+<p>∎</p>
+<p><strong>为什么这方法可靠？</strong> 一维情形有完整定理：W_p(μ,ν) = (∫₀¹ |F_μ^{-1}(t) − F_ν^{-1}(t)|^p dt)^{1/p}——即"沿分位数逐点比差距"。单调重排是它的几何化身，也是后面 Brenier 定理（高维单调映射 = 凸梯度）的雏形。</p>
+</section>
+
+<section>
+<h3>六、Kantorovich 对偶——从非线性约束到线性规划</h3>
+<p>原始问题 inf_{T#μ=ν} ∫c(x,T(x))dμ 是<strong>非线性映射 T</strong> 的约束优化，难以下手。Kantorovich 的放松把它变成对耦合 π 的<strong>线性规划</strong>：</p>
+<div class="formula display" data-tex="\inf_{\pi\in\Pi(\mu,\nu)}\int c\,d\pi"></div>
+<p>而每个线性规划都有一个对偶。这个对偶就是下面定理的全部威力。</p>
+<p><strong>Kantorovich 对偶定理。</strong> 设 μ ∈ P(X)，ν ∈ P(Y)，X,Y 为 Polish 空间，成本 c: X×Y → [0,∞] 下半连续。则</p>
+<div class="formula display" data-tex="\inf_{\pi\in\Pi(\mu,\nu)}\int_{X\times Y} c\,d\pi=\sup_{(\varphi,\psi)\in\Phi_c}\left(\int_X\varphi\,d\mu+\int_Y\psi\,d\nu\right)"></div>
+<p>其中 Φ_c = {(φ,ψ): φ∈L¹(μ), ψ∈L¹(ν), φ(x)+ψ(y)≤c(x,y) ∀x,y}。且下确界由某个最优耦合 π* 达到，上确界由某个 c-凹对 (φ*,ψ*) 达到（φ* = c-变换 ψ*：φ*(x)=inf_y[c(x,y)−ψ*(y)]）。</p>
+<p><strong>为什么这个对偶有价值？</strong> 原始问题在"耦合"这种高维对象上求 inf，对偶问题只在"一对函数"上求 sup——后者往往容易构造（例如下面例题 3 里取 f(x)=x 就恰好达到上确界）。</p>
+<p><strong>证明框架（三部分）。</strong> ① <strong>弱对偶</strong>：对任意耦合 π 与可行对 (φ,ψ)，φ(x)+ψ(y)≤c(x,y) 两边对 π 积分得 ∫φdμ+∫ψdν ≤ ∫c dπ——取 inf/sup 得"sup ≤ inf"。② <strong>Kantorovich 放松的紧性</strong>：Π(μ,ν) 在 P(X×Y) 的弱-* 拓扑下紧（固定边缘分布，Prokhorov + 紧致性），c 下半连续 ⟹ 下确界可达。③ <strong>对偶可达</strong>：在函数空间上做 <strong>Fenchel-Moreau 对偶</strong>。把 inf 问题视为以"边缘分布为约束"的线性规划：定义凸函数 F(π)=∫c dπ（π 无约束时）+ 用凸锥指标函数编码 π∈Π(μ,ν)，其 Legendre-Fenchel 对偶共轭给出 sup 表示；下半连续性保证 sup 可达，Riesz 表示定理保证对偶变量确实是函数而非泛函。∎</p>
+<p><strong>特别情形（W₁）。</strong> 当 c(x,y)=d(x,y) 为度量时，对偶化为 <strong>Kantorovich-Rubinstein 公式</strong>：</p>
+<div class="formula display" data-tex="W_1(\mu,\nu)=\sup_{\|f\|_{\mathrm{Lip}}\le 1}\int f\,d(\mu-\nu)"></div>
+<p>证明：对可行对取 f=φ=−ψ，φ(x)−φ(y)≤c(x,y) ⟹ f 是 1-Lipschitz。这是 WGAN 损失函数的数学根基。</p>
+</section>
+
+<section>
+<h3>七、例题 3——用对偶算 W₁：平移一个单位的均匀分布（一步步算完）</h3>
+<p><strong>题目。</strong> μ = U([0,1])，ν = U([1,2])（把 μ 整体平移 1）。用 Kantorovich-Rubinstein 对偶证明 W₁(μ,ν) = 1。</p>
+<p><strong>第一步：用对偶给下界。</strong> 取 f(x) = x，它是 1-Lipschitz（斜率 1）。∫f d(μ−ν) = ∫₀¹ x dx − ∫₁² x dx = 1/2 − 3/2 = −1。取 f(x) = −x（同样 1-Lipschitz）得 ∫(−x)dμ − ∫(−x)dν = −1/2 − (−3/2) = 1。故上确界 ≥ 1，即</p>
+<div class="formula display" data-tex="W_1(\mu,\nu)\ge 1"></div>
+<p><strong>第二步：用耦合给上界。</strong> 平移耦合 π = (id+1)#μ ∈ Π(μ,ν)：把每一点 x 原样送到 x+1。此时 |x−y| ≡ 1，故</p>
+<div class="formula display" data-tex="W_1(\mu,\nu)\le\int|x-y|\,d\pi=\int_0^1 1\,dx=1"></div>
+<p><strong>第三步：夹逼。</strong> 1 ≤ W₁ ≤ 1，所以 W₁ = 1。∎</p>
+<p><strong>推广。</strong> 同样的论证对任意平移 t 的均匀分布成立：W₁ = W₂ = |t|——平移距离正是被移动的路程本身。这个例子同时演示了对偶定理的"两个方向"各司其职：<strong>对偶函数构造下界、显式耦合构造上界</strong>。</p>
+</section>
+
+<section>
+<h3>八、Brenier 定理——二次成本的最优映射</h3>
+<p><strong>Brenier（1991）</strong>：设 c(x,y)=|x−y|²，μ ≪ Leb（绝对连续），ν ∈ P(ℝⁿ) 且 ∫|y|² dν &lt; ∞。则存在<strong>唯一</strong>的最优运输映射 T: ℝⁿ → ℝⁿ（即最优耦合唯一且形如 (id, T)#μ），且</p>
+<div class="formula display" data-tex="T=\nabla\varphi\ \ (\,\mu\text{-a.e.}),\qquad \varphi\text{ 凸、下半连续},\qquad \nu=(\nabla\varphi)_\#\mu"></div>
+<p><strong>为什么最优映射必须是凸函数的梯度？</strong> 直观上：一维最优映射"保序"（T 单调递增）；高维的推广是"单调映射"（⟨T(x)−T(y), x−y⟩ ≥ 0）。而单调映射与凸函数次梯度之间有一个经典一一对应（Rockafellar 的单调映照定理）——于是最优映射 = 凸梯度。这是重排思想从一维走向高维的桥梁。</p>
+<p><strong>证明思路。</strong> ① <strong>先解 Kantorovich</strong>：用对偶定理得最优对 (φ,ψ)。由成本二次，c-凹性精细化：最优 ψ 的 c-变换 φ 满足 φ(x)+ψ(y)=|x−y|² 在 supp π 上几乎处处成立。② <strong>单调性</strong>：在 supp π 上取两对 (x,y)、(x′,y′)，由等式相减得 ⟨y−y′, x−x′⟩ ≥ 0——T 在 supp μ 上单调（一维重排不等式的高维推广）。③ <strong>凸函数梯度</strong>：单调映射与凸函数次梯度有一一对应（Rockafellar 的单调映照定理）⟹ 存在凸 φ 使 T = ∇φ。④ <strong>唯一性</strong>：两个最优映射的凸组合仍最优，用严格凸性的线性插值论证迫使二者 μ-a.e. 相等。∎</p>
+<p><strong>Monge-Ampère 方程。</strong> 当 ν 也绝对连续时，φ 满足（在 Alexandrov/粘性意义下）</p>
+<div class="formula display" data-tex="\det(D^2\varphi(x))=\frac{\mu(x)}{\nu(\nabla\varphi(x))}\quad(\mu\text{-a.e.})"></div>
+<p>其正则性理论（Caffarelli 等）是"最优映射为何光滑"的核心。物理直觉：最优位移 = 把沙堆铺成目标形状的势场梯度。这是继 Kantorovich 对偶之后，最优传输理论第二个里程碑——它给出 Monge 问题与 Kantorovich 问题等价的第一个实质性结果。</p>
+</section>
+
+<section>
+<h3>九、标准反例——Brenier 定理的假设一步都省不得</h3>
+<p><strong>反例 1（μ 非绝对连续 ⟹ 最优映射不存在）。</strong> μ = δ₀，ν = (δ_{−1}+δ₁)/2。二次成本下唯一最优耦合把质量 1/2 分给 −1、1/2 分给 1——这<strong>不是</strong>函数 T 诱导的（函数只能把 0 送到一个点）。Monge 问题无解，Kantorovich 问题有解——这就是必须放松的原因。</p>
+<p><strong>反例 2（ν 非绝对连续 ⟹ T 非光滑）。</strong> μ = U([0,1])，ν = δ₀。最优映射 T(x) ≡ 0（整段坍缩）。Monge-Ampère 方程右边 ν(∇φ(x)) = δ₀(0) 未定义——密度之比为无穷大，φ 非光滑（梯度在每点"跳向 0"）。<strong>正则性定理必须假设 ν ≪ Leb</strong>。</p>
+<p><strong>反例 3（成本非严格凸 ⟹ 最优性退化）。</strong> c(x,y)=|x−y| 在 ℝ 且 μ=δ₀、ν=δ₂ 时唯一耦合是 0→2；但若成本仅为凸而非严格凸（如 c(x,y)=|x−y|）且支撑合适，最优耦合可能不唯一（多个 T 均可最优）。一般地，<strong>严格凸且可微的成本</strong>是 Brenier 型结论（T = ∇φ 的凸梯度形式）的充分条件——非凸或非光滑成本会出现多解与非函数化。</p>
+</section>
+
+<section>
+<h3>十、Sinkhorn 算法——熵正则化让最优传输跑得起来</h3>
+<p>对偶化后的问题仍是大规模线性规划，动辄上亿变量，直接求解不可行。<strong>Cuturi（2013）</strong>的洞见：给目标函数加一个熵惩罚项，问题立刻变成可以<strong>迭代求解的矩阵缩放</strong>：</p>
+<div class="formula display" data-tex="\min_{\pi\in\Pi(\mu,\nu)}\ \int c\,d\pi+\varepsilon\,\mathrm{KL}(\pi\mid a\otimes b)"></div>
+<p>对离散情形，最优解有解析形式 π = diag(u)·K·diag(v)，其中 K_ij = e^{−c_{ij}/ε}。未知量 u、v 通过交替缩放行列和来求：<strong>先按行缩放匹配 μ，再按列缩放匹配 ν，反复迭代</strong>——这就是 <strong>Sinkhorn-Knopp 算法</strong>。每一步只是矩阵与对角阵相乘，计算速度比传统线性规划提升几个数量级。这是最优传输从纯理论走向大规模应用（图像、NLP、生成模型）的关键突破。</p>
+<p><strong>为什么熵正则化"合理"？</strong> 熵惩罚量鼓励 π 尽量"均匀、光滑"；ε 很小时，熵几乎不影响结果，解逼近真正的 W_p 最优耦合；ε 越大越光滑、越容易算。参数 ε 是一个可调的"软化尺度"——这也呼应 W₁ 对偶中 Lipschitz 函数"越光滑越好算"的直觉。</p>
+</section>
+
+<section>
+<h3>十一、例题 4——2×2 成本表上的 Sinkhorn 迭代（一步步算完）</h3>
+<p><strong>题目。</strong> 两个源点、两个汇点：μ = (0.6, 0.4)，ν = (0.5, 0.5)，成本矩阵 C = [[0, 1],[1, 0]]，取熵参数 ε = 1。做两轮 Sinkhorn 迭代。</p>
+<p><strong>第一步：写核矩阵。</strong> K_ij = e^{−c_{ij}/ε}，e^{−1} ≈ 0.3679，故</p>
+<div class="formula display" data-tex="K=\begin{bmatrix}1&0.368\\0.368&1\end{bmatrix}"></div>
+<p><strong>第二步：初始化 v⁰ = (1,1)，迭代缩放。</strong> 公式为 u_i ← μ_i / (K v)_i，v_j ← ν_j / (Kᵀ u)_j。</p>
+<p><strong>第三步：算两轮。</strong></p>
+<ul>
+  <li>u₁¹ = 0.6 / (1·1 + 0.368·1) = 0.6/1.368 = 0.4386，u₂¹ = 0.4 / (0.368+1) = 0.2924。</li>
+  <li>v₁¹ = 0.5 / (0.4386·1 + 0.2924·0.368) = 0.5/0.5462 = 0.9154，v₂¹ = 0.5 / (0.4386·0.368 + 0.2924·1) = 0.5/0.4538 = 1.1018。</li>
+  <li>u₁² = 0.6 / (1·0.9154 + 0.368·1.1018) = 0.6/1.3209 = 0.4542，u₂² = 0.4 / (0.368·0.9154 + 1·1.1018) = 0.4/1.4387 = 0.2780。</li>
+  <li>v₁² = 0.5 / (0.4542·1 + 0.2780·0.368) = 0.5/0.5565 = 0.8985，v₂² = 0.5 / (0.4542·0.368 + 0.2780·1) = 0.5/0.4451 = 1.1233。</li>
+</ul>
+<p><strong>第四步：读出耦合并核算。</strong> π = diag(u)K diag(v)，取 u²、v²：π₁₁ ≈ 0.4542·1·0.8985 = 0.408，π₁₂ ≈ 0.4542·0.368·1.1233 = 0.188，π₂₁ ≈ 0.2780·0.368·0.8985 = 0.092，π₂₂ ≈ 0.2780·1·1.1233 = 0.312。行和 ≈ (0.60, 0.40)，列和 ≈ (0.50, 0.50)——再迭代几轮，行和会精确收敛到 μ、列和到 ν。∎</p>
+<p><strong>迭代在逼近什么？</strong> 熵正则化的最优耦合把一部分质量"弥散"到非对角项（π₁₂、π₂₁ 非零），总熵代价 = π₁₂·1 + π₂₁·1 ≈ 0.28——这就是"软化的最优传输成本"。ε 越小，这个值越接近真正的 W₁ 成本 0（对角耦合：把 0.6 留在原处、0.4 留在原处，成本全为 0）。</p>
+</section>
+
+<section>
+<h3>十二、Wasserstein 几何——Otto 的形式 Riemann 结构</h3>
+<p>Otto（2001）发现在 W₂ 距离下，概率测度空间 (P₂(ℝⁿ), W₂) 具有<strong>形式的 Riemannian 结构</strong>（并非真正的无穷维 Riemann 流形，但实际效果如次）。在该结构下：切空间 = {∇f: f∈C_c^∞}，指数映射 = McCann 位移插值 μ_t = ((1−t)id + tT)#μ。W₂-测地线连接任意两个测度，而 McCann 证明了在 W₂ 中的位移凸性（displacement convexity）概念——凸函数的无穷维新泛函版本。这为研究概率分布的"凸分析"开辟了道路。</p>
+</section>
+
+<section>
+<h3>十三、梯度流——统一一大类非线性 PDE</h3>
+<p>在 Otto 的形式 Riemannian 结构中，自由能泛函 F(ρ)=∫ρlogρ+∫Vρ 的梯度流 = ∂_tρ = Δρ + ∇·(ρ∇V)——即为<strong>Fokker-Planck 方程</strong>。这是经典热力学第二定律的数学表现：自由能沿水流动力学减小。进一步：Tsallis 熵的梯度流 → 多孔介质方程（非线性扩散）。Jordan-Kinderlehrer-Otto（1998）的开创性论文确立这种 PDE 的"Wasserstein 梯度流"对应关系——自此之后，许多非线性发展方程有了统一的最优传输解释。</p>
+</section>
+
+<section>
+<h3>十四、GAN 与前沿——从 Wasserstein 到生成模型</h3>
+<p>生成对抗网络（GAN）中，Wasserstein GAN 用 W₁ 替代 Jensen-Shannon 散度作为损失函数 → 更稳定的训练，不再有模式坍塌。这是最优传输理论在深度学习中最著名的应用——其损失函数的数学根基正是 Kantorovich-Rubinstein 公式（W₁ = 1-Lipschitz 函数积分差的上确界）。</p>
+<p><strong>前沿：Score-based 生成模型与 Schrödinger 桥。</strong> Score-based 模型（Song 2021）和扩散模型 = SDE 视角下的最优传输。Schrödinger 桥问题（1932）——在扩散过程中找到最接近给定端点分布的演化——正在成为生成模型的新范式。仍开放：离散空间上的 Schrödinger 桥。</p>
+</section>
+
+<section>
+<h3>十五、关键文献与诺贝尔奖级的影响</h3>
+<p>Monge（1781, "Mémoire sur la théorie des déblais et des remblais"——提出运输问题）。Kantorovich（1942, 用线性规划重新表述——1975年<strong>诺贝尔经济学奖</strong>）。Brenier（1991, 二次成本最优映射=凸函数梯度——突破性）。McCann（1997, 位移凸性——凸分析在概率测度空间上的移植）。Otto（2001, Otto 微积分——W₂ 的 Riemannian 结构）。Villani（2003,"Topics in Optimal Transportation"; 2009,"Optimal Transport: Old and New"——Fields 奖相关专著,完整记录领域发展）。开放: 一般成本函数的正则性理论、最优传输的量化稳定性。</p>
+</section>
+
+<section>
+<h3>十六、工作题</h3>
+<p><strong>题 1</strong>：μ = δ_a，ν = δ_b 为 Dirac 质量。计算 W_p(μ,ν)。</p>
+<p><strong>题 2</strong>：μ = U([0,1])，ν = U([0,2])。用一维最优耦合公式 T = F_ν^{-1}∘F_μ（F 为分布函数）计算 W₂(μ,ν)。</p>
+<p><strong>题 3</strong>：μ = U([0,1])，ν = U([1,2])（平移一个单位）。证明 W₁(μ,ν) = 1 且最优 1-Lipschitz 势可取 f(x) = x（用 Kantorovich-Rubinstein 对偶）。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：唯一耦合是 δ_{(a,b)}，故 W_p(μ,ν) = (∫|x−y|^p dδ_{(a,b)})^{1/p} = |a−b|。结论：Dirac 质量之间的 W_p 距离就是两点间距（与 p 无关）。∎</p>
+<p><strong>题 2</strong>：F_μ(x) = x（x∈[0,1]），F_ν^{-1}(t) = 2t。故 T(x) = 2x，把 [0,1] 铺到 [0,2]。位移 |T(x)−x| = x。于是 W₂² = ∫₀¹ x² dx = 1/3，W₂ = 1/√3。（完整计算见例题 2。）∎</p>
+<p><strong>题 3</strong>：取 f(x) = x（1-Lipschitz）：∫f d(μ−ν) = 1/2 − 3/2 = −1；改取 f = −x 得 ∫(−x)dμ − ∫(−x)dν = −1/2 − (−3/2) = 1。故 W₁ ≥ 1。反过来平移耦合 π = (id+1)#μ ∈ Π(μ,ν) 给出 ∫|x−y| dπ = 1 ⟹ W₁ ≤ 1。合起来 W₁ = 1。（完整计算见例题 3。）一般结论：平移 t 的均匀分布，W₁ = W₂ = |t|。∎</p>
+</p></details>
+</section>
+
+<section>
+<h3>十七、试试看（每题附提示）</h3>
+<p><strong>试试看 1（排序的变体）。</strong> μ = U([0,2])，ν = U([1,3])（仍是平移 1 个单位）。用例题 2 的公式算 W₂。<strong>提示：</strong>T(x) = x+1，位移恒为 1，故 W₂² = ∫₀² 1²·(1/2)dx = 1，即 W₂ = W₁ = 1。</p>
+<p><strong>试试看 2（Dirac 与均匀分布）。</strong> 计算 W₁(δ₁, U([0,1]))。<strong>提示：</strong>下界取 f(x)=x：∫x dδ₁ − ∫x dμ = 1 − 1/2 = 1/2；上界：把 δ₁ 送到 [0,1] 的任意耦合，期望成本 = ∫₀¹|1−y|dy = ∫₀¹(1−y)dy = 1/2。</p>
+<p><strong>试试看 3（两个二点分布）。</strong> μ = (δ₀ + δ₂)/2，ν = (δ₁ + δ₃)/2。求 W₂。<strong>提示：</strong>单调重排按序配对：0→1、2→3，位移各为 1，故 W₂² = (1²+1²)/2 = 1，W₂ = 1。</p>
+<p><strong>试试看 4（熵的极限行为）。</strong> 在 Sinkhorn 的核 K_ij = e^{−c_{ij}/ε} 中，当 ε → 0 时 K 发生什么？<strong>提示：</strong>对 c₁₂ &gt; c₁₁，e^{−c₁₂/ε} / e^{−c₁₁/ε} = e^{−(c₁₂−c₁₁)/ε} → 0——大成本项指数级消失，K 趋于"只允许最小成本"的 0-1 矩阵，正是未正则化最优传输的行为。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>C. Villani, Topics in Optimal Transportation</strong></p>
+<p>&rarr; <strong>C. Villani, Optimal Transport: Old and New</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/measure-theory.html">测度论</a>、<a href="/pages/probability.html">概率论基础</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/operator-algebras.html">🔮 算子代数</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：同一学科分类「分析」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/optimal-transport.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

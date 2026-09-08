@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖动时间滑块：热量不可逆地扩散，波动可逆地传播" />
+  <meta property="og:title" content="偏微分方程：热与波 — Vibe Math" />
+  <meta property="og:description" content="拖动时间滑块：热量不可逆地扩散，波动可逆地传播" />
+  <title>偏微分方程：热与波 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌡️ 偏微分方程：热与波 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">拖动时间滑块：热量不可逆地扩散，波动可逆地传播</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='pde',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/fourier-transform.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🎚️ 傅里叶变换与卷积</a>
+  <a href="/pages/laplace-eigenvalue.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🥁 拉普拉斯特征值与鼓的形状 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一杯咖啡的冷却与一根琴弦的颤动，为什么需要同一种新语言</h3>
+<p>倒一杯热咖啡，什么都不碰，它自己会变凉；而且凉得<strong>不可逆</strong>——把咖啡放回昨天的温度环境，它不会自己重新变热。另一边，拨动一根吉他弦，它来回振动，理论上可以<strong>几乎永远</strong>这样振动下去（没有阻尼的话）；录下振动再倒放，看起来依然合法——波动是<strong>可逆</strong>的。</p>
+<p>这两件日常现象，在 18–19 世纪各自催生了一个方程：</p>
+<div class="formula display" data-tex="\frac{\partial u}{\partial t}=\alpha\,\frac{\partial^2 u}{\partial x^2}\quad(\text{热方程，Fourier 1822})\qquad\qquad \frac{\partial^2 u}{\partial t^2}=c^2\frac{\partial^2 u}{\partial x^2}\quad(\text{波动方程，d'Alembert 1746})"></div>
+<p>它们的样子惊人地像：左边都是"对时间的导数"，右边都是"对空间的二阶导数"。差别只有两处——时间导数的阶数（一阶 vs 二阶），以及符号（+ 扩散 vs + 传播）。就是这一丁点差别，造成了<strong>不可逆的模糊</strong>与<strong>可逆的传播</strong>之间的天壤之别。</p>
+<p>这两个方程属于一门全新的数学：<strong>偏微分方程（PDE）</strong>。与普通方程不同，PDE 的解<strong>不是一个数，而是一个函数 u(x,t)</strong>——它描述"某个量如何在空间与时间中同时变化"。物理学家、工程师每天用它们描述热、声、光、流体、电磁场、引力波、量子波函数；而普林斯顿数学指南把偏微分方程列为现代数学的一个独立分支（Part IV.12），因为这门学问同时是：物理的语言、分析的试炼场、以及若干最著名未解问题的家。</p>
+<div class="key-insight">洞察：热方程是"时间的低通滤波器"——高频（细碎）结构先消失，所以图像会模糊；波动方程是"形状的搬运工"——波形以速度 c 平移而不变形，所以声音不失真。PDE 的全部深刻性，几乎都从"细结构"在两种方程下的不同命运开始。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/gradient.html">梯度与多元微积分</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>（分离变量法需要）。不需要物理背景，但若熟悉 <a href="/pages/hydrogen-atom.html">薛定谔方程</a> 会更容易看到联系。</p></div>
+
+<section>
+<h3>一、一个具体问题——两根弦、一块铁板，数学家吵了整整一个世纪</h3>
+<p><strong>波动方程从哪里来。</strong> 1746 年 d'Alembert 研究一根绷紧的弦的微小振动：弦上每一点的位置 u(x,t) 满足 u_tt = c²u_xx，其中 c = √(T/ρ) 由张力与线密度决定。d'Alembert 当场给出通解</p>
+<div class="formula display" data-tex="u(x,t)=f(x-ct)+g(x+ct)"></div>
+<p>——任意波形 f 以速度 c 向右平移、g 向左平移，互不干扰。Euler（1748）与 Bernoulli（1753）随后争论：弦的初始形状任意时，解能否写成三角级数？Bernoulli 说能（三角函数叠加），但"任意函数都能展开成正弦级数"在当时没有严格意义。这场争论持续了半个多世纪，直到 Fourier、Dirichlet、Riemann 为"函数"与"积分"建立严格基础才尘埃落定——<strong>PDE 是逼出整个现代分析严格化的发动机之一</strong>。</p>
+<p><strong>热方程从哪里来。</strong> 1807 年 Fourier 向巴黎科学院提交《热的解析理论》：一块物体的温度分布 u 满足 u_t = α∇²u。委员会（Laplace、Lagrange 等）质疑他的"任意函数可展成三角级数"，论文被拒；Fourier 1822 年以专著形式出版。今天我们用的<strong>傅里叶级数、傅里叶变换</strong>，都是这场 PDE 之争的遗产。</p>
+<p><strong>为什么值得为"一个方程"建一门课？</strong> 因为热方程与波动方程是 PDE 世界两大原型：所有"扩散型"方程（热、渗流、Black–Scholes）继承热的不可逆模糊；所有"波动型"方程（弦、声、光、电磁、引力）继承波的有限速度传播。理解这两个原型，就理解了 PDE 的一半直觉。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——二阶空间导数到底在"感知"什么</h3>
+<p><strong>离散格点看热方程。</strong> 把一根杆切成小段，u_i(t) 是第 i 段温度。二阶导数 u_xx 的差分近似是</p>
+<div class="formula display" data-tex="u_{xx}(x_i)\approx \frac{u_{i+1}-2u_i+u_{i-1}}{\Delta x^2}\ =\ \frac{(u_{i+1}-u_i)-(u_i-u_{i-1})}{\Delta x^2}"></div>
+<p>括号里是"右边比我热多少 减 左边比我热多少"——即<strong>邻居温差的变化率</strong>。于是热方程说的是：<strong>我的升温速度 ∝ 邻居们对我的"热度不均衡"程度</strong>。若我比两边都冷（u_i 是局部最低），u_{i+1}−u_i 与 u_i−u_{i−1} 都为正，二阶导为正，我升温——凹的地方被填平。<strong>二阶导 = 局部凹凸 = 扩散的驱动力</strong>。这就是为什么热方程把一切尖峰磨平、把一切凹陷填满：它在消灭"凹凸"，而凹凸一旦被消灭就回不来（信息丢失）。</p>
+<p><strong>波动方程在感知什么。</strong> 波动方程 u_tt = c²u_xx 说的是：<strong>加速度 ∝ 局部凹凸</strong>。若弦在 x₀ 处被拉成凹形（u_xx&lt;0），该点获得向下的加速度，冲过平衡位置后又被另一边拉回——于是"凹凸"变成"振动"，而且<strong>凹凸以波的形式被搬运走而不是被消灭</strong>。d'Alembert 解 f(x−ct) 揭示了机制：任何初始形状都被原样拆成左右两半、各以速度 c 平移。信息不丢失——所以可逆。</p>
+<div class="key-insight">同一个二阶导 u_xx，在 u_t = αu_xx 里是"被时间消耗的燃料"（不可逆），在 u_tt = c²u_xx 里是"驱动振动的弹簧"（可逆）。多出来的那一次时间导数，把"填平"变成了"弹跳"。</div>
+</section>
+
+<section>
+<h3>三、例题 1——一维热方程：分离变量法（一步步算完）</h3>
+<p><strong>题目。</strong> 一根长 L 的杆，两端恒为 0 度：u(0,t)=u(L,t)=0。初始温度 u(x,0)=sin(kπx/L)。求 u(x,t)。</p>
+<p><strong>第一步：设分离变量解。</strong> 猜 u(x,t)=X(x)T(t)。代入 u_t = αu_xx：X·T′ = αX″·T，移项得 X″/X = T′/(αT)。左边只依赖 x、右边只依赖 t，两者必须同为一个常数 −λ：</p>
+<div class="formula display" data-tex="X''=-\lambda X,\qquad T'=-\alpha\lambda T"></div>
+<p><strong>第二步：解空间部分（本征值问题）。</strong> X″=−λX 且 X(0)=X(L)=0。λ&gt;0 时通解 X = A cos(√λ x)+B sin(√λ x)；X(0)=0 逼出 A=0；X(L)=0 逼出 sin(√λ L)=0，即</p>
+<div class="formula display" data-tex="\lambda_k=\Bigl(\frac{k\pi}{L}\Bigr)^{2},\qquad X_k(x)=\sin\Bigl(\frac{k\pi x}{L}\Bigr),\quad k=1,2,3,\dots"></div>
+<p><strong>第三步：解时间部分。</strong> T′ = −αλ_k T ⟹ T_k(t) = e^{−αλ_k t} = e^{−α(kπ/L)²t}。</p>
+<p><strong>第四步：匹配初值并写答案。</strong> 初值恰好是第 k 个模态，故</p>
+<div class="formula display" data-tex="u(x,t)=\sin\Bigl(\frac{k\pi x}{L}\Bigr)\,e^{-\alpha (k\pi/L)^{2}t}\qquad\blacksquare"></div>
+<p><strong>第五步：代入数字找感觉。</strong> L=π、α=0.15：k=1 时 u(x,t)=sin x·e^{−0.15t}，半衰期（衰减到 1/e）τ₁ = 1/(0.15·1²) ≈ 6.7 秒；k=2 时 τ₂ = 1/(0.15·4) ≈ 1.67 秒——<strong>模态越细（k 越大）死得越快，且按 k² 加速</strong>。到 t=3 秒，k=1 分量还剩 e^{−0.45}≈64%，k=2 只剩 e^{−1.8}≈17%。这就是"模糊"的数学：图像里细小的明暗纹理（高频）在 1/k² 的时间尺度内被抹平，只剩大尺度的模糊轮廓。</p>
+<p><strong>为什么这是"整套方法"的样板？</strong> 任意初值 u(x,0)=φ(x) 都可展开成 φ = Σb_k sin(kπx/L)，由线性叠加原理得</p>
+<div class="formula display" data-tex="u(x,t)=\sum_{k=1}^{\infty} b_k\sin\Bigl(\frac{k\pi x}{L}\Bigr)e^{-\alpha (k\pi/L)^2 t}\qquad b_k=\frac{2}{L}\int_0^L \varphi(x)\sin\Bigl(\frac{k\pi x}{L}\Bigr)\,dx"></div>
+<p>每一项独立地按自己的 e^{−αλt} 衰减——<strong>分离变量 + 叠加原理 = 把 PDE 拆成无穷多个 ODE</strong>。这是 PDE 最重要的一件通用武器，画布上看到的"脉冲融化"正是这项武器在级数形式下的表现。</p>
+</section>
+
+<section>
+<h3>四、例题 2——无限弦上的 d'Alembert 公式（一步步算完）</h3>
+<p><strong>题目。</strong> 无限长弦，初始位移 u(x,0)=f(x)、初始速度 u_t(x,0)=g(x)。求 u(x,t)。</p>
+<p><strong>第一步：通解。</strong> d'Alembert：u(x,t)=F(x−ct)+G(x+ct)。</p>
+<p><strong>第二步：代入初值。</strong> F(x)+G(x)=f(x)；对 t 求导再代 t=0：−cF′(x)+cG′(x)=g(x)，即 −F′(x)+G′(x)=g(x)/c。</p>
+<p><strong>第三步：解出 F、G。</strong> 由 F′+G′=f′ 与 −F′+G′=g/c 相加得 G′=(f′+g/c)/2，相减得 F′=(f′−g/c)/2。积分：</p>
+<div class="formula display" data-tex="u(x,t)=\frac{f(x-ct)+f(x+ct)}{2}+\frac{1}{2c}\int_{x-ct}^{x+ct}g(s)\,ds\qquad\blacksquare"></div>
+<p><strong>第四步：看一个具体波形。</strong> 设 g≡0，f 是宽度 w、高度 1 的方波脉冲（在区间 [a,b] 上为 1，其余为 0）。则</p>
+<div class="formula display" data-tex="u(x,t)=\frac12 f(x-ct)+\frac12 f(x+ct)"></div>
+<p>——脉冲<strong>分裂成两个半高方块</strong>，一个以速度 c 向右、一个向左，形状完全不变。这就是画布上方波预设展示的现象。</p>
+<p><strong>第五步：读出三个"区间"概念。</strong> 在时刻 t 观察点 x 处的 u(x,t) 只依赖初值在区间 [x−ct, x+ct] 上的取值（<strong>依赖区间</strong>）；初值在 x₀ 处的一个扰动，到时刻 t 最多影响到 [x₀−ct, x₀+ct]（<strong>影响区间</strong>）；两点间信息传播速度 ≤ c（<strong>有限传播速度 / 因果性</strong>）。相比之下热方程的解在任何 t&gt;0 都依赖整条初值曲线——<strong>热的"影响"瞬间到达无穷远</strong>（虽然指数衰减），这是物理上著名的"热方程无限传播速度"悖论，也是它与相对论因果结构冲突的根源。</p>
+<p><strong>为什么方波的尖角永远不消失？</strong> 把方波展开成傅里叶级数，高频项确实存在；但波动方程不衰减任何频率（每个模态都是纯振动 e^{iωt}，|模|=1），所以尖角（含所有频率）被完整地搬运。热方程则把每个频率按 e^{−αk²t} 砍掉——同一根"傅里叶棱镜"，两种方程对频率的待遇截然相反。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——分类、适定性与两大证明方法</h3>
+<p><strong>PDE 三大家族（以二阶线性方程为纲）。</strong> 对 u 的二阶主部做线性代数分类，对应三种物理原型：</p>
+<ul>
+<li><strong>椭圆型</strong>（如 Laplace 方程 ∇²u=0）：描述平衡态，无时间；解"全局耦合"，最光滑（椭圆正则性）。</li>
+<li><strong>抛物型</strong>（如热方程 u_t=α∇²u）：一阶时间 + 二阶空间；不可逆、无限传播速度、立刻光滑化。</li>
+<li><strong>双曲型</strong>（如波动方程 u_tt=c²∇²u）：二阶时间；可逆、有限传播速度、奇性沿特征线传播。</li>
+</ul>
+<p><strong>适定性（Hadamard，1902）。</strong> 一个"好的"初值/边值问题必须满足三条：解<strong>存在</strong>、<strong>唯一</strong>、且<strong>连续依赖初值</strong>（初值的小扰动只引起解的小扰动）。第三条常被忽略却最致命——反例见第八节的反向热方程。</p>
+<p><strong>唯一性武器 1：极值原理（热方程）。</strong> 热方程的解在时空区域内部不可能取得比初值与边界更大的最大值（或更小的最小值）——"热不会自己从冷处流向热处，也不会凭空产生新热点"。证明要点：若内部某点 (x₀,t₀) 取到严格最大，则 u_t=0 且 u_xx≤0，而方程要求 u_t=αu_xx≤0——只说明不矛盾；真正的论证是对 u+εx² 之类辅助函数做精细的"不可能性"分析。由极值原理立刻得唯一性：两个解的差满足同一方程与零初边值，极值原理逼它恒为零。</p>
+<p><strong>唯一性武器 2：能量法（波动方程）。</strong> 定义机械能 E(t)=½∫(u_t²+c²u_x²)dx。对固定端点弦，计算 dE/dt：分部积分后边界项消失，得 <strong>dE/dt = 0</strong>——能量守恒。两个解的差初值为零 ⟹ E(0)=0 ⟹ E(t)≡0 ⟹ 差恒为零。能量法还直接给出<strong>连续依赖初值</strong>（能量范数下的稳定性）。</p>
+<p><strong>光滑化 vs 奇性保持。</strong> 热方程：只要 t&gt;0，即使初值只有可积性，解也立刻是 C^∞ 光滑的（每个模态乘 e^{−αk²t}，级数项指数衰减压倒一切多项式增长）。波动方程：初值的奇性（折角、跳跃）沿特征线以原样传播——拨弦产生的尖角在弦上永远存在（真实弦的阻尼是另一回事）。两个定理合起来给出了 PDE 世界的根本分野。</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="u_t=\alpha u_{xx}\ (\text{热})\qquad u_{tt}=c^{2}u_{xx}\ (\text{波})\qquad \nabla^{2}u=0\ (\text{Laplace})"></div>
+<div class="formula display" data-tex="u(x,t)=f(x-ct)+g(x+ct)\qquad(\text{d'Alembert})"></div>
+<div class="formula display" data-tex="u(x,t)=\tfrac{f(x-ct)+f(x+ct)}{2}+\tfrac{1}{2c}\int_{x-ct}^{x+ct}g(s)\,ds"></div>
+<div class="formula display" data-tex="u=\sum_{k\ge1}b_k\sin\tfrac{k\pi x}{L}\,e^{-\alpha(k\pi/L)^2 t},\qquad \tau_k=\frac{1}{\alpha(k\pi/L)^2}\propto \frac{1}{k^2}"></div>
+<div class="formula display" data-tex="E(t)=\tfrac12\int_0^L\bigl(u_t^{2}+c^{2}u_x^{2}\bigr)dx\ \text{守恒}\qquad(\text{能量法})"></div>
+</section>
+
+<section>
+<h3>七、延伸——从原型方程到现代数学的中心</h3>
+<p>热与波这两个原型只是入口。顺着四条路走出去，就触到现代数学的多个前沿：</p>
+<ul>
+<li><strong>非线性化（物理世界的常态）。</strong> 真实流体满足 Navier–Stokes 方程——一个非线性抛物型 PDE。它的三维全局光滑性问题至今未解，是千禧年七大问题之一（一百万美元）。→ 见 <a href="/pages/navier-stokes.html">Navier-Stokes 流场</a> 课。</li>
+<li><strong>可积系统。</strong> 浅水波的 KdV 方程 u_t+6uu_x+u_xxx=0 有"孤子"解——非线性波碰撞后竟能保持形状穿过彼此（像线性波一样叠加！）。孤子、反散射变换是 20 世纪 PDE 最出人意料的篇章。→ 见 <a href="/pages/soliton.html">孤子</a> 课。</li>
+<li><strong>量子力学即复值波动。</strong> Schrödinger 方程 iħψ_t = −(ħ²/2m)∇²ψ+Vψ 在形式上是"带虚数 i 的热方程"（对时间一阶！）——所以量子演化是可逆的、保模长的，却有波的干涉。→ 见 <a href="/pages/hydrogen-atom.html">氢原子轨道</a>、<a href="/pages/uncertainty.html">不确定性</a> 课。</li>
+<li><strong>几何流。</strong> 把 u 换成黎曼度量 g，热方程变成 Ricci 流 ∂g/∂t = −2Ric(g)：度量自己"扩散"变均匀。Hamilton 1982 提出、Perelman 2002–03 完成证明：Ricci 流正是庞加莱猜想（以及更广的几何化猜想）证明的核心工具。→ 见 <a href="/pages/poincare-conjecture.html">庞加莱猜想</a>、<a href="/pages/curvature.html">曲率</a> 课。</li>
+</ul>
+<p><strong>数值视角。</strong> 画布上的演化图正是用显式有限差分（把二阶导换成第二节的差分公式）算出来的——这是 <a href="/pages/numerical-methods.html">数值计算方法</a> 课里"稳定性条件"（CFL 条件、αΔt/Δx² ≤ 1/2）的活例子：步长取错，数值解立刻爆炸给你看。</p>
+</section>
+
+<section>
+<h3>八、反例与陷阱——直觉的四个雷区</h3>
+<p><strong>陷阱 1："波以形状不变地传播，所以所有波动方程都保形？"</strong> 错。保形是<strong>线性、无色散</strong>的波动方程的特权。真实介质里波速常依赖频率（色散）：深水波的短波比长波跑得快，一个波包会"摊开"成彩虹般的色散尾迹。KdV 方程里色散与非线性恰好抵消，才出现孤子。d'Alembert 的 f(x−ct) 是理想化的"无色散"极限。</p>
+<p><strong>陷阱 2："热方程时间可逆——把 t 换成 −t 不就行了？"</strong> 这正是 Hadamard 的著名反例：反向热方程 u_t = −αu_xx（把胶卷倒放）在任意小的时刻都可能无解，或解剧烈爆炸。例如初值 u(x,0)=0 的反向解必须恒为零，但初值 u(x,0)=ε·sin(kx) 的反向解是 ε·e^{+αk²t}sin(kx)——取 k 足够大，即使 ε 小到 10⁻¹⁰⁰⁰，解也在瞬间超过任何界。<strong>反向热方程不适定：解存在但不连续依赖初值</strong>。物理含义：冷却过程丢失了信息（高温细节被抹平），倒放等于要从模糊照片还原清晰原图——数学上不可行，这正是"不可逆"的严格版本。</p>
+<p><strong>陷阱 3："函数都能展开成傅里叶级数吧？"</strong> 热方程之争的教训：需要合适的收敛概念与条件（Dirichlet 条件、逐点 vs L² 收敛）。更惊人的是，Weierstrass 构造的连续但处处不可微函数，其傅里叶级数行为曾让 Riemann 的积分理论失灵——为修补这些洞，Lebesgue 才发明了测度论。→ <a href="/pages/measure-theory.html">测度论</a> 课正是这段历史的产物。</p>
+<p><strong>陷阱 4："叠加原理对任何 PDE 都成立？"</strong> 叠加原理只对<strong>线性</strong>方程成立。Navier–Stokes、KdV、Ricci 流都是非线性的：两个解之和不再是解。非线性 PDE 的"解空间"没有线性结构，这正是它们比本课两个原型难上几个数量级的原因。</p>
+</section>
+
+<section>
+<h3>九、当前状态——从本课出发的开放前沿</h3>
+<ol>
+<li><strong>Navier–Stokes 全局正则性（千禧年问题）：</strong> 3 维粘性流体的速度场是否对任意光滑初值永远光滑不爆破？Leray（1934）证明了弱解的存在性，Ladyzhenskaya 等人解决了 2 维情形，但 3 维"会不会在有限时间出现奇点"悬而未决——直觉上湍流里到处是涡旋级联，但数学上既证不出爆破也证不出不爆破。</li>
+<li><strong>欧拉方程（无粘）的有限时间爆破：</strong> 理想流体 3D 欧拉方程是否会在有限时间内形成奇点？近年（Elgindi 2021）对一类特殊初值得到了有限时间爆破，一般情形仍开放。</li>
+<li><strong>湍流的数学理论：</strong> 湍流中能量如何从大尺度级联到小尺度（Kolmogorov 1941 的 −5/3 律只是物理推测）？Onsager 猜想（能量反常耗散与解的正则性门槛）已部分解决，完整刻画未完成。</li>
+<li><strong>自由边界问题与几何流奇点：</strong> 水的自由表面、晶体生长（Hele-Shaw）、Ricci 流奇点分析——奇点形成的一般理论是 PDE 与几何交叉处最活跃的战场。</li>
+</ol>
+<p>入门路线：本课的两个原型 → <a href="/pages/navier-stokes.html">NS</a>（非线性抛物）→ 现代专著（如 Evans 的 PDE 教材第三部分）。</p>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>d'Alembert (1746)</strong>：弦振动研究——波动方程与行波解 f(x−ct)，PDE 的诞生之一。</li>
+<li><strong>Fourier (1822)</strong>：<em>"Théorie analytique de la chaleur"</em>——热方程、分离变量、三角级数展开，催生傅里叶分析。</li>
+<li><strong>Cauchy–Kovalevskaya (1875)</strong>：解析初值下 PDE 局部解的存在唯一性定理——PDE 存在性理论的起点（Kovalevskaya 是史上最早的女性数学教授之一）。</li>
+<li><strong>Hadamard (1902)</strong>：适定性（well-posedness）概念与反向热方程的反例——定义了什么才算"被解决"的 PDE 问题。</li>
+<li><strong>Leray (1934)</strong>：<em>"Sur le mouvement d'un liquide visqueux emplissant l'espace"</em>, <em>Acta Math.</em> 63——Navier–Stokes 弱解理论的奠基。</li>
+<li><strong>De Giorgi–Nash (1957)</strong>：椭圆/抛物方程的 Hölder 正则性——"解自动光滑"这一奇迹的严格证明，Nash 因此工作与博弈论同获诺奖级声誉。</li>
+<li><strong>Kolmogorov (1941)</strong>：湍流的局域结构理论（K41），能量谱 −5/3 律——PDE 与统计物理的交汇。</li>
+<li><strong>Hamilton (1982) / Perelman (2002–03)</strong>：Ricci 流与庞加莱猜想的证明——热方程思想进入几何拓扑，21 世纪 PDE 最伟大的胜利。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——分离变量、行波与能量</h3>
+<p><strong>题 1（验证解）。</strong> 直接求导验证 u(x,t)=sin x·e^{−0.15t} 满足热方程 u_t = 0.15·u_xx、边界 u(0,t)=u(π,t)=0 与初值 u(x,0)=sin x。<strong>提示：</strong>u_t = −0.15 sin x e^{−0.15t}；u_xx = −sin x e^{−0.15t}，故 0.15u_xx = −0.15 sin x e^{−0.15t} = u_t。✓</p>
+<p><strong>题 2（模态衰减比）。</strong> 长 π 的杆、α=0.15：k=2 模态的半衰期是 k=1 的几分之几？到 t=2 秒，k=1 还剩多少、k=2 还剩多少？<strong>提示：</strong>τ_k = 1/(αk²)，τ₂/τ₁ = 1/4；e^{−0.3}≈0.74，e^{−1.2}≈0.30。</p>
+<p><strong>题 3（d'Alembert 画图）。</strong> g≡0、f 是 [1,3] 上为 1 的方波（c=1）。画出 t=0、t=1、t=2 时 u 的图像，并标出每个"半脉冲"的位置。<strong>提示：</strong>t=1 时右行半脉冲中心在 x=3、左行半脉冲中心在 x=1，重叠区在 [1,3] 内为两半叠加 = 仍为 1（半+半）；t=2 时两半完全分开（中心在 4 与 0），中间为 0。</p>
+<p><strong>题 4（能量守恒的物理意义）。</strong> 用能量法证明固定端点波动方程解的唯一性，并解释为什么同样的论证对热方程不适用。<strong>提示：</strong>两个解差 w 满足同方程零初边值；E(t)=½∫(w_t²+c²w_x²)，dE/dt=0，E(0)=0 ⟹ w≡0。对热方程没有守恒的"动能+势能"（能量单调耗散，只能给出衰减估计而非恒等式，唯一性靠极值原理）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示逐步求导即证。∎</p>
+<p><strong>题 2</strong>：τ₂=1/(0.15·4)≈1.67s，τ₁=1/0.15≈6.67s，比值 1/4。t=2：k=1 为 e^{−0.15·1·2}=e^{−0.3}≈0.74；k=2 为 e^{−0.15·4·2}=e^{−1.2}≈0.30。∎</p>
+<p><strong>题 3</strong>：u(x,t)=½·1_{[1,3]}(x−t)+½·1_{[1,3]}(x+t)。t=1：右半脉冲支撑 [2,4]、左半 [0,2]，[1,3] 内二者重叠处高度 ½+½=1（t&lt;2 时始终有重叠区）；t=2：支撑 [3,5] 与 [−1,1]，互不相交，中间 (1,3) 为 0。∎</p>
+<p><strong>题 4</strong>：见提示。能量法本质是"守恒量"方法，只对可逆（保能量）系统有效；热方程耗散能量，唯一性需极值原理这把不同的刀。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布对比）。</strong> 选"方波脉冲"预设，播放：注意上方（热）脉冲变矮、变宽、边缘立刻圆滑且永不恢复；下方（波）脉冲分裂成两半、以固定形状撞到端点并<strong>上下反转</strong>弹回。再选"光滑鼓包"：热的鼓包整体缓慢塌陷，波的鼓包分裂为两个光滑半波。思考：为什么反转只发生在波、不发生在热？</p>
+<p><strong>试试看 2（频率筛选）。</strong> 热面板里注意"细结构先消失"：方波的尖角瞬间变圆，而整体轮廓（低频）活得更久。用傅里叶的视角：每个模态乘 e^{−αk²t}，k 大的项死得快。把画布当"时间低通滤波器"用。</p>
+<p><strong>试试看 3（数值稳定性）。</strong> 若把热方程的显式格式步长取到超过 αΔt/Δx² = 1/2，数值解会出现锯齿振荡甚至爆炸——这正是稳定性条件（CFL）的意义。画布的步长已按安全值选取，你可以在 <a href="/pages/numerical-methods.html">数值计算方法</a> 课里亲手玩坏它。</p>
+<p><strong>试试看 4（反向直觉）。</strong> 凭直觉回答：把一段"正在冷却"的温度录像倒放，为什么看起来"不可能"？用陷阱 2 的语言（高频 e^{+αk²t} 放大）说清原因。<strong>提示：</strong>倒放 = 反向热方程 = 每个傅里叶模态被 e^{+αk²t} 放大，k 越大放大越疯——微小的测量误差瞬间淹没真实信号。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>L. Evans, Partial Differential Equations</strong>（AMS，研究生标准教材，本课所有定理的严格版）</p>
+<p>&rarr; <strong>W. Strauss, Partial Differential Equations: An Introduction</strong>（直觉与推导的黄金平衡，入门首选）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.12（偏微分方程）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/gradient.html">梯度与方向导数</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fourier-series.html">🎼 傅里叶级数</a>：分离变量法的核心工具，PDE 之争的历史主角。</p>
+<p>&rarr; <a href="/pages/navier-stokes.html">🌊 Navier-Stokes 流场</a>：非线性抛物型 PDE，千禧年问题。</p>
+<p>&rarr; <a href="/pages/soliton.html">🌀 孤子</a>：非线性波保持形状的奇迹（KdV）。</p>
+<p>&rarr; <a href="/pages/hydrogen-atom.html">⚛️ 氢原子轨道</a>：薛定谔方程 = 复值"波动"的量子版。</p>
+<p>&rarr; <a href="/pages/poincare-conjecture.html">🌌 庞加莱猜想</a>：Ricci 流（几何版热方程）证明的世纪难题。</p>
+<p>&rarr; <a href="/pages/numerical-methods.html">💻 数值计算方法</a>：显式格式与 CFL 稳定性条件的活教材。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/pde.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

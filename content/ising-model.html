@@ -1,0 +1,132 @@
+<section>
+<h3>〇、直觉入门——一个具体格点、几个具体温度、一组具体数字</h3>
+<p>想象一个二维方格纸，每个格点上放一枚"小磁针"，只能朝上（↑）或朝下（↓）。规则只有一条：<strong>相邻的小磁针喜欢方向一致</strong>。这个游戏就是 Ising 模型。</p>
+<p>先给一组带数字的预告，这是本课末尾你亲手能算出来的结果（J 是相邻磁针的耦合强度，k 是 Boltzmann 常数，温度用 kT/J 度量）：</p>
+<div class="formula display" data-tex="T_c=\frac{2J}{k\ln(1+\sqrt2)}\approx 2.269\,\frac{J}{k},\qquad M(T=2J/k)\approx 0.911,\quad M(T=2.2J/k)\approx 0.784,\quad M(T=3J/k)=0"></div>
+<p>读法：温度 T 低于临界值 2.269 J/k 时，整块格子"自发"趋向整齐，平均磁化 M 不是零（比如 T=2 时 M≈0.911，接近满磁化）；一旦 T 超过临界值，M 立刻变成 0，整块格子乱成一团。天冷（温度低）时全班齐刷刷，天气一热每个人都躁动乱看——这个游戏用最简单的规则解释了真实的<strong>相变</strong>：水怎么变成冰、磁铁怎么突然有了磁性。物理学家拿它当实验室里最干净的"小白鼠"，去检验所有关于相变的理论。</p>
+<div class="key-insight">一句话：Ising模型 = 每个小磁针都想跟邻居一致，温度一变就整体"从有序变无序"的相变。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/entropy.html">熵与信息</a>、<a href="/pages/probability.html">概率论基础</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、Ising 模型是什么？——配分函数与一笔能量账（完整例题 1）</h3>
+<p>每个格点 i 上有一个自旋 σ<sub>i</sub>=±1（+1 记 ↑，−1 记 ↓）。系统的<strong>能量（哈密顿量）</strong>是</p>
+<div class="formula display" data-tex="H = -J\sum_{\langle ij\rangle}\sigma_i\sigma_j - h\sum_i\sigma_i"></div>
+<p>Σ<sub>⟨ij⟩</sub> 表示对所有最近邻"键"求和。读法：<strong>邻居同向 → 贡献 −J（能量低，受欢迎）；邻居反向 → 贡献 +J（能量高，受罚）</strong>。所以能量总想让你整齐。第二项是外加磁场 h 对每个自旋的"拉拽"（本课先取 h=0）。</p>
+<p>统计力学的规则（Boltzmann–Gibbs）：系统出现在某个构形 σ 的概率 ∝ e<sup>−βH</sup>，β=1/(kT)。把所有构形的权重加起来，得到<strong>配分函数</strong></p>
+<div class="formula display" data-tex="Z=\sum_{\text{configs}} e^{-\beta H},\qquad \langle O\rangle=\frac1Z\sum_{\text{configs}}O(\sigma)e^{-\beta H}"></div>
+<p>配分函数是"所有构形按能量加权求和的总权重"——从它出发，一切热力学量（能量、磁化、比热）都可以求出来。下面拿一个能完整数一遍的具体格子练手。</p>
+<p><strong>完整例题 1：2×2 方块的配分函数、平均能量、平均磁化（带数字）。</strong>四个自旋 σ₁,σ₂,σ₃,σ₄ 在正方形的四个顶点，四条边是最近邻键。把 2⁴=16 个构形按能量分类：全同向 2 个（H=−4J）；恰一个自旋相反 8 个（该自旋的 2 条键被罚，H=0）；两上两下 6 个——其中两上对角 2 个（4 条键全罚，H=+4J）、两上相邻 4 个（H=0）。合计 2+8+2+4=16 ✓。于是</p>
+<div class="formula display" data-tex="Z=2e^{4\beta J}+12e^{0}+2e^{-4\beta J}=4\cosh(4\beta J)+12"></div>
+<p>代入具体数字 βJ=1（即 T=J/k，低温侧）：cosh 4≈27.31，Z≈4·27.31+12≈<strong>121.2</strong>。平均能量 ⟨H⟩=−∂lnZ/∂β = −16J sinh(4βJ)/Z ≈ −16·27.29/121.2 ≈ <strong>−3.60J</strong>（靠近基态 −4J，说明低温和时确实"整齐占优"）。再看平均磁化：由于 ↑↓ 对称，⟨M⟩≡0——这是关键教学点，下面专门讲。改用 ⟨|M|⟩（绝对磁化）：</p>
+<div class="formula display" data-tex="\langle|M|\rangle=\frac{8e^{4\beta J}+16}{4\cosh(4\beta J)+12}\;\Longrightarrow\; \beta J=0:\ 1.5,\quad \beta J=\tfrac12:\ 2.78,\quad \beta J=1:\ 3.73,\quad \beta J\to\infty:\ 4"></div>
+<p>数字越变越单调：高温（βJ=0）时平均绝对磁化只有 1.5（乱），低温（βJ→∞）时逼近 4（全同向，M=±4）。</p>
+<div class="key-insight">Ising模型看似玩具（±1+最近邻），但它包含了统计力学几乎所有核心概念：相变、临界指数、普适类、重整化群（群=一套能互相套用的操作；重整化=把短距离细节一层层"抹糊"，只看大尺度行为怎么变）、自发对称破缺。它是"最简单的非平凡统计力学模型"。</div>
+</section>
+
+<section>
+<h3>二、为什么 Ising 模型有临界温度？——能量与熵的竞争（完整例题 2）</h3>
+<p><strong>直觉。</strong>每个自旋面临两个"老板"：<strong>能量</strong>要它和邻居一致（整齐省能量），<strong>熵</strong>要它随心所欲（乱的状态更多，熵大）。温度就是裁判的砝码——自由能</p>
+<div class="formula display" data-tex="F=E-TS\;\Longrightarrow\; \text{低温：能量赢，有序；高温：熵赢，无序}"></div>
+<p>竞争的中点就是<strong>临界温度 T<sub>c</sub></strong>。为什么会有"中点"而不是永远有序或永远无序？因为"整齐"和"混乱"各自的优势都随温度连续变化，必然有一个转折点。这就是相变存在的原因。</p>
+<p><strong>严格一点：具体算一笔能量-熵账（完整例题 2）。</strong>在二维方形格子上，把一个自旋从"和四个邻居全一致"翻成"和四个邻居全反"，要罚掉 4 条键：</p>
+<div class="formula display" data-tex="\Delta E=4\times 2J=8J\;\Longrightarrow\; P(\text{翻转})\propto e^{-8\beta J}:\ \ T=\tfrac Jk\Rightarrow e^{-8}\approx 3.4\times10^{-4},\ \ T=\tfrac{3J}{k}\Rightarrow e^{-8/3}\approx 0.070"></div>
+<p>数字说话：T=J/k 时翻转概率不到万分之一，有序铁打不动；T=3J/k 时翻转概率 7%，乱象丛生。可这是单自旋的账——熵的账是"有多少种方式乱"：温度每高一点，乱的方式数爆炸式增长，最终熵赢。真正的临界点需要整体计算（见第四、七节），结果为 T<sub>c</sub>≈2.269J/k，正好落在上面两个数字之间。</p>
+<p><strong>为什么维度这么关键？</strong>这本质上是"墙"的账：在 1D，把"一半↑一半↓"之间的一个<strong>畴壁</strong>放到 N 个位置之一，能量成本 2J，熵收益 k ln N——对任何 T&gt;0 和足够大的 N，熵都赢（见第三节）。在 2D，畴壁是<strong>闭合的圈</strong>，周长 L 的圈能量成本 2JL，熵只能提供约 kL ln μ（方形格子 μ≈2.64），所以当 T 低于 2J/(k ln 2.64)≈2.06J/k 时大圈被抑制、有序存活——直到 2.269J/k 才失守。这就是"一维没有相变、二维有相变"的根源。</p>
+</section>
+
+<section>
+<h3>三、一维 Ising——为什么没有相变</h3>
+<p>一维链 H=−JΣ<sub>i</sub>σ<sub>i</sub>σ<sub>i+1</sub> 可以用<strong>转移矩阵</strong>精确解出（这也是第五节方法的雏形）。把相邻两个自旋的相互作用写成 2×2 矩阵，两个本征值分别为</p>
+<div class="formula display" data-tex="\lambda_\pm=e^{\beta J}\pm e^{-\beta J}\;\Longrightarrow\; Z=\operatorname{Tr}(T^N)=\lambda_+^N+\lambda_-^N=(2\cosh\beta J)^N+(2\sinh\beta J)^N"></div>
+<p>每自旋自由能 f = −kT lim(1/N)ln Z = −kT ln(2 cosh βJ)——对一切 T 都是解析函数，<strong>处处没有相变，T<sub>c</sub>=0</strong>。只有 T=0 时系统才是完全有序的。</p>
+<p><strong>为什么？</strong>回到第二节的"墙"的账：一维链条里放一个畴壁（把链切成 ↑…↑↓…↓），能量成本 ΔE=2J（只有一条键被罚），但这个墙有 N 个位置可放，熵收益 ΔS=k ln N。于是自由能变化</p>
+<div class="formula display" data-tex="\Delta F=2J-kT\ln N\;\Longrightarrow\; \text{对任何 }T>0,\ \text{只要 }N>e^{2J/kT},\ \Delta F<0"></div>
+<p>具体数字：取 T=0.2J/k、N=10⁶，则 ln N≈13.8，kT ln N≈2.76J&gt;2J，墙白白增殖，长程有序被涨落摧毁。所以在 1D，任意微小的温度都足以杀死有序——相变不存在。Ising 本人在 1925 年解了一维情况，并错误地认为高维也没有相变；十年后 Peierls 用上面的墙论证证明二维确实有有序相，真相才被翻过来。</p>
+</section>
+
+<section>
+<h3>四、二维 Ising——Onsager 的精确解（1944）与具体磁化数字（完整例题 3）</h3>
+<p>二维才有真正的相变，而 1944 年 Onsager 给出了自由能的<strong>闭型精确解</strong>——被称为"统计力学的费马大定理"。核心结果：</p>
+<div class="formula display" data-tex="\sinh(2\beta_c J)=1\;\Longrightarrow\; k_B T_c=\frac{2J}{\ln(1+\sqrt2)}\approx 2.269\,J,\qquad M=\big[1-\sinh^{-4}(2\beta J)\big]^{1/8}\ (T&lt;T_c)"></div>
+<p>注意那个指数 1/8——它和后面要讲的临界指数 β=1/8 直接挂钩，也和平均场理论（β=1/2）完全不同，是"普适类"概念的历史源头。</p>
+<p><strong>完整例题 3：用精确公式算三个温度下的平均磁化数字。</strong></p>
+<p>① T=2.0 J/k（低于 T<sub>c</sub>）。βJ=1/2，2βJ=1，sinh 1≈1.175，sinh⁴≈1.906，sinh⁻⁴≈0.5247。代入：</p>
+<div class="formula display" data-tex="M=\big(1-0.5247\big)^{1/8}=0.4753^{1/8}\approx 0.911"></div>
+<p>（怎么算：ln 0.4753≈−0.744，÷8≈−0.0930，取指数 e^{−0.0930}≈0.911。）</p>
+<p>② T=2.2 J/k（贴近 T<sub>c</sub>）。βJ=1/2.2≈0.4545，2βJ≈0.909，sinh(0.909)≈1.039，sinh⁻⁴≈0.857。得</p>
+<div class="formula display" data-tex="M=(1-0.857)^{1/8}=0.143^{1/8}\approx 0.784"></div>
+<p>③ T=3.0 J/k（高于 T<sub>c</sub>）。2βJ=2/3，sinh(2/3)≈0.719，sinh⁻⁴≈3.75&gt;1，根号下 1−3.75&lt;0 无实数解——数学上告诉我们 <strong>M=0</strong>，系统不再自发磁化。</p>
+<p>三个数字排在一起：0.911 → 0.784 → 0。<strong>磁化不是"逐渐变没"，而是在 T<sub>c</sub>≈2.269 处以幂律 M∝(T<sub>c</sub>−T)^{1/8} 急剧跌到 0</strong>——这就是连续（二级）相变的模样。拖动温度滑块观察相变。</p>
+<p><strong>三维 Ising</strong>：<strong>至今没有精确解。</strong>这是统计力学中最著名的未解问题之一。最好的结果是级数展开+Monte Carlo数值。</p>
+</section>
+<section>
+<h3>五、转移矩阵方法——Onsager解的核心技巧</h3>
+<p>配分函数 Z = Σ<sub>configs</sub> e<sup>−βH</sup>（β=1/kT；配分函数即把所有构形按能量加权求和的总权重）。将格点按行排列→每行自旋构形是一个"态"→相邻行之间的相互作用写成<strong>转移矩阵</strong>T→Z = Tr(T<sup>N</sup>)。对角化T→最大特征值（特征值=变换的"放大倍数"，最大那个主导整体行为）→自由能。第三节的一维解就是这个方法的 2×2 特例。</p>
+<p>Onsager的天才之处：将2<sup>N</sup>×2<sup>N</sup>的转移矩阵对角化问题转化为Clifford代数的表示论（表示=把抽象的代数对象翻译成能具体计算的矩阵，从此可以动手算）问题。他用到了当时物理学家几乎无人了解的数学工具——这个解开启了"精确可解模型"的整个研究领域。</p>
+</section>
+<section>
+<h3>六、Onsager 精确解的思路——转移矩阵 + 自由费米子</h3>
+<p>二维 Ising 配分函数 Z = Σ_{σ} e^{−βH}。把 N 行 × M 列的自旋按行排列，把第 r 行的 2ᴺ 种构形视为一个"态" s_r。行内键与相邻行之间的垂直键全部编码进<strong>转移矩阵</strong> T(2ᴺ×2ᴺ)，于是</p>
+<div class="formula display" data-tex="Z=\mathrm{Tr}(T^M),\qquad T \text{ 为 } 2^N\times 2^N \text{ 的对称矩阵}"></div>
+<p>在热力学极限 M→∞ 下，自由能只由最大特征值决定：f = −(1/β)lim(1/N)ln λ_max。<strong>Onsager(1944)的天才一步</strong>：用 N 对 Majorana(Clifford)算符表示 T，把对角化化归为<strong>自由费米子</strong>（无相互作用、可精确求解的费米子）的 Bogoliubov 对角化（现代语言即 Jordan–Wigner 变换（变换=换个等价写法，把难算的对象翻译成好算的形式）：把自旋算符改写成费米子算符的技巧）。结果是零场自由能的闭型积分表示（积分=把无穷多小份加起来算总面积，这里把各角度贡献累计起来）：</p>
+<div class="formula display" data-tex="-\beta f=\ln 2+\frac1{2\pi}\int_0^\pi d\theta\,\ln\Big[\cosh^2(2\beta J)+\sinh(2\beta J)\sqrt{1-\kappa^2\sin^2\theta}\,\Big],\qquad \kappa=\frac{2\sinh(2\beta J)}{\cosh^2(2\beta J)}"></div>
+<p>校验：β→0(高温自由自旋)时 κ→0、积分贡献 0，得 f=−kT ln 2，正确。当 κ=1 时被积函数中平方根在 θ=π/2 处非解析，导致比热 C ∝ −ln|T−T_c| <strong>对数发散</strong>；临界条件 sinh(2β_cJ)=1 给出</p>
+<div class="formula display" data-tex="\sinh(2\beta_c J)=1\;\Longrightarrow\; k_B T_c=\frac{2J}{\ln(1+\sqrt2)}\approx 2.269\,J"></div>
+</section>
+<section>
+<h3>七、Kramers–Wannier 对偶性——不求解就锁定 T_c</h3>
+<p>对零场二维 Ising 定义<strong>对偶温度</strong>（对偶=同一个问题的另一种等价视角，这里高温和低温竟能互相映照）K̃ 满足</p>
+<div class="formula display" data-tex="\sinh(2\tilde K)\,\sinh(2K)=1,\qquad K=\beta J"></div>
+<p><strong>对偶定理(Kramers–Wannier 1941)。</strong>高低温配分函数满足 Z_L(K) = 2^{−1}(\sinh 2K)^{N} Z_H(K̃)。来源：高温展开(把 e^{Kσ_iσ_j} 展开为 bond 图形求和)与低温展开(以 domain wall 闭合多边形计数)由同一个图的二重性互变——闭合多边形边的数目与顶点覆盖（顶点=图形的角点）数互换。</p>
+<p>若存在唯一的相变点，自对偶点 sinh(2K_c)=1 必为该点，解得 K_c = ½ln(1+√2)，即 T_c = 2J/(k ln(1+√2))。<strong>与 Onsager 精确解完全一致</strong>——对偶性在不解出完整配分函数的情况下就确定了临界温度。注意：自对偶点的存在本身并不保证相变(需辅以低温展开在 K̃_c 处发散的论据)；一维 Ising 配分函数处处解析，T_c=0，即是明证。</p>
+</section>
+<section>
+<h3>八、临界指数与普适类——精确的标度行为</h3>
+<p>临界点附近热力学量呈幂律行为，二维 Ising 的精确指数为(τ=(T−T_c)/T_c)</p>
+<div class="formula display" data-tex="C\sim|\tau|^{-\alpha},\quad M\sim|\tau|^{\beta},\quad \chi\sim|\tau|^{-\gamma},\quad \xi\sim|\tau|^{-\nu};\qquad \alpha=0,\ \beta=\tfrac18,\ \gamma=\tfrac74,\ \nu=1,\ \eta=\tfrac14"></div>
+<p>α=0 表示比热为<strong>对数</strong>发散而非幂律。这些指数满足标度关系：α+2β+γ=2(Rushbrooke)、γ=ν(2−η)(Fisher)、2−α=dν(Josephson)。普适类由<strong>空间维数 d 与序参数的对称群</strong>决定：二维标量序参数 ⇒ 液-气临界、二元合金、磁性等不同系统共享同一组指数。</p>
+<p>回到〇节的数字：β=1/8 意味着 M 在 T<sub>c</sub> 附近"陡峭地"跌到 0（0.911→0.784→0 的走势正是这条幂律的形状），而不是像平均场那样平缓地 β=1/2。这就是"普适类"——不同的物理系统（水、磁铁、合金），只要维度与对称性相同，临界行为一模一样。</p>
+</section>
+<section>
+<h3>九、标准反例：平均场理论的失败</h3>
+<p>平均场近似(Curie–Weiss)把每个自旋与"平均场"⟨σ⟩ 耦合，预言所有维度都有相变、β=½、γ=1 等朗道型指数。但它在一维与二维均<strong>定量甚至定性失败</strong>：</p>
+<p>(1) <strong>一维 Ising 无相变</strong>：平均场预言有限 T_c&gt;0，但精确解 Z=(2cosh βJ)^{N} 处处解析，T_c=0。<br>(2) <strong>二维指数全错</strong>：平均场 β=½ vs 精确 β=⅛；平均场 α 无对数发散，精确 α=0 带对数发散。<br>(3) 物理根源：平均场忽略了<strong>关联涨落</strong>。低于临界维数 d_c=4 时涨落不可忽略，平均场彻底失效；仅在 d≥d_c 或长程相互作用下才定量成立。这正是引入重正化群处理临界涨落的原因。</p>
+<p>平均场给出了正确的<strong>定性图像</strong>：m=tanh(βJz m) 在 βJz&gt;1 时有非零解，故 T_c^MF=zJ/k（二维方形 z=4，得 T_c^MF=4J/k≈2.269J/k 的 1.76 倍），但仍开放的问题是谁来修正它——答案就是普适类与临界指数。</p>
+</section>
+<section>
+<h3>十、关键公式</h3>
+<div class="formula display" data-tex="H = -J\sum_{\langle ij\rangle}\sigma_i\sigma_j - h\sum_i\sigma_i,\qquad Z=\sum_{\text{configs}}e^{-\beta H}"></div>
+<div class="formula display" data-tex="T_c = \frac{2J}{k\ln(1+\sqrt{2})} \approx 2.27\frac{J}{k},\qquad M = \big[1-\sinh^{-4}(2\beta J)\big]^{1/8}\ (T&lt;T_c)"></div>
+<div class="formula display" data-tex="M \propto (T_c - T)^{\beta},\quad \beta = 1/8\ \text{(2D Ising)},\qquad \sinh(2\tilde K)\sinh(2K)=1\ \text{(对偶)}"></div>
+</section>
+<section>
+<h3>十一、试试看（带提示）</h3>
+<p>1. T=1（远低于T<sub>c</sub>）时磁化趋于±1。T=3（远高于T<sub>c</sub>）时磁化在0附近振荡。为什么高温时会有短暂的"看起来有序"的涨落？<br>提示：涨落是热激活的——任一时刻，热涨落会在局部自发形成一小块有序区域，其典型尺寸是关联长度 ξ∝|T−T_c|^{−ν}。高温时 ξ 很短、翻转速率 e^{−8βJ} 大（见第二节数字），小块有序瞬间生灭，看起来像"短暂有序"；真正有判别力的是长距离、长时间的关联。</p>
+<p>2. 二维Ising的比热在T<sub>c</sub>处对数发散——这和一级相变（潜热+比热delta函数）有什么不同？<br>提示：一级相变中能量/熵（自由能的一阶导数）不连续 → 有潜热、比热 δ 函数；连续(二级)相变中一阶导数连续，是二阶导数（比热）发散，且是对数发散 C∝−ln|τ| 而非幂律。看 ⟨E⟩ 是否连续即可区分。</p>
+<p>3. 用一维精确解估算：βJ=1 时单个自旋的平均能量 ⟨E⟩/N 是多少？<br>提示：⟨E⟩=−∂lnZ/∂β，Z=(2cosh βJ)^N，故 ⟨E⟩/N=−J tanh(βJ)=−J·tanh(1)≈−0.762J。对比完全有序时的 −J，可见高温仍有显著涨落。</p>
+<p>4. 解释为什么一维 Ising 在任意 T&gt;0 都无序（Peierls 论证）。<br>提示：畴壁能量 2J 固定，熵却随系统尺寸增长 k ln N。ΔF=2J−kT ln(N−1)：只要 N&gt;e^{2J/kT} 就 ΔF&lt;0，墙自动增殖，任何温度都摧毁有序——T<sub>c</sub>=0。</p>
+<p>5. 平均场自洽方程 m=tanh(βJz·m) 在 T=2J/k、z=4 时的非零解是多少？<br>提示：βJz=2，解 m=tanh(2m)。试 m=0.957：tanh(1.914)≈0.957，代入自洽 ✓。这就是平均场在低温侧给出的磁化近似值——和精确值 0.911 比一比，误差来源正是忽略了的关联涨落。</p>
+</section>
+<section>
+<h3>十二、工作题：2×2 方块的配分函数</h3>
+<p><strong>题目。</strong>考虑 2×2 Ising 系统：四个自旋 σ₁,…,σ₄ 位于正方形四个顶点，H = −J(σ₁σ₂ + σ₂σ₃ + σ₃σ₄ + σ₄σ₁)(四条边为最近邻键)。(1) 将 2⁴=16 个构形按能量 −4J、0、+4J 分类并计数；(2) 写出配分函数 Z 并化简为含 cosh 的形式；(3) 求平均能量 ⟨H⟩。</p>
+<details><summary>显示解答</summary><p>(1) 全部同向(全↑或全↓)：2 个构形，4 键全满足，H=−4J。恰一个自旋相反：C(4,1)·2=8 个构形，该自旋的 2 条键不满足、另 2 条满足，H=0。两个↑两个↓：若两↑对角位(2 个构形)，4 键全不满足，H=+4J；若两↑相邻(4 个构形)，2 满足 2 不满足，H=0。合计 2+8+2+4=16 ✓。(2) Z = 2e^{4βJ} + 12e^{0} + 2e^{−4βJ} = 4cosh(4βJ) + 12 = 4(cosh 4βJ + 3)。(3) ⟨H⟩ = −∂lnZ/∂β = −(1/Z)·16J sinh(4βJ) = −4J·sinh(4βJ)/(cosh 4βJ + 3)。校验：β→0 时 ⟨H⟩→0(构形均匀)，T→0 时 ⟨H⟩→−4J(全同向占优)，均正确。∎</p></details>
+<p><strong>题目 2。</strong>一维两自旋链：求"开放链"（1 条键）和"周期链"（2 条键）的配分函数，并与转移矩阵公式对照。</p>
+<details><summary>显示解答</summary><p>开放链：4 个构形，E=−J（σ₁σ₂ 同向，2 个）、E=+J（反向，2 个），Z=2e^{βJ}+2e^{−βJ}=4cosh(βJ)。周期链：每个构形被两条键连接（同一条边算两次），E=−2J（同向 2 个）、+2J（反向 2 个），Z=2e^{2βJ}+2e^{−2βJ}=4cosh(2βJ)。转移矩阵对照：Z=λ₊²+λ₋²=(2cosh βJ)²+(2sinh βJ)²=4(cosh²βJ+sinh²βJ)=4cosh(2βJ) ✓，与周期链一致。∎</p></details>
+</section>
+<section><h3>前沿：3D Ising与共形场论</h3><p>3D Ising 的临界指数至今无法解析推导（解析=能用干净的公式精确算出来，而不是靠数值近似）——这是统计力学最著名的未解问题之一，最好的结果是高温/低温级数展开 + Monte Carlo 数值。已知数值（无法解析推导）约：α≈0.11、β≈0.326、γ≈1.237。2012年 El-Showk 等用"共形 Bootstrap"（共形=保持夹角的对称，只看形状不看大小、允许"保角伸缩"）数值计算了 3D Ising 的临界指数——精度前所未有。这启发了"Bootstrap 纲领"——不需要 Lagrangian，直接用量子场论的自洽性（共形对称+交叉对称）确定理论。仍开放：3D Ising 的严格解析解；若能解出，Fields 奖几乎板上钉钉。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Kardar, Statistical Physics of Particles</strong></p>
+<p>&rarr; <strong>K. Huang, Statistical Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/entropy.html">熵与信息</a>、<a href="/pages/probability.html">概率论基础</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/entropy.html">熵与信息</a>：Ising模型的自由能F=E−TS，熵S驱动高温无序相——相变是能量和熵竞争的结果，这正是统计力学和信息论在"熵"这个概念的汇合点。</p>
+<p>&rarr; <a href="/pages/boltzmann.html">Boltzmann方程</a>：Ising模型在平均场近似下等价于Curie-Weiss模型——其平衡态分布由Boltzmann-Gibbs分布描述，和Boltzmann方程的平衡解同源。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">布朗运动</a>：Ising模型Monte Carlo模拟中的Metropolis算法本质是构造马尔可夫链——自旋翻转的随机动力学和布朗运动的随机微分方程同属于随机过程的框架。</p>
+<p>&rarr; <strong>重整化群相关</strong>：Ising模型是重整化群的标准示范——Wilson正是用Ising模型演示了RG流、不动点（怎么变换都保持不变的状态）和普适类，由此获1982年Nobel物理学奖。</p>
+</section>

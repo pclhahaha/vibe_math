@@ -1,0 +1,208 @@
+<section>
+<h3>〇、开场问题——一个精确到万亿分之一的数字</h3>
+<p>下面这两个数字是同一个物理量，来自两条完全独立的路：一条是人类的实验，一条是纸笔加电脑的理论。</p>
+<div class="formula display" data-tex="a_e^{\mathrm{theory}}=1\,159\,652\,181.606\,(229)\times 10^{-12}\qquad a_e^{\mathrm{exp}}=1\,159\,652\,180.59\,(13)\times 10^{-12}"></div>
+<p>\(a_e=(g-2)/2\) 是电子的反常磁矩（磁矩——大白话：一块小磁铁"摆正自己"的能力有多强）。两个数字在小数点后第 <strong>12 位</strong>才分道扬镳——一致性达到约 \(10^{-12}\)。这是人类科学史上最精确的理论预言，比地球周长的测量精度还要高上千万倍。</p>
+<p>这个数字是怎么算出来的？答案是：画出 12,672 张"图纸"，再把每张图纸的贡献加起来。这些图纸就是<strong>费曼图</strong>。本课要回答的问题：<strong>为什么"画几根线和圈圈"这种看上去像涂鸦的东西，能算出精确到万亿分之一的结果？</strong></p>
+<div class="key-insight">一张费曼图=一次粒子碰撞的"账本"：线的形状与圈数不同，算出的振幅就不同。而"费曼图"之所以成立，是因为碰撞的量子力学振幅恰好能写成"越复杂的图贡献越小"的级数。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/entanglement.html">量子纠缠</a>、<a href="/pages/electromagnetism.html">电磁学与 Maxwell 方程组</a>、<a href="/pages/contour-integral.html">围道积分与留数（留数——大白话：复平面上某个特殊点"残留"下来的数值，掌握它就能算出很多棘手的积分）</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、开场问题」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、为什么费曼图=微扰展开？——先看 e≈0.303 这个"小"数字</h3>
+<p>把两个粒子撞在一起，量子力学说：任何"可能的中间过程"都以一定的概率振幅参与。问题在于，可能的中间过程有<strong>无穷多种</strong>——它们可以直接碰一下，也可以先绕一个圈，再绕两个圈……一个个算完再加起来？听起来像天方夜谭。</p>
+<p>费曼的天才在于：<strong>把"每个中间过程"画成一张图，并规定每张图贡献的大小只取决于它的"结构"，且结构越复杂贡献越小。</strong>这就把"无穷多项求和"变成了"可控制的级数"。</p>
+<p><strong>级数的小参数是电荷 \(e\)。</strong>QED（量子电动力学）的耦合常数是无量纲的电荷 <strong>\(e\approx 0.303\)</strong>（自然单位），但真正决定收敛快慢的是它的平方除以 \(4\pi\)：</p>
+<div class="formula display" data-tex="\alpha=\frac{e^2}{4\pi}\approx\frac{1}{137.036}"></div>
+<p>费曼规则告诉我们：<strong>图中每出现一个顶点，振幅就多乘一个 \(e\)</strong>。于是图的阶数越高，贡献就越小。把具体数字列出来感受一下收敛速度（电子的反常磁矩 \(a_e\)）：</p>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;">
+<tr style="background:#1a1a2e;color:#e0e0e0;"><th style="text-align:left;padding:8px;">阶数</th><th style="text-align:left;padding:8px;">费曼图数</th><th style="text-align:left;padding:8px;">贡献量级</th></tr>
+<tr><td style="padding:8px;">1 圈</td><td style="padding:8px;">1</td><td style="padding:8px;">\(\alpha/2\pi\approx 1.16\times10^{-3}\)</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">2 圈</td><td style="padding:8px;">7</td><td style="padding:8px;">\(\sim (\alpha/\pi)^2\approx 5.4\times10^{-6}\)</td></tr>
+<tr><td style="padding:8px;">3 圈</td><td style="padding:8px;">72</td><td style="padding:8px;">\(\sim (\alpha/\pi)^3\approx 1.3\times10^{-8}\)</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">5 圈</td><td style="padding:8px;">12672</td><td style="padding:8px;">\(\sim 5.1\times10^{-13}\)</td></tr>
+</table>
+<p>每多两圈，贡献缩小约 2～3 个数量级——这就是"微扰展开"（微扰——大白话：把一个难算的问题，按"影响大小"拆成一串越来越好算的项，逐项加起来逼近答案）能收敛的物理根源。<strong>如果 \(\alpha\) 不 ≈ 1/137 而是 ≈ 1，这种展开立刻失效</strong>（这正是 QCD 在低能下强耦合、微扰论失效的原因）。</p>
+<p><strong>为什么一张图等于一个级数项？</strong>把散射过程写成量子力学的"时间演化"——Dyson 级数：</p>
+<div class="formula display" data-tex="S=\mathcal{T}\exp\!\left(-i\int d^4x\,\mathcal{H}_{\mathrm{int}}(x)\right)=\sum_{n=0}^{\infty}\frac{(-i)^n}{n!}\int d^4x_1\cdots d^4x_n\;\mathcal{T}\{\mathcal{H}_{\mathrm{int}}(x_1)\cdots\mathcal{H}_{\mathrm{int}}(x_n)\}"></div>
+<p>哈密顿量（哈密顿——大白话：系统的"能量记账本"，写明系统在每种状态下有多少能量）里每一项对应一个相互作用顶点，所以 <strong>第 \(n\) 项含 \(n\) 个顶点，自带因子 \(e^n\)</strong>。这一项的物理含义是"粒子在时空点 \(x_1,\dots,x_n\) 处碰了 \(n\) 次"。而场论中真正算下去要用 Wick 定理（Wick定理：T-乘积=正规序+所有可能的收缩。白话：把一次碰撞拆成若干条独立传播的粒子线，两根线配对之处就是一次瞬时相互作用）：</p>
+<div class="formula display" data-tex="\underbrace{\mathcal{T}\{\phi(x_1)\cdots\phi(x_n)\}}_{\text{时间排序}}=\underbrace{:\phi(x_1)\cdots\phi(x_n):}_{\text{正规序}}+\sum_{\text{配对}}\ \Delta_F(x_i-x_j)\cdots"></div>
+<p>每一个"配对方式"就是一根传播子线，连起来就是一张图。<strong>因此：Dyson 级数的第 \(n\) 项 ⟶ 含 \(n\) 个顶点的费曼图；级数求和 ⟶ 把所有图求和。</strong>费曼图不是魔法，它是 Dyson 级数被 Wick 收缩"摊开"之后的几何形状。</p>
+<p>所以"为什么费曼图=微扰展开"的答案是一句话：<strong>图的顶点数=级数的阶数，每阶带因子 \(e^n\)，而 \(e\approx0.303\)、\(\alpha\approx1/137\) 足够小，使高阶项迅速衰减。</strong>精确到 \(10^{-12}\)，是因为 \(\alpha^{5}\sim 10^{-12}\) 级别的第五圈贡献，人真的把它算完了。</p>
+</section>
+
+<section>
+<h3>二、费曼规则——从拉格朗日量读出图纸</h3>
+<p>要"画图"，先得知道每种图值多少钱。费曼规则就是"价目表"，而且它不是凭经验定的——<strong>直接从拉格朗日量系统地读出</strong>（白话：拉格朗日量就是描述有哪些粒子、彼此怎么相互作用的总配方）。规则有三条：</p>
+<p><strong>① 自由部分（二次项）→ 传播子。</strong>拉格朗日量里的二次项决定粒子"自由飞行"的行为，其逆给出传播子。<strong>QED 拉格朗日量</strong>：</p>
+<div class="formula display" data-tex="\mathcal{L}_{\mathrm{QED}}=\bar{\psi}(i\gamma^\mu D_\mu-m)\psi-\frac14 F_{\mu\nu}F^{\mu\nu}= \bar{\psi}(i\gamma^\mu\partial_\mu-m)\psi-\frac14 F_{\mu\nu}F^{\mu\nu}-e\bar{\psi}\gamma^\mu\psi A_\mu"></div>
+<p>从它读出：动能项 \(\bar{\psi}(i\gamma^\mu\partial_\mu-m)\psi\) → 电子传播子</p>
+<div class="formula display" data-tex="\frac{i}{\not{p}-m+i\varepsilon}=\frac{i(\not{p}+m)}{p^2-m^2+i\varepsilon}"></div>
+<p>以及 \(-\frac14 F_{\mu\nu}F^{\mu\nu}\) → 光子传播子</p>
+<div class="formula display" data-tex="\frac{-ig_{\mu\nu}}{p^2+i\varepsilon}\;(\text{Feynman规范})"></div>
+<p><strong>② 相互作用项（三次及以上）→ 顶点</strong>（顶点——大白话：图里几根线撞在一起的那个交叉点，代表粒子在这里碰了一下）。QED 的相互作用项 \(-e\bar{\psi}\gamma^\mu\psi A_\mu\) 给出唯一的顶点因子：</p>
+<div class="formula display" data-tex="-ie\gamma^\mu\quad\text{(QED 顶点因子)}"></div>
+<p><strong>③ 外部腿 → 外线波函数（极化矢量、旋量）。</strong>至此，任意一张图的数值=「外线波函数 × 各传播子 × 各顶点 × 动量守恒 δ 函数 × 圈动量积分」的乘积。</p>
+<p>为什么传播子是"逆算子"？因为量子力学振幅要求"从一个点传到另一个点"的权重正比于运动方程格林函数的逆——这一点的严格推导放在下面例题 1。</p>
+<p><strong>非阿贝尔的补充规则。</strong>对于如 QCD 的非阿贝尔规范理论（胶子——大白话：把夸克"粘"在一起的强力"搬运工"粒子，名字就取自"胶水"），还需额外规则：三胶子顶点 \(\propto gf^{abc}\)、四胶子顶点 \(\propto g^2\)、鬼粒子传播子和鬼-胶子顶点。这些均可从规范固定的有效拉格朗日量</p>
+<div class="formula display" data-tex="\mathcal{L}_{\mathrm{eff}}=\mathcal{L}_{\mathrm{YM}}+\mathcal{L}_{\mathrm{GF}}+\mathcal{L}_{\mathrm{FP}}"></div>
+<p>系统导出。其中规范场（规范——大白话：同一物理事实可以有不同"写法"，这些等价写法间的自由度就叫规范）的量子化（量子化——大白话：把连续变化的量切成一份一份的离散量，像水流变成一粒粒水滴）需要选择规范条件——在 Feynman-'t Hooft 规范下推导最为直接。</p>
+</section>
+
+<section>
+<h3>三、教科书例题 1——传播子的来源：iε 与因果性</h3>
+<p><strong>问题：</strong>费曼传播子 \(\Delta_F(p)=i/(p^2-m^2+i\varepsilon)\) 为什么长这样？\(+i\varepsilon\) 那一小片"尘埃"究竟在干什么？</p>
+<p><strong>第 1 步：确认它是格林函数。</strong>把传播子做逆傅里叶变换，并要求它是 Klein-Gordon 算子 \((\partial^2+m^2)\) 的格林函数（格林函数——大白话：把方程右边放一个"点状源"解出的答案，用它可以把任意源的通解"拼"出来）：</p>
+<div class="formula display" data-tex="\Delta_F(x)=\int\frac{d^4p}{(2\pi)^4}\,e^{-ip\cdot x}\frac{i}{p^2-m^2+i\varepsilon}"></div>
+<p>作用一次算子（注意 \(\partial_\mu\to -ip_\mu\)）：</p>
+<div class="formula display" data-tex="(\partial^2+m^2)\Delta_F(x)=\int\frac{d^4p}{(2\pi)^4}e^{-ip\cdot x}(-p^2+m^2)\frac{i}{p^2-m^2+i\varepsilon}\xrightarrow{\varepsilon\to0} -i\delta^{(4)}(x)"></div>
+<p>所以 \(\Delta_F\) 确实是一个格林函数。但格林函数不止一个——差一个齐次解就不同。真正把 \(\Delta_F\) 挑出来的，是 \(+i\varepsilon\) 的符号。</p>
+<p><strong>第 2 步：对 \(p^0\) 做围道积分，看时间行为。</strong>固定空间动量 \(\mathbf p\)，令 \(E_p=\sqrt{\mathbf p^2+m^2}\)，对时间分量作积分：</p>
+<div class="formula display" data-tex="\int\frac{dp^0}{2\pi}\,e^{-ip^0t}\frac{i}{(p^0)^2-E_p^2+i\varepsilon}"></div>
+<p>分母因式分解得两个极点：\((p^0)^2-E_p^2+i\varepsilon\approx(p^0-E_p+i\epsilon')(p^0+E_p-i\epsilon')\)，即极点位于</p>
+<div class="formula display" data-tex="p^0=E_p-i\epsilon'\ (\text{下半平面}),\qquad p^0=-E_p+i\epsilon'\ (\text{上半平面})"></div>
+<p><strong>第 3 步：选闭合回路。</strong>当 \(t&gt;0\) 时，因子 \(e^{-ip^0t}\) 要求在下半平面闭合才收敛；该回路只套住极点 \(p^0=E_p\)。由留数定理（注意下半平面为顺时针，取负号）：</p>
+<div class="formula display" data-tex="t&gt;0:\quad \frac{1}{2\pi}\oint\frac{i\,e^{-ip^0t}}{(p^0)^2-E_p^2+i\varepsilon}\,dp^0=\frac{e^{-iE_p t}}{2E_p}"></div>
+<p>当 \(t&lt;0\) 时在上半平面闭合，套住 \(p^0=-E_p\)：</p>
+<div class="formula display" data-tex="t&lt;0:\quad =\frac{e^{+iE_p t}}{2E_p}"></div>
+<p><strong>第 4 步：读出物理。</strong>于是</p>
+<div class="formula display" data-tex="\Delta_F(t,\mathbf x)=\int\frac{d^3p}{(2\pi)^3}e^{i\mathbf p\cdot\mathbf x}\Big[\theta(t)\frac{e^{-iE_p t}}{2E_p}+\theta(-t)\frac{e^{+iE_p t}}{2E_p}\Big]"></div>
+<ul>
+<li>\(t&gt;0\)：振幅是正频成分 \(e^{-iE_p t}\)——粒子携带正能量 <strong>向前</strong>传播；</li>
+<li>\(t&lt;0\)：振幅是负频成分 \(e^{+iE_p t}\)——等价于反粒子（正电子）<strong>逆着时间</strong>传播。</li>
+</ul>
+<p>这就是费曼"正电子=逆时间传播的电子"这句话的数学出处。而这一切全靠 \(i\varepsilon\) 那一个符号：<strong>若把 \(i\varepsilon\) 换成 \(-i\varepsilon\)，极点上下颠倒，因果方向也跟着颠倒，得到的是违背物理的"超前"传播子。</strong>所以 \(i\varepsilon\) 不是技巧，它是因果性的编码。∎</p>
+<div class="key-insight">传播子 \(i/(p^2-m^2+i\varepsilon)\) 的三个部件各司其职：分子 \(i\) 保证正规化，极点 \(p^2=m^2\) 是粒子的"质壳"，而 \(i\varepsilon\) 唯一地指定了"正频向前、负频向后"的因果方向。</div>
+</section>
+<section>
+<h3>四、教科书例题 2——e⁺e⁻→μ⁺μ⁻：从振幅到截面</h3>
+<p><strong>问题：</strong>用费曼规则完整计算正负电子对撞产生正负 μ 子的树级截面，并给出在 \(\sqrt{s}=10\,\mathrm{GeV}\) 处的数值。</p>
+<p><strong>第 1 步：画图，写振幅。</strong>树级只有一张图：\(e^+\) 与 \(e^-\) 湮灭成一个虚光子，再衰变成 \(\mu^+\mu^-\)。设外动量 \(e^-:k_1,\ e^+:k_2,\ \mu^-:p_1,\ \mu^+:p_2\)，虚光子动量 \(q=k_1+k_2\)，\(q^2=s\)。按费曼规则连乘：两个顶点各 \(-ie\gamma^\mu\)，光子传播子 \(-ig_{\mu\nu}/q^2\)：</p>
+<div class="formula display" data-tex="\mathcal{M}=-\frac{e^2}{s}\,\big[\bar v(k_2)\gamma^\mu u(k_1)\big]\big[\bar u(p_1)\gamma_\mu v(p_2)\big]"></div>
+<p><strong>第 2 步：自旋求和与平均。</strong>初态 \(e^+e^-\) 有 \(2\times2=4\) 个自旋态，平均需除以 4；末态求和。把两条费米子线各自配对成迹：</p>
+<div class="formula display" data-tex="\frac14\sum_{\text{spin}}|\mathcal{M}|^2=\frac{e^4}{4s^2}\ \mathrm{Tr}[\not{k}_2\gamma^\mu\not{k}_1\gamma^\nu]\ \mathrm{Tr}[\not{p}_1\gamma_\mu\not{p}_2\gamma_\nu]"></div>
+<p><strong>第 3 步：用迹恒等式化简</strong>（高能极限下忽略质量）：</p>
+<div class="formula display" data-tex="\mathrm{Tr}[\gamma^\mu\gamma^\nu\gamma^\rho\gamma^\sigma]=4(g^{\mu\nu}g^{\rho\sigma}-g^{\mu\rho}g^{\nu\sigma}+g^{\mu\sigma}g^{\nu\rho})"></div>
+<p>代入并收缩，得到</p>
+<div class="formula display" data-tex="\frac14\sum|\mathcal{M}|^2=\frac{e^4}{s^2}\cdot 4\big[(k_1\cdot p_1)(k_2\cdot p_2)+(k_1\cdot p_2)(k_2\cdot p_1)\big]"></div>
+<p>在质心系取 \(\theta\) 为散射角：\(k_1\cdot p_1=k_2\cdot p_2=\frac s4(1-\cos\theta)\)，\(k_1\cdot p_2=k_2\cdot p_1=\frac s4(1+\cos\theta)\)，代入：</p>
+<div class="formula display" data-tex="\frac14\sum|\mathcal{M}|^2=e^4(1+\cos^2\theta)"></div>
+<p><strong>第 4 步：化成截面。</strong>两体末态微分散面公式 \(d\sigma/d\Omega=|\bar{\mathcal M}|^2/(64\pi^2 s)\)，其中 \(|\bar{\mathcal M}|^2=(1/4)\sum|\mathcal M|^2=e^4(1+\cos^2\theta)=(4\pi\alpha)^2(1+\cos^2\theta)\)：</p>
+<div class="formula display" data-tex="\frac{d\sigma}{d\Omega}=\frac{\alpha^2}{4s}(1+\cos^2\theta)"></div>
+<p>对立体角积分（\(\int(1+\cos^2\theta)\,d\Omega=\frac{16\pi}{3}\)）：</p>
+<div class="formula display" data-tex="\sigma(e^+e^-\to\mu^+\mu^-)=\frac{4\pi\alpha^2}{3s}"></div>
+<p><strong>第 5 步：代入数字。</strong>取高能跑动值 \(\alpha=1/128\)（见例题 3）、\(\sqrt{s}=10\,\mathrm{GeV}\)：</p>
+<div class="formula display" data-tex="\sigma=\frac{4\pi(1/128)^2}{3(10\,\mathrm{GeV})^2}=2.56\times10^{-6}\,\mathrm{GeV}^{-2}=0.995\,\mathrm{nb}\approx 1\,\mathrm{nb}"></div>
+<p>（换算：\(1\,\mathrm{GeV}^{-2}=0.3894\,\mathrm{mb}\)。）这就是为什么在正负电子对撞机上，\(\mu\) 对产额是"每 nb 一个量级"——与实验（如 PETRA、LEP）在 QED 本底的测量吻合。∎</p>
+<div class="key-insight">完整例题 2 展示了一条标准流水线：画图 → 乘规则 → 算迹 → 化简 → 积分 → 代数字。其中 <strong>\(|\mathcal M|^2\) 的自旋平均是"把理论变成可检验预言"的关键一步</strong>——实验测不到单个自旋态，只测得到平均。</div>
+</section>
+
+<section>
+<h3>五、教科书例题 3——真空极化：α 从 1/137 跑到 1/128</h3>
+<p><strong>问题：</strong>为什么同一根"电荷"，在低能下是 \(\alpha=1/137.036\)，到了 Z 玻色子质量 91.19 GeV 就成了 \(\alpha\approx1/128\)？</p>
+<p><strong>第 1 步：物理图景。</strong>光子传播子不是一条裸线——它可以随时"借"出一对正负电子虚对再湮灭，这就是<strong>真空极化</strong>（真空并非空无一物，而是充满虚粒子涨落）。这个"圈"修正了光子的传播，等效地<strong>屏蔽</strong>了电荷：距离越近（探测能量越高），看到的裸电荷越多，\(\alpha\) 越大。</p>
+<p><strong>第 2 步：一圈结果。</strong>对圈动量积分后，重正化的跑动耦合为（只有电子圈、领先对数近似）：</p>
+<div class="formula display" data-tex="\alpha(Q^2)=\frac{\alpha(0)}{1-\frac{\alpha(0)}{3\pi}\log\frac{Q^2}{m_e^2}+\cdots}"></div>
+<p><strong>第 3 步：代入数字。</strong>在 \(Q^2=m_Z^2\) 处：</p>
+<div class="formula display" data-tex="\log\frac{m_Z^2}{m_e^2}=2\log\frac{91.19\times10^3}{0.511}=2\log(178\,457)=24.18"></div>
+<div class="formula display" data-tex="\frac{\alpha(0)}{3\pi}\cdot24.18=\frac{1}{137}\cdot\frac{24.18}{9.4248}=7.297\times10^{-3}\cdot 2.566=0.0187"></div>
+<div class="formula display" data-tex="\alpha(m_Z^2)=\frac{1/137}{1-0.0187}=\frac{1}{134.5}"></div>
+<p>所以单算电子圈，\(\alpha\) 从 1/137 跑到 1/134.5，相对移动 \(\Delta\alpha_e\approx1.4\times10^{-4}\)。</p>
+<p><strong>第 4 步：诚实的对照——为什么实验值是 1/128？</strong>实验测定 \(\alpha(m_Z^2)=1/128.0\)，比电子圈的预言还要大，相对移动 \(\Delta\alpha_{\exp}\approx5.2\times10^{-4}\)。差额来自<strong>夸克圈（强子真空极化）</strong>：5 种轻夸克加粲、底等，贡献约为电子圈的 3 倍。夸克圈的精确大小不能纯解析算出（低能强耦合），必须由 \(e^+e^-\to\) 强子的"R 值"实验数据确定。这一事实在 LHC 的所有电弱精度计算中都要用到。</p>
+<p><strong>第 5 步：Landau 极点——预言这套公式何时失效。</strong>令分母为零：</p>
+<div class="formula display" data-tex="1-\frac{\alpha}{3\pi}\log\frac{Q^2}{m_e^2}=0\ \Longrightarrow\ Q_{\mathrm{pole}}=m_e\,e^{\,3\pi/2\alpha}\approx0.511\,\mathrm{MeV}\cdot e^{645}\approx10^{277}\,\mathrm{GeV}"></div>
+<p>在如此荒唐的能量下 QED 的微扰公式发散——但物理上远在此之前的 TeV 尺度，弱力和强力已经主导，QED 作为孤立理论早已让位于标准模型。Landau 极点因此不是危机，而是"每个场论都只是有效理论"的提醒。∎</p>
+</section>
+
+<section>
+<h3>六、重整化——无穷大的减法与 Wilson 图景</h3>
+<p>例题 3 里我们"假装"圈积分有限，但严格算一圈电子自能会遇到紫外发散（积分——大白话：把无数小块累加成总和，这里是把圈图里所有可能的情况都加一遍）在动量→∞时发散。重整化（重整化——大白话：算出来的"无穷大"其实是自己跟自己抵消，把参数重新定义一下就能得到有限、可测的结果）的核心洞察：<strong>这些发散可被吸收到有限个裸参数的重定义中——理论的可预言性不变。</strong></p>
+<p><strong>一圈电子自能</strong>：电子传播子的一圈修正</p>
+<div class="formula display" data-tex="\Sigma(p)\propto e^2\int d^4k\,\frac{\gamma^\mu(\not{p}-\not{k}+m)\gamma_\mu}{[k^2][(p-k)^2-m^2]}"></div>
+<p>按大 \(k\) 展开：线性发散 \((\sim\Lambda)\) + 对数发散 \((\sim\log\Lambda^2/m^2)\)。线性发散因规范不变性在 QED 中对消（Ward 恒等式保证），对数发散被质量重整化吸收：\(m_R=m_0+\delta m\)。</p>
+<p><strong>真空极化</strong>：光子传播子的一圈电子环（环——大白话：图里那个小圆圈，代表粒子中途多绕了一圈，每绕一圈都要重新算一遍贡献）修正导致电荷的重整化——这就是例题 3 里跑动耦合 \(\alpha(Q^2)\) 的根源。</p>
+<p><strong>Wilson 的物理图景与重整化群</strong>（群——大白话：一组可互相"组合"的变换的集合，重整化群就是随能量变化不断调整参数的那一族变换）：积分掉高能自由度 \((\Lambda\to\Lambda/s)\) → 有效拉格朗日量参数按 RG 方程运行。这一思想彻底改变了量子场论：<strong>短距离物理被编码到跑动耦合中，长距离物理由低能有效理论描述。</strong>现代粒子物理的核心观：标准模型（模——大白话：一套"宇宙有哪些基本粒子、它们怎么相互作用"的搭积木说明书）本身就是有效场论（有效场论——大白话：只描述某一能量范围内的近似理论，像只要家门口的地图也能导航，够用就行）(EFT)，在 \(\Lambda\sim M_{\mathrm{Pl}}\) 处有待 UV 完备（完备——大白话：拼图还缺几块，理论在极高能量处还不完整，需要新物理来补全）的新物理。</p>
+<p>重整化的一般判据：<strong>理论可重整 ⇔ 所有耦合常数质量维度≥0。</strong>QED 的 \(e\) 和 \(m\) 满足此条件。't Hooft 和 Veltman (1971) 证明了即使有自发对称破缺，Yang-Mills 理论也可重整化——这使标准模型成为一个数学上一致的理论。</p>
+</section>
+<section>
+<h3>七、五圈 QED——人类计算的极限</h3>
+<p>电子反常磁矩 \(a_e=(g-2)/2\) 的逐圈精确计算，是高能物理精度计算史上的丰碑。注意表的最后一列：图的个数从 1 涨到 12,672，而贡献从 \(10^{-3}\) 掉到 \(10^{-13}\)——<strong>级数确实在收敛，但代价是图的爆炸。</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;">
+<tr style="background:#1a1a2e;color:#e0e0e0;"><th style="text-align:left;padding:8px;">圈数</th><th style="text-align:left;padding:8px;">年份</th><th style="text-align:left;padding:8px;">研究者</th><th style="text-align:left;padding:8px;">费曼图数</th><th style="text-align:left;padding:8px;">贡献</th></tr>
+<tr><td style="padding:8px;">1圈</td><td style="padding:8px;">1948</td><td style="padding:8px;">Schwinger</td><td style="padding:8px;">1</td><td style="padding:8px;">\(\alpha/2\pi \approx 1.16\times10^{-3}\)</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">2圈</td><td style="padding:8px;">1950</td><td style="padding:8px;">Karplus &amp; Kroll</td><td style="padding:8px;">7</td><td style="padding:8px;">\(\sim -0.328(\alpha/\pi)^2\)</td></tr>
+<tr><td style="padding:8px;">3圈</td><td style="padding:8px;">1981</td><td style="padding:8px;">Kinoshita &amp; Lindquist</td><td style="padding:8px;">72</td><td style="padding:8px;">\(\sim 1.181(\alpha/\pi)^3\)</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">4圈</td><td style="padding:8px;">1996</td><td style="padding:8px;">Laporta &amp; Remiddi</td><td style="padding:8px;">891</td><td style="padding:8px;">\(\sim -1.912(\alpha/\pi)^4\)</td></tr>
+<tr><td style="padding:8px;">5圈</td><td style="padding:8px;">2012/19</td><td style="padding:8px;">Aoyama, Hayakawa, Kinoshita, Nio</td><td style="padding:8px;">12672</td><td style="padding:8px;">\(\sim 5.1\times10^{-13}\)</td></tr>
+</table>
+<p><strong>六圈计算的前景</strong>：六圈图的数量达数十万。当前最强的数值积分+符号计算组合方法面临根本挑战。探测六圈效应将超越对 QED 更精确的强子贡献的已知精度——至少在目前，五圈已是人类计算的实际极限（极限——大白话：再多算一圈，费曼图数量会爆炸式增长，以现在的电脑和时间根本算不动）。</p>
+<p><strong>理论与实验的最终对比</strong>：</p>
+<div class="formula display" data-tex="a_e(\text{theory})=1\,159\,652\,181.606\,(229)\times 10^{-12}"></div>
+<div class="formula display" data-tex="a_e(\text{exp}\,) =1\,159\,652\,180.59\,(13)\times 10^{-12}"></div>
+<p><strong>理论与实验吻合到万亿分之一（约 \(10^{-12}\)）的水平。</strong>这是 QED 作为精密科学的最辉煌证据，也是所有物理学中精度最高的理论预言。它不仅验证了微扰 QED，还对轻子普适性、电子可能的亚结构和潜在的新物理（全新的相互作用或额外维度）施加了极强的约束。</p>
+</section>
+
+<section>
+<h3>八、关键公式</h3>
+<div class="formula display" data-tex="\Delta_F(p)=\frac{i}{p^2-m^2+i\varepsilon}"></div>
+<div class="formula display" data-tex="S=\mathcal{T}\exp\left(-i\int d^4x\,\mathcal{H}_{\mathrm{int}}(x)\right)"></div>
+<div class="formula display" data-tex="-ie\gamma^\mu\ (\text{QED顶点}),\qquad \sigma(e^+e^-\to\mu^+\mu^-)=\frac{4\pi\alpha^2}{3s}"></div>
+<div class="formula display" data-tex="\alpha(Q^2)=\frac{\alpha(0)}{1-\frac{\alpha(0)}{3\pi}\log\frac{Q^2}{m_e^2}+\cdots},\qquad \alpha(m_Z^2)\approx\frac{1}{128}"></div>
+</section>
+
+<section>
+<h3>九、试试看（每题附提示）</h3>
+<p>1. 不查资料，用一句话解释：为什么费曼图数从 1 圈到 5 圈依次是 1、7、72、891、12672，而贡献却依次缩小 2～3 个数量级。</p>
+<p><em>提示：顶点数=2×圈数，每多两个顶点多一个因子 \(\alpha\approx1/137\)；但图的数量（组合方式）也在涨。总贡献=数量×单图大小，前者的多项式/指数增长输给了后者的指数衰减——这正是"微扰展开仍能收敛"的精确含义。</em></p>
+<p>2. 在例题 1 中，若把传播子分母改成 \(p^2-m^2-i\varepsilon\)，因果方向会怎样变化？</p>
+<p><em>提示：极点上下对调：\(p^0=E+i\epsilon'\)（上半平面）、\(p^0=-E-i\epsilon'\)（下半平面）。于是 \(t&gt;0\) 闭合下半平面取到负频，\(t&lt;0\) 闭合上半平面取到正频——因果完全颠倒，粒子会"先到后走"，必须舍弃。</em></p>
+<p>3. 用例题 3 的跑动耦合公式，估计 \(\alpha\) 在 \(Q=1\,\mathrm{GeV}\) 处的值。</p>
+<p><em>提示：\(\ln(Q^2/m_e^2)=2\ln(1\,\mathrm{GeV}/0.511\,\mathrm{MeV})=2\ln1957\approx15.16\)；\((\alpha/3\pi)\times15.16\approx1.17\times10^{-2}\)；\(\alpha(1\,\mathrm{GeV})\approx0.007297/0.9883\approx1/135.4\)。</em></p>
+<p>4. 推导 Landau 极点标度：令分母 \(1-\frac{\alpha}{3\pi}\ln\frac{Q^2}{m_e^2}=0\)，解出 \(Q_{\mathrm{pole}}=m_e e^{3\pi/2\alpha}\)，并估计其量级。</p>
+<p><em>提示：\(\ln(Q^2/m_e^2)=3\pi/\alpha\approx1291\)，故 \(\ln(Q/m_e)\approx645.5\)；用 \(\log_{10}Q\approx645.5/2.303\approx280\)，所以 \(Q\approx10^{280}\,\mathrm{MeV}\approx10^{277}\,\mathrm{GeV}\)。</em></p>
+<p>5. 计算 \(e^+e^-\to\mu^+\mu^-\) 在 \(\sqrt{s}=91.19\,\mathrm{GeV}\) 处的 QED 连续本底截面（只算光子交换，忽略 Z）。</p>
+<p><em>提示：\(s=8317\,\mathrm{GeV}^2\)，\(\sigma=\frac{4\pi\alpha^2}{3s}\approx\frac{2.556\times10^{-4}}{8317}\,\mathrm{GeV}^{-2}=3.1\times10^{-8}\,\mathrm{GeV}^{-2}\approx0.012\,\mathrm{nb}\)。注意这远小于实验在 Z 极点看到的共振峰（约 30 nb）——差别就是 Z 玻色子的贡献。</em></p>
+</section>
+
+<section><h3>前沿：五圈 QED 与超越标准模型</h3><p>五圈 QED 计算需要处理 12672 个费曼图——Aoyama 等 (2019) 完成。g-2 的 QED+EW+强子总预言=实验在约 1σ 内一致。但 μ 子 g-2（Fermilab 2023）显示 4.2σ 偏差——<strong>可能是新物理</strong>（新粒子/新相互作用）。这是当前粒子物理最活跃的前沿之一。</p></section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：用 Wick 定理写出 \(\mathcal{T}\{\phi(x_1)\phi(x_2)\phi(x_3)\phi(x_4)\}\) 的全部收缩方式，数出能构成连通四顶点图的收缩个数。</p>
+<p><strong>题 2</strong>：在例题 2 中，把 μ 子质量重新加回来（保留 \(m_\mu\)），推导质量不为零时的总截面表达式，并说明它在 \(\sqrt{s}\ll m_\mu\) 时如何趋近零。</p>
+<p><strong>题 3</strong>：从 \(\alpha(m_Z^2)=1/128.0\) 与 \(\alpha(0)=1/137.036\) 出发，反推强子真空极化对 \(\Delta\alpha\) 的贡献约占总量的几分之几。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：四个场两两配对共 3 种完整收缩：(1,2)(3,4)、(1,3)(2,4)、(1,4)(2,3)。其中 (1,2)(3,4) 分裂成两个二点函数（不相连，是真空泡/两段传播子的乘积），后两种使四点连成一条"链"或"X"型连通结构——连通图只有后两种的组合方式。关键：<strong>非连通的"乘积图"由 W 恒等式/真空图因子自动吸收，物理振幅只关心连通图</strong>。</p>
+<p><strong>题 2</strong>：保留质量时迹的结果为 \(\frac14\sum|\mathcal M|^2=\frac{e^4}{s^2}[8(p_1\cdot k_1)(p_2\cdot k_2)+...]\) 再加 \(m_\mu^2\) 修正项；积分后得 \(\sigma=\frac{4\pi\alpha^2}{3s}\sqrt{1-\frac{4m_\mu^2}{s}}\big(1+\frac{2m_\mu^2}{s}\big)\)。当 \(\sqrt{s}&lt;2m_\mu\) 时根号内为负——物理上截面严格为零，因为能量不足以成对产生 μ。</p>
+<p><strong>题 3</strong>：\(\Delta\alpha_{\exp}=1/128-1/137=5.15\times10^{-4}\)；电子圈只贡献 \(\approx1.4\times10^{-4}\)，故强子部分 \(\approx3.7\times10^{-4}\)，约占总量 <strong>约 72%</strong>。这就是为什么精确测量 \(\alpha(m_Z)\) 必须依赖 \(e^+e^-\to\)强子数据。</p>
+</p></details>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<p><strong>基础论文</strong>：</p>
+<p>• Feynman, R. P. (1949). "Space-Time Approach to Quantum Electrodynamics." <em>Physical Review</em> 76, 769. ——费曼图形式体系的开创论文。将 QED 表述为传播子和顶点在时空中的组合，彻底改变了场论计算的范式。</p>
+<p>• Feynman, R. P. (1949). "The Theory of Positrons." <em>Physical Review</em> 76, 749. ——正电子作为逆时间方向传播的电子这一革命性解释。</p>
+<p>• Dyson, F. J. (1949). "The S Matrix in Quantum Electrodynamics." <em>Physical Review</em> 75, 1736. ——Dyson 级数的系统阐述，统一了 Schwinger 和 Feynman 的方法，引入了重整化的形式体系。</p>
+<p>• Schwinger, J. (1948). "Quantum Electrodynamics. I. A Covariant Formulation." <em>Physical Review</em> 74, 1439. ——近代关于 Schwinger 作用量（作用量——大白话：给整段运动过程打的一个总分，物理规律就是让这个总分取极值的那条路线）原理的先驱工作，以及电子反常磁矩 \(\alpha/2\pi\) 的首次计算。</p>
+<p><strong>现代精密计算的核心文献</strong>：</p>
+<p>• Aoyama, T., Hayakawa, M., Kinoshita, T., &amp; Nio, M. (2012, 2019). "Tenth-Order QED Contribution to the Electron g−2 and an Improved Value of the Fine Structure Constant." <em>Physical Review Letters</em> 109, 111807. ——五圈 QED 完整计算，评估全部 12672 个费曼图。</p>
+<p>• Muon g−2 Collaboration (2023). "Measurement of the Positive Muon Anomalous Magnetic Moment to 0.20 ppm." <em>Physical Review Letters</em> 131, 161802. ——Fermilab μ 子 g−2 实验最新结果：与标准模型预言的 4.2σ 偏差。</p>
+<p><strong>综述与教材</strong>：</p>
+<p>• Peskin &amp; Schroeder (1995). <em>An Introduction to Quantum Field Theory</em>. 第五、六、七章系统讲述了 QED 的费曼规则、圈图计算与重整化。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Peskin &amp; D. Schroeder, An Introduction to QFT</strong></p>
+<p>&rarr; <strong>S. Weinberg, The Quantum Theory of Fields</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/entanglement.html">量子纠缠</a>、<a href="/pages/electromagnetism.html">电磁学与 Maxwell 方程组</a>、<a href="/pages/contour-integral.html">围道积分与留数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/standard-model.html"><strong>标准模型</strong></a>：费曼图是标准模型微扰计算的核心工具——SU(3)×SU(2)×U(1) 规范理论的费曼规则完全决定了粒子散射振幅。</p>
+<p>&rarr; <a href="/pages/higgs-mechanism.html"><strong>Higgs 机制</strong></a>：费曼图中 Higgs 玻色子的传播子、与规范玻色子和费米子的耦合顶点——LHC 通过费曼图计算预言和实验对比发现了 Higgs 粒子。</p>
+<p>&rarr; <a href="/pages/contour-integral.html"><strong>围道积分与留数</strong></a>：费曼传播子 \(\Delta_F(p)=i/(p^2-m^2+i\varepsilon)\) 的傅里叶变换是复平面上的围道积分——iε-prescription 选择因果传播方向，留数定理计算圈积分。</p>
+</section>
+

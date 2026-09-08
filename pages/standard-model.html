@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SU(3)×SU(2)×U(1)——所有已知粒子" />
+  <meta property="og:title" content="标准模型 — Vibe Math" />
+  <meta property="og:description" content="SU(3)×SU(2)×U(1)——所有已知粒子" />
+  <title>标准模型 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🧩 标准模型 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">SU(3)×SU(2)×U(1)——所有已知粒子</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='standard-model',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/band-structure.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📶 能带结构</a>
+  <a href="/pages/cmb.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌌 宇宙微波背景 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——质量谱里的六个数：从 0.511 MeV 到 172.7 GeV</h3>
+<p>先摆出标准模型最扎眼的一组数字——基本粒子的质量谱。单位是 MeV/c²（质子约 938 MeV/c²，作为参照）：</p>
+<div class="formula display" data-tex="m_e=0.511,\quad m_\mu=105.7,\quad m_\tau=1777\ \mathrm{MeV};\qquad m_u=2.2,\ m_d=4.7,\ m_s=95\ \mathrm{MeV}"></div>
+<div class="formula display" data-tex="m_c=1.28\times10^{3},\ m_b=4.18\times10^{3},\ m_t=1.73\times10^{5}\ \mathrm{MeV};\qquad m_W=8.04\times10^{4},\ m_Z=9.12\times10^{4},\ m_H=1.25\times10^{5}\ \mathrm{MeV}"></div>
+<p>三个惊人的事实。第一，<strong>最轻的电子与最重的顶夸克差了 34 万倍</strong>（六个数量级）——同一套理论里，凭什么？第二，中间一行里，上夸克 2.2 MeV 和中微子（几乎为零）差得比电子还离谱。第三，W、Z、Higgs 的"重量级"集中在 ~10⁵ MeV（百 GeV）量级——这正是电弱对称破缺的能标。</p>
+<p>这些数字为什么值得学？因为它们定义了标准模型的两副面孔：<strong>它是人类有史以来最精确的理论</strong>（预言电子磁矩吻合到 12 位有效数字），却<strong>一个也解释不了这些质量从哪来</strong>（19 个自由参数只能测，不能算）。本课要做的事：把粒子谱数清楚（几代、几种力）、把 19 个参数逐个数出来、再把"为什么这套理论站得住"（幺正性、可重整化）和"为什么它明显不完整"（暗物质、中微子质量、层级问题）讲透。</p>
+<div class="key-insight">洞察：世界的"积木清单"基本齐了——3 代费米子 + 5 种规范玻色子 + Higgs，Lagrangian 只有一个。但清单上每个粒子的质量都是"测来的数字"而非"算来的答案"，引力没装进来、暗物质也不在清单里。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/higgs-mechanism.html">Higgs 机制</a>、<a href="/pages/feynman-diagram.html">费曼图</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、标准模型的"清单"——粒子与力</h3>
+<p>先把主角点名。标准模型里所有已知粒子的"户口"分三类：</p>
+<ul>
+<li><strong>费米子（12 个，物质）。</strong>分三"代"，每一代都是 2 个夸克 + 2 个轻子：
+第 1 代（u、d、电子 e⁻、电子中微子 νₑ），第 2 代（c、s、μ、ν_μ），第 3 代（t、b、τ、ν_τ）。<strong>每一代都只是上一代的"重型翻版"</strong>——电荷、色荷、弱荷完全相同，只有质量不同。这是标准模型最神秘的结构：为什么重复三遍？</li>
+<li><strong>规范玻色子（5 个，力的信使）。</strong>光子 γ（电磁力，无质量）、W± 和 Z⁰（弱力，80.4/91.2 GeV）、8 个胶子 g（强力，无质量）。力就是粒子之间交换这些信使。</li>
+<li><strong>Higgs 玻色子（1 个）。</strong>与所有有质量粒子耦合，给出质量（见 <a href="/pages/higgs-mechanism.html">Higgs 机制课</a>）。</li>
+</ul>
+<p>为什么"三代 + 一代是一套"？实验事实：第一代构成普通物质（质子 = uud，中子 = udd），第二代、第三代在宇宙早期或高能对撞中才露面。计数：12 费米子 + 5 玻色子 + 1 Higgs = 18 个粒子（胶子按 8 个算则 24 个）。这些数字不是推导出来的，是"户口普查"的结果——本课第二节会数出描述它们所需的 19 个自由参数。</p>
+<div class="key-insight">标准模型 = 一份 18（或 24）个粒子的户口簿：三代费米子每代都是"2 夸克 + 2 轻子"的复制，5 种规范玻色子传递三种力，Higgs 给出质量。为什么重复三代，是它问的第一号"为什么"。</div>
+</section>
+
+<section>
+<h3>一、标准模型——SU(3)×SU(2)×U(1)</h3>
+<p>18 个粒子不是各管各的，它们被一个<strong>对称性原理</strong>统一进同一个 Lagrangian。标准模型的完整规范群是</p>
+<div class="formula display" data-tex="G_{\mathrm{SM}}=SU(3)_C\times SU(2)_L\times U(1)_Y"></div>
+<p>三块分别对应三种力：<strong>SU(3)_C</strong> 是色（强）相互作用，夸克在其中是"色三重态"，胶子是它的 8 个生成元；<strong>SU(2)_L</strong> 是弱相互作用，只作用于左旋费米子（下标 L），W 是它的生成元；<strong>U(1)_Y</strong> 是超荷，B 玻色子对应它，与 SU(2)_L 混合后给出电磁（光子）和 Z。</p>
+<p><strong>为什么是"规范原理"说了算？</strong>这是一个"免费午餐"式的逻辑：<strong>要求理论在每一点都允许做局部的相位/旋转（局部规范不变性），就被迫引入传递相互作用的规范玻色子</strong>——粒子要"知道"每一处的变换方式，就必须携带一个场（玻色子）来补偿，这个场正是力的信使。换句话说，对称性不是对物理的描述，而是物理的<strong>源头</strong>：你要求 SU(3)×SU(2)×U(1) 局部不变，标准模型的全部力和粒子就被"逼"出来了。</p>
+<div class="key-insight">规范原理：要求理论有局部 SU(3)×SU(2)×U(1) 不变性 → 你<strong>被迫</strong>引入所有标准模型的力和粒子。对称性是源头，不是描述。但 19 个自由参数从哪来？暗物质在哪？标准模型不是终极理论。</div>
+</section>
+
+<section>
+<h3>二、教科书例题 1——数出 19 个自由参数</h3>
+<p><strong>问题：</strong>常听说"标准模型有 19 个自由参数"。请从 Lagrangian 出发把它们逐个数出来，并解释为什么"中微子质量"不在其中（要另加）。</p>
+<p><strong>第 1 步：从 Lagrangian 的项目数起。</strong>标准模型的 Lagrangian 是</p>
+<div class="formula display" data-tex="\mathcal{L}=-\frac14 F^2+\bar{\psi}i\gamma^\mu D_\mu\psi+|D_\mu\phi|^2-V(\phi)+y\,\bar{\psi}\phi\psi+\frac{\theta}{32\pi^2}G\tilde{G}"></div>
+<p>每一项里的"待定系数"就是一个自由参数：</p>
+<p><strong>第 2 步：逐项清点。</strong></p>
+<ul>
+<li><strong>规范耦合：3 个。</strong>g₃（SU(3)）、g（SU(2)）、g′（U(1)）——三种力的强度。</li>
+<li><strong>Higgs 势：2 个。</strong>V(φ) = μ²|φ|² + λ|φ|⁴ 的 μ²、λ。它们组合出 v ≈ 246 GeV 与 m_H ≈ 125 GeV（见 Higgs 机制课例题 1）。</li>
+<li><strong>Yukawa 耦合：9 个。</strong>费米子与 Higgs 的耦合系数 y_f，每代 6 个费米子各一个：y_u、y_c、y_t、y_d、y_s、y_b、y_e、y_μ、y_τ。它们决定全部 9 个费米子质量（m_f = y_f v/√2）。</li>
+<li><strong>CKM 矩阵：4 个。</strong>夸克味混合的 3×3 幺正矩阵有 3 个角度 + 1 个复相位（下一节讲）。</li>
+<li><strong>QCD θ 角：1 个。</strong>θ_G μν G̃^μν 项里的 θ，实验强迫它 &lt; 10⁻¹⁰（强 CP 问题）。</li>
+</ul>
+<p><strong>第 3 步：求和。</strong></p>
+<div class="formula display" data-tex="3\ (\text{规范})+2\ (\text{Higgs})+9\ (\text{Yukawa})+4\ (\text{CKM})+1\ (\theta)=19"></div>
+<p><strong>第 4 步：为什么中微子不在里面。</strong>标准模型没有右手中微子 ν_R（它是超标准模型的扩展），因此中微子没有 Yukawa 项，质量只能为零。一旦实验（1998）证明中微子有质量，就必须<strong>外挂</strong>右手中微子（或 Majorana 机制），再增加参数：3 个质量 + 3 个 PMNS 角 + 1 个相位（若 Majorana 再加 2 个）——所以"标准模型 19 个参数"和"中微子要另加 7–9 个"是同一个事实的两面。<strong>参数数目本身就是理论结构的诊断书。</strong>∎</p>
+<div class="key-insight">19 = 3 规范 + 2 Higgs + 9 Yukawa + 4 CKM + 1 θ。数参数不是算术游戏：每多一个参数就多一个"只能测不能算"的输入。中微子质量迫使再加 7–9 个，这正是标准模型"不完整"的最硬证据之一。</div>
+</section>
+
+<section>
+<h3>三、规范群与粒子谱</h3>
+<p>现在把粒子的量子数（色荷、弱荷、超荷）摆到桌面上——它们是决定"谁和谁怎么相互作用"的身份证。标准模型的完整规范群：</p>
+<div class="formula display" data-tex="G_{\mathrm{SM}}=SU(3)_C\times SU(2)_L\times U(1)_Y"></div>
+<p><strong>粒子内容（三代的完整谱）</strong>：</p>
+<p><strong>费米子</strong>：左手夸克二重态 Q_L = (u_L, d_L) ~ (3,2)_{1/6}，右手上型夸克 u_R ~ (3,1)_{2/3}，右手下型夸克 d_R ~ (3,1)_{−1/3}；左手轻子二重态 L_L = (ν_L, e_L) ~ (1,2)_{−1/2}，右手带电轻子 e_R ~ (1,1)_{−1}。右手中微子 ν_R ~ (1,1)_0 不属于标准模型（它是超标准模型扩展）。</p>
+<p><strong>规范玻色子</strong>：8 个胶子 (SU(3)_C, m=0)，W± 和 Z⁰ (SU(2)_L, m_W ≈ 80.4 GeV, m_Z ≈ 91.2 GeV)，光子 γ (U(1)_em, m=0 after SSB)。</p>
+<p><strong>Higgs 玻色子</strong>：标量二重态 φ ~ (1,2)_{1/2}，真空期望值 v ≈ 246 GeV，物理 Higgs 粒子质量 m_H ≈ 125.25±0.17 GeV。</p>
+<p><strong>标准模型的 19 个独立自由参数及其测量值</strong>：</p>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;">
+<tr style="background:#1a1a2e;color:#e0e0e0;"><th style="text-align:left;padding:8px;">参数</th><th style="text-align:left;padding:8px;">含义</th><th style="text-align:left;padding:8px;">测量值（约）</th></tr>
+<tr><td style="padding:8px;">g₃</td><td style="padding:8px;">SU(3) 规范耦合</td><td style="padding:8px;">αₛ(m_Z) ≈ 0.118</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">g</td><td style="padding:8px;">SU(2) 规范耦合</td><td style="padding:8px;">α(m_Z) ≈ 1/30</td></tr>
+<tr><td style="padding:8px;">g'</td><td style="padding:8px;">U(1) 规范耦合</td><td style="padding:8px;">α'(m_Z) ≈ 1/100</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">μ², λ</td><td style="padding:8px;">Higgs 势参数</td><td style="padding:8px;">v≈246 GeV, m_H≈125 GeV</td></tr>
+<tr><td style="padding:8px;">y_u, y_c, y_t</td><td style="padding:8px;">上型夸克 Yukawa 耦合</td><td style="padding:8px;">y_t ≈ 1, y_c ≈ 7×10⁻³, y_u ≈ 2.5×10⁻⁵</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">y_d, y_s, y_b</td><td style="padding:8px;">下型夸克 Yukawa 耦合</td><td style="padding:8px;">y_b ≈ 2.4×10⁻², y_s ≈ 5×10⁻⁴, y_d ≈ 1×10⁻⁴</td></tr>
+<tr><td style="padding:8px;">y_e, y_μ, y_τ</td><td style="padding:8px;">带电轻子 Yukawa 耦合</td><td style="padding:8px;">y_τ ≈ 1.0×10⁻², y_μ ≈ 6×10⁻⁴, y_e ≈ 2.9×10⁻⁶</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">θ_12, θ_23, θ_13, δ</td><td style="padding:8px;">CKM 参数</td><td style="padding:8px;">θ_12≈13°, θ_23≈2.4°, θ_13≈0.2°, δ≈68°</td></tr>
+<tr><td style="padding:8px;">θ_QCD</td><td style="padding:8px;">QCD θ-参数</td><td style="padding:8px;">< 10⁻¹⁰</td></tr>
+</table>
+<p>这 19 个数（加上 ν 质量/混合参数 → 再加 7–9 个）构成了所有粒子物理实验的理论输入。它们的层次结构——特别是 Yukawa 耦合跨越六个数量级——是味物理中最深刻的未解谜题。下一节把"跨越六个数量级"算给你看。</p>
+<div class="key-insight">粒子谱 = 一张量子数身份证：每组 (SU(3) 色, SU(2) 弱, U(1) 超荷) 决定相互作用。19 个参数全是"测出来"的——质量谱的层次（y_t≈1 到 y_e≈3×10⁻⁶）就是标准模型最大的"为什么"。</div>
+</section>
+
+<section>
+<h3>四、教科书例题 2——从 v 到质量谱：W 质量与 Yukawa 层次</h3>
+<p><strong>问题：</strong>已知 v ≈ 246.22 GeV。求：(1) 电子、τ、顶夸克的 Yukawa 耦合 y_f；(2) 用 g = e/sinθ_W 验证 W 质量 m_W = gv/2。目的：看清"质量的层次"到底从哪来。</p>
+<p><strong>第 1 步：Yukawa 耦合的定义。</strong>Higgs 机制给出费米子质量 m_f = y_f v/√2（v/√2 ≈ 174 GeV 是 Higgs 场的真空值），所以</p>
+<div class="formula display" data-tex="y_f=\frac{\sqrt2\,m_f}{v}"></div>
+<p>这个公式的动机：质量不是"放进 Lagrangian 的"，而是"真空值 v 乘上耦合 y_f"——每个费米子质量都是它与 Higgs 场的"握手力度"。</p>
+<p><strong>第 2 步：代入三个数。</strong></p>
+<div class="formula display" data-tex="y_e=\frac{1.414\times0.511}{246\,220}\approx2.9\times10^{-6},\qquad y_\tau=\frac{1.414\times1\,777}{246\,220}\approx1.0\times10^{-2},\qquad y_t=\frac{1.414\times172\,700}{246\,220}\approx0.99"></div>
+<p><strong>第 3 步：层次的量级。</strong>顶夸克与电子之比</p>
+<div class="formula display" data-tex="\frac{y_t}{y_e}\approx\frac{0.99}{2.9\times10^{-6}}\approx3.4\times10^{5}\quad(\text{跨越 }6\ \text{个数量级})"></div>
+<p>顶夸克的 y_t ≈ 1（与 Higgs 的握手是"全力"），电子只有三百万分之一。这 6 个数量级不是任何原理的推论——它就是"标准模型的 19 个参数只能测不能算"最刺眼的地方。</p>
+<p><strong>第 4 步：验证 W 质量。</strong>由 α(m_Z) = 1/128 得 e = √(4πα) = √0.0982 ≈ 0.3133；由 sin²θ_W ≈ 0.223 得 sinθ_W ≈ 0.4721，故 g = e/sinθ_W = 0.3133/0.4721 ≈ 0.6636。于是</p>
+<div class="formula display" data-tex="m_W=\frac{gv}{2}=\frac{0.6636\times246.2}{2}\approx81.7\,\mathrm{GeV}\quad(\text{树级})"></div>
+<p>与实验值 80.379 GeV 差约 1.7%——这个残差正是圈图辐射修正（顶夸克、Higgs 圈）的贡献，而 LEP 正是靠精确测量这类修正反过来确定了顶夸克质量 m_t ≈ 173 GeV（在 Tevatron 直接发现之前）。∎</p>
+<div class="key-insight">质量谱的层次 = Yukawa 耦合的层次：y = √2 m/v。顶夸克 y≈1 而电子 y≈3×10⁻⁶——同一个 v 乘上不同的"握手力度"，这就是 6 个数量级质量差的全部来源，也是"为什么标准模型不解释质量"的标准答案。</div>
+</section>
+
+<section>
+<h3>五、费曼图——QFT 的可视化语言</h3>
+<p>Lagrangian 是标准模型的"宪法"，但要做计算，需要一套把"量子过程"画出来、算出来的语言——费曼图。</p>
+<p>费曼图背后的数学是 <strong>Wick 定理</strong>：场算符的时序乘积等于"正规序 + 所有可能的收缩"，每个收缩（两算符的真空期望）就是一个费曼传播子，每个交叉点（顶点）对应一个耦合常数。所以一张费曼图 = 一个微扰展开的积分，图的拓扑决定算子的结构。这是从"场论"到"可计算物理"的唯一通道。</p>
+<p>为什么值得记住这门语言？因为标准模型全部可测预言的"最精确"样板是<strong>电子磁矩</strong>：</p>
+<div class="formula display" data-tex="\frac{g}{2}=1.00115965218073\ldots\quad(\text{QED 预言 vs 实验})"></div>
+<p>g/2 与 1 的偏离（反常磁矩）由一圈圈虚粒子图贡献：α/2π 项、α² 项、α³ 项……QED 的微扰计算把这串数算到 12 位有效数字，与实验吻合到同样精度——<strong>这是人类科学史上最精确的理论预言</strong>，也是"标准模型是对的"最硬的一张牌。代价是：这套计算需要处理无穷大（重整化），它为什么合法，正是下一节的主题。</p>
+<div class="key-insight">费曼图 = 微扰展开的记账本：Wick 定理把场算符乘积拆成传播子（线）与顶点（耦合），图即积分。电子 g/2 吻合到 12 位有效数字——标准模型"最精确理论"的称号来自这里。</div>
+</section>
+
+<section>
+<h3>六、幺正性、可重整化与 't Hooft 的证明</h3>
+<p>一个看似漂亮的量子场论可能根本算不了——除非它"可重整化"。标准模型的可重整化不是恩赐，而是被 <strong>幺正性</strong>（概率总和恒为 1）强制出来的。这段历史是本课最重要的"为什么"。</p>
+<p><strong>大质量问题。</strong>在非阿贝尔规范理论中，单纯地手动加入质量项 m²W_μW^μ 会破坏规范不变性，导致高能散射振幅的增长违反幺正性界——例如 W_L⁺W_L⁻ → W_L⁺W_L⁻ 散射在无 Higgs 时振幅 ∝ s (能量平方)，在 s ∼ (1.8 TeV)² 时超过幺正性限制 |M| &lt; 1。这意味着理论会在 TeV 尺度附近预言意义不明的高能散射——除非有新的机制介入。</p>
+<p>Brout–Englert–Higgs 机制（Higgs 机制）通过自发对称破缺给出规范玻色子质量：m_W = gv/2, m_Z = √(g²+g′²)v/2，同时保持理论的规范不变性。被"吃掉"的 Goldstone 玻色子精确贡献了抵消 W_L 散射中 ∝ s 项所需的标量交换——<strong>Higgs 粒子因此不仅是质量的源头，也是理论幺正性的保障</strong>。</p>
+<p><strong>'t Hooft 和 Veltman 的幺正性证明</strong>：1971 年，Gerard 't Hooft 和 Martinus Veltman 证明了 Yang–Mills 理论即使经过自发对称破缺仍然是可重整化的——所有紫外发散均可被有限个裸参数的重整化吸收。这一证明使用了维度正规化（dim-reg）和背景场方法，扫除了将 Weinberg–Salam 电弱统一理论作为一致量子场论的最后障碍。这一发现荣获 1999 年诺贝尔物理学奖。</p>
+<p>这意味着标准模型的所有过程——从 Z 玻色子衰变到 LHC 的 p-p 碰撞——都可以在微扰论框架内进行有限、可预言的计算。这是标准模型作为"完成的数学理论"地位的基石。</p>
+<div class="key-insight">可重整化不是"技巧"，而是"一致性"：没有 Higgs，W_LW_L 散射在 1.8 TeV 违反幺正性；有 Higgs，发散被吸收、概率守恒。't Hooft 的证明让标准模型从"漂亮的猜测"升级为"可以无脑计算"的理论。</div>
+</section>
+
+<section>
+<h3>七、教科书例题 3——Z 线形与中微子代数：为什么是三代</h3>
+<p><strong>问题：</strong>1990 年代 LEP 用 e⁺e⁻ → Z → ff 精确测量了 Z 的宽度。用下面的数字，证明"光中微子只有三种"。</p>
+<p><strong>第 1 步：Z 的宽度 = Z 衰变的总速率。</strong>LEP 测得</p>
+<div class="formula display" data-tex="\Gamma_Z=2.4952\,\mathrm{GeV},\qquad \Gamma_{\mathrm{had}}=1.7444\,\mathrm{GeV},\qquad \Gamma_{ll}\approx0.0840\,\mathrm{GeV}\ (e,\mu,\tau\ \text{各一})"></div>
+<p><strong>第 2 步：不可见宽度。</strong>Z 除衰变到夸克（→强子）和带电轻子外，还能衰变到中微子——中微子逃出探测器，测不到，只能"算剩余"：</p>
+<div class="formula display" data-tex="\Gamma_{\mathrm{inv}}=\Gamma_Z-\Gamma_{\mathrm{had}}-3\Gamma_{ll}=2.4952-1.7444-3\times0.0840\approx0.499\,\mathrm{GeV}"></div>
+<p><strong>第 3 步：每种中微子的贡献。</strong>标准模型预言每个中微子味对 Z 宽度的贡献是带电轻子的 2 倍（中微子只有左手分量，少一个自由度）：Γ_νν̄ = 2Γ_ll ≈ 0.168 GeV。于是</p>
+<div class="formula display" data-tex="N_\nu=\frac{\Gamma_{\mathrm{inv}}}{\Gamma_{\nu\bar\nu}}=\frac{0.499}{0.168}\approx2.97\approx3"></div>
+<p>LEP 的精确结果是 N_ν = 2.984 ± 0.008——<strong>中微子代数只能是 3</strong>。</p>
+<p><strong>第 4 步：为什么这是"代数"而不是"质量"的证据。</strong>这条测量完全不看中微子质量，只看"有多少种中微子能参与 Z 衰变"——所以它排除了第四代"轻型中微子"，也独立于中微子质量的大小。若存在第四代轻中微子，Γ_inv 会多出 0.168 GeV，LEP 的精度足以看出。这是标准模型"三代结构"最干净的实验裁定。∎</p>
+<div class="key-insight">例题 3 的方法论：宽度 = 衰变账本，测不到的"不可见宽度"恰好 = 3 × (每代中微子贡献)。N_ν = 2.98 ± 0.01 用一把尺子量出了三代结构——标准模型"3 代"不是假设，是 Z 宽度里的算术。</div>
+</section>
+
+<section>
+<h3>八、味物理与 CKM 矩阵</h3>
+<p>夸克有"味"（上、奇、顶……），而弱相互作用能让味改变——比如 d 夸克吸收 W⁺ 变成 u。夸克质量矩阵在对角化时引入的幺正变换导致了味改变的带电流——这在标准模型中被编码在 Cabibbo–Kobayashi–Maskawa (CKM) 矩阵中：</p>
+<div class="formula display" data-tex="V_{\mathrm{CKM}}=\begin{pmatrix}V_{ud}&V_{us}&V_{ub}\\ V_{cd}&V_{cs}&V_{cb}\\ V_{td}&V_{ts}&V_{tb}\end{pmatrix}\approx\begin{pmatrix}0.974&0.225&0.0037\\ 0.225&0.974&0.041\\ 0.0086&0.040&0.999\end{pmatrix}"></div>
+<p>（数值：λ ≈ 0.225 是 Cabibbo 角的正弦，V_ub、V_cb 很小——三代夸克"几乎不混"。）一个 3×3 幺正矩阵可由参数化为 <strong>3 个 Euler 角度 + 1 个复相位</strong>。这个复相位就是标准模型中唯一的 CP 破坏来源——Kobayashi 和 Maskawa (1973) 正是因此预测了第三代夸克的存在（当时只发现了 u、d、s），荣获 2008 年诺贝尔物理学奖。</p>
+<p><strong>Wolfenstein 参数化</strong>（适用于 V_ud ≈ V_cs ≈ V_tb ≈ 1 的各层次结构）：</p>
+<div class="formula display" data-tex="V_{\mathrm{CKM}}=\begin{pmatrix}1-\frac{\lambda^2}{2}&\lambda&A\lambda^3(\rho-i\eta)\\ -\lambda&1-\frac{\lambda^2}{2}&A\lambda^2\\ A\lambda^3(1-\rho-i\eta)&-A\lambda^2&1\end{pmatrix}+\mathcal{O}(\lambda^4)"></div>
+<p>其中 λ ≈ 0.225、A ≈ 0.814、ρ̄ ≈ 0.16、η̄ ≈ 0.35。η ≠ 0 意味着 CP 破坏。</p>
+<p><strong>CKM 幺正三角形</strong>：幺正性条件 V_ud V*_ub + V_cd V*_cb + V_td V*_tb = 0 在复平面上形成一个三角形。B 工厂（BaBar 在 SLAC, Belle 在 KEK）通过精密测量 B 介子衰变确定了三角形的所有边和角，结果与标准模型 CKM 范式的预言在实验误差内完全一致——这是对标准模型味结构的有力验证，但也意味着在该精度下没有新味物理的迹象。</p>
+<p>值得注意的是：CKM 矩阵的幺正性约束来自 W 玻色子与所有三代的规范相互作用。如果存在第四代手征夸克（但已被 m_H 和单 Higgs 产生截面排除）或新的带电规范玻色子，幺正三角形的闭合将出现偏差。</p>
+<div class="key-insight">CKM = 夸克味混合的"旋转矩阵"：3 角 + 1 相。那个复相位是标准模型 CP 破坏的唯一来源，也预言了第三代夸克。幺正三角形闭合与否，是味物理检验新物理的试金石。</div>
+</section>
+
+<section>
+<h3>九、中微子振荡——超越标准模型的第一个确凿证据</h3>
+<p>例题 1 说过：标准模型里中微子没有质量。实验却从 1968 年开始积累反例——<strong>太阳中微子失踪</strong>：Homestake 实验测到的太阳中微子流只有理论预言的三分之一。争议了几十年后，答案不是"太阳出了问题"，而是<strong>中微子在旅途中变了味</strong>。</p>
+<p>机制：<strong>味态 ≠ 质量态</strong>。中微子有三种味（νₑ、ν_μ、ν_τ）和三个质量态（ν₁、ν₂、ν₃），味态是质量态的叠加。三种质量态以不同速度传播，于是"电子中微子"在途中慢慢变成"μ 中微子 + τ 中微子"的混合——探测器按味计数，就"丢"了三分之一。这套混合由轻子版的 CKM——<strong>PMNS 矩阵</strong>描述。</p>
+<p>两条决定性证据：<strong>大气中微子</strong>（Super-Kamiokande，1998）——宇宙线在大气里产生的 μ 中微子随路径长度变化，"消失"的比例精确符合振荡公式；<strong>太阳中微子</strong>（SNO，2001）——用中性流反应看到"所有味"的中微子总数与标准太阳模型一致，证实太阳没问题、是中微子变了味。为此，Kajita 与 McDonald 获 2015 年诺贝尔物理学奖。</p>
+<p><strong>为什么这是"超越标准模型"？</strong>因为质量非零意味着必须有右手中微子或 Majorana 机制（例题 1 第 4 步）。中微子质量还顺带给了宇宙学一个可测的量：三个质量之和 ∑m_ν &lt; 0.12 eV（Planck）——中微子成了标准模型里唯一"已知非零、却不知机制"的质量。</p>
+<div class="key-insight">中微子振荡 = 味态与质量态的干涉：νₑ 在途中变成 ν_μ、ν_τ。太阳中微子失踪（1968）→ Super-K（1998）与 SNO（2001）裁定 → 2015 年诺贝尔奖。这是"标准模型必须扩展"的第一条硬证据。</div>
+</section>
+
+<section>
+<h3>十、标准模型未解决的谜题</h3>
+<p>标准模型在实验上近乎完美，但理论上有深刻的未解问题：</p>
+<p><strong>1. 层级问题</strong>：Higgs 质量 m_H ≈ 125 GeV，而其量子修正的裸质量 ∝ Λ²（Λ 是 UV 截断）。如果 Λ ∼ M_Pl ≈ 10¹⁹ GeV，则裸质量与物理质量之间的巨大抵消需要精细调节到 ∼ 10⁻³⁴ 精度——这一"自然性危机"是超对称、复合 Higgs 和额外维度等 BSM 理论的主要驱动力。</p>
+<p><strong>2. 强 CP 问题</strong>：QCD 拉格朗日量允许 CP 破坏项 θ_QCD (G_μν G̃^μν)/(32π²)，但实验测量（中子电偶极矩约束）给出 θ_QCD &lt; 10⁻¹⁰。为什么这个参数如此接近于零？Peccei–Quinn 机制和轴子（axion）是最自然的解答——轴子本身即是暗物质候选者。</p>
+<p><strong>3. 暗物质</strong>：宇宙总能量密度的 27% 是暗物质——标准模型中没有任何粒子扮演这个角色。中轻微质量中微子太轻（∑m_ν &lt; 0.12 eV），且是热暗物质（被排除为主要的 DM 贡献）。WIMP（弱相互作用大质量粒子——如超对称中性子）、轴子和 sterile 中微子是主要候选者。</p>
+<p><strong>4. 中微子质量</strong>：中微子振荡的发现要求中微子有质量——标准模型没有引入右手中微子，因此不能自然地产生 Dirac 质量项。如果中微子是 Majorana 粒子（ν = ν̄），需要跷跷板机制（m_ν ∼ v²/Λ ∼ 0.01–0.1 eV 当 Λ ∼ 10¹⁴–10¹⁵ GeV）——跷跷板标度接近 GUT 能标，这是一个诱人的暗示。</p>
+<p><strong>5. 重子不对称性</strong>：可观测物质中重子数远多于反重子数，而 SM 的 CP 破坏（Yukawa 相位）太弱（≪ 10⁻⁹）。早期宇宙中一定存在更强的 CP 破坏和新粒子参与的重子数生成过程——如 leptogenesis（通过重的 Majorana 中微子的衰变 → 轻子不对称 → sphaleron 转化为重子不对称）。</p>
+<p><strong>6. 味谜题</strong>：为什么有三代？Yukawa 耦合为什么跨越六个数量级（y_t ∼ 1 到 y_e ∼ 3×10⁻⁶）？CKM 矩阵近似对角的原因？这些都是味模型（如 Froggatt–Nielsen U(1)_F 机制、离散味对称群 A₄、S₄ 等）试图回答的问题。</p>
+<p>标准模型在实验上<strong>极其成功</strong>，在理论上<strong>明确不完整</strong>——这双重属性使它成为当代粒子物理学的核心张力。</p>
+<div class="key-insight">六道未解题：层级（125 GeV 与 10¹⁹ GeV 的 10⁻³⁴ 精细调节）、强 CP（θ &lt; 10⁻¹⁰ 为何这么小）、暗物质（27% 没有候选者）、中微子质量（机制未知）、重子不对称（CP 不够用）、味谜题（为什么三代）。标准模型精确地停在了这些问题的门口。</div>
+</section>
+
+<section>
+<h3>十一、为什么标准模型不是终极理论？</h3>
+<p>把上一节收敛成一句话：标准模型是<strong>有效场论</strong>——它在目前实验能到达的能标（≲ 10⁴ GeV）完美工作，但没有理由认为它能一路成立到 Planck 尺度 10¹⁹ GeV。具体地说：</p>
+<ul>
+<li><strong>19 个自由参数无法从第一原理推导。</strong>它们的数值（尤其 Yukawa 的六个数量级层次）是"测量值"而非"推导值"——任何自称"终极"的理论都应该解释它们。</li>
+<li><strong>暗物质粒子不在其中。</strong>宇宙 27% 的能量密度由标准模型里不存在的粒子承担。</li>
+<li><strong>中微子质量需要新机制。</strong>跷跷板机制（m_ν ≈ v²/M_R）尚未直接验证，但它把中微子质量与 GUT 能标联系起来。</li>
+<li><strong>层级问题。</strong>Higgs 质量 = 125 GeV，量子修正被推到 Planck 尺度 10¹⁹ GeV——两者之间的精确抵消需要"巧合"。<strong>超对称（SUSY）</strong>是解决层级问题最自然的候选（用超对称伙伴的圈抵消掉发散），但 LHC 至今未发现——这让"自然性"本身成了争议。</li>
+</ul>
+<p>结论不是"标准模型错了"，而是"标准模型是更深理论的低能极限"。问题只是：更深的理论长什么样——SUSY、额外维度、复合 Higgs、还是别的？这正是未来 10 年对撞机与宇宙学实验要回答的。</p>
+<div class="key-insight">"不是终极"的四条硬理由：参数只能测、暗物质缺席、中微子机制未知、层级需要 10⁻³⁴ 精细调节。标准模型是有效场论——在 Planck 尺度之下一定有新物理，只是我们还不知道它长什么样。</div>
+</section>
+
+<section>
+<h3>十二、前沿：μ 子 g−2 反常与轻子风味普适性</h3>
+<p>例题 2 说电子 g/2 吻合到 12 位数字；但同样的测量放到 μ 子身上，出现了裂缝。</p>
+<p><strong>μ 子 g−2 反常。</strong>Fermilab 的 Muon g−2 实验（2023 年最终结果）测得 μ 子的反常磁矩比标准模型预言<strong>大 4.2σ</strong>。如果这个偏差是真的，说明有标准模型之外的粒子在一圈层参与了 μ 子的磁矩——候选者包括轻子夸克、额外的 Z′、超对称伙伴。电子 g/2 与 μ 子 g−2 的差异本身就是线索：新物理与质量的耦合（如按质量标度）会让重轻子更受影响。</p>
+<p><strong>轻子风味普适性（LFU）。</strong>标准模型断言"电子、μ、τ 除了质量外完全一样"。LHCb 测量 B → K* μμ 与 B → K* ee 的分支比，曾偏离普适性预言约 3σ——若确认，同样要求新物理。</p>
+<p>这两条异常的特点是：都是"3–4σ"、都在精确测量的边缘。2025–2026 年更多数据（LHC Run 3、Belle II、Fermilab 升级）将决定它们的命运：<strong>要么升级为 5σ 的"新物理第一发现"，要么回归标准模型</strong>。这可能是未来十年粒子物理最激动人心的二选一。</p>
+<div class="key-insight">μ 子 g−2 超出 4.2σ、B 介子 LFU 偏离 3σ——标准模型的"最精确预言"在重轻子处出现裂缝。是统计涨落、还是新物理的第一扇门？2025–2026 的数据将给出裁决。</div>
+</section>
+
+<section>
+<h3>十三、关键公式</h3>
+<div class="formula display" data-tex="\mathcal{L}=-\frac14 F^2+\bar{\psi}i\gamma^\mu D_\mu\psi+|D_\mu\phi|^2-V(\phi)+y\,\bar{\psi}\phi\psi+\frac{\theta}{32\pi^2}G\tilde{G};\qquad G_{\mathrm{SM}}=SU(3)_C\times SU(2)_L\times U(1)_Y"></div>
+<div class="formula display" data-tex="m_f=\frac{y_f v}{\sqrt2},\quad v\approx246.22\,\mathrm{GeV};\qquad m_W=\frac{gv}{2}\approx80.4\,\mathrm{GeV},\quad m_Z=\frac{\sqrt{g^2+g'^2}\,v}{2}\approx91.2\,\mathrm{GeV}"></div>
+<div class="formula display" data-tex="\frac{g}{2}=1.001159652\ldots\ (\text{12 位有效数字});\qquad N_\nu=\frac{\Gamma_Z-\Gamma_{\mathrm{had}}-3\Gamma_{ll}}{2\Gamma_{ll}}=2.98\pm0.01"></div>
+<div class="formula display" data-tex="V_{\mathrm{CKM}}:\ 3\ \text{角}+1\ \text{相};\qquad \text{自由参数}:3+2+9+4+1=19\ (\text{中微子另加 }7\text{–}9)"></div>
+</section>
+
+<section>
+<h3>十四、试试看（每题附提示）</h3>
+<p><strong>1. 验证 μ 轻子的 Yukawa 耦合。</strong>m_μ = 105.66 MeV，v = 246.22 GeV。</p>
+<p><em>提示：y_μ = √2×105.66/246220 ≈ 6.07×10⁻⁴，与表格 6×10⁻⁴ 一致。试把 9 个 y_f 按大小排成一列，看它们如何横跨 6 个数量级——这就是"味层次"的原始数据。</em></p>
+<p><strong>2. 从 m_W 反求 g。</strong>已知 m_W = 80.379 GeV、v = 246.22 GeV，用 m_W = gv/2 求 g。</p>
+<p><em>提示：g = 2m_W/v = 160.76/246.22 ≈ 0.653。与例题 2 从 α、sinθ_W 推出的 0.664 差约 2%——这个差正是圈图辐射修正的大小，也是"树级公式 vs 实验"的典型误差。</em></p>
+<p><strong>3. 为什么 2×2 的 CKM 没有 CP 破坏？</strong></p>
+<p><em>提示：2×2 幺正矩阵只有 1 个角度、没有复相位（sinθ 与 cosθ 都是实的）；3×3 才有 3 角 + 1 相。所以"CP 破坏需要至少三代"是矩阵代数的必然——Kobayashi–Maskawa 正是倒过来用这一点预言了第三代。</em></p>
+<p><strong>4. 跷跷板机制的数值。</strong>m_ν ≈ v²/M_R，取 v = 246 GeV、M_R = 10¹⁴ GeV。</p>
+<p><em>提示：m_ν ≈ (246)²/10¹⁴ GeV = 6.05×10⁴/10¹⁴ ≈ 6×10⁻¹⁰ GeV ≈ 6×10⁻¹ eV? 不——6×10⁻¹⁰ GeV = 6×10⁻¹⁰×10⁹ eV = 0.6 eV。用 M_R = 10¹⁵ GeV 得 0.06 eV，正落在观测的中微子质量差平方根（~0.05 eV）量级。这就是"跷跷板标度接近 GUT"的数字含义。</em></p>
+<p><strong>5. 若电子无质量，世界会怎样？</strong></p>
+<p><em>提示：原子结合能 ∝ m_e（玻尔能级 E ∝ m_e），电子无质量则原子核周围的电子尺度发散、原子不复存在——稳定的化学与生命将不可能。所以 y_e ≈ 3×10⁻⁶ 这个"看起来随便"的数，是"宇宙能不能有结构"的开关之一。</em></p>
+<p><strong>6. 层级问题的精度到底是多少？</strong></p>
+<p><em>提示：裸质量修正 δm_H² ~ (y_t²/8π²)Λ²，Λ = 10¹⁹ GeV 时 δm_H ~ 10¹⁹ GeV，要与物理质量 125 GeV 抵消，需要相对精度 (125/10¹⁹)² ≈ 10⁻³⁴。这就是"精细调节 34 位小数"的来源——超对称正是为了让这些大数自动对消而设计的。</em></p>
+</section>
+
+<section>
+<h3>十五、附：工作题</h3>
+<p><strong>题 1（Yukawa 层次完整版）。</strong>用 y_f = √2 m_f/v 计算全部 9 个带电费米子的 Yukawa 耦合，并画出数量级分布。</p>
+<details><summary>显示解答</summary><p>
+代入 m_u=2.2、m_d=4.7、m_s=95、m_c=1.28×10³、m_b=4.18×10³、m_t=1.73×10⁵ MeV（轻子已给）：y_u ≈ 1.3×10⁻⁵、y_d ≈ 2.7×10⁻⁵、y_s ≈ 5.5×10⁻⁴、y_c ≈ 7.4×10⁻³、y_b ≈ 2.4×10⁻²、y_t ≈ 0.99；y_e ≈ 2.9×10⁻⁶、y_μ ≈ 6.1×10⁻⁴、y_τ ≈ 1.0×10⁻²。数量级分布：3×10⁻⁶、1.3×10⁻⁵、2.7×10⁻⁵、5×10⁻⁴、6×10⁻⁴、7×10⁻³、1×10⁻²、2.4×10⁻²、1。九个数横跨约 5.5 个数量级，且没有明显的"规则"——这是味谜题的全部原始材料。</p></details>
+<p><strong>题 2（Jarlskog 不变量）。</strong>估计标准模型 CP 破坏的量级：J = A²λ⁶η（用 Wolfenstein 参数 A≈0.81、λ≈0.225、η≈0.35）。</p>
+<details><summary>显示解答</summary><p>
+λ² ≈ 0.0506，λ⁶ = (λ²)³ ≈ 1.30×10⁻⁴。A² ≈ 0.66。J ≈ 0.66×1.30×10⁻⁴×0.35 ≈ 3.0×10⁻⁵。这个数远小于 1，正是"SM 的 CP 破坏不足以解释宇宙重子不对称"（需要 J 大得多）的数量级依据——也解释了为什么重子生成必须求助于新物理（leptogenesis）。
+</p></details>
+<p><strong>题 3（Z 宽度的轻重子检验）。</strong>若存在第四代"重电子"E⁻（m_E &gt; m_Z/2），它会影响 N_ν 的测量吗？</p>
+<details><summary>显示解答</summary><p>
+不影响直接计数。第四代带电轻子若 m_E &gt; m_Z/2，Z 无法衰变到它（相空间关闭），它在 Z 宽度里不出现；它的中微子（若存在且轻）才会把 Γ_inv 抬高一档。LEP 的 N_ν = 2.98 排除的是"第四代轻中微子"，不排除重第四代费米子——所以 4 代完全不被这个测量禁止，只是被别的（m_H、单 Higgs 产生截面）约束。这正是"每种测量各守一道门"的典型例子。</p></details>
+<p><strong>题 4（幺正三角形）。</strong>为什么"三角形闭合"能测新物理？试想 CKM 若真的非幺正（比如存在第四代），哪些观测量会变？</p>
+<details><summary>显示解答</summary><p>
+CKM 幺正性由"W 只与三代入态耦合"保证。若存在第四代夸克（或新的带电流），V 变成 4×3 的"非方阵"或 4×4 幺正矩阵，则原 3×3 的 V V† 将出现偏差：幺正三角形三边不再闭合，误差超出理论不确定度。B 工厂把三边和三角都测到 10% 以内仍闭合，意味着：要么没有第四代，要么其混合角极小。这就是"用几何闭合性当探测器"的思路——闭合是标准模型的指纹，开裂是新物理的信号。</p></details>
+</section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>D. Griffiths, Introduction to Elementary Particles</strong>——粒子谱、CKM 与标准模型结构的系统入门。</p>
+<p>&rarr; <strong>M. Peskin &amp; D. Schroeder, An Introduction to QFT</strong>——Wick 定理、重整化与可重整性证明的权威参考。</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/higgs-mechanism.html">Higgs 机制</a>、<a href="/pages/feynman-diagram.html">费曼图</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/higgs-mechanism.html">💎 Higgs 机制</a>：粒子物理核心链。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/y combinator.html">λ Y Combinator</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/standard-model.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

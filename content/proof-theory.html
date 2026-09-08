@@ -1,0 +1,175 @@
+<section>
+<h3>〇、直觉入门——一个可以亲手写的具体形式证明</h3>
+<p>先不看抽象理论，直接写一个<strong>完全机械、每一步都验证得了</strong>的证明。<strong>问题：在自然演绎（natural deduction）系统里，证明命题 A → A。</strong>规则只有两条：如果从假设 A 出发能推出 B，就能引入蕴含 A → B；而如果我们有 A 和 A → B，就能推出 B。</p>
+<p>证明这样写：</p>
+<p><strong>第 1 步</strong>：写下假设 A（我们暂时假定 A 成立）。</p>
+<p><strong>第 2 步</strong>：用"蕴含引入"规则：因为从假设 A 推出了 A（本身），所以可以去掉假设，得到 A → A。</p>
+<div class="formula display" data-tex="\dfrac{A\ \ (\text{假设})}{A}\qquad \Rightarrow\qquad \dfrac{\dfrac{}{A\vdash A}}{{}\vdash A\rightarrow A}(\rightarrow\text{I})"></div>
+<p>就这么短。A → A 是逻辑里最平凡的事实，但请注意它的形式：我们不是"凭直觉说它显然"，而是<strong>按规则一步步从假设推导</strong>。规则对不对，每一步都对得到——这正是"形式证明"和"随手写证明"的分水岭。</p>
+<p>现在加一点数字，展示"为什么要研究证明本身"。同一个 A → A，可以有两种截然不同的证明：<strong>直证</strong>（上面那种，两行）和<strong>绕路的证明</strong>——先证明一个中间引理 L，再用 L 推出 A → A。第二个证明更长、更"绕"，但结论一样。</p>
+<p>证明论（proof theory）就是<strong>把"证明"本身搬上手术台</strong>：它研究证明怎么化简、什么时候能去掉绕路的中间引理、证明有没有"标准形式"。就像有工程师专门研究发动机的每个零件是怎么转的，证明论的数学家专门研究"推理"这台机器是怎么工作的。这些抽象问题最终支撑起了让电脑帮人验证数学的软件（Coq、Lean、Agda）。</p>
+<div class="key-insight">证明论把"推理过程"本身当作研究对象——它研究证明如何化简、如何被程序验证。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/godel.html">Gödel 不完备</a>、<a href="/pages/turing-machine.html">图灵机</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、证明为什么值得被研究？——从"答案对不对"到"过程好不好"</h3>
+<p>平时做题，我们只关心结论对不对；但"结论对"之外还有一整片问题被忽略了。设想三个场景：</p>
+<p><strong>场景一（正规化）：</strong>一份证明 100 页长，其中藏着一个"中间引理"，用它的地方其实可以直接拼结论。能不能机械地把这个绕路的引理删掉，得到一份最短的"干净证明"？——这就是切消定理问的问题。</p>
+<p><strong>场景二（机械化验证）：</strong>让计算机检查一份证明。计算机不懂"显然"、不懂"略去"，它只认每一步都符合固定的规则。这意味着证明必须被写成一串严格规则下的步骤——这正是〇节示范的形式。</p>
+<p><strong>场景三（提取内容）：</strong>一句断言"存在一个解"的证明，能不能从证明里<strong>提取出</strong>那个解本身？——这是证明挖掘（proof mining）的目标，也是 Gödel 的 Dialectica 解释的初衷。</p>
+<p>三个场景的共同点：<strong>证明不再只是"手段"，而是被研究的对象</strong>。证明论的全部工作，就是把"证明"变成一个像数、像群一样可以研究的数学实体：给它定规则（形式系统）、给它测指标（长度、强度）、给它找标准形（正规证明）。</p>
+<div class="key-insight">三个动机：① 证明可"正规化"（删掉绕路引理）；② 证明可被机器逐行检查（形式化）；③ 证明可被"挖掘"出构造性内容。证明从此成为数学对象。</div>
+</section>
+
+<section>
+<h3>〇·二、自然演绎与序列演算——把证明写成树（直觉 → 严格）</h3>
+<p>证明论要有可研究的对象，先得把"证明"写成严格的形式。最常用的是两套符号系统：<strong>自然演绎</strong>和<strong>序列演算</strong>。</p>
+<p><strong>自然演绎（Gentzen, 1934）。</strong>它模仿人类推理：假设 A，推出 B，于是 A → B；假设 A 和 B，推出 A∧B；……每条规则都是"从一个判断推出另一个判断"。一个完整的证明是一棵<strong>证明树</strong>：根是结论，叶子是假设或被接受的公理，每个内节点是一次规则应用。〇节那个 A → A 就是一棵极小的树。</p>
+<p><strong>序列演算（sequent calculus）。</strong>为了让"绕路的引理"显形，Gentzen 又设计了序列演算。一个<strong>序列</strong>写作</p>
+<div class="formula display" data-tex="\Gamma\ \vdash\ \Delta,"></div>
+<p>读作"在前提 Γ 之下，Δ 中至少有一个命题成立"（Γ、Δ 是公式的有限列，Γ 是假设，Δ 是结论）。序列演算的每个规则形如"从上方若干序列推出下方一个序列"。它和自然演绎证明的是同一些定理，但序列的显式形状让"中间引理"无处可藏——切消定理正是关于序列演算的。</p>
+<p><strong>为什么要两套？</strong>自然演绎贴近"人怎么想"（好看），序列演算贴近"证明怎么被操纵"（好用）。证明论很多深刻结果在序列演算里陈述、证明，再翻译回人类友好的形式。</p>
+<div class="key-insight">自然演绎：树形证明，贴近直觉。序列演算：Γ ⊢ Δ，把假设和结论摊开在纸面上——它是研究"证明结构"的工作台。两套系统证明的是同一条定理集。</div>
+</section>
+
+<section>
+<h3>一、完整例题 1：在自然演绎里证 (A∧B) → A——一步步写证明树</h3>
+<p>规则先用两条足够：∧-消去（从 A∧B 可以推出 A，也可以推出 B）和 →-引入（从"假设 A 推出 B"推出 A → B）。</p>
+<p><strong>问题：证明 (A ∧ B) → A。</strong></p>
+<p><strong>第一步（做假设）。</strong>假设 H：A ∧ B。我们要从 H 推出 A。</p>
+<p><strong>第二步（用 ∧-消去）。</strong>因为 A ∧ B 成立，取左分量：由假设 H 得 A。（规则：A∧B ⊢ A。）</p>
+<p><strong>第三步（用 →-引入，消掉假设）。</strong>现在我们在"假设 A∧B 之下推出了 A"，于是可以引入蕴含并卸下假设 H：</p>
+<div class="formula display" data-tex="\dfrac{\dfrac{[A\wedge B]^1}{A}\ \wedge\text{E}_1}{A\wedge B\rightarrow A}\ \rightarrow\text{I}_1"></div>
+<p>方括号 [A∧B]¹ 表示这个假设在第一步用 →-引入"结算"了（上标 1 是配对标记）。证明树完整：根是 (A∧B) → A，叶子只有被结算的假设。∎</p>
+<p><strong>第四步（检查每一步都合法）。</strong>∧E₁：从 A∧B 取左分量得 A，规则合法。→I：从"假设 A∧B 推出 A"引入蕴含，规则合法。两步皆机械可验，无需"显然"。这就是形式证明的全部秘密。</p>
+<div class="key-insight">例题 1 的流程：做假设 → 规则展开 → 结算假设。每一步都由一条固定规则保证合法。看懂了这棵两层的树，就看清了所有自然演绎证明的骨架。</div>
+</section>
+
+<section>
+<h3>二、完整例题 2：在 Hilbert 系统里证明 A → A——五步、两条公理、一次演绎</h3>
+<p>为了让"形式证明"看起来更像"算数"，这里用另一种更朴素的系统：<strong>Hilbert 系统</strong>。它只有两条公理模式、一条规则：</p>
+<div class="formula display" data-tex="(\text{Ax1})\quad A\rightarrow(B\rightarrow A),\qquad (\text{Ax2})\quad (A\rightarrow(B\rightarrow C))\rightarrow((A\rightarrow B)\rightarrow(A\rightarrow C))."></div>
+<p><strong>规则（肯定前件，MP）：</strong>从 A → B 和 A 推出 B。</p>
+<p><strong>问题：用这两条公理证明 A → A。</strong>整个证明只有 5 行，每一步都是公理或 MP：</p>
+<p><strong>第 1 行</strong>：把 Ax2 取 B := (A → A)、C := A：<code>(A → ((A→A) → A)) → ((A → (A→A)) → (A → A))</code>。</p>
+<p><strong>第 2 行</strong>：把 Ax1 取 B := (A → A)：<code>A → ((A→A) → A)</code>。</p>
+<p><strong>第 3 行</strong>：对第 1、2 行做 MP：<code>(A → (A→A)) → (A → A)</code>。</p>
+<p><strong>第 4 行</strong>：把 Ax1 取 B := A：<code>A → (A → A)</code>。</p>
+<p><strong>第 5 行</strong>：对第 3、4 行做 MP：<code>A → A</code>。∎</p>
+<p><strong>为什么这样绕？</strong>Hilbert 系统把一切推理压进两条公理 + MP，像图灵机把一切计算压进状态表——它不优雅，但<strong>无可争议地严格</strong>：每行都能核查是不是公理或 MP 的直接结果。这正是"形式证明"的精神：把推理压到最小、最可核查的原子步骤。证明论里常把这类证明当"标准具"使用：任何系统能证 A → A，说明它至少这么强。</p>
+<div class="key-insight">例题 2 展示了"严格"的极致：5 行、2 条公理、3 次 MP，机械可查。Hilbert 系统不友好但无懈可击——它是检验"形式证明"概念的标尺。</div>
+</section>
+
+<section>
+<h3>三、切消定理——什么是 cut，为什么必须研究它</h3>
+<p>现在来到证明论的心脏。<strong>cut 规则</strong>（在序列演算里）：</p>
+<div class="formula display" data-tex="\dfrac{\Gamma\vdash\Delta,\,B\qquad B,\,\Gamma'\vdash\Delta'}{\Gamma,\Gamma'\vdash\Delta,\Delta'}\ \text{Cut}"></div>
+<p>翻译成大白话：为了证明结论，我们<strong>先证明一个中间命题 B</strong>（左前提：B 能被推出），再证明<strong>在 B 的帮助下结论成立</strong>（右前提：假设 B 能推出结论），于是把它们拼起来——B 就是那个"中间引理"。</p>
+<p>cut 是唯一一条"结论里有东西在上方出现两次、而中间量 B 消失"的规则。B 是"用完即弃"的临时引理。一个自然的疑问：<strong>没有 cut 的证明，够不够用？</strong>——即：中间引理能不能总是被"就地展开"，从而整个证明里根本没有绕路？</p>
+<p><strong>Gentzen 切消定理（1934）的答案：够。</strong></p>
+<div class="key-insight"><strong>切消定理</strong>：任何可证的序列 Γ ⊢ Δ，都存在一个<strong>不含有 cut 规则</strong>的证明。也就是说——每个证明都可以"正规化"，消除一切绕路的中间引理。</div>
+<p>用一个具体的小例子体会"切消"在做什么。设想一个用 cut 的证明：先证明引理 B，再用 B 推出结论 C。切消定理保证存在直接证 C 的证明。对一阶逻辑的每个具体证明，切消过程是可计算的（Gentzen 给出机械算法：反复把"最高层的 cut"向上推，遇到公理或 cut 的复合就消除）。</p>
+<p><strong>推论一（无矛盾的捷径）。</strong>没有 cut 的证明有"子公式性质"：证明里出现的每个公式都是结论的子公式。于是"空序列 ⊢"（矛盾）根本没有证明——因为结论空，能用的公式只能是空。这给出逻辑<strong>一致性</strong>的一种干净证明。</p>
+<p><strong>推论二（Curry-Howard）。</strong>切消 = 程序的 β 归约。证明 = 程序、命题 = 类型、cut 消除 = 程序执行（见关联课程与 Y 组合子）。证明被"执行"时，绕路的引理正是被计算消除的中间调用。</p>
+<div class="key-insight">cut = 中间引理。切消定理：一切可证命题都有"无切证明"——证明可正规化、可化简。这等价于 Curry-Howard 里的"程序可执行"。</div>
+</section>
+
+<section>
+<h3>四、证明论序数——用序数度量"这需要多强的推理"</h3>
+<p>切消定理给了"证明可以正规化"，但还缺一把尺子：<strong>不同的数学理论，需要多强的证明工具？</strong>证明论序数（proof-theoretic ordinal）就是这把尺子。</p>
+<p>先看序数。自然数 0,1,2,… 之后还有无穷序数 ω（"比一切自然数都大"的极限序数），然后是 ω+1, ω+2, …, ω+ω, …, ω², …, ω^ω, …, 再往上是：</p>
+<div class="formula display" data-tex="\varepsilon_0=\sup\{\,\omega,\ \omega^{\omega},\ \omega^{\omega^{\omega}},\ \omega^{\omega^{\omega^{\omega}}},\dots\,\}."></div>
+<p>ε₀ 是"ω 的塔"的第一个极限，也是第一个满足 ε = ω^ε 的序数。它是可数的，但比"任何有限的 ω 指数塔"都大。为什么要关心它？因为</p>
+<div class="key-insight"><strong>Gentzen（1936）：</strong>在 ε₀ 上做<strong>超限归纳</strong>（允许按 ε₀ 的结构递归证明），可以证明 Peano 算术 PA 的一致性；而 PA 自身做不到。这就是"证明论序数"纲领的开端：<strong>PA 的证明论序数 = ε₀</strong>。</div>
+<p><strong>序数怎么测理论强度？</strong>大致地说：一个理论 T 的证明论序数 = "T 能处理到哪一步超限归纳的最小序数"。理论越强，序数越大。PA 是 ε₀；更强的理论（如二阶算术的一部分 Π¹₁-CA₀）对应更大的序数 Γ₀；这个把"数学理论按序数排序"的纲领叫 ordinal analysis，至今仍在推进（现代成果包括对 Kruskal 树定理等的分析）。</p>
+<p><strong>为什么超限归纳能"绕过" Gödel？</strong>Gödel 第二不完备定理说：一个包含算术的理论，其一致性无法在<strong>理论自身</strong>内证明。Gentzen 没有违反它——他用了<strong>更强的、理论之外</strong>的工具（ε₀ 的超限归纳），而这个工具本身已被"元数学地"（在更弱的算术片段里）验证。不完备定理没有被推翻，它只是精确地划出了"用什么强度才够"。这与 Gödel 第一不完备定理相呼应：任何足够强的可公理化理论都不完备、不完备性恰可用序数来"补救性度量"。</p>
+<div class="key-insight">ε₀ = ω 的塔的极限 = 第一个"不动点"序数。PA 的证明论序数是 ε₀：在 ε₀ 上做超限归纳就能证 PA 一致。更强的理论对应更大的序数——这是 ordinal analysis 的纲领。</div>
+</section>
+
+<section>
+<h3>五、完整例题 3：Goodstein 序列——一个只靠 ε₀ 才证得了的具体算术</h3>
+<p>序数不是空中楼阁；它和一个看得见、带数字的算术现象直接挂钩。<strong>Goodstein 序列</strong>的终止性，PA 证不了，但 ε₀ 归纳能证。</p>
+<p><strong>第一步（定义：把数字写成"遗传基表示"）。</strong>把 266 用基 2 写：266 = 2⁸ + 2³ + 2¹，再把<strong>指数</strong>也用基 2 写：8 = 2³，于是</p>
+<div class="formula display" data-tex="266 = 2^{2^3}+2^3+2^1\qquad(\text{指数也写成 }2\text{ 的幂，递归到底})."></div>
+<p>这就是"遗传基 2 表示"——连指数里的指数都用基 2 表示。</p>
+<p><strong>第二步（定义 Goodstein 序列 G(m)）。</strong>从 m 出发：第 k 步（基从 k+1 开始）把当前数的遗传基表示里<strong>所有基都换成下一个基</strong>（k+1 → k+2），然后<strong>减去 1</strong>。举例，从 4 开始：</p>
+<p><strong>第 1 步</strong>：4 = 2²（遗传基 2）。基 2→3，得 3³ = 27，减 1 = 26。</p>
+<p><strong>第 2 步</strong>：26 = 2·3² + 2·3 + 2（遗传基 3）。基 3→4：2·4² + 2·4 + 2 = 32+8+2 = 42，减 1 = 41。</p>
+<p><strong>第 3 步</strong>：41 = 2·4² + 2·4 + 1（遗传基 4）。基 4→5：2·25 + 2·5 + 1 = 50+10+1 = 61，减 1 = 60。</p>
+<p>——数字在膨胀：4 → 26 → 41 → 60 → … 看起来会冲向无穷。</p>
+<p><strong>第三步（惊人事实：它最终到 0）。</strong>Goodstein 定理：无论从哪个 m 出发，这个序列<strong>都会在某一步变成 0</strong>。但从 4 出发要经过天文数字级的一亿多步；从更大的 m 出发，步数增长快得超出一切可计算函数（远超 Busy Beaver 意义上的任何"有限估算"）。</p>
+<p><strong>第四步（为什么 ε₀ 登场）。</strong>给每一步的 Goodstein 数配一个"序数标签"：把表示里的基换成 ω（3³ 换成 ω^ω 等）。关键观察：<strong>换基不改变标签</strong>（ω 是无所谓的"符号"），而<strong>减 1 一定让标签下降</strong>（例如 2·ω²+2·ω+2 减 1 变成 2·ω²+2·ω+1）。于是 Goodstein 数每走一步，对应的序数标签就<strong>严格下降</strong>一步。而序数不可能无限严格下降——任何下降链在 ω 的塔里终会触底（这正是 ε₀ 良基性）。所以序列必到 0。</p>
+<p><strong>第五步（为什么 PA 证不了）。</strong>"每一步标签严格下降"用到的是<strong> ε₀ 的超限归纳</strong>。Kirby–Paris（1982）证明了：Goodstein 终止性在 PA 里<strong>不可证明</strong>——它是最有名的"PA 之外的算术真命题"之一。也就是说：<strong>一个纯算术、只涉及加减乘除幂的陈述，其证明必须借道 ε₀</strong>。这正是证明论序数理论的"活标本"。</p>
+<div class="key-insight">Goodstein 序列：换基、减 1，数字先膨胀后归零。对应到序数标签（基换 ω），每一步标签严格下降，由 ε₀ 良基性保证终止。PA 证不了它——终止性需要 ε₀ 归纳。</div>
+</section>
+
+<section>
+<h3>六、Hilbert → Gödel → Gentzen——证明论的三部曲</h3>
+<p>证明论的诞生是一段真实的历史，三幕正好刻画了"用有限工具理解无穷"这个目标如何被一步步实现与修正。</p>
+<p><strong>第一幕（Hilbert 纲领）。</strong>20 世纪初，数学遭遇基础危机（Russell 悖论等）。David Hilbert 提出：用<strong>有限、可见、不依赖无穷对象</strong>的方法（所谓"有限方法"，finitistic methods）证明数学理论的一致性——只要一致性被有限地证明，数学的地基就稳了。</p>
+<p><strong>第二幕（Gödel 的当头一棒）。</strong>1931 年，Gödel 第二不完备定理：任何足以编码自身语法的一致算术理论，<strong>不能证明自己的一致性</strong>。这意味着 Hilbert 纲领里"用理论内部能表达的方法证自身一致"被彻底否决——如果 PA 一致，则"PA 一致"这个命题在 PA 里不可证。</p>
+<p><strong>第三幕（Gentzen 的精确回答）。</strong>1936 年，Gentzen 用 ε₀ 上的超限归纳证明了 PA 的一致性——这个工具<strong>超越</strong>了 PA 能表达的"有限"方法，但每一步仍是有限可检查的。Gödel 说不完备定理不可绕过；Gentzen 用事实说明：<strong>只要外推到 ε₀，就够得着</strong>。两者不矛盾，合起来精确划出了分界线：<em>PA 一致性的证明，恰好在 PA 自身的"有限方法"之外、但在 ε₀ 归纳之内</em>。</p>
+<div class="key-insight">三部曲：Hilbert 想用有限方法证一致 → Gödel 证明不可能（第二不完备）→ Gentzen 用 ε₀ 超限归纳"恰好够得着"。分界线因此精确：PA 证自身一致，正好差 ε₀ 一步。</div>
+</section>
+
+<section>
+<h3>七、Gödel 的 Dialectica 解释——用泛函理解算术，为 Curry-Howard 铺路</h3>
+<p>把目光从"证明的化简"转向"证明里能提取出什么"。</p>
+<p><strong>问题：</strong>Heyting 算术 HA（直觉主义版本的算术）的一致性能否被"翻译成"一个更容易控制的对象？Gödel（1958）发明了 <strong>Dialectica 解释</strong>：把每个 HA 公式解释成"存在一个高阶泛函实现它"。</p>
+<p>直觉：公式"对每个 x 存在 y 使 P(x,y)" 的证明，应当能<strong>给出一台"机器"</strong>：输入 x，输出一个具体的 y（和"见证"）。Gödel 把这台机器形式化为<strong>原始递归的高阶泛函</strong>（类型打底的 λ 演算雏形）。解释是递归的：</p>
+<div class="formula display" data-tex="\forall x\exists y\,P(x,y)\ \ \rightsquigarrow\ \ \exists\,f\ \forall x\ P(x,\,f(x))."></div>
+<p>公式的"实现者"就是那个 f。每个 HA 公式对应一个泛函；HA 的每一条推理规则都被证明"保持可实现性"；而空公式（矛盾）没有实现者——由此 HA 一致。</p>
+<p><strong>为什么重要？</strong>① 它是 Curry-Howard 的<strong>直接前身</strong>：命题 = 存在性陈述，证明 = 实现该陈述的泛函，一脉相承到"类型 = 命题"。② 它开创了<strong>证明挖掘</strong>：从经典证明里提取构造性内容——如果某定理的经典证明是"存在 y"，Dialectica 式翻译有时能实际产出"y 怎么找"的算法。③ 它在现代用做强归一化与程序提取的理论工具。</p>
+<div class="key-insight">Dialectica 解释：每个 HA 公式 = "存在泛函实现它"；公式的证明 = 实现该公式的泛函。这是 Curry-Howard 的前身，也是现代"证明挖掘"（从证明提取构造/算法）的核心工具。</div>
+</section>
+
+<section>
+<h3>八、Girard 的线性逻辑——把"资源"写进证明系统</h3>
+<p>经典逻辑有个隐藏假设：一个命题<strong>可以被任意使用多次</strong>（A 推出 A 之后再推出 A，从不减少）。Girard（1987）问：如果每个前提都是"用完即弃的资源"呢？——他发明了<strong>线性逻辑</strong>。</p>
+<p><strong>直觉（用钱做例子）。</strong>设 A = "你有 1 元钱"，B = "你有 1 张戏票"。经典逻辑里 A ∧ B 可以随便再读、再用；线性逻辑里 A ⊗ B 表示"这两样资源<strong>都</strong>被你拥有一次"——用了就没了。线性蕴含 A ⊸ B 是"把 A 这份资源<strong>换成</strong> B 这份资源"；加法 A ⊕ B 是"你<strong>只能选一个</strong>"。一条规则的分量就被明写成"这个资源用掉了几份"。</p>
+<p><strong>一个具体推导。</strong>在经典逻辑里 A → A ∧ A 永远成立；在线性逻辑里 A ⊸ A ⊗ A 不成立——因为把 A 拆成两份 A 意味着"复制资源"，而这需要专门的"复制"算子 !A（"可再生资源"）。正是"复制与否"的区分让线性逻辑能表达<strong>资源敏感</strong>的计算：程序每一步允许消耗哪些输入、哪些输入必须原样保留。</p>
+<p><strong>证明网络（proof nets）。</strong>线性逻辑还带来了 <strong>证明网络</strong>：把证明画成一张图（连接子节点组成的无环图），切消（证明正规化）变成图的简单"展开与消除"。这是第一次把"证明的规范化"<strong>直接几何化</strong>——证明论与几何在此交汇，也是自动推理与证明表示里的重要工具。</p>
+<p><strong>与量子计算的深层联系。</strong>量子世界的"纠缠态不可克隆"（no-cloning theorem）正是"资源不能复制"的物理化身：你不能拷贝一份量子态，只能消耗它。线性逻辑恰好是"禁止复制"的逻辑——所以它成为量子程序语言（如 Linear Haskell、量子线路语言的类型论）的设计基础。</p>
+<div class="key-insight">线性逻辑：经典逻辑的"随便用"被改成"用一次就没了"。A ⊗ B 要两样都有、A ⊸ B 是资源兑换、!A 才允许复制。证明网络把切消几何化；"不可克隆"让它与量子计算深层共振。</div>
+</section>
+
+<section>
+<h3>九、工作题（带解答）</h3>
+<p><strong>题 1（自然演绎：交换律）。</strong>证明 A∧B → B∧A，写完整的证明树。</p>
+<details><summary>显示解答</summary><p>假设 H：A∧B。用 ∧E₁ 从 H 得 A，用 ∧E₂ 从 H 得 B，用 ∧I 拼出 B∧A，最后 →I 卸下 H：<br><code>([A∧B]¹ → ∧E₁: A, ∧E₂: B) → ∧I: B∧A → →I₁: A∧B → B∧A</code>。∎</p></details>
+<p><strong>题 2（Hilbert 系统一步检查）。</strong>在例题 2 中，第 3 行（(A→(A→A))→(A→A)）为什么可以由第 1、2 行用 MP 得到？</p>
+<details><summary>显示解答</summary><p>第 1 行是 A→((A→A)→A) 作为前件的蕴含，形如 P → Q 其中 P = A→((A→A)→A)、Q = (A→(A→A))→(A→A)。第 2 行恰好就是 P。MP 从 P → Q 和 P 推出 Q，故得第 3 行。∎</p></details>
+<p><strong>题 3（Goodstein 第二步）。</strong>从 4 出发的 Goodstein 序列，算第 2、3 步的具体数字，并写下对应序数标签的下降。</p>
+<details><summary>显示解答</summary><p>第 1 步后是 26 = 2·3²+2·3+2，标签 ω 版 = 2·ω²+2·ω+2。第 2 步换基 3→4 得 2·4²+2·4+2=42，减 1 得 41 = 2·4²+2·4+1，标签 2·ω²+2·ω+1（已下降）。第 3 步换基 4→5 得 2·5²+2·5+1=61，减 1 得 60 = 2·5²+2·5+0，标签 2·ω²+2·ω（再降）。标签逐项严格下降，最终归零。∎</p></details>
+<p><strong>题 4（cut 的具体含义）。</strong>在序列演算里，用 cut 证"⊢ C"需要哪两个前提？若 C 是 A→A，写出一对合法前提。</p>
+<details><summary>显示解答</summary><p>需要 ⊢ B 与 B ⊢ C（取 Γ=Γ′=Δ′=∅）。对 C = A→A，取 B = A→A：前提一是 ⊢ A→A（可直接证），前提二是 (A→A) ⊢ (A→A)（公理，恒成立）。cut 把它们拼成 ⊢ A→A。注意这里 cut 完全多余——这正是切消定理要消除的那种"绕圈"。∎</p></details>
+<p><strong>题 5（Dialectica 的小例子）。</strong>用 Dialectica 精神写出公式 ∀x∃y (y &gt; x)（自然数上）的一个实现泛函 f。</p>
+<details><summary>显示解答</summary><p>取 f(x) = x+1，则对每个 x，f(x) = x+1 &gt; x，故 ∀x (f(x) &gt; x) 成立。f 就是该公式的"实现者"——Dialectica 解释要找的正是这样的 f（这里用后继函数即可）。∎</p></details>
+</section>
+
+<section>
+<h3>十、试试看（带提示）</h3>
+<p><strong>1. 自然演绎证 (A→B)→((B→C)→(A→C))（假言三段论）。</strong><strong>提示：</strong>假设 A→B、再假设 B→C、再假设 A；依次 MP 得 B、再 MP 得 C；最后三个 →I 依次卸下 A、B→C、A→B。</p>
+<p><strong>2. 证明 A→A 也可以不用 cut，为什么这条定理的"无切证明"恰好是〇节那棵两行树？</strong><strong>提示：</strong>〇节的树里没有任何中间引理，两步之内结论直接出现；cut 的定义要求"先用中间 B、再靠 B"，而这里从头到尾只有一个公式 A 在传递。</p>
+<p><strong>3. 从 4 出发的 Goodstein 序列，为什么第 4 步之后数字还会继续涨，但标签却在降？</strong><strong>提示：</strong>换基使数字变大（2·5²+2·5+0 → 换基 5→6 得 2·36+2·6+0=84，再减 1=83），但标签只由"形状"决定（换基不改变 ω 版标签），减 1 才真正让标签下降——数字涨和标签降可以并存。</p>
+<p><strong>4. 线性逻辑里为什么 A ⊸ A ⊗ A 不成立、而 !A ⊸ A ⊗ A 可以？</strong><strong>提示：</strong>⊗ 是"两样都要"，把 A 变成两份 A 需要复制资源；!A 就是"可再生/可复制"的资源，提供复制能力。所以复制只对带 ! 的资源允许。</p>
+<p><strong>5. 为什么 Goodstein 定理是"PA 之外"的最自然的例子，而它又不与 PA 的正确性冲突？</strong><strong>提示：</strong>PA 只"漏掉"了这条定理的<strong>证明</strong>，不是说它错了——定理在标准自然数上为真（可元数学验证）；PA 证不到它，正说明 PA 的一致性需要 ε₀ 归纳（见第五、六节），两者相互印证而非矛盾。</p>
+<p><strong>6. 为什么 ε₀ 良基（没有无限下降链）在 PA 内部无法形式化，但元数学地成立？</strong><strong>提示：</strong>证明"每步下降的序列必终止"需要对 ω 指数塔做超限归纳，其强度恰是 ε₀ 归纳；PA 的证明论序数就是 ε₀，再往上一步就超出 PA 的"证明力"了——这正是 ordinal analysis 定量的地方。</p>
+</section>
+
+<section><h3>前沿：同伦类型论（HoTT）与 Voevodsky</h3><p>证明论与代数拓扑在 21 世纪迎来了最深的交汇。<strong>Voevodsky（2006）</strong>提出用<strong>同伦类型论</strong>作为数学的新基础：把<strong>类型看作空间</strong>，把<strong>"两个元素相等"看作这两个点之间的同伦路径</strong>（道路可以连续形变，于是"相等"本身有了结构——相等的相等的……是无穷层级的高阶道路）。这个视角把"相等"从"要么真要么假"升级成"带结构的几何对象"。它的核心公理是<strong>单值公理（univalence）</strong>：<strong>等价 = 相等</strong>——两个空间之间只要存在一个同伦等价（"本质上同一个形状"），它们就是同一条"类型相等"。单值公理让"数学对象在被等价变换下保持性质"成为类型论内置的定理，而不是需要逐个去证的元性质。HoTT 可能替代 ZFC 成为数学的新底层语言（尤其是需要"不变量"和"高阶结构"的领域，如代数拓扑与高阶范畴论）。仍开放的问题：HoTT 的<strong>计算解释</strong>（规范化算法，normalization by evaluation，能否在类型论内部完全实现单值公理）以及<strong>无穷范畴的完全形式化</strong>——即如何把"∞-范畴"这一现代代数对象干净地编码进类型论。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Takeuti, Proof Theory</strong></p>
+<p>&rarr; <strong>J.-Y. Girard, Proof Theory and Logical Complexity</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/godel.html">Gödel 不完备</a>、<a href="/pages/turing-machine.html">图灵机</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/y combinator.html">λ Y Combinator</a>：同一难度层次。</p>
+</section>

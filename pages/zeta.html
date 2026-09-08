@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ζ(s) 的零点——素数分布的神秘线索" />
+  <meta property="og:title" content="黎曼 ζ 函数 — Vibe Math" />
+  <meta property="og:description" content="ζ(s) 的零点——素数分布的神秘线索" />
+  <title>黎曼 ζ 函数 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>〰️ 黎曼 ζ 函数 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">ζ(s) 的零点——素数分布的神秘线索</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='zeta',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/sieve.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔢 素数筛</a>
+  <a href="/pages/diophantine-approximation.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🐚 丢番图逼近与连分数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、具体动机——ζ(2) = π²/6：一个把"平方和"变成"圆的数"的惊人事实</h3>
+<p>先看一个带数字的具体问题。把每个自然数的倒数平方全部加起来：</p>
+<div class="formula display" data-tex="1+\frac{1}{4}+\frac{1}{9}+\frac{1}{16}+\frac{1}{25}+\cdots"></div>
+<p>前四项是 1 + 0.25 + 0.1111 + 0.0625 = 1.4236，前十项是 1.5498，前一百项是 1.6350，前一万项是 1.6448——它越加越大，却始终停在一个数附近。这个极限值是</p>
+<div class="formula display" data-tex="\zeta(2)=1+\frac{1}{4}+\frac{1}{9}+\frac{1}{16}+\cdots=\frac{\pi^2}{6}\approx 1.644934\ 0668\ldots"></div>
+<p>这就是著名的<strong>巴塞尔问题</strong>：把一整列"平方的倒数"加起来，得到的居然是一个含有 π 的数——π 是属于圆的常数，而这串和里根本没有圆。这个谜困扰了数学家约 90 年，1735 年，28 岁的欧拉把它解开了。</p>
+<p>更耐人寻味的是它的邻居——调和级数：</p>
+<div class="formula display" data-tex="1+\frac{1}{2}+\frac{1}{3}+\frac{1}{4}+\cdots=\infty"></div>
+<p>同样是"倒数加总"，一个收敛、一个发散，分界线恰好是 s = 1。于是把这两个和并成一个函数：ζ(s) = Σ 1/n<sup>s</sup>。欧拉随后发现了一个更深的身份：<strong>这个"所有数的和"竟然等于"所有素数的积"</strong>——这就是本课的入口。</p>
+<div class="key-insight">一句话：ζ(s) = 素数的"总账本"。ζ(2)=π²/6 是它的第一个具体名字，调和级数在 s=1 的发散是它的第一道奇异。读懂 ζ 函数的零点，就读懂了素数的分布规律。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/real-analysis.html">实分析</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、从具体到一般——为什么 ζ(2) 收敛而 ζ(1) 发散：分界线在 s=1</h3>
+<p>把具体例子概括成函数：对任意实数 s，定义</p>
+<div class="formula display" data-tex="\zeta(s)=\sum_{n=1}^{\infty}\frac{1}{n^s}\qquad(\text{通常称黎曼}\ \zeta\ \text{函数})"></div>
+<p>当 s=2 时就是上节的平方和，当 s=1 时就是调和级数。<strong>直觉先来：</strong>项 1/n<sup>s</sup> 随 n 增大会多快地缩小？s 越大缩小越快，和越容易收敛。严格的判据是<strong>积分判别法</strong>：把阶梯和与面积做比较——</p>
+<div class="formula display" data-tex="\sum_{n=1}^{\infty}\frac{1}{n^s}\ \text{收敛}\iff \int_1^\infty\frac{dx}{x^s}\ \text{收敛}\iff s&gt;1"></div>
+<p>因为</p>
+<div class="formula display" data-tex="\int_1^\infty\frac{dx}{x^s}=\frac{1}{s-1}\quad(s&gt;1),\qquad \int_1^\infty\frac{dx}{x}=\log x\Big|_1^\infty=\infty"></div>
+<p>所以 <strong>ζ(s) 对一切 s&gt;1 收敛，在 s=1 处发散</strong>。这个"在 s=1 爆掉"的性质叫<strong>单极点</strong>（singularity / simple pole）。也就是说，ζ(2)=π²/6 之所以存在，恰恰是因为 2 已经越过 s=1 这条"生死线"。</p>
+<p>那为什么偏偏是 π²/6？欧拉的核心洞察是：这个和可以<strong>写成关于素数的乘积</strong>，而乘积的形状能让 π 走进来。这为下一节铺好了路。</p>
+<div class="key-insight">ζ(s)=Σ1/n<sup>s</sup> 在 s&gt;1 收敛（积分判别法），在 s=1 有单极点（调和级数发散）。s=1 是全体自然数幂和的"生死线"；ζ(2)=π²/6 是越过这条线后的第一个具体礼物。</div>
+</section>
+
+<section>
+<h3>二、为什么 ζ 与素数有关——欧拉乘积公式（直觉 → 严格）</h3>
+<p>算术基本定理说：每个数都能唯一分解成素数之积。ζ 函数是"所有自然数的和"，素数"所有素数"是这些自然数的原子。于是欧拉问：<strong>能不能用素数直接重建 ζ？</strong></p>
+<p><strong>直觉先来。</strong>对每个素数 p，等比数列求和给出</p>
+<div class="formula display" data-tex="\frac{1}{1-p^{-s}}=1+\frac{1}{p^s}+\frac{1}{p^{2s}}+\frac{1}{p^{3s}}+\cdots"></div>
+<p>把这无穷多行乘起来：</p>
+<div class="formula display" data-tex="\prod_{p}\frac{1}{1-p^{-s}}=\left(1+\frac1{2^s}+\frac1{4^s}+\cdots\right)\left(1+\frac1{3^s}+\frac1{9^s}+\cdots\right)\left(1+\frac1{5^s}+\frac1{25^s}+\cdots\right)\cdots"></div>
+<p>展开这个无穷乘积：从 2 的列取 1/2^{2s}（即因子 2²），从 3 的列取 1/3^s（因子 3¹），其余全取 1——得到 1/(2²·3)^s = 1/6^s。<strong>每一个乘积项都对应一个自然数 n = ∏p<sup>k</sup>，而且恰好对应一次</strong>（唯一分解！）。反过来，每个自然数都在乘积里现身恰好一次。于是</p>
+<div class="formula display" data-tex="\zeta(s)=\sum_{n=1}^{\infty}\frac{1}{n^s}=\prod_{p}\frac{1}{1-p^{-s}}\quad(\mathrm{Re}(s)&gt;1)"></div>
+<p>这就是<strong>欧拉乘积公式</strong>（Euler，1737）。<strong>为什么成立？</strong>因为它只是"唯一分解"换了一副生成函数的面孔：左边对自然数求和，右边对素数取积，中间靠"每个数唯一分解"接线。它在 Re(s)&gt;1 处绝对收敛，所以换序完全合法——这一步在下一节会严格化。</p>
+<div class="key-insight">ζ(s) 同时编码了<strong>所有素数</strong>的信息：Σ1/n<sup>s</sup> = ∏(1−p<sup>−s</sup>)<sup>−1</sup>。这个等号是算术基本定理的解析化身。下一节立刻用它兑现第一个战利品：素数无穷多。</div>
+</section>
+
+<section>
+<h3>三、第一个收获——用欧拉乘积证明素数无穷多（完整例题）</h3>
+<p>欧拉乘积不只是好看，它是素数分布的第一个解析工具。下面把"素数无穷多"从乘积里一步步逼出来。</p>
+<p><strong>第一步：把乘积限制在有限个素数上。</strong>令 P 是某个整数，先只看 ≤P 的素数。唯一分解保证</p>
+<div class="formula display" data-tex="\prod_{p\le P}\left(1-\frac1p\right)^{-1}=\sum_{\substack{n\ge1\\ \text{只含}\le P\ \text{的素因子}}}\frac1n\ \ge\ \sum_{n\le P}\frac1n"></div>
+<p>（不等号：所有 n≤P 都"只含 ≤P 的素因子"，所以左边的和被右边更大的和被包含——左边至少等于右边。）</p>
+<p><strong>第二步：右边的和被逼向无穷。</strong>调和级数发散：</p>
+<div class="formula display" data-tex="\sum_{n\le P}\frac1n\ \longrightarrow\ \infty\qquad(P\to\infty)"></div>
+<p><strong>第三步：矛盾。</strong>若素数只有有限多个（设最后一个素数是 p<sub>k</sub>），那么取 P = p<sub>k</sub>，左边就是有限个有限数的乘积，必然有限——这与"左边 ≥ 无穷大"矛盾。</p>
+<div class="formula display" data-tex="\therefore\ \text{素数无穷多}\qquad\blacksquare"></div>
+<p><strong>数值验证这一步不等式。</strong>取 P=10：</p>
+<div class="formula display" data-tex="\prod_{p\le10}\left(1-\frac1p\right)^{-1}=2\cdot\frac32\cdot\frac54\cdot\frac76=\frac{35}{8}=4.375,\qquad \sum_{n\le10}\frac1n\approx 2.929"></div>
+<p>4.375 ≥ 2.929 ✓——不等式咬得死死的。这是欧几里得"素数无穷多"定理的<strong>解析证明</strong>，它把代数事实（唯一分解）升级为量化的收敛性论证。</p>
+<div class="key-insight">ζ(s) 在 s=1 发散 + 欧拉乘积 = 素数无穷多的解析证明。调和级数不只是"发散了之"，它是素数无穷多的第一份证据。</div>
+</section>
+
+<section>
+<h3>四、解析延拓——从 Re(s)&gt;1 走向整个复平面</h3>
+<p>第二节的 ζ 只在 Re(s)&gt;1 有定义。但素数分布的问题（如"π(x) 有多准"）需要把 ζ 当作<strong>复变函数</strong>来研究，而那要求 ζ 在更大的区域上有意义。<strong>为什么一定要延拓？</strong>因为函数方程——ζ 最深的一条对称性——只有把 ζ 定义在整个复平面上才看得见。</p>
+<p><strong>直觉：先延到 Re(s)&gt;0。</strong>用交错级数</p>
+<div class="formula display" data-tex="\eta(s)=1-\frac1{2^s}+\frac1{3^s}-\frac1{4^s}+\cdots=\sum_{n=1}^{\infty}\frac{(-1)^{n-1}}{n^s}\quad(\mathrm{Re}(s)&gt;0)"></div>
+<p>（交错级数只要项趋于 0 就收敛，所以 η 在 Re(s)&gt;0 都有定义。）把正负号拆开：偶数项是 ζ(s) 中 1/n<sup>s</sup> 减去 2·(1/(2^s)+1/(4^s)+…) = 2^{1−s}ζ(s)，于是</p>
+<div class="formula display" data-tex="\zeta(s)=\frac{\eta(s)}{1-2^{1-s}}\quad(\mathrm{Re}(s)&gt;0,\ s\neq1)"></div>
+<p>这就把 ζ 延拓到了 Re(s)&gt;0 的整个半平面（s=1 处是极点）。再靠<strong>函数方程</strong>一路延到全平面：</p>
+<div class="formula display" data-tex="\zeta(s)=2^s\pi^{s-1}\sin\!\left(\frac{\pi s}{2}\right)\Gamma(1-s)\,\zeta(1-s)"></div>
+<p>这条方程把 ζ(s) 和 ζ(1−s) 连起来，说明 <strong>ζ 关于 Re(s)=1/2 是镜像对称的</strong>——这条对称轴正是关键线（critical line）。<strong>平凡零点</strong>一目了然：正弦项在 s=−2,−4,−6,… 处为零（且 Γ 项无极点抵消），所以</p>
+<div class="formula display" data-tex="\zeta(-2)=\zeta(-4)=\zeta(-6)=\cdots=0\quad(\text{平凡零点})"></div>
+<p>其余零点都位于带状区域 0&lt;Re(s)&lt;1——叫<strong>关键带</strong>（critical strip），它们叫<strong>非平凡零点</strong>。本课后半（第五节、第六节）会看到：<strong>素数的全部信息都藏在关键带里的这些零点中</strong>。严格的延拓过程见「证明：解析延拓」一节。</p>
+<div class="key-insight">解析延拓把 ζ 从 Re(s)&gt;1 推广到全平面；函数方程给出对称轴 Re(s)=1/2（关键线）与平凡零点 −2,−4,−6,…。真正决定素数分布的是关键带 0&lt;Re(s)&lt;1 里的非平凡零点。</div>
+</section>
+
+<section>
+<h3>五、Riemann 的 1859 年论文——8 页改变了数论，与精确素数公式</h3>
+<p>1859 年，Riemann 在当选柏林科学院院士时提交了唯一的数论论文：《论小于给定数的素数个数》（Über die Anzahl der Primzahlen unter einer gegebenen Größe）。仅仅 8 页。他在其中提出了黎曼假设，引入了 ζ 的解析延拓与函数方程，并建立了<strong>素数分布与 ζ 零点之间的精确关系</strong>。</p>
+<p>这篇论文给出了 π(x) 的<strong>精确公式</strong>——这不是近似，是恒等式：</p>
+<div class="formula display" data-tex="\pi(x)=\operatorname{Li}(x)-\sum_{\rho}\operatorname{Li}(x^\rho)-\log 2+\int_x^\infty\frac{dt}{t(t^2-1)\log t}"></div>
+<p>其中 Li(x)=∫<sub>2</sub><sup>x</sup> dt/log t 是<strong>对数积分主项</strong>，求和遍历（＝挨个走遍）ζ(s) 的<strong>所有非平凡零点 ρ</strong>。每一项 Li(x<sup>ρ</sup>) 是一个<strong>振荡项</strong>：</p>
+<div class="formula display" data-tex="x^\rho=x^{\sigma+it}=x^\sigma\cdot e^{it\log x}"></div>
+<p><strong>零点的实部 σ 决定振幅衰减的速率，虚部 t 决定振荡的频率</strong>——每个零点贡献一个频率为 t 的波。第三项 −log 2 与最后的积分项是<strong>平凡修正</strong>。</p>
+<p>这个公式是数学中最优美的恒等式之一：<strong>它将素数的离散分布完全分解为 ζ 函数零点的连续谱（连续＝像温度计一样无缝衔接、不跳格）</strong>——如同将白光分解为彩虹。每一个零点对应素数计数函数的一个<strong>振动模式</strong>（模式＝这里指"振动的方式/节律"，不是数学里的"模"）。</p>
+<div class="key-insight">Riemann 证明了<strong>素数分布 ⇔ ζ 零点分布的 Fourier 对偶（对偶＝同一信息换一种说法，像同一首歌的简谱和五线谱）</strong>。素数定理等价于 Re(ρ)&lt;1 对所有零点成立——Hadamard 与 de la Vallée Poussin 在 1896 年证明了这一点（ζ(1+it)≠0，见「证明：素数定理思路」）。RH 要求最强形式：所有 Re(ρ)=1/2。</div>
+</section>
+
+<section>
+<h3>六、黎曼假设——数学中最重要的未解问题</h3>
+<p>Riemann 在 1859 年猜想：</p>
+<div class="formula display" data-tex="\text{所有非平凡零点都在临界线 }\ \mathrm{Re}(s)=\frac12\ \text{上}\qquad(\text{黎曼假设，RH})"></div>
+<p>前 10<sup>13</sup> 个零点已逐一验证——全部落在关键线上。但验证不是证明。</p>
+<p><strong>如果 RH 成立</strong>：素数分布是"最佳可能随机"的——</p>
+<div class="formula display" data-tex="\pi(x)=\operatorname{Li}(x)+O(\sqrt{x}\log x)"></div>
+<p><strong>如果存在偏离关键线的零点</strong>：素数分布有我们尚未发现的深层结构。RH 是 Clay 千禧年七大问题之一，悬赏百万美元。</p>
+<div class="key-insight">RH 断言所有非平凡零点躺在 Re(s)=1/2 上。它等价于"素数的音乐里每个音符都以同一速率衰减"——这是素数分布随机性所能达到的理论极限。</div>
+</section>
+
+<section>
+<h3>七、完整例题——三个例子一步步算完</h3>
+<p>公式不是摆着看的。教科书风格：每个例子都展开到每一步，最后用已知值核对。</p>
+
+<p><strong>例 1：手算 ζ(2) 的部分和，看它逼近 π²/6。</strong></p>
+<p>第一步，逐项加：S<sub>1</sub>=1；S<sub>4</sub>=1+0.25+0.1111+0.0625=1.4236；S<sub>10</sub>=1.5498。第二步，多取几项：S<sub>100</sub>≈1.6350，S<sub>1000</sub>≈1.6439，S<sub>10000</sub>≈1.6448。</p>
+<div class="formula display" data-tex="\frac{\pi^2}{6}=1.644934\ 0668\ldots\qquad S_{10000}\approx 1.64483\ \text{——逐渐逼近，但永远慢吞吞}"></div>
+<p>第三步，解释"慢"：∑1/n² 的余项 ≈ ∫<sub>N</sub><sup>∞</sup>dx/x² = 1/N——误差和 N 成反比，所以要多取很多项才前进一点点。✓</p>
+
+<p><strong>例 2：展开欧拉乘积，看它逼近 ζ(2)。</strong></p>
+<p>第一步，取 s=2，乘积只保留素数 ≤5：</p>
+<div class="formula display" data-tex="\prod_{p\le5}\left(1-\frac1{p^2}\right)^{-1}=\frac{4}{3}\cdot\frac{9}{8}\cdot\frac{25}{24}=\frac{25}{16}=1.5625"></div>
+<p>第二步，多放一个素数 7、再放 11：</p>
+<div class="formula display" data-tex="\frac{25}{16}\cdot\frac{49}{48}=\frac{1225}{768}\approx1.5951,\qquad \frac{1225}{768}\cdot\frac{121}{120}\approx 1.6083"></div>
+<p>第三步，对照目标：ζ(2)=1.6449。随着放入的素数越来越多，乘积一路逼近它。✓</p>
+
+<p><strong>例 3：把"素数无穷多"的证明写成可核查的数字。</strong></p>
+<p>第一步，取 P=10，算有限乘积：∏<sub>p≤10</sub>(1−1/p)<sup>−1</sup> = 2·(3/2)·(5/4)·(7/6) = 35/8 = 4.375。第二步，算部分调和和：Σ<sub>n≤10</sub>1/n ≈ 2.929。第三步，检验不等式 4.375 ≥ 2.929 ✓。第四步，想象 P 增大：右边冲向无穷，所以左边的素数乘积也必须冲向无穷——素数只能是无穷多。✓</p>
+</section>
+
+<section>
+<h3>八、临界线上的零点统计——GUE 普适性</h3>
+<p>1972 年，Montgomery 在 Princeton 与物理学家 Freeman Dyson 喝茶时，发现了数论与量子物理的深层联系。Montgomery 计算了 ζ 零点的<strong>对关联函数</strong>（pair correlation）：</p>
+<div class="formula display" data-tex="F(\alpha,T)=\frac{2\pi}{T\log T}\sum_{0&lt;\gamma,\gamma'\le T}T^{i\alpha(\gamma-\gamma')}w(\gamma-\gamma')"></div>
+<p>在限制 α≤1 时得到对关联密度：1−sinc²(πα)。Dyson 立刻认出——这和<strong>高斯酉系综（酉＝量子力学里"不改变长度"的矩阵变换）(GUE)</strong>随机矩阵特征值的对关联函数完全一致。</p>
+<div class="formula display" data-tex="1-\operatorname{sinc}^2(\pi\alpha),\qquad \operatorname{sinc}(x)=\frac{\sin\pi x}{\pi x}"></div>
+<p><strong>Montgomery–Dyson 对关联猜想（1973）：</strong>Riemann ζ 零点的局部统计和 GUE 随机 Hermitian 矩阵特征值的局部统计<strong>完全相同</strong>。这意味着 ζ 零点表现出"排斥"行为——两个零点几乎不可能靠得太近——这是量子混沌系统的典型特征。</p>
+<p>Odlyzko 在 1987 年进行了大规模数值验证：计算了 10<sup>20</sup> 量级的 ζ 零点，统计结果与 GUE 预测在 30 位有效数字吻合——这是实验数学历史上最精确的数值证据之一。</p>
+<p><strong>Keating–Snaith（2000）：</strong>利用随机矩阵理论预测了 ζ 函数在临界线上高阶矩的完整渐近展开。对 2k 阶矩：</p>
+<div class="formula display" data-tex="\frac{1}{T}\int_0^T|\zeta(\tfrac12+it)|^{2k}\,dt \sim g_k\,a_k\,(\log T)^{k^2}"></div>
+<p>其中 g<sub>k</sub> 是算术因子（来自欧拉乘积），a<sub>k</sub> 来自 GUE 随机矩阵理论的 Selberg 积分。该预测与现存数值结果惊人吻合。</p>
+<p>Sarnak 提出的"<strong>算术量子混沌</strong>"纲领：对于算术流形（如 SL(2,ℤ)\ℍ 上的 Maass 形式），量子极限（＝被不断逼近、最终封顶的那个边界值）问题与 L-函数的矩问题等价。ζ 零点的 GUE 普适性是算术量子混沌猜想在零维类比中的体现。</p>
+<div class="key-insight">GUE 普适性暗示着<strong>Hilbert–Pólya 猜想</strong>的深层正确性：存在某个量子 Hamiltonian Ĥ，满足 Ĥψ<sub>n</sub> = E<sub>n</sub>ψ<sub>n</sub>，且 ζ(1/2+iE<sub>n</sub>)=0。GUE 统计是该算符对应经典系统为<strong>混沌</strong>的必然结果。Bohigas–Giannoni–Schmit 猜想（1984）：量子混沌系统的能级统计由随机矩阵理论描述——如果 ζ 零点是某个混沌量子系统的能谱，GUE 统计就是必然的。</div>
+</section>
+
+<section>
+<h3>九、前沿：随机矩阵理论对 ζ 零点的最新预测</h3>
+<p>Keating–Snaith（2000）用随机矩阵预测了 ζ 零点的矩——和数值完美吻合。这强化了 Hilbert–Pólya 猜想（ζ 零点 = 某个 Hamiltonian 的能谱）。</p>
+<p>仍开放的问题：<strong>找到具体的算符</strong>——"如果 RH 为真，这个 Hamiltonian 是什么？"没人知道。这是当前随机矩阵路线与 RH 之间最后一公里的鸿沟。</p>
+</section>
+
+<section>
+<h3>十、ζ 函数和物理的惊人联系</h3>
+<p>ζ 函数在量子混沌（能谱统计）、弦论（Veneziano 振幅包含 ζ 值）、Casimir 效应（ζ 正规化计算真空能）中反复出现。这不是巧合——ζ 函数似乎是大自然"数字化"信息的通用编码方式。</p>
+<div class="key-insight">从 GUE 到弦论，ζ 值总在物理公式里"恰好"出现。物理学与解析数论在 ζ 身上多次接头，这是 Hilbert–Pólya 猜想之所以诱人的背景。</div>
+</section>
+
+<section>
+<h3>十一、为什么 RH 这么难？——五条攻击路线</h3>
+<p><strong>1. 函数域类比（已解）</strong>：Deligne 1974 年证明了有限域上代数簇（＝由一组多项式方程"画"出来的曲线/曲面等几何形状）的 Weil 猜想——RH 的函数域版本。工具是 étale 上同调 + Lefschetz 束。推广到数域本身——需要 F₁ 几何。</p>
+<p><strong>2. F₁ 几何（一元域纲领）</strong>：如果存在虚拟的"一元域 F₁"使 Spec(Z) 是其上的代数簇 → RH 变成 F₁ 上的 Weil 猜想。Manin、Connes–Consani 正在建构。</p>
+<p><strong>3. 随机矩阵理论</strong>：Montgomery 1972 年发现 ζ 零点间距 = GUE 随机矩阵（矩阵＝排成一张方表的一堆数）特征值（特征值＝这张表被"拉伸"时纹丝不动的刻度，物理里对应能级）间距。量子混沌 → Hilbert–Pólya 猜想：ζ 零点 = 某个量子 Hamiltonian 的能谱。</p>
+<p><strong>4. Connes 的非交换几何</strong>：构造谱三元组使 ζ 零点 = 某 Dirac 算子（算子＝把函数加工成另一个函数的"机器"，比如"求导"就是一个算子）的谱。</p>
+<p><strong>5. 解析数论传统方法</strong>：当前最好——至少 41% 的零点在关键线上。经典链条：Hardy（1914）无穷多个在线上 → Selberg（1942）正比例 → Levinson（1974）≥1/3 → Conrey（1989）40% → Pratt–Robles–Zaharescu–Zeindler（2020）&gt;5/12 ≈ 41.7%。</p>
+<div class="key-insight">五条路线各执一词，谁也没有攻破 RH。几何路线（F₁）、分析路线（零点密度）、概率路线（GUE）在同一堵墙面前握手言和——这正是 RH 之难的注脚。</div>
+</section>
+
+<section>
+<h3>十二、如果 RH 为假——会发生什么？</h3>
+<p>如果存在偏离关键线的零点，这将是一场<strong>概念性地震</strong>。RH 不是孤立的猜想——它与随机矩阵理论、量子混沌、F₁ 几何等整个数学/物理网络相连。如果存在 Re(ρ)&gt;1/2 的零点，这些联系需要一个<strong>全新的解释框架</strong>。</p>
+<p>素数分布将表现出<strong>非随机结构</strong>：存在一个频率为 Im(ρ) 的振动模式，其振幅衰减速率慢于预期——意味着素数的"音乐"中有一个<strong>异常响亮的音符</strong>。</p>
+<p>在某些算术级数中，素数会比"随机模型"预测的更密集或更稀疏——这类偏差可通过零点位置<strong>精确计算</strong>。Littlewood（1914）已经证明 π(x)−Li(x) 变号无穷多次——RH 为假只会让这种振荡更加剧烈。</p>
+<p>量子混沌的 Bohigas–Giannoni–Schmit 猜想可能需要在算术量子混沌中做修正。GUE 普适性可能不能完全对应——但仍可能是"接近 GUE"的统计。F₁ 几何和 Connes 的非交换几何纲领将需要重大修正——或反过来，提供<strong>解释</strong>为何某个特定位置出现反例零点。</p>
+<div class="key-insight">学界共识：RH 几乎肯定为真。但"几乎肯定"不是数学证明。Hilbert–Pólya 猜想的实现——为 ζ 零点找到一个量子力学模型——可能是最终证明 RH 的关键。如果 RH 为假，反例零点的虚部将是一个<strong>极其特殊的数</strong>——可能在数学中扮演类似 Feigenbaum 常数 δ=4.669… 的角色。</div>
+</section>
+
+<section>
+<h3>十三、如果 RH 被证明或反驳——对数学的影响</h3>
+<p><strong>如果 RH 为真：</strong></p>
+<ul>
+<li><strong>素数定理的最优误差项：</strong>π(x)=Li(x)+O(√x log x)。这是素数分布随机性所能达到的理论极限——没有一个公式能以亚 √x 量级的误差预测素数位置。RH 将经典 PNT 从"近似"升级为"精确的误差控制"。</li>
+<li><strong>类数问题：</strong>虚二次域的类数 h(−d)→∞ 当 d→∞，退化成素数的合数分布极有规律。Goldfeld（1976）将类数问题与 L-函数零点关联——GRH ⟹ 有效类数下界。</li>
+<li><strong>Artin L-函数与 Chebotarev 密度定理：</strong>GRH（广义 Riemann 假设）蕴含 Artin L-函数的全纯性 ⟹ Chebotarev 密度定理的最优误差项 ⟹ 数域中素理想的统计分布的最精确描述。</li>
+<li><strong>Mertens 猜想：</strong>Odlyzko–te Riele（1985）证明 Mertens 猜想为假——|M(x)|≤√x 不成立。但 RH 为真时 M(x)=O(x<sup>1/2+ε</sup>) 仍成立。</li>
+<li><strong>数域上椭圆曲线：</strong>BSD 猜想的某种形式可能作为 RH 的推论出现。GRH 是 BSD 全秩公式的"一致性条件"。</li>
+</ul>
+<p><strong>如果 RH 为假——存在偏离临界线的零点：</strong>见上节（概念地震、非随机结构、异常音符、BGS 修正、F₁ 与非交换几何的改写）。</p>
+<div class="key-insight">RH 一旦成立，一揽子"最优误差项"跟着成立；RH 一旦被推翻，整个数学–物理网络需要重新校准。这就是"最重要未解问题"的分量。</div>
+</section>
+
+<section>
+<h3>十四、试试看（带提示）</h3>
+<p>1. 用积分判别法说明 Σ1/n<sup>s</sup> 在 s=2 收敛、在 s=1 发散。<br>提示：比较 Σ 与 ∫<sub>1</sub><sup>∞</sup>x<sup>−s</sup>dx；该积分在 s&gt;1 等于 1/(s−1)，在 s=1 是 log x→∞。</p>
+<p>2. 手算欧拉乘积前五个素数（2,3,5,7,11）在 s=2 的值，并与 π²/6 比较。<br>提示：(4/3)(9/8)(25/24)(49/48)(121/120) = 148225/92160 ≈ 1.6083；π²/6 ≈ 1.6449——放入的素数越多越接近。</p>
+<p>3. 验证 ∏<sub>p≤10</sub>(1−1/p)<sup>−1</sup> ≥ Σ<sub>n≤10</sub>1/n 的不等式数字，并解释它为何证明素数无穷多。<br>提示：左 = 35/8 = 4.375，右 ≈ 2.929；左边是"只含 ≤10 的素因子"的数的倒数和，包含所有 n≤10。</p>
+<p>4. 用函数方程说明 ζ(−2)=0（提示：sin(πs/2) 在 s=−2 为零，而 Γ(1−s) 在那里没有极点）。</p>
+<p>5. 解释为什么 ζ 在 s=1 的极点就足以推出"素数倒数和发散"？<br>提示：对欧拉乘积取对数，log ζ(s) = Σ<sub>p</sub>log(1/(1−p<sup>−s</sup>)) ≈ Σ<sub>p</sub>p<sup>−s</sup>，令 s→1 得 Σ1/p = ∞（这是 Euler 1740 的经典结果）。</p>
+<p>6. 想一想：Riemann 精确公式里，为什么零点的实部越小（越靠左）越好？<br>提示：x<sup>ρ</sup>=x<sup>σ</sup>e<sup>it log x</sup>，σ 越小则振幅 x<sup>σ</sup> 衰减越快，主项 Li(x) 越"说了算"。</p>
+</section>
+
+<section>
+<h3>十五、关键公式</h3>
+<div class="formula display" data-tex="\zeta(s)=\sum_{n=1}^{\infty}\frac{1}{n^s}=\prod_{p}\frac{1}{1-p^{-s}}\quad(\mathrm{Re}(s)&gt;1)"></div>
+<div class="formula display" data-tex="\zeta(2)=\frac{\pi^2}{6}\approx 1.644934,\qquad \zeta(1)=\infty"></div>
+<div class="formula display" data-tex="\zeta(s)=\frac{\eta(s)}{1-2^{1-s}},\qquad \eta(s)=\sum_{n\ge1}\frac{(-1)^{n-1}}{n^s}\quad(\mathrm{Re}(s)&gt;0)"></div>
+<div class="formula display" data-tex="\zeta(s)=2^s\pi^{s-1}\sin\!\left(\frac{\pi s}{2}\right)\Gamma(1-s)\,\zeta(1-s)"></div>
+<div class="formula display" data-tex="\zeta(-2)=\zeta(-4)=\zeta(-6)=\cdots=0\qquad(\text{平凡零点})"></div>
+<div class="formula display" data-tex="\pi(x)=\operatorname{Li}(x)-\sum_{\rho}\operatorname{Li}(x^\rho)-\log 2+\int_x^\infty\frac{dt}{t(t^2-1)\log t}"></div>
+<div class="formula display" data-tex="\pi(x)\sim\frac{x}{\log x}\quad(\text{PNT}),\qquad \text{RH}\implies \pi(x)=\operatorname{Li}(x)+O(\sqrt{x}\log x)"></div>
+<div class="formula display" data-tex="\frac{1}{T}\int_0^T|\zeta(\tfrac12+it)|^{2k}\,dt\sim g_k\,a_k\,(\log T)^{k^2}\quad(\text{Keating--Snaith})"></div>
+</section>
+
+<section>
+<h3>证明：解析延拓（严格版）</h3>
+<p>正文第四节用 η 函数"先直觉"地延拓了一次。这里补上严格化的两处细节。</p>
+<p><strong>（一）η(s) 在 Re(s)&gt;0 处处收敛。</strong>对 s=σ+it，|(−1)^{n−1}/n<sup>s</sup>| = 1/n<sup>σ</sup> 单调趋于 0，且符号交错，故交错级数检验成立——η(s) 在 σ&gt;0 的每个半平面上一致收敛，因而全纯。</p>
+<p><strong>（二）恒等式 ζ(s)=η(s)/(1−2<sup>1−s</sup>)。</strong>把 η 按奇偶拆开：</p>
+<div class="formula display" data-tex="\eta(s)=\sum_{n\ge1}\frac1{n^s}-2\sum_{n\ge1}\frac1{(2n)^s}=\zeta(s)-2^{1-s}\zeta(s)\quad(\sigma&gt;1)"></div>
+<p>（第一步在 σ&gt;1 绝对收敛，换序合法；右边是 ζ 在 σ&gt;1 的定义式。）于是 ζ(s)=η(s)/(1−2<sup>1−s</sup>)。右端在 Re(s)&gt;0、s≠1 处有定义，且当 s=1 时分母 1−2<sup>0</sup>=0，与 η(1)=log 2≠0 相配——正是单极点。这就把 ζ 解析延拓到 Re(s)&gt;0。∎</p>
+<p><strong>（三）函数方程把延拓推到全平面。</strong>由 Mellin 变换（θ 函数方法）可证</p>
+<div class="formula display" data-tex="\zeta(s)=\frac{\pi^{s-1/2}\Gamma\!\left(\frac{1-s}{2}\right)}{\Gamma\!\left(\frac{s}{2}\right)}\,\zeta(1-s)"></div>
+<p>再结合 Γ 的反射公式 Γ(s)Γ(1−s)=π/sin(πs)，化为正文的对称形式。该方程对一切 s≠0,1 成立，右端与左端互为对方的解析延拓，故 ζ 是全平面上的亚纯函数（唯一极点在 s=1）。<strong>解析延拓的唯一性</strong>（两全纯函数在一小片重合即处处重合）保证这种延拓只有一种。∎</p>
+</section>
+
+<section>
+<h3>证明：素数定理的思路——为什么 ζ(1+it)≠0 ⟹ PNT</h3>
+<p>素数定理（PNT）：</p>
+<div class="formula display" data-tex="\pi(x)\sim\frac{x}{\log x}\qquad(x\to\infty)"></div>
+<p>由 Hadamard 与 de la Vallée Poussin（1896）独立证明。思路分三层：</p>
+<p><strong>第一步：把 π(x) 翻译成 ζ。</strong>对欧拉乘积取对数：log ζ(s) = Σ<sub>p</sub> p<sup>−s</sup> + O(收敛项)。借助 Perron 公式（围道积分把 Dirichlet 级数"回收"成计数函数），可写</p>
+<div class="formula display" data-tex="\pi(x)=\frac{1}{2\pi i}\int_{c-i\infty}^{c+i\infty}\log\zeta(s)\,\frac{x^s}{s}\,ds+\cdots\qquad(c&gt;1)"></div>
+<p>π(x) 的大幅振荡被编码成 log ζ 在复平面上的奇点。</p>
+<p><strong>第二步：零点决定误差。</strong>把积分线从 Re(s)=c&gt;1 向左移到 Re(s)=1 的左边。位移过程中经过的奇点（ζ 的极点与零点）给出主项与误差项。<strong>关键：ζ 在 Re(s)≥1 无零点</strong>（即 ζ(1+it)≠0 对一切 t，且 ζ(s)≠0 在 s&gt;1），于是积分线可以安全越过 Re(s)=1，主项来自 s=1 的极点，误差来自剩下的小奇点——它们给出 o(x/log x)。</p>
+<p><strong>第三步：证明 ζ(1+it)≠0。</strong>Hadamard/de la Vallée Poussin 用三面观（1+ζ 的三次幂关系）：若 ζ(1+it)=0，则</p>
+<div class="formula display" data-tex="|\zeta(\sigma)^3\,\zeta(\sigma+it)^4\,\zeta(\sigma+2it)|\ \text{在 }\sigma\downarrow1\ \text{时趋向 }\infty"></div>
+<p>但另一方面该乘积可写成绝对收敛的欧拉乘积展开，对实数 σ&gt;1 有界——矛盾，故 ζ(1+it)≠0。∎</p>
+<p><strong>RH 的升级。</strong>若所有零点 Re(ρ)=1/2，则积分线可进一步左移越过 Re(s)=1/2 的零点区，最优误差为 π(x)=Li(x)+O(√x log x)。这正是第六节声称的"最佳可能随机"。∎</p>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<div class="paper-ref"><strong>Riemann (1859)</strong> · <em>Über die Anzahl der Primzahlen unter einer gegebenen Größe</em> — 提出 RH 和素数精确公式。8 页论文奠定了解析数论的基础。</div>
+<div class="paper-ref"><strong>Hadamard (1896)</strong> · <em>Sur la distribution des zéros de la fonction ζ(s) et ses conséquences arithmétiques</em> — 第一个素数定理证明：ζ(1+it)≠0。</div>
+<div class="paper-ref"><strong>de la Vallée Poussin (1896)</strong> · 独立给出素数定理证明，建立了 ζ 函数零点无区域。</div>
+<div class="paper-ref"><strong>Hardy (1914)</strong> · <em>Sur les zéros de la fonction ζ(s)</em> — 证明无穷多个零点在临界线上。基于函数方程与 ζ(s) 的实部估计。这是 RH 的第一个实质性进展。</div>
+<div class="paper-ref"><strong>Selberg (1942)</strong> · <em>On the zeros of Riemann's zeta-function</em> — 证明临界线上零点占<strong>正比例</strong>。引入 Selberg mollifier 技术——将近似函数方程和共鸣法结合。开创了现代零点密度的研究方向。</div>
+<div class="paper-ref"><strong>Levinson (1974)</strong> · <em>More than one third of zeros of Riemann's zeta-function are on the critical line</em> — 证明至少<strong>1/3</strong> 零点在临界线上。将零点计数转化为某复函数零点分布问题。</div>
+<div class="paper-ref"><strong>Conrey (1989)</strong> · 改进 Levinson 方法，证明至少<strong>40%</strong> 零点在关键线上。</div>
+<div class="paper-ref"><strong>Pratt, Robles, Zaharescu, Zeindler (2020)</strong> · 将比例提升到超过<strong>5/12 (≈41.7%)</strong>。使用了更复杂的 mollifier 和双线性求和。</div>
+<div class="paper-ref"><strong>Montgomery (1973)</strong> · <em>The pair correlation of zeros of the zeta function</em> — 提出对关联猜想，建立了随机矩阵与 ζ 零点的联系。</div>
+<div class="paper-ref"><strong>Keating &amp; Snaith (2000)</strong> · <em>Random matrix theory and ζ(1/2+it)</em> — 用随机矩阵预测 ζ 值的矩。</div>
+</section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Hardy &amp; E. Wright, An Introduction to the Theory of Numbers</strong></p>
+<p>&rarr; <strong>K. Ireland &amp; M. Rosen, A Classical Introduction to Modern Number Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/real-analysis.html">实分析</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/sieve.html">🔢 素数筛</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎵 模形式</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/goldbach.html">👬 哥德巴赫猜想</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/twin-prime.html">👯 孪生素数猜想</a>：同一学科分类「数论」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/zeta.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

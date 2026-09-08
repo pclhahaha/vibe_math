@@ -1,0 +1,318 @@
+<section>
+<h3>〇、具体动机——一个没解的方程，和一个"画数"的地图</h3>
+<p>先看一个带数字的具体问题。方程</p>
+<div class="formula display" data-tex="x^2+1=0,\qquad x^2=-1"></div>
+<p>在实数里<strong>没有解</strong>：任何实数的平方都是非负的——(−2)² = 4，(0.5)² = 0.25，0² = 0——永远不可能等于 −1。这个"没解"让数学家别扭了几个世纪：明明所有方程都该有解，为什么偏偏这一个例外？</p>
+<p>但如果你同意一个大胆的约定——<strong>允许一个新数 i，规定 i² = −1</strong>——那么 x = i 和 x = −i 立刻就是这个方程的解。一个新数，解锁一个方程。而真正奇妙的事情还在后面：把 i 画在平面上，它的乘法会表现出一种非常具体的几何行为——<strong>每乘一次 i，就是把一个点绕原点旋转 90°</strong>。于是 i × i = −1 不再是"正负号游戏"，而是"转 90° 再转 90° = 转 180°"。</p>
+<p>本课沿着一条教科书式的主线回答两件事：<strong>① 复数是什么、怎么算、怎么画</strong>（一张叫复平面的地图，一个复数就是地图上的一个点/箭头）；<strong>② 为什么"乘以 i 是旋转 90°"，更进一步，为什么神秘的 e^{iθ} 其实就是"旋转 θ 角"</strong>——这两件事最终会合并成同一条规则：复数的乘法 = 模相乘 + 角相加。</p>
+<div class="key-insight">复数把"旋转"翻译成了"乘法"：乘以一个模长为 1 的复数，就是纯旋转；而 e^{iθ} 正是"旋转 θ 角"的代数符号。如果你想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、i 是什么？——为"没有解的方程"造一个新数</h3>
+<p>小学你就知道，任何<strong>实数</strong>（real number，平时见到的普通数，比如 1、−3、0.5）的平方都不可能是负数：正数乘正数是正数，负数乘负数也是正数，0 的平方是 0。所以方程 x² = −1 在实数里<strong>没有解</strong>——翻遍所有实数，都找不到一个数，平方之后等于 −1。</p>
+<p>数学家不甘心让这个方程永远无解，索性<strong>规定一个新数 i</strong>，并约定它的平方就是 −1：</p>
+<div class="formula display" data-tex="i^2=-1"></div>
+<p>规定之后，x² = −1 立刻有了解：x = i 或 x = −i（因为 (−i)² = i² = −1）。i 读作"虚数单位"（imaginary unit），"虚"并不是说它"不存在"，而是说它"不在实数轴上"——它是专门为方程 x² = −1 量身定制的一格新数。</p>
+<p>有了 i，就能写出更大的一类数：<strong>复数</strong>（complex number）。一个复数是"一个普通数加上 i 的若干倍"：</p>
+<div class="formula display" data-tex="z=a+bi\qquad(a,b\ \text{是实数})"></div>
+<p>其中 a 叫<strong>实部</strong>（real part），b 叫<strong>虚部</strong>（imaginary part）。比如 3+4i 就是一个复数，实部是 3，虚部是 4。当 b=0 时，a+0i = a 就是普通实数——所以<strong>实数只是复数的一个特殊情况</strong>，复数把实数"装"进了自己里面。</p>
+<div class="key-insight">i 是"平方等于 −1"的新数，它让方程 x² = −1 有解；复数是 a+bi 的形式，实数藏在里面（b=0 的时候）。下一节先学怎么算，再学怎么画。</div>
+</section>
+
+<section>
+<h3>二、复数的加法与乘法——先学会算</h3>
+<p>有了复数，第一件事是定义运算。规则只有一个宗旨：<strong>i 就是一个遵守"i²=−1"的普通代数符号</strong>，其余一切照常。</p>
+<p><strong>加法：实部加实部、虚部加虚部。</strong></p>
+<div class="formula display" data-tex="(a+bi)+(c+di)=(a+c)+(b+d)i"></div>
+<p>例：(3+4i)+(1+2i) = (3+1)+(4+2)i = 4+6i。加法平凡到有点无聊——但它的几何意义（箭头首尾相接）要到下一节才登场。</p>
+<p><strong>乘法：把括号全部乘开，再用 i²=−1 收拾。</strong></p>
+<div class="formula display" data-tex="(a+bi)(c+di)=ac+adi+bci+bdi^2=(ac-bd)+(ad+bc)i"></div>
+<p>注意那个醒目的 <strong>−bd</strong>：它来自 bdi² = bd·(−1) = −bd。所以复数乘法的结果不是"四个积都相加"，而是<strong>实部相减、虚部相加</strong>。这个奇怪的结构，正是后面"模相乘、角相加"几何定律的代数种子。</p>
+<p>手算一个具体的：(1+2i)(3−i)，一步步来——</p>
+<div class="formula display" data-tex="(1+2i)(3-i)=1\cdot3+1\cdot(-i)+2i\cdot3+2i\cdot(-i)"></div>
+<div class="formula display" data-tex="=3-i+6i-2i^2=3+5i+2=5+5i"></div>
+<p>（最后一步用 i²=−1：−2i² = −2·(−1) = +2。）结果 5+5i：实部 3+2=5，虚部 −1+6=5。先把代数算顺，几何马上就来。</p>
+<div class="key-insight">复数运算的独门诀窍只有一条：i²=−1。乘法展开后，把含 i² 的项换成 −1，实部和虚部分开收拾即可。乘法的公式 (ac−bd)+(ad+bc)i 先背下来，第七节会证明它就是在"模相乘、角相加"。</div>
+</section>
+
+<section>
+<h3>三、复数怎么画？——一个复数就是一个点，也是一个箭头</h3>
+<p>一个复数 a+bi 里有两块信息：实部 a 和虚部 b。正好，平面上的一个点也有两个坐标。于是数学家把复数直接画到平面上：</p>
+<div class="formula display" data-tex="\text{复数 } a+bi\ \longleftrightarrow\ \text{点 } (a,b)"></div>
+<p>画法很简单：横轴叫<strong>实轴</strong>（real axis），用来放实部 a；纵轴叫<strong>虚轴</strong>（imaginary axis），用来放虚部 b。比如复数 3+4i，就在横轴走 3 步、竖轴走 4 步，落在点 (3,4)。</p>
+<p>几个特殊位置：实数 1 = 1+0i 在实轴上，即点 (1,0)；虚数单位 i = 0+1i 在虚轴上，即点 (0,1)；0 在原点。也就是说，<strong>整条实轴上的点都是实数，整条虚轴上的点都是纯虚数</strong>（a=0、b≠0 那种），而平面其余地方全是一般复数。</p>
+<p>这张画着复数的平面就叫<strong>复平面</strong>（complex plane）。把 (a,b) 再向前想一步：它也可以看成<strong>从原点指出去的一个箭头</strong>——这样，第二节的加法立刻有了图像：</p>
+<div class="formula display" data-tex="(3+4i)+(1+2i)=4+6i"></div>
+<p>两个箭头首尾相接：从原点出发，先沿 (3,4) 走，再沿 (1,2) 走，到达 (4,6)。这正好是<strong>向量加法</strong>（平行四边形法则）——坐标分别相加。减法同理，只是方向反过来。于是"代数"和"几何"在第一处成功接头：<strong>复数的加减 = 箭头的加减。</strong></p>
+<div class="key-insight">复数 a+bi 就是平面上的点 (a,b)，也是从原点指出去的箭头：横轴放实部，竖轴放虚部。加减法就是箭头首尾相接。从此复数有了"图像"，下一节就用它来看乘法——看"乘以 i 为什么是旋转"。</div>
+</section>
+
+<section>
+<h3>四、为什么乘以 i 就是旋转 90°？——把乘法画在图上</h3>
+<p>第二节只说了"怎么算"，本节回答"为什么"：<strong>为什么乘以 i 就是旋转 90°？</strong>三个数字就够先建立直觉。看 i 反复作用在 1 上：</p>
+<div class="formula display" data-tex="1\cdot i=i,\qquad i\cdot i=-1,\qquad i\cdot i\cdot i=-i,\qquad i\cdot i\cdot i\cdot i=1"></div>
+<p>把它画在复平面上（点沿着单位圆转圈）：点 1=(1,0) 乘 i 到点 i=(0,1)——逆时针转了 90°；再乘 i 到点 −1=(−1,0)——又转 90°；四次之后回到 1，正好转满一整圈 360°。于是 i²=−1 有了几何读音：<strong>转 90° 再转 90° = 转 180° = 乘 −1。</strong>这和代数公式严丝合缝。</p>
+<p>直觉有了，现在验证它<strong>对任意复数都对</strong>。取任意 z = a+bi，算 i·z：</p>
+<div class="formula display" data-tex="i(a+bi)=ai+bi^2=-b+ai"></div>
+<p>也就是说，乘法把点 (a,b) 送到了点 (−b,a)：</p>
+<div class="formula display" data-tex="(a,b)\ \longmapsto\ (-b,a)"></div>
+<p>怎么确定这是旋转而不是别的？两件事缺一不可：</p>
+<p><strong>① 长度不变。</strong>新点到原点的距离 √((−b)²+a²) = √(a²+b²) 和原来一模一样——是旋转，不是缩放。</p>
+<p><strong>② 方向转了 90°。</strong>两个箭头的内积 a·(−b)+b·a = 0，互相垂直；再看 a=1、b=0 时 (1,0) 落到 (0,1)，方向是逆时针。所以乘 i 就是<strong>逆时针转 90°、长度不变</strong>。</p>
+<div class="key-insight">乘以 i = 逆时针旋转 90°（且不改变长度）。这是复数与旋转的第一次接头，也是第七节"乘法=模乘+角加"的雏形：i 的模长是 1（不缩放），辐角是 90°（转 90°）。</div>
+</section>
+
+<section>
+<h3>五、共轭与模——镜像与距离</h3>
+<p>每个复数 z = a+bi 都配有一个"镜像兄弟"，叫它的<strong>共轭</strong>（conjugate）：</p>
+<div class="formula display" data-tex="\overline{z}=a-bi"></div>
+<p>几何上，共轭就是<strong>关于实轴的镜像</strong>：上下翻。比如 3+4i 的共轭是 3−4i，点在实轴下方对称的位置。两个马上用到的性质：</p>
+<div class="formula display" data-tex="z+\overline{z}=2a\ \text{（实数）},\qquad z-\overline{z}=2bi\ \text{（纯虚数）}"></div>
+<p>把 z 和它的共轭乘起来，会得到一个意外干净的结果——虚部全部消光：</p>
+<div class="formula display" data-tex="z\,\overline{z}=(a+bi)(a-bi)=a^2-abi+abi-b^2i^2=a^2+b^2"></div>
+<p>右边 a²+b² 正是点 (a,b) 到原点距离的平方。于是定义<strong>模</strong>（modulus，复数到原点的距离）：</p>
+<div class="formula display" data-tex="|z|=\sqrt{a^2+b^2},\qquad |z|^2=z\,\overline{z}"></div>
+<div class="formula display" data-tex="\frac{1}{z}=\frac{\overline{z}}{|z|^2}\qquad(\text{倒数})"></div>
+<p>（倒数公式验证：z·(z̄/|z|²) = z\bar z/|z|² = |z|²/|z|² = 1。）倒数公式是共轭的招牌用途——把"除一个复数"变成"乘它的共轭再除以一个实数"。</p>
+<p><strong>先拿一个具体数字验证核心恒等式 |z|² = z\bar z。</strong>取 z = 2+3i：</p>
+<div class="formula display" data-tex="(2+3i)(2-3i)=4-6i+6i-9i^2=4+9=13"></div>
+<p>而 |z|² = (√(2²+3²))² = (√13)² = 13。两边都是 13 ✓。</p>
+<p>共轭还有一条传播性质：<strong>乘积的共轭等于共轭的乘积</strong>，即 \overline{z₁z₂} = \overline{z₁}·\overline{z₂}（每一项取镜像）。用它立刻能证出一个重要公式——<strong>模的乘性</strong>：</p>
+<div class="formula display" data-tex="|z_1z_2|^2=(z_1z_2)(\overline{z_1z_2})=(z_1\overline{z_1})(z_2\overline{z_2})=|z_1|^2|z_2|^2"></div>
+<div class="formula display" data-tex="|z_1z_2|=|z_1|\,|z_2|"></div>
+<p>乘积的模 = 模的乘积。这是"复乘法几何含义"的一半（模相乘）；另一半（角相加）需要极坐标，下一节准备。</p>
+<div class="key-insight">共轭 z̄ = a−bi 是实轴镜像；模 |z| = √(a²+b²) 是到原点的距离；|z|² = z\bar z 是贯穿全课的一把钥匙（倒数、模的乘性、第七节的几何定律全从它长出来）。</div>
+</section>
+
+<section>
+<h3>六、极坐标形式——用"半径×角度"重写复数</h3>
+<p>直角坐标 (a,b) 不是唯一描述一个点的方式。一个点到原点有距离，还有方向——这就引出复数的第二套坐标：</p>
+<div class="formula display" data-tex="r=|z|=\sqrt{a^2+b^2}\quad(\text{模，半径}),\qquad \theta=\arg z\quad(\text{辐角，与实轴夹角})"></div>
+<p>由直角三角形，直角坐标和极坐标互相换算：</p>
+<div class="formula display" data-tex="a=r\cos\theta,\qquad b=r\sin\theta"></div>
+<p>于是同一个复数 z = a+bi 可以被重写为<strong>极坐标形式</strong>：</p>
+<div class="formula display" data-tex="z=r(\cos\theta+i\sin\theta)"></div>
+<p>一个复数从此有了两副面孔：<strong>直角坐标 (a,b)</strong> 擅长加减，<strong>极坐标 (r, θ)</strong> 擅长乘除。θ 叫<strong>辐角</strong>（argument），它只在"加上 2π 的整数倍"的意义下唯一确定（转一整圈还是同一个方向）；0 这个数没有辐角（没有方向）。</p>
+<p>把 1+i 写成极坐标：a=1、b=1，所以</p>
+<div class="formula display" data-tex="r=\sqrt{1^2+1^2}=\sqrt2,\qquad \theta=\arctan\frac{1}{1}=45^\circ=\frac{\pi}{4}"></div>
+<p>（点在第一象限，θ 取正。）于是</p>
+<div class="formula display" data-tex="1+i=\sqrt2\left(\cos 45^\circ+i\sin 45^\circ\right)"></div>
+<p>这个形式的好处马上显现：<strong>在极坐标下乘法变成"半径相乘、角度相加"</strong>——这正是下一节要完整推导的东西。到了第八节，e^{iθ} 记号会让这一切更简洁：z = re^{iθ}。</p>
+<div class="key-insight">极坐标形式 z = r(cosθ + isinθ) 把复数拆成"半径 r"和"角度 θ"两件独立的事。这为"乘法 = 模相乘 + 角相加"铺好了舞台。</div>
+</section>
+
+<section>
+<h3>七、复乘法的几何含义——模相乘、角相加（完整推导）</h3>
+<p>第四节看到了特例（乘以 i 是转 90°），第五节证明了模的乘性。本节把<strong>复乘法的几何含义</strong>完整推出来，一个特例都不放。</p>
+<p>设两个复数用极坐标写：</p>
+<div class="formula display" data-tex="z_1=r_1(\cos\theta_1+i\sin\theta_1),\qquad z_2=r_2(\cos\theta_2+i\sin\theta_2)"></div>
+<p>直接用第二节的代数乘法展开（i²=−1）：</p>
+<div class="formula display" data-tex="\begin{aligned}z_1z_2={}&r_1r_2(\cos\theta_1+i\sin\theta_1)(\cos\theta_2+i\sin\theta_2)\\={}&r_1r_2\big[(\cos\theta_1\cos\theta_2-\sin\theta_1\sin\theta_2)\\&\quad+i(\sin\theta_1\cos\theta_2+\cos\theta_1\sin\theta_2)\big]\end{aligned}"></div>
+<p>括号里的两组式子不是随便凑出来的——它们是三角函数的<strong>两角和公式</strong>：</p>
+<div class="formula display" data-tex="\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta,\qquad \sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta"></div>
+<p>（这两条公式的来源：点 (cos α, sin α) 绕原点转角度 β，用内积公式 cos(α−β) = cosαcosβ + sinαsinβ 与余角关系 sin θ = cos(π/2 − θ) 即可推出——它们是"旋转怎么叠加"的坐标记录。）把 α=θ₁、β=θ₂ 代回去，实部与虚部立刻认出各自的公式：</p>
+<div class="formula display" data-tex="z_1z_2=r_1r_2\big[\cos(\theta_1+\theta_2)+i\sin(\theta_1+\theta_2)\big]"></div>
+<p>于是得到本课第一块基石——<strong>复乘法的几何定律</strong>：</p>
+<div class="formula display" data-tex="|z_1z_2|=|z_1|\,|z_2|\quad(\text{模相乘}),\qquad \arg(z_1z_2)=\arg z_1+\arg z_2\quad(\text{角相加})"></div>
+<p>换句话说：<strong>把 z₁ 的半径放大成 r₂ 倍，再把它旋转 θ₂ 角，就得到乘积 z₁z₂。</strong>第五节用共轭证过的 |z₁z₂|=|z₁||z₂|，在这里被极坐标形式一行看穿。</p>
+<p>除法是乘法的逆：模相除、角相减。</p>
+<div class="formula display" data-tex="\frac{z_1}{z_2}=\frac{r_1}{r_2}\big[\cos(\theta_1-\theta_2)+i\sin(\theta_1-\theta_2)\big]"></div>
+<p>反复自乘，得到 <strong>de Moivre 公式</strong>（把角相加 n 次）：</p>
+<div class="formula display" data-tex="(r(\cos\theta+i\sin\theta))^n=r^n(\cos n\theta+i\sin n\theta)"></div>
+<p>现在回看第四节：i = cos 90° + i sin 90°，模长 1、辐角 90°。所以乘以 i = 乘以"模 1、角 90° 的复数" = 旋转 90°、不缩放——与手算完全一致。几何定律吃透了特例，而不是反过来。</p>
+<div class="key-insight">复乘法的几何含义：模相乘、角相加。旋转就是"乘以一个模长为 1 的复数"。这就是为什么"乘以 i 是转 90°"（i 的辐角是 90°）。下一节揭晓 e^{iθ} = 旋转 θ 角，让这条定律变成指数运算法则。</div>
+</section>
+
+<section>
+<h3>八、欧拉公式——为什么 e^{iθ} 就是旋转（完整推演）</h3>
+<p>第七节的定律漂亮，但"cosθ + isinθ"写起来啰嗦。伟大的公式把旋转压缩进一个指数符号——<strong>欧拉公式</strong>：</p>
+<div class="formula display" data-tex="e^{i\theta}=\cos\theta+i\sin\theta"></div>
+<p>本节把它从头推一遍，并回答：<strong>为什么 e^{iθ} 就是旋转？</strong></p>
+<p><strong>第一步：指数函数的幂级数。</strong>实数的 eˣ 有泰勒展开（收敛半径无穷大，对一切 x 成立）：</p>
+<div class="formula display" data-tex="e^x=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\frac{x^4}{4!}+\frac{x^5}{5!}+\cdots"></div>
+<p><strong>第二步：把 x 换成 iθ，勇敢地代入。</strong>一切照常展开，只是每逢 i² 换成 −1：</p>
+<div class="formula display" data-tex="e^{i\theta}=1+i\theta+\frac{(i\theta)^2}{2!}+\frac{(i\theta)^3}{3!}+\frac{(i\theta)^4}{4!}+\frac{(i\theta)^5}{5!}+\cdots"></div>
+<p>逐项化简，用到 i²=−1、i³=−i、i⁴=1、i⁵=i（四个一轮回）：</p>
+<div class="formula display" data-tex="e^{i\theta}=1+i\theta-\frac{\theta^2}{2!}-\frac{i\theta^3}{3!}+\frac{\theta^4}{4!}+\frac{i\theta^5}{5!}-\cdots"></div>
+<p><strong>第三步：把实部、虚部分开摆成两队。</strong>含 i 的项归一边，不含 i 的归另一边：</p>
+<div class="formula display" data-tex="e^{i\theta}=\left(1-\frac{\theta^2}{2!}+\frac{\theta^4}{4!}-\cdots\right)+i\left(\theta-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}-\cdots\right)"></div>
+<p><strong>第四步：认出两队级数。</strong>第一队正是 cos θ 的泰勒展开，第二队正是 sin θ 的展开（i 是系数）：</p>
+<div class="formula display" data-tex="\cos\theta=1-\frac{\theta^2}{2!}+\frac{\theta^4}{4!}-\cdots,\qquad \sin\theta=\theta-\frac{\theta^3}{3!}+\frac{\theta^5}{5!}-\cdots"></div>
+<p>合起来，就是欧拉公式：</p>
+<div class="formula display" data-tex="e^{i\theta}=\cos\theta+i\sin\theta\qquad\blacksquare"></div>
+<p>（严格性说明：两个级数都在整个实数轴上绝对收敛，代入 iθ 后依旧绝对收敛，因此"换序"完全合法——重排和按项化简不会改变和，详见文末"证明：欧拉公式"一节。）</p>
+<p><strong>为什么 e^{iθ} 就是旋转？</strong>站在第七节的高度，答案一望而知：e^{iθ} = cosθ + isinθ，它的<strong>模长是 √(cos²θ+sin²θ) = 1</strong>，<strong>辐角就是 θ</strong>。所以</p>
+<div class="formula display" data-tex="e^{i\theta}\ \text{是半径 1、转角 }\theta\ \text{的复数}\quad\Longrightarrow\quad z\,e^{i\theta}=\ \text{把 } z\ \text{绕原点旋转 }\theta"></div>
+<p>乘法对 e^{iθ} 退化成纯旋转——这正是复数最优雅的地方：<strong>旋转被写成了指数，而"先转 θ₁ 再转 θ₂"就是指数乘法</strong>：</p>
+<div class="formula display" data-tex="e^{i\theta_1}\cdot e^{i\theta_2}=e^{i(\theta_1+\theta_2)}"></div>
+<p>（用第七节定律：两个都是模 1 的数，乘积的辐角是 θ₁+θ₂，模还是 1，所以是 e^{i(θ₁+θ₂)}——指数法则直接继承自"角相加"。）这条式子把第七节的几何定律升级成了代数恒等式：<strong>角相加 = 指数相乘</strong>。极坐标形式于是也可以写成更紧凑的模样 z = re^{iθ}。</p>
+<p>作为收尾，欧拉公式最著名的特例是 θ = π——它把复分析里最常出现的五个常数缝进一个等号：</p>
+<div class="formula display" data-tex="e^{i\pi}=\cos\pi+i\sin\pi=-1+0i=-1,\qquad e^{i\pi}+1=0"></div>
+<div class="key-insight">欧拉公式 e^{iθ} = cosθ + isinθ 把"旋转 θ 角"装进一个指数符号：模长 1、转角 θ。于是"乘法 = 模相乘 + 角相加"升级为指数法则 e^{iθ₁}e^{iθ₂} = e^{i(θ₁+θ₂)}。e^{iπ}+1=0 是它最著名的一句。</div>
+</section>
+
+<section>
+<h3>九、完整例题——三个例子一步步算完</h3>
+<p>公式不是摆着看的。教科书风格：每个例子都展开到每一步，不跳步，最后用几何定律核对。</p>
+
+<p><strong>例 1：手算 (2+3i)(1−i)，并做几何核对。</strong></p>
+<p>第一步，把括号全部乘开：</p>
+<div class="formula display" data-tex="(2+3i)(1-i)=2\cdot1+2\cdot(-i)+3i\cdot1+3i\cdot(-i)"></div>
+<p>第二步，分别收拾：2·(−i) = −2i，3i·(−i) = −3i² = +3（用 i²=−1）：</p>
+<div class="formula display" data-tex="=2-2i+3i-3i^2=2+3+(-2+3)i=5+i"></div>
+<p>第三步，几何核对（模相乘、角相加）：|2+3i| = √13，arg(2+3i) = arctan(3/2) ≈ 56.3°；|1−i| = √2，arg(1−i) = −45°。于是</p>
+<div class="formula display" data-tex="|(2+3i)(1-i)|=\sqrt{13}\cdot\sqrt{2}=\sqrt{26}=|5+i|,\qquad \arg=56.3^\circ-45^\circ=11.3^\circ=\arg(5+i)"></div>
+<p>模和角都对得上——代数结果与几何定律严丝合缝。✓</p>
+
+<p><strong>例 2：取 z = 2+3i，验证 |z|² = z\bar z，并求 |z|、arg z 与 1/z。</strong></p>
+<p>先写共轭 z̄ = 2−3i。再算 z\bar z（虚部交叉项 −6i 与 +6i 对消）：</p>
+<div class="formula display" data-tex="z\,\overline{z}=(2+3i)(2-3i)=4-6i+6i-9i^2=4+9=13"></div>
+<p>而 |z|² = (√(2²+3²))² = (√13)² = 13。两边都是 13，恒等式成立。✓</p>
+<p>顺手把其余三样一次求齐：</p>
+<div class="formula display" data-tex="|z|=\sqrt{13},\qquad \arg z=\arctan\frac{3}{2}\approx 56.3^\circ,\qquad \frac{1}{z}=\frac{\overline{z}}{|z|^2}=\frac{2-3i}{13}"></div>
+<p>（1/z 用倒数公式，把除法变成了"乘共轭再除以实数"。可核验：z·(2−3i)/13 = 13/13 = 1。）</p>
+
+<p><strong>例 3：把 1+i 写成极坐标，再用它算 (1+i)⁸。</strong></p>
+<p>第一步，求模与辐角。a=1、b=1，都在第一象限：</p>
+<div class="formula display" data-tex="r=\sqrt{1^2+1^2}=\sqrt2,\qquad \theta=\arctan\frac{1}{1}=\frac{\pi}{4}\ (=45^\circ)"></div>
+<div class="formula display" data-tex="1+i=\sqrt2\left(\cos\frac{\pi}{4}+i\sin\frac{\pi}{4}\right)=\sqrt2\,e^{i\pi/4}"></div>
+<p>第二步，用 de Moivre 公式（= 极坐标下模相乘、角相加 8 次）：</p>
+<div class="formula display" data-tex="(1+i)^8=\left(\sqrt2\,e^{i\pi/4}\right)^8=(\sqrt2)^8\,e^{i\cdot 8\pi/4}=2^4\,e^{i2\pi}"></div>
+<div class="formula display" data-tex">=16(\cos 2\pi+i\sin 2\pi)=16\cdot(1+0)=16</div>
+<p>第三步，独立复核——用反复平方法硬算：</p>
+<div class="formula display" data-tex="(1+i)^2=1+2i+i^2=2i;\qquad (1+i)^4=(2i)^2=4i^2=-4;\qquad (1+i)^8=(-4)^2=16"></div>
+<p>两条路都给出 <strong>16</strong>。这就是极坐标的威力：直算 (1+i)⁸ 要展开 8 个括号，而极坐标下"角加 8 次"一圈回到 2π，模乘 8 次变成 16。</p>
+</section>
+
+<section>
+<h3>十、全纯映射保持角度——复分析的第一奇迹</h3>
+<p>还记得第七节的结论吗——复数乘法是"旋转 + 缩放"，直角永远保持直角。在复平面上<strong>处处都能求导</strong>的函数，有个正式名字叫<strong>全纯函数</strong>（holomorphic function，可简单理解成"复可微"）。它最著名的共同点，正是前面预告过的那件事：<strong>保持角度</strong>。拿 f(z)=z² 作例：</p>
+<p>f(z)=z² 把蓝色网格变成红色网格，原本正交的网格线映射后<strong>仍然正交</strong>——这就是全纯函数是<strong>共形映射</strong>（conformal=angle-preserving，保持角度）的可视化证据。</p>
+<div class="key-insight">Cauchy–Riemann 方程（简称 CR 方程，判断复函数能不能"算导数"的两条偏导等式：∂u/∂x=∂v/∂y，∂u/∂y=−∂v/∂x）强制全纯函数在每一点的 Jacobian（变换的"局部缩放系数"）都是<strong>旋转+均匀缩放</strong>。两个方向的缩放倍数相同→角度被保持。这是复可微⇒共形的数学根源。</div>
+</section>
+
+<section>
+<h3>十一、复可微 ⇒ 自动无穷可微——实数做梦都得不到的性质</h3>
+<p>实数中：可微一次≠可微两次≠C^∞（任意阶都可导）≠解析（能展开成收敛幂级数）。存在处处连续但处处不可微的函数（Weierstrass函数）。存在C^∞但不是解析的函数（e<sup>−1/x²</sup>在x=0处所有导数=0，但不恒等于零）。</p>
+<p>复数中：<strong>全纯（可微一次）⇒C^∞⇒有收敛幂级数展开⇒解析。</strong>全部等同。这是Cauchy积分公式强制的结果——一旦知道边界上的值，内部所有阶导数都被确定。复数世界没有实数中那种"可微层次的阶梯"。</p>
+</section>
+
+<section>
+<h3>十二、z²的共形映射——手算验证</h3>
+<p>f(z)=z²=(x+iy)²=<strong>(x²−y²)+2ixy</strong>。实部u=x²−y²，虚部v=2xy。Cauchy-Riemann: ∂u/∂x=2x=∂v/∂y ✓, ∂u/∂y=−2y=−∂v/∂x ✓。z²在ℂ上处处全纯（整函数）。</p>
+<p>z²的映射效果：以原点为中心的圆→等半径的圆（双重覆盖）。射线→双重角度的射线。水平线y=k→抛物线。垂直线x=k→另一组抛物线。两组抛物线<strong>处处正交</strong>——因为z²保持直角。</p>
+</section>
+
+<section>
+<h3>十三、共形映射的物理应用</h3>
+<p>二维静电学、二维流体力学、二维热传导——这些物理问题在单连通区域内都可以通过<strong>共形映射</strong>转化为简单区域（如单位圆或上半平面）上的问题求解。这就是为什么复分析在工程中如此实用——一个共形映射把复杂的边界变成简单的边界。</p>
+</section>
+
+<section>
+<h3>十四、关键公式</h3>
+<div class="formula display" data-tex="z=a+bi,\qquad \overline{z}=a-bi,\qquad |z|^2=z\,\overline{z}=a^2+b^2"></div>
+<div class="formula display" data-tex="z=r(\cos\theta+i\sin\theta)=re^{i\theta},\qquad r=|z|,\ \theta=\arg z"></div>
+<div class="formula display" data-tex="|z_1z_2|=|z_1|\,|z_2|,\qquad \arg(z_1z_2)=\arg z_1+\arg z_2\qquad(\text{模乘、角加})"></div>
+<div class="formula display" data-tex="e^{i\theta}=\cos\theta+i\sin\theta,\qquad e^{i\pi}+1=0,\qquad (re^{i\theta})^n=r^n e^{in\theta}"></div>
+<div class="formula display" data-tex="f(z)=z^2,\quad z=x+iy,\quad f(z)=(x^2-y^2)+2ixy"></div>
+<div class="formula display" data-tex="\frac{\partial f}{\partial\bar z}=0\iff\text{Cauchy-Riemann}\iff f\text{ is holomorphic}"></div>
+</section>
+
+<section>
+<h3>十五、试试看（带提示）</h3>
+<p>1. 用极坐标（第七节定律）说明"乘以 i 为什么是旋转 90°"，并要求写下 (2−i)·i 的几何过程。<br>提示：i = e^{iπ/2}，模长 1、辐角 90°。乘以它不改变模、只把辐角加 90°。(2−i)·i = 2i − i² = 1+2i，即点 (2,−1) 逆时针转 90° 到 (1,2)。</p>
+<p>2. 用 de Moivre 公式求 (1+i)³ 和 (√3+i)⁶。<br>提示：1+i = √2 e^{iπ/4}，故 (1+i)³ = (√2)³ e^{i3π/4} = 2√2·(−√2/2 + i√2/2) = −2+2i。√3+i = 2 e^{iπ/6}，故 (√3+i)⁶ = 2⁶ e^{iπ} = −64。</p>
+<p>3. 计算 (1−i)/(1+i)，先用共轭法，再用极坐标法（模相除、角相减）。<br>提示：共轭法乘上 (1−i)/(1−i)：(1−i)²/2 = (−2i)/2 = −i。极坐标法：1−i = √2 e^{−iπ/4}，1+i = √2 e^{iπ/4}，相除 = e^{−iπ/2} = −i。</p>
+<p>4. 验证 e^{iπ} + 1 = 0：把 π 代入欧拉公式，一步步写出 cosπ 与 sinπ。<br>提示：cos π = −1，sin π = 0，故 e^{iπ} = −1 + i·0 = −1，移项即得。</p>
+<p>5. 试求 i^i（答案居然是个实数，大胆用极坐标）。<br>提示：i = e^{iπ/2}，所以 i^i = (e^{iπ/2})^i = e^{i·iπ/2} = e^{−π/2} ≈ 0.208——一个实数！这是欧拉公式最著名的"惊吓"。</p>
+<p>6. f(z)=z̄（共轭）为什么不保持角度？验证Cauchy-Riemann不成立。</p>
+<p>7. f(z)=e<sup>z</sup>把水平线映射成什么？垂直线呢？</p>
+<p>8. z²把单位圆映射成什么？把第一象限映射成什么？</p>
+</section>
+
+<section><h3>前沿：随机Loewner演化(SLE)</h3><p>Schramm(2000)用Loewner方程+Brownian运动驱动定义了SLE_kappa——二维随机共形映射。SLE精确描述了Ising模型、渗流和自避随机游走的标度极限。Fields奖(Werner 2006,Smirnov 2010)。仍开放:SLE和量子引力的联系。</p></section>
+
+<section>
+<h3>证明：欧拉公式 e^{iθ} = cosθ + isinθ（严格版）</h3>
+<p>正文第八节用幂级数"先直觉"地推了一遍。这里补上严格化所需的两处细节，并给出第二条独立的证明路径。</p>
+<p><strong>（一）幂级数的换序是合法的。</strong>eˣ、cos x、sin x 的泰勒级数在整个实数轴上绝对收敛。把 x = iθ 代入 eˣ 的级数后，|(iθ)ⁿ/n!| = |θ|ⁿ/n!，正是 e^|θ| 的收敛级数——所以代入后的级数绝对收敛，可以任意重排与按项化简，结论 e^{iθ} = cosθ + isinθ 对一切实数 θ 严格成立。∎</p>
+<p><strong>（二）用微分方程独立证明。</strong>把 cosθ + isinθ 视为 θ 的函数，直接求导：</p>
+<div class="formula display" data-tex="\frac{d}{d\theta}(\cos\theta+i\sin\theta)=-\sin\theta+i\cos\theta=i(\cos\theta+i\sin\theta),\qquad (\cos 0+i\sin 0)=1"></div>
+<p>即 f(θ) = cosθ + isinθ 满足一阶线性微分方程 f' = if，初值 f(0) = 1。另一方面，g(θ) = e^{iθ} 由指数函数定义也满足 g' = ig、g(0) = 1。作差函数 h(θ) = f(θ) − g(θ)，则 h' = ih、h(0) = 0；解这个常微分方程（乘积分因子 e^{−iθ}）得 h(θ) = 0，故 f = g。∎</p>
+<p>两条路殊途同归：幂级数路线"机械而直接"，微分方程路线"用唯一性说话"。它们共同钉死了 e^{iθ} = cosθ + isinθ。</p>
+</section>
+
+<section>
+<h3>证明一：Cauchy–Riemann 方程的完整推导</h3>
+<p>设 f = u + iv 在 z₀ = x₀ + iy₀ 处复可微（全纯），即极限</p>
+<div class="formula display" data-tex="f'(z_0) = \lim_{h\to 0}\frac{f(z_0+h)-f(z_0)}{h}\quad(h\in\mathbb{C})"></div>
+<p>存在且与 h 趋近的方向无关。<strong>这是复可微区别于实可微的本质：极限必须对一切方向一致成立。</strong></p>
+<p><strong>取 h 沿实轴。</strong> 令 h = Δx（实数），Δf = f(x₀+Δx, y₀) − f(x₀, y₀) = Δu + iΔv。则</p>
+<div class="formula display" data-tex="f'(z_0) = \lim_{\Delta x\to 0}\Big[\frac{\Delta u}{\Delta x} + i\frac{\Delta v}{\Delta x}\Big] = u_x(x_0,y_0) + i\,v_x(x_0,y_0)"></div>
+<p>（复数极限存在 ⟺ 实部与虚部各自收敛。）故 f'(z₀) = uₓ + ivₓ，且偏导 uₓ、vₓ 存在。</p>
+<p><strong>取 h 沿虚轴。</strong> 令 h = iΔy（纯虚数），则（用 1/i = −i）：</p>
+<div class="formula display" data-tex="f'(z_0) = \lim_{\Delta y\to 0}\frac{f(x_0, y_0+\Delta y)-f(x_0,y_0)}{i\,\Delta y} = \frac{u_y + iv_y}{i} = v_y - i\,u_y"></div>
+<p>两个方向的极限必须相等。比较实部与虚部得：</p>
+<div class="formula display" data-tex="u_x = v_y,\qquad v_x = -u_y\qquad(\text{Cauchy--Riemann 方程})"></div>
+<p><strong>反向（充分性）。</strong> 若 u, v 有连续的一阶偏导且满足 CR 方程，则 f 全纯。由一阶 Taylor 展开 Δu = uₓΔx + u_yΔy + o(|Δz|)，Δv 类似；代入并利用 CR 消去含 u_y、v_y 的项，得 Δf = (uₓ + ivₓ)(Δx + iΔy) + o(|Δz|)，故 f'(z₀) = uₓ + ivₓ 与方向无关。∎</p>
+<p><strong>Wirtinger 表述。</strong> 引入 ∂/∂z̄ = (1/2)(∂/∂x + i∂/∂y)，则全纯 ⟺ ∂f/∂z̄ = 0。这是"复可微"最简洁的刻画，也是多复变理论的出发点。</p>
+</section>
+
+<section>
+<h3>证明二：全纯 ⇒ 解析（Cauchy 积分公式与幂级数展开）</h3>
+<p>这是复分析的核心：全纯（一次可微）自动推出无穷可微与收敛幂级数展开，实数中绝无此事。</p>
+<p><strong>Cauchy–Goursat 定理（陈述）。</strong> 若 f 在单连通区域 D 内全纯，则对 D 内任何闭合可求长曲线 γ：</p>
+<div class="formula display" data-tex="\oint_\gamma f(z)\,dz = 0"></div>
+<p>证明思想：Goursat 用三角形剖分把大回路化约为任意小三角形上的积分（无需假设 f 连续可微）；若再假设 f' 连续，则由 Green 定理 + CR 方程一步得到。由此推出积分的路径无关性。</p>
+<p><strong>Cauchy 积分公式（陈述）。</strong> 若 f 在含闭圆盘 B̄(z₀, R) 的区域全纯，则对 |z − z₀| &lt; R：</p>
+<div class="formula display" data-tex="f(z) = \frac{1}{2\pi i}\oint_{|\zeta-z_0|=R}\frac{f(\zeta)}{\zeta - z}\,d\zeta"></div>
+<p>证明框架：在圆盘内挖去含 z 的小圆，用 Cauchy–Goursat 把边界积分归结为小圆上的积分；写 ζ − z = (ζ − z₀) − (z − z₀)，令小圆半径 → 0，利用 ∫<sub>小圆</sub> dζ/(ζ−z) = 2πi，被积函数趋于 f(z)/(ζ−z)，即得公式。</p>
+<p><strong>幂级数展开。</strong> 对 |ζ − z₀| = R，几何级数（在边界上一致收敛）：</p>
+<div class="formula display" data-tex="\frac{1}{\zeta - z} = \frac{1}{\zeta - z_0}\cdot\frac{1}{1 - \frac{z-z_0}{\zeta-z_0}} = \sum_{n=0}^{\infty}\frac{(z-z_0)^n}{(\zeta-z_0)^{n+1}}"></div>
+<p>代入积分公式，因级数一致收敛可与积分交换次序：</p>
+<div class="formula display" data-tex="f(z) = \sum_{n=0}^{\infty} a_n (z-z_0)^n,\qquad a_n = \frac{1}{2\pi i}\oint_{|\zeta-z_0|=R}\frac{f(\zeta)}{(\zeta-z_0)^{n+1}}\,d\zeta"></div>
+<p>对幂级数逐项求导（或对参数 z 在被积函数中求导，一致收敛保证换序合法），得所有阶导数存在：</p>
+<div class="formula display" data-tex="f^{(n)}(z_0) = \frac{n!}{2\pi i}\oint_{|\zeta-z_0|=R}\frac{f(\zeta)}{(\zeta-z_0)^{n+1}}\,d\zeta"></div>
+<p>于是全纯 ⟹ C<sup>∞</sup> ⟹ 有收敛幂级数（解析）。整条链的引擎是 Cauchy 积分公式：边界值一旦确定，内部全部信息被唯一锁定。</p>
+</section>
+
+<section>
+<h3>反例：f(z) = z̄ 与 f(z) = |z|²</h3>
+<p><strong>f(z) = z̄ = x − iy 处处不可导，但满足"一半"CR 方程。</strong></p>
+<p>u = x，v = −y。偏导：uₓ = 1，u_y = 0，vₓ = 0，v_y = −1。检查 CR：uₓ = 1 ≠ v_y = −1（第一式不成立）；u_y = 0 = −vₓ（第二式成立）。故 f 只满足第二个方程、不满足第一个——不满足全纯。</p>
+<p>直接用定义：差商 [z̄+h̄ − z̄]/h = h̄/h = e<sup>−2i·arg h</sup>——随 h 的方向变化！沿实轴 h 取 +1，沿虚轴 h = iΔt 取 −1，极限不存在。故 f 处处不可导。同时 z̄ 是反射而非旋转+缩放，与全纯映射的共形性冲突（不保角）。</p>
+<p><strong>f(z) = |z|² = x² + y² 只在 z = 0 一点可导。</strong></p>
+<p>u = x² + y²，v = 0。偏导：uₓ = 2x，u_y = 2y，vₓ = 0，v_y = 0。CR：uₓ = v_y ⟹ 2x = 0 ⟹ x = 0；u_y = −vₓ ⟹ 2y = 0 ⟹ y = 0。故 CR 只在原点成立。</p>
+<p>验证导数：在 z₀ = 0，差商 = |h|²/h = h̄ → 0，故 f'(0) = 0 存在。在 z₀ ≠ 0，差商 = (|z₀+h|² − |z₀|²)/h = (z₀h̄ + z̄₀h + |h|²)/h = z̄₀ + z₀·(h̄/h) + o(1)，含方向项 h̄/h，极限不存在。故 f 只在原点可导，在任何非空开集上不解析——"单点可导"与"开集上全纯"天差地别。</p>
+</section>
+
+<section>
+<h3>工作题：全纯性判断与 CR 方程验证</h3>
+<p><strong>题1。</strong> 验证 f(z) = e<sup>z</sup> 满足 CR 方程并求 f'(z)。</p>
+<details><summary>显示解答</summary><p>e<sup>z</sup> = e<sup>x</sup>(cos y + i sin y)，故 u = eˣcos y，v = eˣsin y。偏导：uₓ = eˣcos y，u_y = −eˣsin y，vₓ = eˣsin y，v_y = eˣcos y。CR：uₓ = v_y ✓，u_y = −vₓ ✓。偏导连续，故 e<sup>z</sup> 在 ℂ 上全纯，f'(z) = uₓ + ivₓ = eˣcos y + ieˣsin y = e<sup>z</sup>——导数仍是自身。</p></details>
+
+<p><strong>题2。</strong> 判断 f(z) = z̄² 在哪些点全纯。</p>
+<details><summary>显示解答</summary><p>z̄² = (x−iy)² = (x²−y²) − 2ixy，故 u = x²−y²，v = −2xy。偏导：uₓ = 2x，u_y = −2y，vₓ = −2y，v_y = −2x。CR：uₓ = v_y ⟹ 2x = −2x ⟹ x = 0；u_y = −vₓ ⟹ −2y = 2y ⟹ y = 0。故 CR 只在原点成立，f 只在 z = 0 可导，在任何非空开集上不全纯。结论：f 不是全纯函数。</p></details>
+
+<p><strong>题3。</strong> 验证 f(z) = 1/z 在 ℂ∖{0} 上全纯并求其导数。</p>
+<details><summary>显示解答</summary><p>1/z = z̄/|z|² = x/(x²+y²) − i y/(x²+y²)（z ≠ 0）。用商法则求偏导：uₓ = (y²−x²)/(x²+y²)²，u_y = −2xy/(x²+y²)²，vₓ = 2xy/(x²+y²)²，v_y = (y²−x²)/(x²+y²)²。CR：uₓ = v_y ✓，u_y = −vₓ ✓。故 1/z 在挖掉原点的平面上全纯，f'(z) = uₓ + ivₓ = (y²−x² − 2ixy)/(x²+y²)² = −(x−iy)²/(x²+y²)² = −1/z²。与幂法则一致——全纯函数的求导法则在形式上与实变一致。</p></details>
+
+<p><strong>题4。</strong> 设 f(z) = u(x,y) + iv(x,y) 全纯且 u = x² − y² + x。求 f 的表达式。</p>
+<details><summary>显示解答</summary><p>由 CR：uₓ = 2x + 1 = v_y ⟹ v = 2xy + y + φ(x)。再由 u_y = −2y = −vₓ = −(2y + φ'(x)) ⟹ φ'(x) = 0，φ 为常数（取 0）。故 v = 2xy + y，f = (x²−y²+x) + i(2xy+y) = z² + z。核验：z² + z = (x+iy)² + (x+iy) = (x²−y²+x) + i(2xy + y) ✓。此题型展示：已知实部（或虚部），可由 CR 方程唯一重构全纯函数——这是调和函数理论的核心技巧。</p></details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>L. Ahlfors, Complex Analysis</strong></p>
+<p>&rarr; <strong>J. Conway, Functions of One Complex Variable</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/contour-integral.html">⭕ 围道积分与留数</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/several-complex-variables.html">🪞 多复变</a>：同一学科分类「复分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：分析核心链。</p>
+</section>
+

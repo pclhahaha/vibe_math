@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拉格朗日与哈密顿力学——从最小作用量原理出发" />
+  <meta property="og:title" content="经典力学与最小作用量 — Vibe Math" />
+  <meta property="og:description" content="拉格朗日与哈密顿力学——从最小作用量原理出发" />
+  <title>经典力学与最小作用量 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎢 经典力学与最小作用量 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">拉格朗日与哈密顿力学——从最小作用量原理出发</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='classical-mechanics',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/variational-calculus.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📐 变分法</a>
+  <a href="/pages/functional-analysis.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📊 泛函分析 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——物体走路的样子，可以用"省力气"来解释</h3>
+<p>想象你在山坡上扔一个球，它走的不是随便一条路，而像是"最省事"的那条路。最小作用量原理说：真实的运动轨迹，就是让某个"总账"（作用量）最小（或最稳）的那条路，就像爬山的人会挑最省力的路线。</p>
+<p>它为什么存在？因为用"路径的全局比较"来描述运动，比牛顿"每时每刻受力"更强大，还能由此导出能量、动量守恒等深层规律，也是现代物理（量子、场论）的基础。</p>
+<div class="key-insight">万物运动像是在"挑选最省事的路径"——经典力学就是算清这条路径的学问。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/derivative.html">导数与切线</a>、<a href="/pages/variational-calculus.html">变分法</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、牛顿第二定律——从"推购物车"到微分方程</h3>
+<p>如果你推过一辆购物车，你其实早就懂牛顿第二定律了。装满东西的车很重，推起来费劲，速度提得慢；空车很轻，轻轻一推就窜出去。这就是 <strong>F = ma</strong>：<strong>F</strong> 是力（你用多大劲推），<strong>m</strong> 是质量（车有多"懒"、多不愿意改变速度），<strong>a</strong> 是加速度（速度每秒变化多快）。</p>
+<p>三个字拆开理解：力是"推一把"；质量是"懒"——越重的物体越不容易被推得动起来，也越不容易停下来；加速度是"速度改变的快慢"，不是速度本身。小车匀速前进时不代表没有力作用，只是"推它的力"和"地面摩擦等阻力"刚好抵消，合力为零，速度就不变了。</p>
+<p>用数字把直觉落到实处。假设你推一辆 20 kg 的购物车，用的力是 40 N，那么它的加速度是</p>
+<div class="formula display" data-tex="a=\frac{F}{m}=\frac{40\,\mathrm{N}}{20\,\mathrm{kg}}=2\,\mathrm{m/s^2}"></div>
+<p>也就是说速度每秒增加 2 m/s：从静止出发，1 秒后 2 m/s，2 秒后 4 m/s。再看一个 0.10 kg 的苹果从树上落下：重力 F = mg = 0.10 × 9.8 ≈ 0.98 N，加速度 a = F/m = g ≈ 9.8 m/s²——<strong>与质量无关</strong>，因为 a = mg/m = g，m 被约掉了。这就是伽利略"轻重物体同时落地"的现代算法：羽毛和铁球在真空里同时落地，不是偶然，而是 F = ma 的直接推论。</p>
+<p><strong>为什么 F = ma 是微分方程？</strong>因为"加速度"不是别的，正是位置函数 x(t) 对时间的二阶导数：</p>
+<div class="formula display" data-tex="a=\frac{d^2x}{dt^2},\qquad F=m\frac{d^2x}{dt^2}"></div>
+<p>当力可能依赖位置、速度和时间时（F = F(x, v, t)），这个等式不再是"求一个数"，而是<strong>关于未知函数 x(t) 及其导数的一个方程</strong>——一个微分方程。解它，是找一条"曲线" x(t)，而不是找一个"数字" x。这是经典力学与普通代数题最根本的区别：<strong>未知数是一个函数，方程约束的是函数与其导数之间的关系</strong>。</p>
+<p>所以牛顿定律说的其实是一句大白话：<strong>想让物体改变运动状态，就得用力；物体越"懒"（质量越大），需要的力就越大</strong>。这就是经典力学最底层的直觉，后面所有高大上的理论——拉格朗日量、哈密顿量、最小作用量——都是在换着花样重讲这句话。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>二、运动方程——给定初始条件，预言未来</h3>
+<p>牛顿定律最神奇的地方，是它能<strong>预言未来</strong>。想想看：把一个小球抛出去，只要我知道它现在的位置（在哪）、现在的速度（往哪个方向、多快），以及作用在它身上的力（比如重力），那么它接下来每一刻会走到哪、速度变多快，就全都确定了——不用等它飞完才知道。</p>
+<p>为什么能做到？因为力决定加速度，加速度决定"速度怎么变"，速度又决定"位置怎么变"。一步一步"递推"下去，就像放一部已经拍好的电影，每一帧都由前一帧决定。这就是经典力学的<strong>决定性</strong>：<strong>给定的"初始条件"（位置 + 速度）一旦定下，整条运动轨迹就被唯一地锁定了</strong>。</p>
+<p>我们把"现在的位置和速度"叫<strong>初始条件</strong>，把"每一步的力如何推动运动"叫<strong>运动方程</strong>（牛顿第二定律就是最典型的运动方程）。整门经典力学，本质上就是回答一个问题：<strong>给定初始条件和受力规则，算出之后任何时刻物体在哪</strong>。</p>
+<p><strong>为什么必须给两个数（位置 + 速度），而不是一个？</strong>因为 mẍ = F 是<strong>二阶</strong>微分方程：积分一次得到速度 v(t)，要定下一个积分常数；再积分一次得到位置 x(t)，又要定下一个。两个积分常数正好对上两个初始条件。少给一个，轨迹就会"漂移"，不唯一。</p>
+<p><strong>完整例题 1：一个篮球的抛物线。</strong>从地面以 20 m/s、仰角 45° 抛出一个 0.60 kg 的篮球，忽略空气阻力。求运动轨迹、最高点高度、全程飞行时间与射程。</p>
+<p>第 1 步，写受力与运动方程。重力竖直向下，水平方向无外力：</p>
+<div class="formula display" data-tex="m\ddot{x}=0,\qquad m\ddot{y}=-mg\ \Rightarrow\ \ddot{x}=0,\quad \ddot{y}=-g,\qquad g=9.8\,\mathrm{m/s^2}"></div>
+<p>第 2 步，分解初速得到初始条件（45° 时两个分量相等）：</p>
+<div class="formula display" data-tex="v_{0x}=v_0\cos45^\circ=20\times\tfrac{\sqrt2}{2}\approx14.1\,\mathrm{m/s},\qquad v_{0y}=v_0\sin45^\circ\approx14.1\,\mathrm{m/s}"></div>
+<p>第 3 步，两次积分解方程。x 方向速度不变、匀速直线；y 方向匀加速：</p>
+<div class="formula display" data-tex="x(t)=v_{0x}\,t\approx14.1\,t,\qquad y(t)=v_{0y}\,t-\tfrac12 gt^2\approx14.1\,t-4.9\,t^2"></div>
+<p>第 4 步，最高点：竖直速度为零的时刻 t* = v₀ᵧ/g = 14.1/9.8 ≈ 1.44 s，代入 y(t)：</p>
+<div class="formula display" data-tex="y_{\max}=14.1\times1.44-4.9\times(1.44)^2\approx10.2\,\mathrm{m}"></div>
+<p>第 5 步，落回地面 y = 0 的时刻是 t = 2t* ≈ 2.88 s，射程</p>
+<div class="formula display" data-tex="R=v_{0x}\times2t^*\approx14.1\times2.88\approx40.8\,\mathrm{m}"></div>
+<p>两步积分、两次定常数——这就是从"力"到"轨迹"的完整流程。抛体的轨迹 y(x) 确实是抛物线（把 t = x/v₀ₓ 代入），这个名字不是随便起的。</p>
+<p><strong>试一试</strong>：把仰角改成 30°（初速仍 20 m/s），射程是多少？先猜它比 45° 的射程大还是小，再算出来验证。</p>
+<details><summary>提示</summary>
+<p>先推导一般公式：全程时间 t = 2v₀sinθ/g，故 R = v₀cosθ·t = v₀²·2sinθcosθ/g = v₀²sin(2θ)/g。对 30°：R = 400×sin60°/9.8 = 400×0.866/9.8 ≈ 35.3 m，比 45° 的 40.8 m 更短。事实上 45° 正是最大射程角（sin 2θ 的最大值在 2θ = 90°）。</p>
+</details>
+<p>如果你想知道天上行星的轨道、钟摆的摆动、炮弹的落点，方法都是一样的：找出力，写下方程，从初始条件出发一路算下去。先记住这个"预言未来"的框架，后面的各种抽象理论都是为了更漂亮、更省力地做同一件事。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>三、从 F=ma 到"最小作用量"——同一个问题换个角度看</h3>
+<p>牛顿的做法是"步步为营"：每一瞬间，我都要知道当时受力多少，才能算出下一步怎么走。这有点像你站在路口，每走一步都要重新看一次路标。它准，但累。</p>
+<p>18 世纪的数学家们发现了另一个更省事的视角。他们问：不看每一瞬间，只看<strong>整体</strong>——从起点到终点，一个物体可以走无数条路线，为什么它偏偏走了我们观察到的那一条？答案是：它走的是那条"最省事"的路。更准确地说，那条路让一个叫<strong>作用量</strong>（action）的量取到"最稳"（通常是最小）的值。这个原理叫<strong>最小作用量原理</strong>。</p>
+<p>打个比方：下山的人会有无数条路可走，但人天然倾向挑省力的那条。大自然也一样——它"挑选"的那条真实轨迹，就像在所有可能的路线里"挑最省事的路"。而那个用来比较各路线的"总账本"（作用量），是把整条路径上的"动能减势能"一路加起来得到的。</p>
+<p>关键要抓住的是：<strong>牛顿 F=ma 和最小作用量原理描述的是同一个物理，只是看问题的角度不同</strong>——一个是"每时每刻怎么走"的局部视角，一个是"整条路最优"的全局视角。从最小作用量原理出发，可以重新推导出 F=ma，还能推导出能量守恒、动量守恒等更深的规律。后面几节（拉格朗日量、Noether 定理、哈密顿量）全是围绕这个"全局视角"展开的。</p>
+<p>如果你想理解核心思想，看到这里就够了。</p>
+</section>
+
+<section>
+<h3>四、最小作用量原理——物理定律的变分表述</h3>
+<p><strong>为什么要把逐点定律换成"全局比较"？</strong>逐点写法 F = ma 要求每时每刻都知道力，而力往往依赖坐标系选择、还常常是近似的；全局写法则把整条轨迹压缩进一个标量 S，坐标随便选，S 不变。更重要的好处藏在后面：一旦有了"什么变了、什么没变"的语言，就能做对称性分析（Noether 定理）——这是逐点写法给不出的。</p>
+<p>经典力学的现代表述以<strong>最小作用量原理</strong>（Hamilton 原理）为公理：系统的运动轨迹 q(t) 是使作用量泛函取驻值（驻值≈"一阶变分为零"的平稳点，通常就是最小值）的路径，而非牛顿第二定律的即时微分约束。这里"泛函"可粗略理解为"输入一条函数、输出一个数"的机器——它输入候选路径 q(t)，输出一个实数 S；"变分"则是拿所有相邻路径与物理路径去比较大小。对端点固定的所有 C² 路径，物理轨迹满足 δS = 0，其中</p>
+<div class="formula display" data-tex="S[q]=\int_{t_1}^{t_2} L(q,\dot{q},t)\,dt"></div>
+<p>推导概要：设路径变分 q(t) → q(t)+εη(t)（η(t₁)=η(t₂)=0），则 δS 的一阶变分为</p>
+<div class="formula display" data-tex="\delta S=\int_{t_1}^{t_2}\left(\frac{\partial L}{\partial q}\eta+\frac{\partial L}{\partial \dot{q}}\dot{\eta}\right)dt"></div>
+<p>对第二项分部积分并利用端点条件 η(t₁)=η(t₂)=0 消去边界项，再由 η 任意性得到<strong>Euler–Lagrange 方程</strong>：</p>
+<div class="formula display" data-tex="\frac{d}{dt}\frac{\partial L}{\partial \dot{q}_i}-\frac{\partial L}{\partial q_i}=0,\qquad i=1,\ldots,n"></div>
+<p><strong>为什么是"驻值"而不是"最小值"？</strong>变分原理只要求一阶变分为零：对绝大多数物理情形这确实对应极小，但有些路径（如经过不稳定平衡点的轨迹）只是"鞍点"。物理学不承诺"最省"，只承诺"最稳"——一阶变分为零就够了。哪条方向是极小、哪条是鞍点，由 Morse 指标理论分类。</p>
+<div class="key-insight">关键点：δS=0 是<strong>全局的</strong>变分要求（对比牛顿方程的逐点性），它把动力学定律编码进单个标量泛函。这不仅统一了力学、光学（Fermat 原理）、弹性与场论，还使对称性分析（Noether 定理）成为可能。驻值而非极小：真实的轨迹仅需一阶变分为零，作用量未必取极小（Morse 指标理论编码了不稳定方向）。</div>
+</section>
+
+<section>
+<h3>五、拉格朗日量 L = T − V——从作用量到运动方程</h3>
+<p>拉格朗日量 L = T − V 定义为动能减势能。对<strong>谐振子</strong> L = ½mẋ² − ½kx²，代入 Euler–Lagrange 方程立即给出 mẍ + kx = 0，即牛顿定律 F = −kx。势能取驻点附近 Taylor 展开 V(x) ≈ V(x₀) + ½V″(x₀)(x−x₀)²，这解释了一切经典系统在平衡点附近的普适性：</p>
+<div class="formula display" data-tex="L=\frac{1}{2}m\dot{x}^2-\frac{1}{2}kx^2,\qquad \omega=\sqrt{\frac{k}{m}}"></div>
+<p><strong>完整例题 2：弹簧振子，从拉格朗日量一路算到 x(t)。</strong>设劲度系数 k = 50 N/m，挂一个 m = 0.20 kg 的物块，把它拉离平衡位置 A = 5.0 cm 后放手（ẋ(0)=0）。求 x(t) 与振动周期。</p>
+<p>第 1 步，写拉格朗日量：</p>
+<div class="formula display" data-tex="L=\tfrac12 m\dot{x}^2-\tfrac12 kx^2"></div>
+<p>第 2 步，代入 Euler–Lagrange 方程。∂L/∂ẋ = mẋ，故 d/dt(∂L/∂ẋ) = mẍ；∂L/∂x = −kx：</p>
+<div class="formula display" data-tex="m\ddot{x}+kx=0\ \Rightarrow\ \ddot{x}+\omega^2 x=0,\qquad \omega=\sqrt{\frac{k}{m}}=\sqrt{\frac{50}{0.20}}\approx15.8\,\mathrm{s^{-1}}"></div>
+<p>第 3 步，解这个二阶常系数线性方程。通解（代入即可验证）为</p>
+<div class="formula display" data-tex="x(t)=C_1\cos\omega t+C_2\sin\omega t"></div>
+<p>第 4 步，用初始条件定常数：x(0) = C₁ = 0.050 m；ẋ(t) = −C₁ωsin ωt + C₂ωcos ωt，ẋ(0) = C₂ω = 0 ⟹ C₂ = 0。于是</p>
+<div class="formula display" data-tex="x(t)=0.050\cos(15.8\,t)\ \mathrm{m},\qquad T=\frac{2\pi}{\omega}\approx0.40\,\mathrm{s}"></div>
+<p>物块每约 0.40 秒往返一次。注意全程没有直接写过一次"力"——从写出 L 到得到 x(t)，拉格朗日力学自动替你做了。这就是它的意义：<strong>坐标选择自由，写一个标量 L 就得到全部运动方程</strong>。</p>
+<p><strong>单摆：换一个坐标的例子。</strong>摆长 l = 1.0 m、摆锤质量 m 的摆。用笛卡尔坐标写动能很别扭，但改用摆角 θ 作广义坐标，位置 (x,y) = (l sinθ, −l cosθ) 自动满足"杆长固定"这个约束，动能与势能都变得干净：</p>
+<div class="formula display" data-tex="L=\tfrac12 ml^2\dot\theta^2-mgl(1-\cos\theta)\ \xrightarrow{\ \theta\text{ 很小时}\ }\ L\approx\tfrac12 ml^2\dot\theta^2-\tfrac12 mgl\,\theta^2"></div>
+<p>代入 Euler–Lagrange 方程得 θ̈ + (g/l)θ = 0，与谐振子同形，周期 T = 2π√(l/g) ≈ 2π√(1.0/9.8) ≈ 2.0 s。单摆与弹簧振子共享同一个数学结构——这正是"平衡点附近一切都像谐振子"那句话的出处，也是摆钟能用来计时的原因。</p>
+<p><strong>广义坐标与约束：</strong>广义坐标即描述系统"形状"的任意一组独立参数（如单摆的摆角、刚体的欧拉角，不必是笛卡尔坐标）。约束力学系统（如单摆、刚体、受约束粒子）无需引入约束反力即可处理。若系统受 s 个完整约束 f<sub>α</sub>(q,t)=0，则在 m 维构形空间中存在 n = m − s 个独立的广义坐标 (q₁,…,qₙ)，运动方程自动投影到约束流形的切空间上。对非完整约束（如滚动轮），Euler–Lagrange 方程须与拉格朗日乘子 λ<sub>α</sub> 结合：</p>
+<div class="formula display" data-tex="\frac{d}{dt}\frac{\partial L}{\partial \dot{q}_i}-\frac{\partial L}{\partial q_i}=\sum_{\alpha}\lambda_\alpha\frac{\partial f_\alpha}{\partial q_i}"></div>
+<p>拉格朗日形式的内在优势：方程不依赖坐标系选择，且满足物理要求（可加性、对称性、相对论因果性）的 L 由对称性唯一决定——这一"从对称性构造动力学"的方法直接延伸到量子场论（标准模型的拉格朗日量即由此构造）。</p>
+<p><strong>试一试</strong>：把例题 2 的劲度系数换成 k = 200 N/m（质量、振幅不变），新的振动周期是多少？猜完再算。</p>
+<details><summary>提示</summary>
+<p>ω = √(k/m) = √(200/0.20) = √1000 ≈ 31.6 s⁻¹，T = 2π/ω ≈ 0.20 s。周期按 √k 的倒数变化，k 变 4 倍、周期减半。</p>
+</details>
+</section>
+
+<section>
+<h3>六、Noether 定理——对称性产生守恒量</h3>
+<p>为什么"对称性"能换来"守恒量"？直觉是：如果物理规律在你做某个变换（平移、转动、改时间起点）之后完全不变，那么沿着真实运动，就有一个量从头到尾保持不变——被那个变换"冻住"的量。Noether 定理把这个直觉变成了精确定理，它是整个现代物理学最重要的桥梁之一。</p>
+<p><strong>定理（Noether 1918）：</strong>设单参数变换 q<sub>i</sub> → q<sub>i</sub> + εδq<sub>i</sub>，t → t + εδt 使作用量泛函不变（允许改变一个全导数 dK/dt，即"拟对称性"）。则存在沿运动方程守恒的 Noether 荷：</p>
+<div class="formula display" data-tex="Q=\sum_i p_i\,\delta q_i-H\,\delta t-K,\qquad \frac{dQ}{dt}=0,\quad H=\sum_i p_i\dot{q}_i-L,\quad p_i:=\frac{\partial L}{\partial \dot{q}_i}"></div>
+<p>证明概要：将 δS=0 与 Euler–Lagrange 方程联立，把变分中的"体项"归零，仅剩边界全导数项，其守恒性正是 δQ=0 的积分表述。具体实例：</p>
+<ul>
+  <li><strong>时间平移不变</strong>（δt=const，δq=0，K=0）→ <strong>能量守恒</strong>：守恒荷（取约定符号）为 Q = Σ p<sub>i</sub>q̇<sub>i</sub> − L = H（若 L 不含时显式）。</li>
+  <li><strong>空间平移不变</strong>（δq=const 方向）→ <strong>动量守恒</strong>：Q = Σ p<sub>i</sub>·n̂。</li>
+  <li><strong>转动不变</strong>（δq = ω̂×q）→ <strong>角动量守恒</strong>：Q = Σ q<sub>i</sub>×p<sub>i</sub>。</li>
+  <li><strong>U(1) 内部规范不变</strong>（电荷对称）→ <strong>电荷守恒</strong>（现代规范理论的核心）。</li>
+</ul>
+<div class="key-insight">Noether 定理是"对称性→守恒律"这一现代物理学基本信条的数学化身，其逆问题（给定守恒量反推对称性，含李代数分级）由 Noether 第二定理与 Bessel-Hagen 等发展。在量子力学中，守恒量对应与哈密顿量对易的算子，Noether 荷的量子化给出量子数与选择定则。</div>
+</section>
+
+<section>
+<h3>七、哈密顿力学——相空间与辛结构</h3>
+<p>对凸拉格朗日量，<strong>勒让德变换</strong>（一种把"原函数"换成"由切线斜率与截距"重构的换装——同一份信息换个角度看）定义哈密顿量。为什么要换？因为 (q, q̇) 的动力学是二阶的，而 (q, p) 的动力学是<strong>一阶</strong>的：两个一阶方程比一个二阶方程更适合做几何化——它把运动摊平在"相空间"里，像一张全景地图。</p>
+<div class="formula display" data-tex="H(q,p,t)=\sum_i p_i\dot{q}_i-L(q,\dot{q},t),\qquad p_i:=\frac{\partial L}{\partial \dot{q}_i}"></div>
+<p>将自由度从 (q, q̇) 改写为<strong>相空间</strong>（以位置和动量当坐标的"运动全景图"）坐标 (q, p)，动力学由一阶<strong>哈密顿方程</strong>给出：</p>
+<div class="formula display" data-tex="\dot{q}_i=\frac{\partial H}{\partial p_i},\qquad \dot{p}_i=-\frac{\partial H}{\partial q_i}"></div>
+<p><strong>完整例题 3：用哈密顿方程重算弹簧振子。</strong>沿用例题 2 的 k = 50 N/m、m = 0.20 kg、A = 0.050 m。先做勒让德变换：广义动量 p = ∂L/∂ẋ = mẋ，于是</p>
+<div class="formula display" data-tex="H=p\dot{x}-L=\frac{p^2}{2m}+\frac{1}{2}kx^2"></div>
+<p>哈密顿方程给出两个一阶方程：</p>
+<div class="formula display" data-tex="\dot{x}=\frac{\partial H}{\partial p}=\frac{p}{m},\qquad \dot{p}=-\frac{\partial H}{\partial x}=-kx"></div>
+<p>两式合起来正是 mẍ = −kx——同一个物理，只是换了一种记账方式。在相空间 (x,p) 里，能量 E = p²/2m + ½kx² 守恒，所以轨迹被锁在椭圆 p²/(2mE) + x²/(2E/k) = 1 上。代入数字：E = ½kA² = ½×50×(0.050)² ≈ 0.0625 J，最大动量 p_max = √(2mE) = √(2×0.20×0.0625) ≈ 0.158 kg·m/s。整个运动的所有信息都写在这一个椭圆上——这就是"相空间全景图"的含义。</p>
+<p>该方程组可由辛形式 ω = Σ dp<sub>i</sub> ∧ dq<sub>i</sub> 与哈密顿向量场 ι<sub>X_H</sub>ω = dH 内蕴地重新表述——不依赖坐标（Darboux 定理）。由此产生的一系列不变量：<strong>Liouville 定理</strong>（哈密顿流保持相空间体积）、<strong>Poisson 括号</strong>、以及刘维尔可积性理论：</p>
+<div class="formula display" data-tex="\{f,g\}=\sum_i\left(\frac{\partial f}{\partial q_i}\frac{\partial g}{\partial p_i}-\frac{\partial f}{\partial p_i}\frac{\partial g}{\partial q_i}\right),\qquad \omega=\sum_i dp_i\wedge dq_i"></div>
+<p>对 n 维可积系统（存在 n 个独立且两两 Poisson 对合的守恒量），Liouville–Arnold 定理断言相空间被不变环面纤维化，流在这些环面上拟周期运动——这是 KAM 定理与经典可积理论的几何基础。注意 H = T + V 在显式不含时的系统中沿轨道恒为常数 E，这正是相空间中能量曲面 {H=E} 作为动力学不变流形的依据。</p>
+<p><strong>试一试</strong>：写出单摆（L = ½ml²θ̇² − mgl(1−cosθ)）的哈密顿量 H 与哈密顿方程，验证它与牛顿方程的 θ̈ + (g/l)θ = 0 一致。</p>
+<details><summary>提示</summary>
+<p>p = ∂L/∂θ̇ = ml²θ̇，故 H = p²/(2ml²) + mgl(1−cosθ)。哈密顿方程给出 θ̇ = p/(ml²)、ṗ = −mgl sinθ；把两式合并（p = ml²θ̇ 代入 ṗ 方程）即得 θ̈ = −(g/l)sinθ，小角时回到 θ̈ + (g/l)θ = 0。</p>
+</details>
+</section>
+
+<section>
+<h3>八、关键公式</h3>
+<div class="formula display" data-tex="\frac{d}{dt}\frac{\partial L}{\partial \dot{q}_i}-\frac{\partial L}{\partial q_i}=0\qquad(\text{Euler--Lagrange})"></div>
+<div class="formula display" data-tex="\dot{q}_i=\frac{\partial H}{\partial p_i},\qquad \dot{p}_i=-\frac{\partial H}{\partial q_i},\qquad H=p\dot{q}-L\qquad(\text{Hamilton})"></div>
+<div class="formula display" data-tex="Q=\sum_i p_i\,\delta q_i-H\,\delta t-K,\quad \frac{dQ}{dt}=0\qquad(\text{Noether},\ H=\sum_i p_i\dot{q}_i-L)"></div>
+</section>
+
+<section>
+<h3>九、关键论文</h3>
+<ul>
+  <li>Euler, L. (1744). <em>Methodus inveniendi lineas curvas maximi minimive proprietate gaudentes.</em> —— 最小作用量原理的奠基论文（变分法的诞生）。</li>
+  <li>Lagrange, J.-L. (1788). <em>Mécanique Analytique.</em> —— 分析力学的创立：广义坐标、约束系统与 Euler–Lagrange 方程的系统化，书中几乎没有图。</li>
+  <li>Hamilton, W. R. (1833–1835). <em>On a general method of expressing the paths of light and of the planets.</em> Phil. Trans. R. Soc. —— 哈密顿原理、勒让德变换与哈密顿方程；类比光学（Hamilton–Jacobi）。</li>
+  <li>Noether, E. (1918). <em>Invariante Variationsprobleme.</em> Nachr. König. Gesell. Wiss. Göttingen, 235–257. —— 对称性→守恒量的两大定理，现代理论物理的基石。</li>
+  <li>Arnold, V. I. (1989). <em>Mathematical Methods of Classical Mechanics.</em> 2nd ed., Springer GTM 60. —— 辛几何视角下经典力学的标准教材：可积性、Liouville–Arnold 定理与 KAM 定理。</li>
+</ul>
+</section>
+
+<section>
+<h3>十、前沿：KAM 定理、混沌与天体力学</h3>
+<p><strong>KAM 定理（Kolmogorov–Arnold–Moser, 1954–1963）：</strong>可积哈密顿系统在足够小的非谐振扰动下，相空间中绝大多数不变环面仅被轻微形变而保持存在（条件：环面上的频率满足强非共振 Diophantine 条件），而非被立即破坏成混沌。KAM 定理解释了为何行星轨道在长时间上保持稳定（Poincaré 的三体问题分析揭示了这种破坏的可能），也划定了可积与混沌的精确边界。</p>
+<p><strong>混沌哈密顿系统：</strong>当扰动超过阈值，不变环面破碎，出现同宿/异宿缠结、Smale 马蹄与正 Lyapunov 指数——确定性系统中的不可预测性（Poincaré 发现三体问题的"动力系统混沌"）。谐振子与自由粒子是零测度例外；一般保守系统几乎都是非可积的。</p>
+<p><strong>天体力学（三体问题）：</strong>Poincaré 1890 证明三体问题的全局解析可积性不存在——为现代动力系统理论奠基。今天受限三体问题（L<sub>1</sub>–L<sub>5</sub> 拉格朗日点）与周期轨道族（Hénon、断崖族）是航天轨道设计的工具。仍开放的经典问题包括：N 体问题任意轨道的长时间渐近行为、以及周期轨道数目下界的精确估计。</p>
+</section>
+
+<section>
+<h3>十一、工作题</h3>
+<p><strong>工作题 1：用 Euler–Lagrange 方程求谐振子运动。</strong>设拉格朗日量 L = ½mẋ² − ½kx²，写出 EL 方程并求满足 x(0)=A、ẋ(0)=0 的运动学方程 x(t)。</p>
+<details><summary>显示解答</summary>
+<p>计算偏导：∂L/∂ẋ = mẋ，故 d/dt(∂L/∂ẋ) = mẍ；∂L/∂x = −kx。代入 EL 方程 d/dt(∂L/∂ẋ) − ∂L/∂x = 0：</p>
+<div class="formula display" data-tex="m\ddot{x}+kx=0\ \Rightarrow\ \ddot{x}+\omega^2 x=0,\qquad \omega=\sqrt{k/m}"></div>
+<p>通解 x(t) = C₁cos ωt + C₂sin ωt。初值 x(0)=C₁=A，ẋ(0)=ωC₂=0 ⟹ C₂=0。故</p>
+<div class="formula display" data-tex="x(t)=A\cos\omega t,\qquad \omega=\sqrt{k/m}"></div>
+<p>这正好对应牛顿第二定律 mẍ = −kx 的解——EL 方程与牛顿定律对谐振子给出完全一致的动力学。</p>
+</details>
+
+<p><strong>工作题 2：从最小作用量原理推导 F = ma。</strong>设单粒子在势 V(x) 中运动，L = ½mẋ² − V(x)，由 δS=0 推导牛顿第二定律。</p>
+<details><summary>显示解答</summary>
+<p>变分 δS = ∫(∂L/∂x·η + ∂L/∂ẋ·η̇)dt，对第二项分部积分，利用端点条件 η(t₁)=η(t₂)=0 消去边界项：</p>
+<div class="formula display" data-tex="\delta S=\int_{t_1}^{t_2}\left[\frac{\partial L}{\partial x}-\frac{d}{dt}\frac{\partial L}{\partial \dot{x}}\right]\eta\,dt=0"></div>
+<p>由 η 任意性（基本引理），括号内为零，即 EL 方程。代入 L = ½mẋ² − V(x)：</p>
+<div class="formula display" data-tex="\frac{d}{dt}(m\dot{x})-\frac{\partial}{\partial x}(-V)=0\ \Rightarrow\ m\ddot{x}=-\frac{\partial V}{\partial x}=F"></div>
+<p>故牛顿第二定律 F = ma 是最小作用量原理在势场中的直接推论——F = −∇V 与 mẍ 由 δS=0 唯一联系。</p>
+</details>
+
+<p><strong>工作题 3：计算 Noether 守恒量。</strong>对自由粒子 L = ½m|q̇|²，(a) 沿 x 方向空间平移 (δq = n̂ε, δt=0, K=0)；(b) 时间平移 (δq=0, δt=ε, K=0)，分别求守恒荷并指出其物理含义。</p>
+<details><summary>显示解答</summary>
+<p>广义动量 pᵢ = ∂L/∂q̇ᵢ = mq̇ᵢ。(a) 空间平移：Q = Σ pᵢδqᵢ = m q̇·n̂ = p·n̂，即动量在 n̂ 方向的分量守恒——空间平移不变性 → 动量守恒。(b) 时间平移（δq=0，δt=1，K=0）：由 Noether 荷公式 Q = Σpᵢδqᵢ − Hδt − K 得 Q = −H，其中 H = Σpᵢq̇ᵢ − L：</p>
+<div class="formula display" data-tex="Q=-H=-(m\dot{q}\cdot\dot{q}-L)=-(m\dot{q}\cdot\dot{q}-\tfrac12 m\dot{q}\cdot\dot{q})=-\tfrac12 m|\dot{q}|^2"></div>
+<p>负号来自 ε 的约定，取 −Q = ½m|q̇|² = T = E 即动能（能量）守恒——时间平移不变性 → 能量守恒。两种情形验证了 Noether 定理：对称性直接给出守恒荷。</p>
+</details>
+
+<p><strong>工作题 4：写出双摆的拉格朗日量。</strong>两质点 m₁、m₂ 由长度 l₁、l₂ 的无质量杆铰接，在竖直平面内运动（摆角 θ₁、θ₂，势能取最低点为零）。求动能 T = T₁+T₂ 并写出拉格朗日量 L = T − V。</p>
+<details><summary>显示解答</summary>
+<p>质点 1：x₁=l₁sin θ₁, y₁=−l₁cos θ₁，故 v₁² = l₁²θ̇₁²。质点 2 的位置由 θ₁、θ₂ 叠加：</p>
+<div class="formula display" data-tex="x_2=l_1\sin\theta_1+l_2\sin\theta_2,\qquad y_2=-l_1\cos\theta_1-l_2\cos\theta_2"></div>
+<div class="formula display" data-tex="v_2^2=l_1^2\dot\theta_1^2+l_2^2\dot\theta_2^2+2l_1l_2\dot\theta_1\dot\theta_2\cos(\theta_1-\theta_2)"></div>
+<p>势能 V = m₁gy₁ + m₂gy₂ = −(m₁+m₂)gl₁cos θ₁ − m₂gl₂cos θ₂。于是拉格朗日量：</p>
+<div class="formula display" data-tex="L=\tfrac12(m_1+m_2)l_1^2\dot\theta_1^2+\tfrac12 m_2 l_2^2\dot\theta_2^2+m_2 l_1l_2\dot\theta_1\dot\theta_2\cos(\theta_1-\theta_2)+(m_1+m_2)gl_1\cos\theta_1+m_2 gl_2\cos\theta_2"></div>
+<p>交叉项 m₂l₁l₂θ̇₁θ̇₂cos(θ₁−θ₂) 体现了两摆的动力学耦合——这正是双摆混沌行为（θ₁ 与 θ₂ 的耦合非线性）的起源。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>H. Goldstein, Classical Mechanics</strong></p>
+<p>&rarr; <strong>V. Arnold, Mathematical Methods of Classical Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/derivative.html">导数与切线</a>、<a href="/pages/variational-calculus.html">变分法</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/variational-calculus.html">📐 变分法</a>：最小作用量原理与 Euler–Lagrange 方程的数学根基——δS=0 泛函极值。</p>
+<p>&rarr; <a href="/pages/lorentz-transform.html">🚀 Lorentz 变换</a>：经典力学的哈密顿对称性在相对论框架中的推广——能量-动量四矢。</p>
+<p>&rarr; <a href="/pages/light-cone.html">💫 光锥与时空</a>：从 Newton 绝对时间到闵可夫斯基时空，作用量的洛伦兹不变形式。</p>
+<p>&rarr; <a href="/pages/symplectic-geometry.html">🌊 辛几何</a>：哈密顿力学的几何舞台——辛流形、矩映射与辛约化。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/classical-mechanics.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

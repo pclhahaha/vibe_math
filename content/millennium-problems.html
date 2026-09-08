@@ -1,0 +1,125 @@
+<section>
+<h3>〇、具体动机——七道一百万美金、至今六道没解的题</h3>
+<p>先认识这七个"超级谜题"里的具体面孔——每道都能用一句话和一个具体例子说出来：</p>
+<div class="formula display" data-tex="\text{P vs NP: 答案能秒验证的问题，答案也能秒找到吗？}\quad\text{（验证 30 个城市的一条回路 < 1 秒，找出来呢？）}"></div>
+<div class="formula display" data-tex="\text{Poincaré: 无洞的三维空间一定是三维球面吗？}\quad\text{（✅ Perelman 2003 已解）}"></div>
+<div class="formula display" data-tex="\text{Riemann: }\zeta(s)\text{ 的零点全在实部 }1/2\text{ 上吗？}\quad\text{（已验 10}^{13}\text{ 个，仍是猜）}"></div>
+<p>2000 年 5 月，位于美国麻省剑桥的 Clay 数学研究所在巴黎宣布了<strong>七个千禧年大奖问题</strong>——每个解决者一百万美元。它们覆盖数学的方方面面：从"验证很快是否意味着求解很快"（P vs NP）、到"水流会不会突然爆掉"（Navier–Stokes）、再到"数字密码的安全根基"（Riemann 假设）。</p>
+<p>25 年过去了：<strong>七个里只解决了一个</strong>（Poincaré，Perelman 还拒领了奖金），剩下六个仍在等待英雄。本课就从这七个具体问题出发，逐个看懂它们问什么、难在哪、现在走到了哪。</p>
+<div class="key-insight">七个百万美元级难题，21世纪数学的"导航图"——至今只解出一个，Perelman还拒领了奖金。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>、<a href="/pages/functional-analysis.html">泛函分析</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、具体动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、2000年——七个百万美元问题</h3>
+<p>2000年5月24日,Clay数学研究所在巴黎法兰西学院宣布了<strong>七个千禧年大奖问题</strong>。每个问题的解决者将获得<strong>一百万美元</strong>。这是继Hilbert 23个问题(1900)之后,数学界最重要的"导航图"。</p>
+<div class="key-insight">目前只有1个被解决:Poincare猜想(Perelman 2003,拒绝领奖)。其余6个仍在等待。</div>
+</section><section>
+<h3>二、七个问题一览</h3>
+<p><strong>1. P vs NP</strong>:能快速验证解的问题,都能快速求解吗？如果P=NP,密码学崩溃,AI飞跃。普遍相信P!=NP但无人能证。电路复杂性下界+Mulmuley的几何复杂性理论(GCT)是主要攻击路线。</p><p><strong>2. Hodge猜想</strong>:每个Hodge类都是代数类吗？代数几何和拓扑学的接口。多数专家怀疑反例存在但无人能构造。七个问题中最"停滞"的一个。</p><p><strong>3. Poincar&eacute;猜想</strong> ✅ Perelman(2003):单连通闭三流形同胚于S3。他用Ricci流+手术证明了更全面的Thurston几何化猜想。拒绝Fields奖和Clay百万奖金。</p><p><strong>4. Riemann假设</strong>:zeta(s)的非平凡零点在Re(s)=1/2。随机矩阵理论+F1几何+非交换几何三路围攻。验证前10^13个零点全在关键线上——但不是证明。</p><p><strong>5. Yang-Mills质量间隙</strong>:量子Yang-Mills理论在4D时空中是否严格存在？胶子为什么没有长程传播？构造性QFT在2D和3D成功——4D超出当前所有方法。</p><p><strong>6. Navier-Stokes</strong>:三维不可压缩流体的光滑解是否永远存在？Tao(2014)证明"平均化NS"会blow-up——暗示原始NS可能也会。但严格证明或反例未完成。</p><p><strong>7. Birch-Swinnerton-Dyer</strong>:椭圆曲线的有理点群的大小=L函数在s=1的值。秩0和1情形已证(Kolyvagin)。秩>=2——未解决。</p>
+</section>
+
+<section>
+<h3>三、完整例题——三个例子一步步算完</h3>
+<p>教科书风格：每个例子展开到每一步，最后用已知值核对。</p>
+
+<p><strong>例 1（P vs NP）：算一算"验证"与"查找"的差距到底有多大。</strong></p>
+<p>第一步，取具体问题：给定一张图，判断它是否有哈密顿回路（一条经过每个顶点恰好一次的回路）。取完全图 K₅（5 个顶点两两相连）。</p>
+<p>第二步，先算"验证"的成本。给一个候选回路，例如 1→2→3→4→5→1：只需要检查 5 条边是否都存在、是否每个顶点恰好出现一次——一共 5 次检查。对 n 个顶点，验证是 O(n)。</p>
+<p>第三步，再算"查找"的成本。若不知道回路，最笨（也最可靠）的办法是枚举所有排列：</p>
+<div class="formula display" data-tex="\text{哈密顿回路数}=\frac{(n-1)!}{2}\ \Rightarrow\ K_5:\ \frac{4!}{2}=12\ \text{条};\qquad K_{30}:\ \frac{29!}{2}\approx 4.4\times10^{30}\ \text{条}"></div>
+<p>第四步，对比。n=30 时，验证一条回路要 ~30 步，枚举查找要 ~10³⁰ 步——快 29 个数量级。P vs NP 问的正是：<strong>这类差距是不是本质的</strong>？是否对<em>所有</em>"验证快"的问题，"查找"也有多项式算法？全世界都不知道。✓</p>
+<p>这个例子还展示了关键的<strong>"验证器"视角</strong>：NP = "存在一个多项式时间的验证器，只要给出正确的解（证书）就能确认"。NP≠P 意味着有些问题的解"只有给出才知道，猜不出来"。</p>
+
+<p><strong>例 2（Riemann 假设）：用手算验证 ζ(−1) = −1/12——函数方程的第一次兑现。</strong></p>
+<p>第一步，回忆函数方程：</p>
+<div class="formula display" data-tex="\zeta(s)=2^{s}\pi^{s-1}\sin\!\left(\frac{\pi s}{2}\right)\Gamma(1-s)\,\zeta(1-s)"></div>
+<p>第二步，代入 s = −1，利用已知值 Γ(2)=1! = 1、ζ(2)=π²/6、sin(−π/2) = −1：</p>
+<div class="formula display" data-tex="\zeta(-1)=2^{-1}\pi^{-2}\cdot\sin\!\left(-\frac{\pi}{2}\right)\cdot\Gamma(2)\cdot\zeta(2)=\frac12\cdot\frac{1}{\pi^2}\cdot(-1)\cdot1\cdot\frac{\pi^2}{6}=-\frac{1}{12}"></div>
+<p>第三步，结论：ζ(−1) = −1/12（"所有正整数之和"在解析延拓意义下的著名值）。✓</p>
+<p>第四步，看零点的具体位置。前几个<strong>非平凡零点</strong>的虚部是</p>
+<div class="formula display" data-tex="\rho_1=\frac12+i\cdot 14.1347\ldots,\quad \rho_2=\frac12+i\cdot 21.0220\ldots,\quad \rho_3=\frac12+i\cdot 25.0109\ldots"></div>
+<p>全部落在实部 1/2 的"关键线"上。已数值验证前 10¹³ 个零点都在线上；但"前 10¹³ 个"在数学上约等于零证据——验证不是证明。✓</p>
+
+<p><strong>例 3（Navier–Stokes）：验证一个真正的显式解，并看清"光滑 vs 爆炸"的分界。</strong></p>
+<p>第一步，写下 2 维不可压缩 Navier–Stokes 方程（ν&gt;0 是黏度，u=(u₁,u₂)，div u=0）：</p>
+<div class="formula display" data-tex="\frac{\partial u}{\partial t}+(u\cdot\nabla)u=-\nabla p+\nu\Delta u,\qquad \nabla\cdot u=0"></div>
+<p>第二步，代入著名的 <strong>Taylor–Green 涡旋</strong>显式解（忽略常数因子）：</p>
+<div class="formula display" data-tex="u_1=e^{-2\nu t}\sin x\cos y,\qquad u_2=-e^{-2\nu t}\cos x\sin y"></div>
+<p>第三步，验证不可压缩：∂u₁/∂x + ∂u₂/∂y = e^{−2νt}(cos x cos y − cos x cos y) = 0 ✓。</p>
+<p>第四步，验证动量方程（x 分量）：∂u₁/∂t = −2νu₁；u·∇u₁ = e^{−4νt} sin x cos x (cos²y+sin²y) = e^{−4νt} sin x cos x；Δu₁ = −2u₁。于是取 p = −(1/2)e^{−4νt}(cos²x+cos²y) 可抵消非线性项，方程成立。✓</p>
+<p>第五步，理解分界。这个解在 2 维对<strong>所有 t</strong> 光滑存在——所以 2 维 NS 的全局光滑性是"平凡"的。千禧年问题的难点在 <strong>3 维</strong>：涡旋拉伸项 (ω·∇)u 会自我放大，能量可能集中。Tao (2014) 证明"平均化"的 3 维 NS 确实能有限时间爆炸——强烈暗示原方程很可能也会，但严格构造仍悬而未决。✓</p>
+</section>
+
+<section>
+<h3>四、为什么每个人都能拿100万美元——除了Perelman</h3>
+<p>Perelman在arXiv上发布了Poincare猜想的证明——没有投给期刊。他的论文被验证后,Clay研究所等了规定的两年才开始颁奖程序。2010年他正式被授予百万奖金——他拒绝了。他说:他不喜欢数学界的"政治"。他现在住在圣彼得堡,和母亲一起,远离数学界。</p>
+</section>
+<section><h3>为什么这些问题被选中？</h3><p>选择标准:1.在数学界有广泛共识的重要性。2.长期未解决(至少几十年)。3.解决将开启新的数学领域。Hilbert(1900)的23个问题中有10个被解决后催生了新领域——Clay希望七个问题也能如此。</p></section>
+<section><h3>最新进展（2020–2025）</h3><p><strong>P vs NP</strong>:元复杂度（meta-complexity）兴起——研究"计算复杂性"的复杂性。<strong>Hodge</strong>:Bloch-Beilinson猜想的推进——用motivic上同调逼近。<strong>BSD</strong>:Bhargava-Shankar(2015)证明正比例椭圆曲线有秩≤1。<strong>Yang-Mills</strong>:Chatterjee(2023)格点YM的Wilson圈严格展开。<strong>NS</strong>:侯一钊等人自相似blow-up的数值研究。<strong>RH</strong>:已验证10^13个零点仍全在关键线上。RH和NS仍是七问题中最活跃和最难的两个。</p></section>
+<section>
+<h3>七个问题的详细状态</h3>
+
+<h4>1. Poincaré 猜想 ✅ 已解决</h4>
+<p><strong>Perelman (2003)——唯一已被解决的千禧年问题。</strong>单连通闭三维流形同胚于 S³。Perelman 的证明基于 Hamilton 的 Ricci 流程序：通过 Ricci 曲率流演化度量，在奇点处做"手术"切除颈状结构，证明手术只发生有限次，最终流向消失或收敛到球面度量。Perelman 发表的<strong>三篇 arXiv 预印本</strong>（2002年11月–2003年7月，共68页）从未投给期刊，但经过 Morgan-Tian (2007) 和 Kleiner-Lott (2008) 两组独立团队的完全验证后，Clay 研究所确认了证明的正确性：Perelman 不仅证明了 Poincaré 猜想，更证明了更强大的 <strong>Thurston 几何化猜想</strong>——所有三维闭流形可沿球面和环面分解为具有八种标准几何结构之一的分片。</p>
+
+<h4>2. P vs NP 完全开放</h4>
+<p><strong>现状：</strong>无决定性进展。普遍猜测 P ≠ NP。当前最有力的下界来自<strong>电路复杂性</strong>：常数深度的电路已建立超多项式下界（Håstad 开关引理，1986），但一般电路的强下界远未达到。Mulmuley-Sohoni 的<strong>几何复杂性理论 (GCT)</strong>（2001–）将 P vs NP 约化为代数簇的包含问题（行列式与永久式轨道闭包的分离），并将其与表示论中 Kronecker 系数的消失相联系。最近十年兴起的<strong>元复杂度 (meta-complexity)</strong> 研究方向——研究"计算复杂性问题的计算复杂性"——提供了新的视角。</p>
+
+<h4>3. Hodge 猜想 完全开放</h4>
+<p><strong>现状：</strong>七个问题中似乎最停滞的一个。猜想断言：光滑复射影代数簇上的每个有理(p,p)-Hodge 类都是代数子簇有理组合的 clase cohomológica。至今没有有理 Hodge 猜想已知的反例——但也几乎没有正面的支持证据。Lefschetz (1,1) 定理证明了<strong>除子情形</strong>（p=1），这是仅有的正例。一般 p≥2 情形：Griffiths 和 Clemens 的工作表明 Hodge 结构比代数几何更精细——但未提供反例。Voisin (2002) 给出了<strong>整 Hodge 猜想</strong>的反例（某光滑复射影三维簇上存在非代数的整 (2,2) 类），但有理系数 Hodge 猜想仍完全开放。</p>
+
+<h4>4. Riemann 假设 完全开放</h4>
+<p><strong>现状：</strong>最著名的开放问题。已验证前 10^13 个零点的实部都在 1/2。Selberg (1942) 证明正比例的零点在关键线上；Conrey (1989) 提升到 >40%；2024 年 Maynard 和 Guth 将下界大幅提升至 >2/3（约 66.7%）。攻击方向三路：<strong>随机矩阵理论</strong>（Montgomery-Odlyzko，ζ(s) 的高零点关联函数与 GUE 系综高度一致——Hilbert-Pólya 猜想的现代版本：可能存在一个自伴算子以零点为特征值）；<strong>F₁ 几何</strong>（Deninger 的无限维上同调纲领，F₁ 上的 Riemann-Roch 型猜想）；<strong>Connes 的非交换几何</strong>（非交换几何中 adele 类空间的显式公式）。但距完整证明仍极遥远。</p>
+
+<h4>5. Yang-Mills 质量间隙 完全开放</h4>
+<p><strong>现状：</strong>要求对 R⁴ 上的非交换紧规范群（至少 SU(2)）的纯量子 Yang-Mills 理论证明满足 Wightman 公理，且最低激发态质量 m>0。2D 和 3D YM 理论已被严格构造（Glimm-Jaffe, Balaban），但 <strong>4D 量子 YM 的存在性本身尚未被证明</strong>——这是构造性量子场论中最难的问题。Chatterjee (2023) 对格点 YM 的 Wilson 圈期待值进行了严格渐近展开——但离连续极限和公理化 QFT 仍差"量子化步骤"。</p>
+
+<h4>6. Navier-Stokes 方程 完全开放</h4>
+<p><strong>现状：</strong>R³ 上的不可压缩 Navier-Stokes 方程：给定光滑初值 u₀ ∈ C^∞(R³, R³)，是否存在直到无穷时间的唯一光滑解，还是会在有限时间内产生奇点（blow-up）？Tao (2014) 证明存在光滑 u₀ 使得 <strong>平均化的 NS 方程</strong> 的弱解在有限时间发生 blow-up——这强烈暗示<strong>原始 NS 方程很可能也会 blow-up</strong>，但严格构造反例的难度极大。侯一钊等人正在进行自相似 blow-up 的数值研究。这是六个开放问题中"最可能被反例解决"的一个。</p>
+
+<h4>7. Birch, Swinnerton-Dyer 猜想 部分解决</h4>
+<p><strong>现况：</strong>BSD 猜想断言：E/Q 椭圆曲线的 L 函数 L(E,s) 在 s=1 处零点的阶 = E(Q) 的秩。秩 0 和 1 情形已被 Kolyvagin (1989) 和 Gross-Zagier (1986) 证明（基于 Gross-Zagier 公式——Heegner 点高度的计算）。秩 ≥2 情形完全开放。关键突破来自 <strong>Bhargava-Shankar (2015)</strong>：他们证明了<strong>椭圆曲线的平均秩 ≤ 1</strong>：具体地，秩 0 与秩 1 的曲线各占正比例，而秩 ≥2 的比例至多为 1/2。但这不排除个别曲线秩可以为任意大。Bhargava 因这项工作获 2014 年 Fields 奖。</p>
+</section>
+
+<section>
+<h3>Clay 数学研究所与百万美元悬赏</h3>
+<p><strong>Clay 数学研究所 (CMI)</strong> 由波士顿商人 Landon T. Clay 于 1998 年创立，总部位于美国麻省剑桥市。2000 年 5 月 24 日，CMI 在巴黎法兰西学院（Hilbert 正是在 100 年前宣读其 23 个问题的同一座城市——巴黎！）宣布了七个千禧年问题，<strong>总悬赏金额 700 万美元</strong>（每个 100 万美元）。</p>
+<p><strong>领奖规则：</strong>(1) 解答必须在<strong>同行评审期刊</strong>上发表；(2) 自发表之日起须经过<strong>两年的数学界公开检验期</strong>；(3) 解答必须获得 Clay 研究所科学顾问委员会的一致认可。Perelman 的 arXiv 预印本虽从未在期刊上发表，但由于其正确性已被 Morgan-Tian 和 Kleiner-Lott 两组独立验证完全确认，且在数学界经过远超两年的公开检验，CMI 科学顾问委员会仍一致认定 Perelman 符合获奖资格——但 Perelman 拒绝了 100 万美元奖金。</p>
+<p><strong>Perelman 为何拒绝？</strong>Perelman 在采访中表示：他认为 Hamilton 对 Ricci 流程序的贡献被低估了——这个证明是集体的成就，不是他一个人的。他还对数学界某些评审行为表示不满（未明确指名）。2006 年国际数学家大会（马德里）授予他 Fields 奖章，2010 年 3 月 Clay 研究所在巴黎宣布授予他千禧年大奖——他均拒绝领奖。Perelman 至今与母亲居住在圣彼得堡，远离数学界。</p>
+</section>
+
+<section>
+<h3>试试看（带提示）</h3>
+<p>1. 计算 K₆ 的哈密顿回路数，并解释为什么"验证"始终是 O(n)。<br>提示：(6−1)!/2 = 60；验证一条回路只需检查 n 条边都在图中且不重复。</p>
+<p>2. 用函数方程再算一个值：ζ(3) 与 ζ(−2) 的关系，并解释为什么 ζ(−2)=0 是"平凡零点"。<br>提示：代入 s=−2，sin(π·(−2)/2)=sin(−π)=0，且 Γ(3)=2 无极点，故 ζ(−2)=0——这就是"平凡"。</p>
+<p>3. 验证例 3 的 Taylor–Green 涡旋还满足 y 分量的动量方程（对称性）。<br>提示：把 x,y 互换并注意符号 u₂=−e^{−2νt}cos x sin y，用同样步骤代入。</p>
+<p>4. 为什么"已验证 10¹³ 个零点"不能证明 RH？<br>提示：证明需要覆盖<em>所有</em>零点；验证再多也只是有限样本。类比：验证 10¹³ 个偶数哥德巴赫分解成立，也不能证明哥德巴赫猜想。</p>
+<p>5.（进阶）解释 Hodge 猜想里"整 Hodge 类有反例但有理 Hodge 类没有"意味着什么。<br>提示：整系数太"刚"，系数会被扭结缠住；有理系数把挠元抹平，反例消失了——问题藏在系数与挠元之间。</p>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+  <li>Perelman, G. (2002–2003). <em>The entropy formula for the Ricci flow and its geometric applications;</em> <em>Ricci flow with surgery on three-manifolds;</em> <em>Finite extinction time for the solutions to the Ricci flow on certain three-manifolds.</em> arXiv: math.DG/0211159, math.DG/0303109, math.DG/0307245. （三篇预印本，共 68 页，完整证明了 Poincaré 猜想和 Thurston 几何化猜想。）</li>
+  <li>Tao, T. (2014). <em>Finite time blowup for an averaged three-dimensional Navier-Stokes equation.</em> arXiv: 1402.0290. （证明修改后的 NS 方程可有限时间 blow-up——2014 年 Fields 奖得主的重量级工作。）</li>
+  <li>Bhargava, M. & Shankar, A. (2015). <em>Binary quartic forms having bounded invariants, and the boundedness of the average rank of elliptic curves.</em> Annals of Mathematics, 181(1), 191–242. （证明椭圆曲线的平均秩 ≤ 1——BSD 猜想研究 30 年来最重大的突破。）</li>
+  <li>Kolyvagin, V. A. (1989). <em>Finiteness of E(Q) and Ш(E, Q) for a subclass of Weil curves.</em> Izv. Akad. Nauk SSSR Ser. Mat., 53(3), 522–540. （BSD 秩 0 和 1 情形的 Euler 系证明。）</li>
+  <li>Mulmuley, K. D. & Sohoni, M. (2001). <em>Geometric complexity theory I: An approach to the P vs. NP and related problems.</em> SIAM J. Comput., 31(2), 496–526. （GCT 纲领的奠基性论文。）</li>
+</ul>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Stillwell, Mathematics and Its History</strong></p>
+<p>&rarr; <strong>K. Devlin, The Millennium Problems</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>、<a href="/pages/functional-analysis.html">泛函分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/hilbert-problems.html">📋 Hilbert 23个问题</a>：同一学科分类「著名问题」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+</section>

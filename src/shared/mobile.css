@@ -1,0 +1,40 @@
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .lesson-layout {
+    flex-direction: column;
+    padding: 12px;
+    margin-left: 0 !important;
+  }
+  .sketch-col {
+    position: static;
+    flex: 0 0 100%;
+    min-width: 100%;
+  }
+  .content-col, .content-col.deep {
+    flex: 1 1 100%;
+    max-height: none;
+    padding-right: 0;
+  }
+  canvas {
+    max-width: 100%;
+  }
+  .sidebar {
+    width: 100vw;
+    transform: translateX(-100vw);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar.open + .sidebar-toggle {
+    left: auto;
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 2em; }
+  .hero .stats { gap: 16px; }
+  .hero .stat .num { font-size: 1.3em; }
+  .grid { grid-template-columns: 1fr; }
+  h2 { font-size: 1.2em; }
+}

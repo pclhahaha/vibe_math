@@ -1,0 +1,165 @@
+<section>
+<h3>〇、直觉入门——为什么 dx dy 不是"普通的乘法"</h3>
+<p>学多元微积分时，你大概已经隐隐感到不对劲：面积分里写的 dx dy、ds、dA 到底是什么？如果 dx 是"无穷小的 x 增量"，那 dx dy 就是"无穷小的面积"，可为什么换积分顺序时 dx dy = dy dx 随便换，而一涉及定向（比如沿曲线从 A 走到 B 再走回来）符号就要翻转？</p>
+<p>19 世纪的数学家被这个问题折磨了很久。Grassmann（1844）的答案是：<strong>dx、dy 不是数，是"测量器"</strong>——它们不是乘法，而是<strong>反对称</strong>的：</p>
+<div class="formula display" data-tex="dx\wedge dy = -\,dy\wedge dx\qquad(\text{外积：交换两个因子变号})"></div>
+<p>这个符号规则不是怪癖，而是<strong>定向的代数化</strong>：交换两个坐标轴 = 翻转面积的方向 = 面积变号。把"带方向的积分元"组织起来的数学对象叫<strong>微分形式（differential form）</strong>。一阶形式像 ω=P dx+Q dy（沿曲线积分）；二阶形式像 η=A dx∧dy（曲面上积分）；它们逐点都是"把切向量变成数"的机器——1-形式把 1 个切向量变成数，2-形式把 2 个切向量（张成的平行四边形）变成数。</p>
+<p>为什么要费这个劲？因为只有这样才能把整个微积分基本定理家族——牛顿–莱布尼茨、格林公式、高斯散度定理、经典 Stokes 定理——统一成<strong>一句话</strong>：</p>
+<div class="formula display" data-tex="\int_{\partial M}\omega=\int_{M}d\omega\qquad(\text{广义 Stokes 定理})"></div>
+<p>左边沿"边界"积分，右边在"内部"积外微分。四条经典定理只是这句话在 1、2、3 维的特例。更重要的是：<strong>d²=0</strong>（外微分两次必为零），它把"闭形式"（dω=0）与"恰当形式"（ω=dα）的差别变成一种拓扑不变量——de Rham 上同调——让"微积分"与"形状"接上了头。这是现代微分几何、规范场论与拓扑学的共同语言。</p>
+<div class="key-insight">洞察：微分形式 = "自动换元的积分器"。它不依赖坐标（拉回规则处理换元）、不依赖度量（积分不需要"长度"概念）、且自带定向（反对称）。微积分基本定理的终极形态 ∫∂M ω = ∫M dω 因此可以写在任意维数的曲面上，无需任何直觉修补。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，建议有一定多元微积分基础。<p><strong>建议先掌握</strong>：<a href="/pages/gradient.html">梯度与方向导数</a>、<a href="/pages/riemann-integral.html">黎曼积分</a>、<a href="/pages/contour-integral.html">围道积分</a>（1-形式在复平面的同款故事）。</p></div>
+
+<section>
+<h3>一、一个具体问题——四条经典定理为什么长得"不像一家人"</h3>
+<p>打开任何一本多元微积分教材，末尾有四条"长得各不一样"的定理：</p>
+<ul>
+<li><strong>牛顿–莱布尼茨：</strong> ∫_a^b f′(x)dx = f(b)−f(a)。</li>
+<li><strong>格林公式：</strong> ∮_∂D (P dx+Q dy) = ∬_D (∂Q/∂x − ∂P/∂y) dxdy。</li>
+<li><strong>高斯散度定理：</strong> ∯_∂V F·n dS = ∭_V div F dV。</li>
+<li><strong>经典 Stokes：</strong> ∮_∂S F·dr = ∬_S (∇×F)·n dS。</li>
+</ul>
+<p>它们形式迥异，因为被写在不同维数、用着不同记号（dx、dxdy、dS、dV、·n）。微分形式的立场是：<strong>这不是四条定理，是一条定理的四个投影</strong>。把"被积的东西"一律写成微分形式 ω：0-形式是函数（∫ = 求值差）、1-形式沿曲线、2-形式沿曲面、3-形式沿体积；把"导数"一律写成外微分 d：对 0-形式 d 就是梯度、对 1-形式 d 就是旋度、对 2-形式 d 就是散度。则四条定理全都是</p>
+<div class="formula display" data-tex="\int_{\partial M}\omega=\int_M d\omega"></div>
+<p>——"内部积 dω"等于"边界上积 ω"。历史上，这套语言由 Grassmann 的外代数（1844）、Poincaré 与 E. Cartan 的外微分（1890s–1900s）逐步打磨成形；Cartan 用移动标架把它变成微分几何的日常工具，而 20 世纪的规范场论发现：<strong>电磁场的 F 是一个 2-形式、麦克斯韦方程组就是 dF=0 与 d⋆F=J</strong>。形式语言因此从"记号便利"升格为"物理定律的几何本质"。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——形式是"测量器"，外微分是"带符号的求导"</h3>
+<p><strong>逐点看。</strong> 在 ℝⁿ 的点 x 处，一个 1-形式 ω_x 把切向量 v 变成数 ω_x(v)，且线性。基底 dx_i 定义为"取第 i 个分量"：dx_i(v)=v_i。于是 ω=ΣP_i dx_i 就是 ω_x(v)=ΣP_i(x)v_i——即用系数 P_i 对切向量做"加权测量"。</p>
+<p><strong>外积。</strong> dx∧dy 是"平行四边形测量器"：对切向量 u、v，dx∧dy(u,v) = det[[dx(u),dx(v)],[dy(u),dy(v)]] = u₁v₂−u₂v₁——正是 u、v 张成的有向面积。反对称 dx∧dy=−dy∧dx 就来自行列式的性质。</p>
+<p><strong>换元 = 拉回（pullback）。</strong> 若 γ(t)=(x(t),y(t)) 是曲线，则 γ*ω = (P(γ)dx/dt + Q(γ)dy/dt) dt——把 ω 沿曲线"拉回来"成一维的 f(t)dt，积分变成普通单变量积分。自动换元、自动带链式法则，这就是"积分器"的妙处。</p>
+<p><strong>外微分 d。</strong> 定义：d(ΣP_I dx_I)=Σ dP_I∧dx_I，其中 dP_I=Σ∂P_I/∂x_j dx_j。它满足莱布尼茨带符号规则与关键性质：</p>
+<div class="formula display" data-tex="d(d\omega)=0\qquad\text{对所有形式}\omega"></div>
+<p><strong>为什么 d²=0？</strong> 两种看法：(1) 计算——d(df)=Σ_j ∂²f/∂x_i∂x_j dx_j∧dx_i，混合偏导相等而 dx_j∧dx_i=−dx_i∧dx_j，两两抵消；(2) 拓扑——对区域做"边界再取边界"必为空（∂∂=∅），d 是边界算子的微积分化身。<strong>d²=0 是一切"上同调"理论的种子</strong>：称 dω=0 的形式为<strong>闭（closed）</strong>、ω=dα 的为<strong>恰当（exact）</strong>；恰当必闭（d²=0），反过来不总是对——"闭而不恰当"的程度就是 de Rham 上同调 H^k 的维数，它数的是"区域的洞"。</p>
+</section>
+
+<section>
+<h3>三、例题 1——两个一维积分：恰当形式与面积公式（一步步算完）</h3>
+<p><strong>题目 (a)。</strong> ω = x dy + y dx 沿单位圆从 (1,0) 逆时针到 (−1,0) 的上半圆弧积分。</p>
+<p><strong>第一步：参数化。</strong> γ(t)=(cos t, sin t)，t∈[0,π]。则 dx=−sin t dt、dy=cos t dt。</p>
+<p><strong>第二步：代入（拉回）。</strong> γ*ω = x dy + y dx = cos t·cos t dt + sin t·(−sin t) dt = (cos²t−sin²t)dt = cos 2t dt。</p>
+<p><strong>第三步：积分。</strong></p>
+<div class="formula display" data-tex="\int_0^\pi \cos 2t\,dt=\Bigl[\tfrac12\sin 2t\Bigr]_0^\pi=0\qquad\blacksquare"></div>
+<p><strong>为什么答案这么"整"？</strong> 因为 ω=d(xy) 是<strong>恰当形式</strong>：∫=xy|_端点 = 1·0 − (−1)·0 = 0。恰当形式积分只依赖端点——这就是"路径无关"的形式语言（本课画布会验证）。</p>
+<p><strong>题目 (b)。</strong> η = ½(x dy − y dx) 沿整条单位圆（逆时针）积分。</p>
+<p><strong>第一步：参数化 t∈[0,2π]。</strong></p>
+<p><strong>第二步：代入。</strong> x dy − y dx = cos t·cos t dt − sin t·(−sin t)dt = (cos²+sin²)dt = dt。</p>
+<p><strong>第三步：积分。</strong> ∫η = ½∫₀^{2π} dt = π。<strong>这恰好是单位圆面积！</strong></p>
+<div class="formula display" data-tex="\text{面积}(D)=\frac12\oint_{\partial D}(x\,dy-y\,dx)\qquad(\text{鞋带公式的连续版})"></div>
+<p><strong>第四步：用 Stokes 验证。</strong> d(½(xdy−ydx)) = ½(dx∧dy − dy∧dx) = dx∧dy。广义 Stokes 给出 ∫_∂D η = ∫_D dx∧dy = 面积(D) = π ✓。∎ 这个"边界的积分算出内部面积"的魔术，是格林公式的全部内容，也是测地线/多边形面积公式的祖辈。</p>
+</section>
+
+<section>
+<h3>四、例题 2——闭而不恰当：dθ 与"洞"（一步步算完）</h3>
+<p><strong>题目。</strong> 在去掉原点的平面 ℝ²∖{0} 上考虑极坐标角度微分 ω = dθ = (x dy − y dx)/(x²+y²)。证明：(1) dω=0（闭）；(2) ω 不是恰当形式。</p>
+<p><strong>第一步：验证闭。</strong> 记 P=−y/r²、Q=x/r²（r²=x²+y²）。</p>
+<div class="formula display" data-tex="\frac{\partial Q}{\partial x}=\frac{r^2-x\cdot2x}{r^4}=\frac{y^2-x^2}{r^4},\qquad \frac{\partial P}{\partial y}=\frac{-r^2+y\cdot 2y}{r^4}=\frac{y^2-x^2}{r^4}"></div>
+<p>两者相等，故 dω=(∂Q/∂x−∂P/∂y)dx∧dy = 0。闭 ✓。</p>
+<p><strong>第二步：沿单位圆积分。</strong> 参数化 x=cos t、y=sin t：x dy − y dx = cos²t dt + sin²t dt = dt，除以 r²=1：</p>
+<div class="formula display" data-tex="\oint_{\text{单位圆}}\omega=\int_0^{2\pi}dt=2\pi\ne 0\qquad\blacksquare"></div>
+<p><strong>第三步：结论。</strong> 若 ω=dα 恰当，由 Stokes（或沿闭合路径积分基本定理）∫ω=0，矛盾。所以 ω 在 ℝ²∖{0} 上<strong>闭而不恰当</strong>。</p>
+<p><strong>第四步：这说明了什么？</strong> 庞加莱引理说"星形区域上闭 ⟹ 恰当"——而 ℝ²∖{0} 不是星形的（中间有个洞），障碍正在于此。洞使 dθ 无法延拓成全局单值函数 θ（绕一圈角度增加 2π）。绕原点的圈数（winding number）k = (1/2π)∫ω 是整数，它数清了"路径绕洞转了几圈"。de Rham 上同调 H¹(ℝ²∖{0}) = ℝ 的 1 维，正是这个洞的代数签名。这与 <a href="/pages/contour-integral.html">围道积分</a> 里 ∮dz/z = 2πi 的"留数看洞"是同一现象的复分析版本——1-形式与全纯微分在此握手。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——形式、外微分与 Stokes 的完整骨架</h3>
+<ul>
+<li><strong>定义。</strong> k-形式 ω = Σ_{|I|=k} P_I dx_{i1}∧…∧dx_{ik}（I 严格递增，保证表示唯一）。0-形式即函数。</li>
+<li><strong>外积。</strong> 结合、双线性、且 α∧β = (−1)^{degα·degβ} β∧α（奇 × 奇才变号）。</li>
+<li><strong>拉回。</strong> 光滑映射 F 给出 F*：Λ^k(N)→Λ^k(M)，满足 F*(α∧β)=F*α∧F*β、F*(dω)=d(F*ω)（自然性）——换元公式 ∫_{F(M)}? 的正确形式是 ∫_M F*ω（对浸入/恰当映射）。</li>
+<li><strong>外微分。</strong> 唯一满足 d(α∧β)=dα∧β+(−1)^{degα}α∧dβ、d²=0、与 f 的 d 重合为 df=Σ∂f/∂x_i dx_i 的算子。它把 Λ^k 送到 Λ^{k+1}。</li>
+<li><strong>广义 Stokes 定理：</strong> 对带边有向流形 M 与 k−1 形式 ω（适当光滑性），∫_M dω = ∫_∂M ω。推论：∫_∂M ω 只依赖 ω 在边界上取值；闭形式沿闭流形积分自动为零当它是恰当的。</li>
+<li><strong>de Rham 定理（1931）：</strong> de Rham 上同调 H^k_dR = {闭 k-形式}/{恰当 k-形式} 与奇异上同调 H^k(M;ℝ) 同构——"洞的代数计数"与"形式的积分障碍"是同一件事。→ <a href="/pages/algebraic-topology-homology.html">同调论</a> 课。</li>
+<li><strong>经典对应表：</strong> d(f)=∇f；d(Pdx+Qdy)=(∂Q/∂x−∂P/∂y)dx∧dy ⟷ 旋度；(外微分 of 2-forms) ⟷ 散度。四条经典定理即 k=1,2,3 的 Stokes。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="dx\wedge dy=-dy\wedge dx;\qquad \alpha\wedge\beta=(-1)^{\deg\alpha\,\deg\beta}\,\beta\wedge\alpha"></div>
+<div class="formula display" data-tex="d\Bigl(\sum_I P_I\,dx_I\Bigr)=\sum_I dP_I\wedge dx_I,\qquad d^2=0"></div>
+<div class="formula display" data-tex="\int_M d\omega=\int_{\partial M}\omega\qquad(\text{广义 Stokes})"></div>
+<div class="formula display" data-tex="\oint_{\text{圆}}\frac{x\,dy-y\,dx}{x^2+y^2}=2\pi;\qquad \operatorname{Area}(D)=\tfrac12\oint_{\partial D}(x\,dy-y\,dx)"></div>
+<div class="formula display" data-tex="H^k_{dR}(M)=\frac{\ker d|_{\Lambda^k}}{\operatorname{im} d|_{\Lambda^{k-1}}}\cong H^k(M;\mathbb{R})\qquad(\text{de Rham 定理})"></div>
+</section>
+
+<section>
+<h3>七、延伸——形式的现代足迹</h3>
+<ul>
+<li><strong>麦克斯韦方程组 = 两条几何语句。</strong> 电磁场强度是时空上的 2-形式 F = −dt∧E + B（恰当记法略）；麦克斯韦方程组压缩为 dF=0（无磁单极 + 法拉第律）与 d⋆F=J（高斯 + 安培律，⋆ 是霍奇星算子）。形式语言让"规范对称"变成"形式等式"。——→ <a href="/pages/electromagnetism.html">电磁学</a> 课。</li>
+<li><strong>辛几何与哈密顿力学。</strong> 相空间的辛形式 ω=Σdp_i∧dq_i 是 2-形式；哈密顿向量场的定义、正则变换的保持、刘维尔定理，全是 ω 的语言。→ <a href="/pages/symplectic-geometry.html">辛几何</a> 课。</li>
+<li><strong>纤维丛上的联络与曲率。</strong> 主丛上的联络是 1-形式、曲率是 2-形式（结构方程 Ω=dω+½[ω,ω]）；Yang–Mills 理论、引力（Levi-Civita 联络的曲率 2-形式 = 黎曼曲率）都以形式为语法。→ <a href="/pages/fiber-bundle.html">纤维丛</a>、<a href="/pages/curvature.html">曲率</a> 课。</li>
+<li><strong>计算与数据。</strong> 数值外微分（DEC）在计算流体与弹性力学中保证离散 Stokes 精确成立；持久同调（拓扑数据分析）把"洞的计数"变成统计工具——形式思想渗透到机器学习时代的数据科学。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——四个常见误解</h3>
+<p><strong>陷阱 1："dx 是一个无穷小量"？</strong> 不是。在标准分析里 dx 是<strong>切向量到第 i 个坐标分量的线性函数</strong>（测量器）；ω_x 是切空间上的线性泛函。把 dx 当"无穷小"只在非标准分析里有严格意义，通常只是启发式。形式论的全部好处恰恰来自 dx 是"函数"而非"无穷小"。</p>
+<p><strong>陷阱 2："dx∧dy 就是 dx·dy，乘积可交换"？</strong> 若可交换，面积元就没有方向；格林公式里 (∂Q/∂x−∂P/∂y) 的符号、换元时雅可比行列式的符号（可负！）都将无法解释。反对称不是可选项——它是定向的代数实现。例：换元 (u,v)→(v,u) 时 dx∧dy→−du∧dv，面积自动带符号，∫_D dx∧dy = −∫_{翻转} … 若用普通乘法会得到荒谬的"负面积"。</p>
+<p><strong>陷阱 3："闭形式（dω=0）一定是恰当形式"？</strong> 例题 2 的 dθ 就是活反例——在 ℝ²∖{0} 上闭而不恰当。庞加莱引理要求星形（或更一般：可缩）区域；洞的存在使闭≠恰当。这正是 de Rham 上同调非平凡的全部内容。</p>
+<p><strong>陷阱 4："沿闭合路径积一个 1-形式总为零"？</strong> 只对<strong>恰当</strong>形式（或保守场）成立。沿闭合路径积 dθ 得到 2π×圈数，不为零。把"闭合路径积分必零"当成普遍真理，是初学者在物理课（"保守场做功为零"）与数学课之间最常见的混淆——保守场 = 恰当形式 = 路径无关，不是所有形式都如此。</p>
+</section>
+
+<section>
+<h3>九、当前状态——形式语言的边界与前沿</h3>
+<ol>
+<li><strong>形式是"完成的理论"，但应用在扩张。</strong> 外微分与 Stokes 已成熟百年；今天的前沿在它的<strong>应用</strong>端：数值外微分（DEC）、计算同调、持久同调（TDA）、优化与控制论中的几何结构。</li>
+<li><strong>霍奇理论。</strong> 在黎曼流形上，霍奇星算子给出 L² 调和形式，霍奇分解把上同调类表示为调和形式——把"洞"变成"调和方程的解"，连接泛函分析与几何。谱几何、指标定理（Atiyah–Singer）都在此交汇。</li>
+<li><strong>非交换推广。</strong> de Rham 复形在非交换几何中被推广（Connes 的循环上同调）——把"洞的计数"带进算子代数世界。→ <a href="/pages/noncommutative-geometry.html">非交换几何</a> 课。</li>
+<li><strong>形式与数学物理。</strong> 弦论与量子场论中的"形式积分"（路径积分）、超对称中的"形式与微分形式对应"（hodge 对偶下的超对称）仍在滋养新的数学结构（如派生代数几何里的"幂零坐标"）。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Grassmann (1844)</strong>：<em>Die lineale Ausdehnungslehre</em>——外代数诞生（"扩张论"），远超前于时代。</li>
+<li><strong>Poincaré (1887–1895)</strong>：庞加莱引理与同调论的起点——"闭而不恰当"第一次被系统研究。</li>
+<li><strong>E. Cartan (1899, 1922)</strong>：外微分系统与移动标架——把微分形式变成微分几何的日常语言。</li>
+<li><strong>de Rham (1931)</strong>：<em>"Sur l'analysis situs des variétés à n dimensions"</em>——de Rham 定理：形式与同调的对偶。</li>
+<li><strong>Hodge (1930s)</strong>：调和形式理论——黎曼流形上的霍奇分解。</li>
+<li><strong>Weyl (1940s) 等</strong>：规范场论的形式语言（F=dA 为曲率 2-形式），物理与几何在 20 世纪中期的重新会师。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——闭与恰当的手感</h3>
+<p><strong>题 1（展开计算）。</strong> 直接展开验证 d(x dy + y dx) = 0，并指出这是哪个函数的恰当形式。<strong>提示：</strong>d(x dy)=dx∧dy，d(y dx)=dy∧dx=−dx∧dy，相加为零；ω=d(xy)。</p>
+<p><strong>题 2（面积公式）。</strong> 用 ½∮(x dy−y dx) 计算椭圆 x=a cos t、y=b sin t 围出的面积。<strong>提示：</strong>½∫₀^{2π}(a cos t·b cos t − b sin t·(−a sin t))dt = ½∫ab(cos²+sin²)dt = πab。</p>
+<p><strong>题 3（闭性验证）。</strong> 直接对 P、Q 求偏导，验证 ω=(x dy−y dx)/(x²+y²) 满足 ∂Q/∂x=∂P/∂y（即 dω=0）。<strong>提示：</strong>见例题 2 第一步的算术：两边都是 (y²−x²)/r⁴。</p>
+<p><strong>题 4（判断闭/恰当）。</strong> 下列形式在 ℝ² 上哪些闭？哪些恰当？(i) x dx + y dy；(ii) y dx；(iii) x dy − y dx。<strong>提示：</strong>(i) = d(½(x²+y²))，恰当；(ii) d(y dx)=−dx∧dy≠0，不闭；(iii) d(xdy−ydx)=2dx∧dy≠0，不闭（它是"面积两倍"的 1-形式版本，无单值势函数）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示。∎</p>
+<p><strong>题 2</strong>：∫½∮=πab。椭圆面积公式的微分形式证明。∎</p>
+<p><strong>题 3</strong>：见例题 2。∎</p>
+<p><strong>题 4</strong>：(i) 恰当（闭）；(ii) 不闭；(iii) 不闭。注意"坐标线性形式的线性组合"极少是恰当的——恰当性需要系数满足配对条件 ∂P/∂y=∂Q/∂x（在可缩区域上）。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布路径积分）。</strong> 选"恰当场 xdx+ydy"：画任意闭合路径，积分应 ≈0（与路径无关）。再选"涡旋场 dθ"：画一条绕原点一圈的闭合路径，积分 ≈2π；画两圈的路径（自交允许）≈4π——积分 = 2π×圈数，而场本身闭而不恰当。</p>
+<p><strong>试试看 2（Green 公式现场）。</strong> 选"非闭场 y dx"，画一个逆时针矩形：积分应 ≈ −(矩形面积)（画布同时显示 Green 预测值）。把矩形换个位置：面积不变、积分不变——因为 d(y dx)=−dx∧dy 与位置无关。</p>
+<p><strong>试试看 3（与围道积分对照）。</strong> 在 <a href="/pages/contour-integral.html">围道积分</a> 课里，∮dz/z=2πi 的留数"看"的是极点；这里 dθ 的 2π 看的是洞。同一个 2π，复分析一只眼、微分形式一只眼——试着在两门课的画布上都画一个绕原点的圈，比较两个积分数值。</p>
+<p><strong>试试看 4（庞加莱引理的地盘）。</strong> 验证"星形区域"直觉：把涡旋场换成在整张平面上定义的 x dy−y dx（不除以 r²）——它处处光滑但在原点闭而不恰当吗？提示：d(xdy−ydx)=2dx∧dy≠0，它在全平面<strong>不闭</strong>，所以没有矛盾——庞加莱引理只适用于闭形式。真正要在 ℝ²∖{0} 制造障碍，必须像 dθ 那样精心选择系数使 dω=0。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>V. Arnold, Mathematical Methods of Classical Mechanics</strong>（微分形式的物理直觉与辛几何，附录是经典）</p>
+<p>&rarr; <strong>M. Spivak, Calculus on Manifolds</strong>（微分形式的现代入门，薄而锋利）</p>
+<p>&rarr; <strong>R. Bott, L. Tu, Differential Forms in Algebraic Topology</strong>（形式与拓扑的完整故事）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part III（微分形式条目）与 Part IV（微分几何、代数拓扑）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/gradient.html">梯度与方向导数</a>、<a href="/pages/riemann-integral.html">黎曼积分</a>、<a href="/pages/contour-integral.html">围道积分</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/contour-integral.html">🔄 围道积分与留数</a>：∮dz/z=2πi 与 dθ 的 2π 是同一拓扑障碍的两副面孔。</p>
+<p>&rarr; <a href="/pages/algebraic-topology-homology.html">🔗 同调论</a>：de Rham 定理把形式与奇异同调焊接。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：黎曼曲率是取值在形式里的 2-形式（结构方程）。</p>
+<p>&rarr; <a href="/pages/fiber-bundle.html">🧵 纤维丛</a>：联络 1-形式与曲率 2-形式是规范场论的语法。</p>
+<p>&rarr; <a href="/pages/symplectic-geometry.html">♾️ 辛几何</a>：相空间辛形式 ω=Σdp∧dq 是哈密顿力学的几何。</p>
+<p>&rarr; <a href="/pages/electromagnetism.html">⚡ 电磁学</a>：麦克斯韦方程组 = dF=0 与 d⋆F=J 两条形式等式。</p>
+</section>

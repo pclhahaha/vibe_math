@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="图论、生成函数、Ramsey理论" />
+  <meta property="og:title" content="组合数学 — Vibe Math" />
+  <meta property="og:description" content="图论、生成函数、Ramsey理论" />
+  <title>组合数学 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎲 组合数学 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">图论、生成函数、Ramsey理论</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='combinatorics',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/abstract-algebra.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🧮 抽象代数</a>
+  <a href="/pages/additive-combinatorics.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">➕ 加性组合学 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：先数几个具体的例子</h3>
+<p>把 5 本不同的书摆上书架：第 1 格有 5 种选法，第 2 格剩下 4 种……一路乘下去，一共 5 × 4 × 3 × 2 × 1 = <strong>120</strong> 种摆法。这是"排列"。从 10 个人里选 3 人组成委员会：顺序不重要，答案不是 10 × 9 × 8 = 720，而是 720 ÷ 3! = <strong>120</strong>。这是"组合"。</p>
+<p>再看一个必须"补回来"的例子。1 到 100 里能被 2 整除的有 50 个，能被 3 整除的有 33 个。直接相加得 83，但既能被 2 又能被 3 整除的（即被 6 整除的，共 ⌊100/6⌋ = 16 个）被<strong>数了两遍</strong>，要减一次：</p>
+<div class="formula display" data-tex="50+33-16=67\qquad(\text{1到100中能被2或3整除的整数个数})"></div>
+<p>三个具体的例子，三件事：排列（讲顺序）、组合（不讲顺序）、容斥（去掉重复）。组合数学就是回答"有多少种摆法、多少种选法"这类问题的学问——它是专门"数东西"的科学。它之所以重要，是因为密码、网络、日程安排这些实际问题，到头来都变成"算一算有几种可能"。</p>
+<div class="key-insight">一句话：组合数学 = 数"有多少种摆法选法"的学问。只要抓住排列、组合、容斥、生成函数这四件工具，就能数清楚绝大多数问题。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、乘法原理与排列：为什么答案是连乘</h3>
+<p>先建立最基础的感觉。摆书问题是"分步"问题：第一步摆第 1 格（5 选），第二步摆第 2 格（4 选），……第 5 步摆最后一格（1 选）。</p>
+<div class="key-insight"><strong>乘法原理</strong>：若一件事可以分成 r 步完成，第 i 步有 nᵢ 种选择，且各步选择互不影响，则总方法数为 n₁ × n₂ × ⋯ × nᵣ。</div>
+<p>为什么"互不影响"这个条件必不可少？如果第 2 步的选择取决于第 1 步，你就不能简单相乘。但"从 n 个不同物件中依次取 k 个"每步都是"拿走一个、少一个"，选择数递减为 n, n−1, …, n−k+1，互不影响，可以直接连乘。</p>
+<div class="formula display" data-tex="P(n,k)=\frac{n!}{(n-k)!}=n(n-1)\cdots(n-k+1)\qquad(\text{从 }n\text{ 个取 }k\text{ 个的排列数})"></div>
+<p>注意两个极端：k = n 时 P(n,n) = n!（全排列）；k = 1 时 P(n,1) = n（挑一个）。这套记号并不神秘——它就是"分步乘法"的速记。</p>
+</section>
+
+<section>
+<h3>二、组合：排列除以重复</h3>
+<p>排列给每个位置分配对象，所以 <strong>{甲,乙,丙}</strong> 和 <strong>{乙,甲,丙}</strong> 被算成两种。但"委员会"不关心顺序——这两个应当算同一种。怎么从"有序"回到"无序"？</p>
+<p>直觉：选出的 k 个人排成一队有 k! 种方式（刚才的乘法原理，k! 种内部顺序）。每一种无序选择对应 k! 种有序排列。所以</p>
+<div class="formula display" data-tex="\binom{n}{k}=\frac{P(n,k)}{k!}=\frac{n!}{k!(n-k)!}\qquad(\text{从 }n\text{ 个取 }k\text{ 个的组合数})"></div>
+<p><strong>为什么除以 k! 就对了？</strong>把"所有有序选法 P(n,k)"按"内部顺序"分组：每一组恰好有 k! 个有序选法（同一组对象的所有排列），且各组一一对应一个无序选择。总数除以每组大小 k!，剩下的就是组数。这就是"去重"的基本手段：<strong>数多了就除以每个对象被重复的次数</strong>。</p>
+<p>数值检验：C(10,3) = P(10,3) / 3! = (10 × 9 × 8) / 6 = 720 / 6 = <strong>120</strong>。手工核对：10 人选 3 人的排列队形共 720 种；每个 3 人组在里面被数了 3! = 6 次（三个人的所有内部顺序），所以真答案 = 720 ÷ 6 = 120。若换小参数：C(5,3) = 5·4·3 / 6 = 10，即从 5 人选 3 人有 10 种委员会——与"主席加委员"例题里 C(11,2) = 55 的算法同款。</p>
+</section>
+
+<section>
+<h3>三、完整例题 1：主席加委员——用两种方法数同一件事</h3>
+<p>从 12 名学生中选一个 3 人委员会，并指定其中 1 人为主席。共几种选法？我们用<strong>两种方法</strong>数，答案必须一致——这是"双重计数"（double counting）的第一次实战。</p>
+<p><strong>方法 A（先选后指定）。</strong>先选 3 人委员会：C(12,3) = 12·11·10 / 6 = 220 种。再从中挑 1 人当主席：每个委员会有 3 种挑法。总数 = 220 × 3 = <strong>660</strong>。</p>
+<p><strong>方法 B（先定主席再补委员）。</strong>先选主席：12 种。再从剩下 11 人中选 2 人当普通委员：C(11,2) = 55 种。总数 = 12 × 55 = <strong>660</strong>。</p>
+<div class="formula display" data-tex="\binom{12}{3}\times3=12\times\binom{11}{2}=660"></div>
+<p>两种方法给出同一个数 660，互相印证。方法 A 用"除以重复"（除以 3!），方法 B 直接分步相乘——这正是排列与组合记号配合的典型套路。<strong>关键教训：同一对象用两种方式计数，得到的表达式必然相等</strong>，这是后面证明组合恒等式的最强武器。</p>
+<p>再补一个"相邻/不相邻"的直觉。把 4 个不同的小球放进 4 个格子且要求互不相邻？格子只有 4 个，放 4 个球必然全相邻，答案是 0。改问：从 7 个格子里选 3 个互不相邻的格子，C(5,3) = 10 种（插空法，见第十三节反例）。</p>
+</section>
+
+<section>
+<h3>四、容斥原理：多算了就补回来</h3>
+<p>回到〇节那个数数问题：1 到 100 中能被 2 或 3 整除的有多少个？"能被 2 整除"和"能被 3 整除"两个条件会<strong>重叠</strong>：被 6 整除的数既在第一个集合里也在第二个里，相加时被数了两遍，必须减去一遍。这就是容斥原理的雏形：</p>
+<div class="formula display" data-tex="|A_2\cup A_3|=|A_2|+|A_3|-|A_2\cap A_3|=50+33-16=67"></div>
+<p>两个集合只需"加、减"两下；三个集合就要"加三个、减三个两两交、加一个三交"：</p>
+<div class="formula display" data-tex="|A\cup B\cup C|=|A|+|B|+|C|-|A\cap B|-|A\cap C|-|B\cap C|+|A\cap B\cap C|"></div>
+<p><strong>为什么符号交替出现（+、−、+）？</strong>这是"逐层修正"：先全加（每个元素被数 k 次，k = 它满足的条件数），再减去两两交的部分（把被数 2 次的调回 1 次），但这样三交的部分被减过头了，又加回来……每个属于 t 个集合的元素最终贡献恰为 1（这就是第十一节证明里用二项式定理抵消的核心）。</p>
+<p>一般形式写出来，就是那行"加加减减"的公式。先看直观形式，把每个元素的净贡献写成"它被多少个 k 元交计入、符号如何"：</p>
+<div class="formula display" data-tex="\left|\bigcup_{i=1}^n A_i\right|=\sum_{k=1}^n(-1)^{k+1}\sum_{1\le i_1&lt;\cdots&lt;i_k\le n}\left|\bigcap_{j=1}^k A_{i_j}\right|"></div>
+</section>
+
+<section>
+<h3>五、完整例题 2：1 到 100 中既不被 2 也不被 3 也不被 5 整除</h3>
+<p>这是容斥的标准应用题，一步步算完。</p>
+<p><strong>第 1 步：设集合。</strong>A₂ = {1,…,100 中能被 2 整除的}，A₃ = {能被 3 整除的}，A₅ = {能被 5 整除的}。所求 = |A₂ ∪ A₃ ∪ A₅ 的补集| = 100 − |A₂ ∪ A₃ ∪ A₅|。</p>
+<p><strong>第 2 步：数出单个集合大小。</strong>⌊100/2⌋ = 50，⌊100/3⌋ = 33，⌊100/5⌋ = 20。</p>
+<p><strong>第 3 步：数出两两交。</strong>被 6 整除：⌊100/6⌋ = 16；被 10 整除：⌊100/10⌋ = 10；被 15 整除：⌊100/15⌋ = 6。</p>
+<p><strong>第 4 步：数出三交。</strong>被 2×3×5 = 30 整除：⌊100/30⌋ = 3。</p>
+<p><strong>第 5 步：套公式。</strong></p>
+<div class="formula display" data-tex="|A_2\cup A_3\cup A_5|=50+33+20-16-10-6+3=74"></div>
+<div class="formula display" data-tex="100-74=\mathbf{26}\qquad(\text{既不被2、3、5整除的个数})"></div>
+<p><strong>第 6 步：核对。</strong>用欧拉函数 φ(30) = 30(1−1/2)(1−1/3)(1−1/5) = 30 × 1/2 × 2/3 × 4/5 = 8 是"1 到 30 中与 30 互素的数"，它在每 30 个数里重复出现：100 = 3×30 + 10，故 3×8 = 24，再加上 91,…,100 中与 30 互素的 97（其他 91,93,95,97,99——91=7×13 与 30 互素? 91 与 30 互素吗？gcd(91,30)=1，是。93=3×31，否。95=5×19，否。97 与 30 互素，是。99=9×11=3²×11，否。故 91 和 97 两个）→ 24 + 2 = 26。✓ 两种独立算法吻合。</p>
+</section>
+
+<section>
+<h3>六、生成函数：为什么把数列装进幂级数有用</h3>
+<p>组合问题常常给你一个<strong>数列</strong>：比如"选 0 个有 a₀ 种、选 1 个有 a₁ 种、……"，而你要的是闭式通项。生成函数（generating function）的妙处是：<strong>把整个数列 (aₙ) 装进一个幂级数</strong></p>
+<div class="formula display" data-tex="A(x)=a_0+a_1x+a_2x^2+\cdots=\sum_{n\ge0}a_nx^n"></div>
+<p>然后用级数的<strong>代数运算</strong>（加、乘、求导、求和）去处理整个数列——递推变成方程，卷积变成乘积。</p>
+<div class="key-insight"><strong>为什么生成函数有用？</strong>三个理由。① 乘法 = 卷积：两个生成函数相乘，系数恰好是"把 n 拆成两部分"的计数——这正是组合计数最需要的运算。② 递推 = 代数方程：常系数线性递推对应有理函数，有理函数可部分分式展开、几何级数还原，一步到位拿到闭式。③ 求解器视角：它把"找通项"这个分析问题变成"解代数方程 + 展开级数"的机械化流程。</div>
+<p>两个变体各有分工：普通生成函数（OGF）数<strong>无序</strong>对象（组合），指数生成函数（EGF）数<strong>标号</strong>对象（排列、集合划分）：</p>
+<div class="formula display" data-tex="\text{OGF: } A(x)=\sum_{n\ge0}a_n x^n,\qquad \text{EGF: } A(x)=\sum_{n\ge0}a_n\frac{x^n}{n!}"></div>
+<p>一个立即有用的特例：<strong>几何级数</strong> 1/(1−x) = Σxⁿ，它的系数恒为 1，对应"每步 1 种选择"。</p>
+</section>
+
+<section>
+<h3>七、完整例题 3：用生成函数解递推</h3>
+<p>求满足 aₙ = 2a_{n−1} + 3a_{n−2}（n ≥ 2），a₀ = 0，a₁ = 1 的数列通项。四步走完。</p>
+<p><strong>第 1 步：把递推翻译成生成函数的方程。</strong></p>
+<div class="formula display" data-tex="F(x)=a_0+a_1x+\sum_{n\ge2}(2a_{n-1}+3a_{n-2})x^n=x+2xF(x)+3x^2F(x)"></div>
+<p>（核对：Σ_{n≥2} a_{n−1} xⁿ = xΣa_{n−1} x^{n−1} = xF(x)，同理第二项 = 3x²F(x)。）</p>
+<p><strong>第 2 步：解代数方程并因式分解。</strong></p>
+<div class="formula display" data-tex="(1-2x-3x^2)F(x)=x\implies F(x)=\frac{x}{(1-3x)(1+x)}"></div>
+<p><strong>第 3 步：部分分式。</strong>令 F(x) = A/(1−3x) + B/(1+x)，通分比较分子 A(1+x)+B(1−3x) = x ⟹ A+B=0 且 A−3B=1，解得 A = 1/4，B = −1/4。</p>
+<p><strong>第 4 步：几何级数展开，读出系数。</strong></p>
+<div class="formula display" data-tex="F(x)=\frac14\sum_{n\ge0}3^n x^n-\frac14\sum_{n\ge0}(-1)^n x^n\implies a_n=\frac{3^n-(-1)^n}{4}"></div>
+<p><strong>第 5 步：逐项核对。</strong>a₂ = (9−1)/4 = 2，而递推给 a₂ = 2·1 + 3·0 = 2 ✓；a₃ = (27+1)/4 = 7，递推给 a₃ = 2·2 + 3·1 = 7 ✓；a₄ = (81−1)/4 = 20，递推给 a₄ = 2·7 + 3·2 = 20 ✓。前几项 0, 1, 2, 7, 20 完全吻合。∎</p>
+</section>
+
+<section>
+<h3>八、Cayley 公式与 Prüfer 编码：为什么标号树是 n^{n−2}</h3>
+<p>你的手机信号靠基站网络，电网靠输电线路——"用最少的边把所有节点连通"就是一棵<strong>生成树</strong>。问题：给 n 个标记城市（标号 1 到 n），能画出多少棵不同的树？</p>
+<p>n = 3 时：3 个城市，任意两两相连都要 2 条边不构成环，树只有"以某个点为枢纽"的形状，标号后共 3 种：枢纽取 1、2 或 3，即 3^{3−2} = 3。n = 4 时：答案是 4^{4−2} = 16 棵。逐个数：星形 4 棵（枢纽选 1 个）+ 路径 12 棵（4 个城市的排列 / 2，因为一条路径从两头数一样）= 16。✓</p>
+<div class="formula display" data-tex="\text{Cayley 公式：}n\text{ 个标记顶点的树共有 }n^{n-2}\text{ 棵}"></div>
+<p><strong>为什么偏偏是 n^{n−2}？</strong>Prüfer 编码（1918）给出一个漂亮的证明：把一棵树压缩成一个长度为 n−2 的序列，且反向唯一还原。压码规则：每次删掉编号最小的叶子，把它的邻居写进序列。于是"数树"变成"数长度为 n−2、每个位置取 1..n 的序列"：n^{n−2} 种。这个一一对应说明：<strong>树的多重结构信息完整地装在一个小序列里</strong>——这是把计数问题"翻译成序列"的典范，和第 6 节生成函数用"系数"装信息是同一哲学。</p>
+</section>
+
+<section>
+<h3>九、Ramsey 理论与极值组合：为什么"完全的无序"不可能</h3>
+<p>参加聚会的有 6 个人。考察任意两人：要么认识，要么不认识。R(3,3) = 6 断言：<strong>无论认识关系怎么安排，6 个人中必能找到 3 个两两互相认识，或 3 个两两互相不认识。</strong>这就是 Ramsey 理论的开山例子——"完全的无序是不可能的"。</p>
+<p><strong>为什么 6 就够、5 就不行？</strong>固定一个人甲，其余 5 人中，按"认识甲"和"不认识甲"分边，必有一边至少 3 人（抽屉原理：5 分成两堆，至少一堆 ≥ 3）。若这 3 人两两认识则找到三角形；否则他们中若有两人认识，则与甲构成三人组；若两两不认识，这 3 人本身就是"三人互不相识"。R(3,3) = 6 的"至少一边 ≥3"与"两两关系"的配合正好凑出 3 人结构；而 5 人时可用五边形染色躲开（K₅ 的两色分解）。</p>
+<p>把"认识"换成一般条件，"极值组合"问的是反向问题：<strong>不含某结构 H 的图，最多能有多少条边？</strong>Turán 定理给出不含 K_{r+1} 的 n 顶点图最大边数（完全 r 部平衡图取到）；Erdős–Stone 定理把它推广为渐近规律：</p>
+<div class="formula display" data-tex="\mathrm{ex}(n,H)=\left(1-\frac{1}{\chi(H)-1}+o(1)\right)\frac{n^2}{2}\qquad(\chi(H)=\text{H 的色数})"></div>
+<p>这是极值图论的"第一定理"——它说明不含 H 的最大边数<strong>只由 H 的色数决定</strong>，而不是 H 的细部结构。直觉：色数衡量"H 多'连通'、多占地方"，色数越大，避开它付出的边数代价越高。</p>
+<p>数论一侧同样有"无序不可能"：Szemerédi（1975）证明正密度的整数集含任意长等差数列；Green–Tao（2004）进一步证明素数含任意长等差数列。这些结果与组合、加性数论、遍历论交织，是当代前沿的原料。</p>
+</section>
+
+<section>
+<h3>十、素数筛——从 Eratosthenes 到 Zhang Yitang</h3>
+<p>Eratosthenes 筛法（公元前 3 世纪）：从 2 开始，划掉 2 的所有倍数，接着划掉下一个未划掉数的倍数……剩下的都是素数。复杂度 O(n log log n)，至今仍是求素数表最朴素也最优的筛法之一。<strong>为什么复杂度是 n log log n？</strong>每个素数 p ≤ √n 要划掉约 n/p 个数，总工作量 ∝ Σ_{p≤√n} n/p ≈ n log log n（倒数和的经典估计）。</p>
+<p>现代筛法的演进：Brun（1919）用筛法证明孪生素数倒数和收敛；Selberg 引入更精细的上界筛；陈景润用加权筛证明"1+2"（每个充分大的偶数是一个素数与一个至多两个素数乘积之和）。2013 年，GPY 方法 + Zhang Yitang 证明<strong>素数有界间隙</strong>：存在无穷多对相邻素数距离小于 7 千万；随后该常数被一路压缩，目前纪录为 <strong>246</strong>。这正是 2022 年张益唐在朗道-西格尔零点猜想上推进的工作所处的数论谱系。</p>
+</section>
+
+<section>
+<h3>十一、证明——容斥原理</h3>
+<p><strong>定理（容斥原理）。</strong> 设 A₁,…,Aₙ 为有限集（或可测集）的若干子集，则</p>
+<div class="formula display" data-tex="\left|\bigcup_{i=1}^n A_i\right|=\sum_{k=1}^n (-1)^{k+1}\sum_{1\le i_1&lt;\cdots&lt;i_k\le n}\left|\bigcap_{j=1}^k A_{i_j}\right|"></div>
+<p><strong>证明（双重计数法）。</strong> 对每个 x ∈ ∪Aᵢ，设 x 恰好属于 t 个集合（t ≥ 1）。则 x 在右边第 k 项中的贡献为"x 被计入的 k 元交叉项个数" = C(t,k)（所选 k 个集合都需含 x）。故 x 的总贡献为</p>
+<div class="formula display" data-tex="\sum_{k=1}^{t}(-1)^{k+1}\binom{t}{k}=1-\sum_{k=0}^{t}(-1)^k\binom{t}{k}=1-(1-1)^t=1"></div>
+<p>最后一步由二项式定理 (1−1)^t = Σ(−1)^k C(t,k) = 0（t ≥ 1）。每个属于并集的元素恰贡献 1，故右边等于 |∪Aᵢ|。∎</p>
+<p><strong>为什么用二项式定理？</strong>每个元素属于 t 个集合，就"在 t 个一元项出现 t 次、在 C(t,2) 个二元项出现一次、……"。这一串 C(t,k) 恰是 (1−1)^t 展开的各项，和为 0——多算的自动抵消，剩下的正好是"出现 1 次"。这就是容斥原理"加加减减"背后精确的算术机理。</p>
+</section>
+
+<section>
+<h3>十二、证明——生成函数方法（母函数）</h3>
+<p><strong>定理。</strong> 设序列 (aₙ)，其生成函数 F(x) = Σaₙxⁿ。若 aₙ 满足常数系数的线性递推，则 F(x) 是有理函数，且可从中解出闭式通项。</p>
+<p><strong>证明（以二阶递推为例，严格的代数化步骤）。</strong> 设 aₙ = 2a_{n−1} + 3a_{n−2}（n ≥ 2），a₀ = 0，a₁ = 1。</p>
+<p><strong>第一步：写出 F 的方程。</strong></p>
+<div class="formula display" data-tex="F(x)=a_0+a_1x+\sum_{n\ge2}(2a_{n-1}+3a_{n-2})x^n=x+2xF(x)+3x^2F(x)"></div>
+<p><strong>第二步：化为代数方程并分解。</strong></p>
+<div class="formula display" data-tex="(1-2x-3x^2)F(x)=x\implies F(x)=\frac{x}{(1-3x)(1+x)}"></div>
+<p><strong>第三步：部分分式展开。</strong> 令 F(x) = A/(1−3x) + B/(1+x)，比较系数得 A = 1/4，B = −1/4。</p>
+<p><strong>第四步：几何级数展开回代。</strong></p>
+<div class="formula display" data-tex="F(x)=\frac14\sum_{n\ge0}3^n x^n-\frac14\sum_{n\ge0}(-1)^n x^n\implies a_n=\frac{3^n-(-1)^n}{4}"></div>
+<p><strong>第五步：验证。</strong> a₀ = (1−1)/4 = 0，a₁ = (3+1)/4 = 1，且满足递推（第七节已逐项核对）。∎</p>
+<p><strong>为什么这套流程总是能走通？</strong>常系数线性递推 ⟹ 递推方程对 F 是线性的 ⟹ F 有理 ⟹ 有理函数总能部分分式化 ⟹ 部分分式的每一项都是几何级数 ⟹ 系数闭式到手。每一步都是标准代数操作，没有任何"灵感"成分——这就是生成函数被称为"组合数学的代数机"的原因。</p>
+</section>
+
+<section>
+<h3>十三、反例——组合计数的陷阱</h3>
+<p><strong>陷阱 1：有序/无序混淆。</strong> 从 n 人挑 3 人委员会 ≠ 排列 3 人。错误：n³（把有序当无序）；正确：C(n,3) = n(n−1)(n−2)/6（除以 3! 去重）。</p>
+<p><strong>陷阱 2：双重计数（同一对象数两次）。</strong> 数"从 n 个位置选 m 个且互不相邻"。错误做法先排后插导致重复或遗漏；正确用<strong>插空法</strong>：先摆 m 个球占 m 个位置，剩下 n−m 个空隙（含两端）中选 m 个放球，得 C(n−m+1,m)。检验 n=4, m=2：总 C(4,2) = 6，相邻对 3 对，故非相邻 = 3，与 C(3,2) = 3 一致。</p>
+<p><strong>陷阱 3：标号与不标号。</strong> Cayley 公式 n^{n−2} 数标号树；若改用不可区分对象则完全不同。n = 3 时标号树 3¹ = 3 棵，而"形状"仅 1 种。</p>
+<p><strong>陷阱 4：容斥漏符号或漏项。</strong> 求"满足至少一个条件"或"都不满足"的方案数时，忘乘 (−1)^{k+1} 或漏掉空交项会系统性偏差。对策：对小参数手工核对（代入 n = 2, 3）。</p>
+</section>
+
+<section>
+<h3>十四、关键公式</h3>
+<div class="formula display" data-tex="P(n,k)=\frac{n!}{(n-k)!},\qquad \binom{n}{k}=\frac{n!}{k!(n-k)!}"></div>
+<div class="formula display" data-tex="\left|\bigcup_{i=1}^n A_i\right|=\sum_{k=1}^n(-1)^{k+1}\sum_{1\le i_1&lt;\cdots&lt;i_k\le n}\left|\bigcap_{j=1}^k A_{i_j}\right|\quad(\text{容斥原理})"></div>
+<div class="formula display" data-tex="n^{n-2}\quad(\text{Cayley公式：}n\text{ 个标记顶点的树数目})"></div>
+<div class="formula display" data-tex="\mathrm{ex}(n,H)=\left(1-\frac{1}{\chi(H)-1}+o(1)\right)\frac{n^2}{2}\quad(\text{Erdős–Stone})"></div>
+<div class="formula display" data-tex="\text{OGF: } A(x)=\sum a_nx^n,\qquad \text{EGF: } A(x)=\sum a_n\frac{x^n}{n!}"></div>
+</section>
+
+<section>
+<h3>十五、前沿：Erdős–Hajnal 猜想与正则性引理</h3>
+<p>Szemerédi 正则性引理（1975）是极值图论的"万能工具"：它把任何大图划分成 O(1) 个"两两随机得像 ε-正则"的分块，从而把"任意图"问题化归为"随机图"问题——Turán、Erdős–Stone 的许多最优证明都走这条路。<strong>为什么它这么强？</strong>因为它把"大而乱的图"压缩成"小而整洁的统计描述"，让组合问题变成可算的代数问题。</p>
+<p>2010 年代：超图正则性引理（Rödl–Schacht 等）与高维 Szemerédi 定理（多重遍历平均的收敛）把这一套搬到更高维。仍开放的问题有两个方向：超图版本的精确界限，以及算法版本的"正则性引理"——能否在多项式时间内找到正则分块？</p>
+</section>
+
+<section>
+<h3>十六、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 8 名男生、5 名女生中选一个 4 人委员会，要求至少含 1 名女生，共几种？</p>
+<p><em>提示：总数 C(13,4) = 715，减去全男生的 C(8,4) = 70，得 645。这就是"至少一个"的标准做法：补集法。</em></p>
+<p><strong>2.</strong> 用容斥求 1 到 200 中既不被 3 整除也不被 4 整除的整数个数。</p>
+<p><em>提示：|A₃| = 66，|A₄| = 50，|A₃∩A₄| = ⌊200/12⌋ = 16，并 = 100，所求 = 200 − 100 = 100。</em></p>
+<p><strong>3.</strong> 排列 6 个不同字母，其中字母 a 必须在 b 的左边（不必相邻），共几种？</p>
+<p><em>提示：a、b 的相对位置完全对称——总排列 6! = 720，一半满足"a 在 b 左"，即 360。</em></p>
+<p><strong>4.</strong> 用生成函数求 aₙ = 3a_{n−1}（a₀ = 1）的通项。</p>
+<p><em>提示：F(x) = 1 + 3xF(x) ⟹ F(x) = 1/(1−3x) ⟹ aₙ = 3ⁿ。这是几何级数的直接应用。</em></p>
+<p><strong>5.</strong> 证明 Pascal 恒等式 C(n,k) = C(n−1,k) + C(n−1,k−1)。</p>
+<p><em>提示：固定第 n 个元素。委员会含它：C(n−1,k−1)；不含它：C(n−1,k)。两类互斥，相加即得。</em></p>
+<p><strong>6.</strong> 用 Prüfer 编码数一数：4 个城市之间能画多少棵不同的航线树？</p>
+<p><em>提示：编码是长度为 n−2 = 2 的序列，每个位置 4 种选择：4² = 16 棵。试着手工列出 4 个节点的一棵星形树对应的编码验证。</em></p>
+</section>
+
+<section>
+<h3>十七、附：工作题——用生成函数解递推；容斥计数</h3>
+<p><strong>工作题 1（生成函数解递推）。</strong> 用生成函数解 Fibonacci 递推 aₙ = a_{n−1} + a_{n−2}（a₀ = 0，a₁ = 1），求通项。</p>
+<details><summary>显示解答</summary><p>
+F(x) = Σaₙxⁿ。由 aₙ = a_{n−1} + a_{n−2}（n ≥ 2）得 F(x) = x + F(x)x + F(x)x²，故 F(x) = x/(1−x−x²)。<br>
+分母 1−x−x² = (1−φx)(1−ψx)，φ = (1+√5)/2，ψ = (1−√5)/2。部分分式：F(x) = A/(1−φx) + B/(1−ψx)，得 A = 1/√5，B = −1/√5。<br>
+展开得 <strong>Binet 公式</strong>：aₙ = (φⁿ − ψⁿ)/√5。验证 a₀ = 0，a₁ = 1，且满足递推。∎</p></details>
+<p><strong>工作题 2（容斥计数）。</strong> 求 1 到 100 中既不被 2 整除、也不被 3 整除、也不被 5 整除的整数个数。</p>
+<details><summary>显示解答</summary><p>
+设 A₂, A₃, A₅ 为分别被 2, 3, 5 整除的集合。|A₂| = 50，|A₃| = 33，|A₅| = 20。<br>
+两两交：|A₂∩A₃| = ⌊100/6⌋ = 16，|A₂∩A₅| = 10，|A₃∩A₅| = 6。三交：|A₂∩A₃∩A₅| = ⌊100/30⌋ = 3。<br>
+并：50 + 33 + 20 − 16 − 10 − 6 + 3 = 74。所求 = 100 − 74 = <strong>26</strong> 个（第五节已完整演算）。</p></details>
+<p><strong>工作题 3（双重计数证明恒等式）。</strong> 用两种方法计数"含代表子集对 (S,x)（x ∈ S ⊆ [n]）"以证明 Σ_k k·C(n,k) = n·2^{n−1}。</p>
+<details><summary>显示解答</summary><p>
+方法一（按子集）：对每个 k 元子集 S，有 k 个代表可选，故总数 = Σ_k k·C(n,k)。<br>
+方法二（按代表元素）：固定 x ∈ [n]，x 属于 2^{n−1} 个子集，每个都贡献一次，故总数 = n·2^{n−1}。<br>
+同一对象两种计数结果必等，故 Σ_k k·C(n,k) = n·2^{n−1}。∎</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>R. P. Stanley, Enumerative Combinatorics, Vol. I &amp; II</strong></p>
+<p>&rarr; <strong>N. Alon &amp; J. H. Spencer, The Probabilistic Method</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/probability.html">🎲 概率论</a>：计数、生成函数与概率的组合侧——同一学科分类「离散数学」。</p>
+<p>&rarr; <a href="/pages/sieve.html">🔢 素数筛</a>：加性组合与筛法——同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/set-theory.html">🔗 集合论</a>：组合计数的公理化基础——同一学科分类「离散数学」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/combinatorics.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

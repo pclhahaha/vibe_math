@@ -1,0 +1,154 @@
+<section>
+<h3>〇、直觉入门——用分数逼近无理数，为什么 355/113 好得不像话</h3>
+<p>π ≈ 22/7（误差 1.3×10⁻³），但 π ≈ 355/113（误差 2.7×10⁻⁷）——分母只大了 16 倍，误差却好了 5000 倍。这不是巧合，是<strong>连分数</strong>的杰作。把任意实数写成</p>
+<div class="formula display" data-tex="\alpha=a_0+\cfrac{1}{a_1+\cfrac{1}{a_2+\cfrac{1}{\ddots}}}\qquad(a_0,a_1,\dots\text{ 整数，}a_i\ge1)"></div>
+<p>截断到第 n 层得到的分数 p_n/q_n 叫<strong>收敛子</strong>。它们是"最佳逼近"：在分母不超过 q_n 的所有分数里，p_n/q_n 离 α 最近。而且误差有精确的上界</p>
+<div class="formula display" data-tex="\Bigl|\alpha-\frac{p_n}{q_n}\Bigr|<\frac{1}{q_n\,q_{n+1}}\approx\frac{1}{a_{n+1}\,q_n^{2}}"></div>
+<p>——下一项 a_{n+1} 越大，这一层的逼近越好。π=[3;7,15,1,292,…] 里的那个 <strong>292</strong>，正是 355/113 惊人的来源（1/(113·33102)≈2.7×10⁻⁷）。</p>
+<p>丢番图逼近问的正是这种"分数能多好地装下无理数"：Dirichlet 说至少能到 1/q²；Hurwitz 说常数 1/√5 是最优（<strong>黄金比最难逼近</strong>）；Roth（1955，菲尔兹奖）说代数数的逼近"不能太好"——这把分数逼近、连分数与超越数理论、乃至动力系统（Gauss 映射）串成一条线。</p>
+<div class="key-insight">洞察：连分数把"数"编码成一串整数——无理数的全部逼近信息都在这串数里：收敛子是最佳逼近，大项 = 意外地好，周期 = 二次无理数（Lagrange）。丢番图逼近的研究对象其实只有一个问题：<strong>整数 q 能让 ||qα||（qα 与最近整数的距离）多小？</strong>——本课画布让你亲眼跟踪这条误差链。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/real-analysis.html">实分析</a>（序列与极限，误差的语言）、<a href="/pages/goldbach.html">哥德巴赫</a> 或 <a href="/pages/zeta.html">ζ 函数</a>（可选的解析数论背景）。连分数还连接 <a href="/pages/ergodic-theory.html">遍历理论</a> 的 Gauss 映射与 <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 的模群作用。</p></div>
+
+<section>
+<h3>一、一个具体问题——"分数能多好地逼近无理数？"</h3>
+<p>对无理 α，问最小化误差 |α − p/q|（q 为整数分母）。三条定理给出完整图景：</p>
+<ul>
+<li><strong>Dirichlet（1842，鸽巢）：</strong> 对任意 Q，存在 1≤q≤Q 使 |qα−p| &lt; 1/Q——即 |α−p/q| &lt; 1/(qQ) ≤ 1/q²。推论：<strong>|α−p/q| &lt; 1/q² 有无穷多个解</strong>。</li>
+<li><strong>Hurwitz（1891）：</strong> 常数可以改进到 1/√5：<strong>|α−p/q| &lt; 1/(√5 q²) 对无穷多个 p/q 成立</strong>；且 √5 是最优——对黄金比 φ=(1+√5)/2 及其等价类，任何更小的常数 c&lt;1/√5 都只有有限多个解。<strong>黄金比是"最难逼近"的无理数</strong>（它的连分数全是 1，没有大项可"利用"）。</li>
+<li><strong>Liouville（1844）/ Roth（1955）：</strong> 代数无理数不能"异常好"地逼近：若 α 是 n 次代数数，则 |α−p/q| &gt; c/qⁿ（Liouville）；Roth 大幅改进为：对任意 ε&gt;0，<strong>|α−p/q| &lt; 1/q^{2+ε} 只有有限多个解</strong>（且指数 2 是最优，Dirichlet 保证 2 有无穷多）。反过来，Liouville 用"好得过分的逼近"构造出第一批<strong>超越数</strong>（如 Σ10^{−k!}）。</li>
+</ul>
+<p>这三条定理的证明语言各不相同（鸽巢、连分数、代数几何/丢番图几何），但研究对象同一：<strong>||qα||=min_p|qα−p| 的最小值能多小、出现多频繁</strong>。连分数给出最精细的逐层答案：收敛子恰好是"纪录刷新者"。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——连分数算法与"最佳逼近"</h3>
+<p><strong>算法。</strong> 给定 α：a₀=⌊α⌋，若 α−a₀≠0 则令 β=1/(α−a₀) 并重复（对 β 求 a₁=⌊β⌋……）。无穷进行下去除非 α 有理（此时有限连分数）。例：√2=1.4142…：a₀=1、β=1/0.4142=2.4142；a₁=2、再取倒数 1/0.4142=2.4142——重复，得 <strong>√2=[1;2,2,2,…]</strong>。</p>
+<p><strong>收敛子的递推。</strong> 截断到 a_n 得 p_n/q_n，由线性递推</p>
+<div class="formula display" data-tex="p_{-1}=1,\ p_0=a_0,\ p_{n}=a_n p_{n-1}+p_{n-2};\qquad q_{-1}=0,\ q_0=1,\ q_n=a_n q_{n-1}+q_{n-2}"></div>
+<p><strong>最佳性。</strong> 收敛子的标志性性质：对任何分母 0&lt;q&lt;q_{n+1} 的分数 p/q ≠ p_n/q_n，都有 |α−p/q| &gt; |α−p_n/q_n|——收敛子是"纪录"。误差满足第二节的 1/(q_n q_{n+1}) 上界与 1/((a_{n+1}+2)q_n²) 下界：<strong>下一项 a_{n+1} 越大，逼近越好</strong>。</p>
+<p><strong>与几何/动力系统。</strong> Gauss 映射 x↦{1/x} 把"取 a₁"变成迭代——连分数部分商的统计由遍历理论控制（Gauss 测度密度 1/((1+x)ln2)，→ <a href="/pages/ergodic-theory.html">遍历理论</a> 课）；模群 SL(2,ℤ) 在双曲上半平面的作用把收敛子连成测地线折线（→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 课）。丢番图逼近同时是数论、动力系统与几何的交汇点。</p>
+</section>
+
+<section>
+<h3>三、例题 1——√2 的连分数与最佳逼近表（一步步算完）</h3>
+<p><strong>题目。</strong> 展开 √2=[1;2,2,2,…]，列出前几个收敛子并验证"分母 q 内最佳"。</p>
+<p><strong>第一步：递推。</strong> a₀=1, a₁=a₂=…=2。用 p_n=a_n p_{n−1}+p_{n−2}、q_n 同式：</p>
+<div class="formula display" data-tex="\frac{p_0}{q_0}=\frac11,\ \frac{p_1}{q_1}=\frac{1\cdot2+1}{1\cdot2+1}=\frac32,\ \frac{p_2}{q_2}=\frac{7}{5},\ \frac{p_3}{q_3}=\frac{17}{12},\ \frac{p_4}{q_4}=\frac{41}{29},\ \dots"></div>
+<p><strong>第二步：误差核对。</strong> √2≈1.41421356…：|√2−7/5|=|1.41421−1.4|=0.01421 &lt; 1/5²=0.04 ✓；|√2−17/12|=|1.41421−1.41667|=0.00245 &lt; 1/12²≈0.00694 ✓；|√2−41/29|=|1.41421−1.41379|=0.000421 &lt; 1/841≈0.00119 ✓。</p>
+<p><strong>第三步：最佳性抽查。</strong> 分母 ≤5 的分数里，3/2（误差 0.0858）、4/3（0.0809）都比 7/5（0.0142）差——7/5 是 ≤5 里的冠军；分母 ≤12 里 17/12 胜出。这正是"收敛子=纪录保持者"。∎</p>
+<p><strong>第四步：误差如何递减。</strong> |e_n| 交替正负且按 1/q_n² 量级收缩（q_n 每步约 ×(1+√2)≈2.414），所以 √2 的可逼近性由 a_n≡2 决定：常数介于 Dirichlet 的 1/q² 与 Hurwitz 的 1/(√5 q²) 之间——它不难逼近，也不像黄金比那样"极端难"。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——π 的 292：为什么 355/113 误差那么小（一步步算完）</h3>
+<p><strong>题目。</strong> 用连分数解释 355/113 的非凡精度，并与 22/7 对比。</p>
+<p><strong>第一步：π 的开头连分数。</strong> π=[3;7,15,1,292,…]。收敛子：3/1、22/7、333/106、<strong>355/113</strong>、103993/33102、…</p>
+<p><strong>第二步：误差上界公式。</strong> 对第 n 个收敛子，|π−p_n/q_n| &lt; 1/(q_n·q_{n+1})。355/113 是第 3 个收敛子，q₃=113、q₄=33102：</p>
+<div class="formula display" data-tex="\Bigl|\pi-\frac{355}{113}\Bigr|<\frac{1}{113\cdot33102}=2.67\times10^{-7}\qquad(\text{实际 }2.6676\times10^{-7})"></div>
+<p>上界几乎就是真值——因为下一项 a₄=292 巨大，q₄=292·113+106=33102 把误差压到几乎 1/(292·113²)。∎</p>
+<p><strong>第三步：对比 22/7。</strong> 22/7 是第 1 个收敛子（q₁=7、q₂=106）：误差 &lt;1/(7·106)=1.35×10⁻³（实际 1.26×10⁻³）。分母从 7 到 113 只 ×16，误差却从 10⁻³ 掉到 10⁻⁷——<strong>大项 292 是这场"精度奇迹"的引擎</strong>。∎</p>
+<p><strong>第四步：教训。</strong> 收敛子不是"均匀地"逼近：每遇到大项 a_{n+1}，精度跳变式提升。反过来，黄金比的全 1 连分数没有任何大项——所以它是 Hurwitz 定理里的"最坏情形"，1/√5 常数被它钉死。画布上切换 π 与 φ，误差曲线的形状差异一目了然。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>存在与最佳性：</strong> 每个实数有（至多两种记法的）连分数；收敛子 p_n/q_n 满足 |α−p_n/q_n|&lt;1/(q_n q_{n+1})，且是分母 ≤q_n 中的最佳逼近。</li>
+<li><strong>Dirichlet：</strong> 对任意 N，∃1≤q≤N：||qα||&lt;1/N；|α−p/q|&lt;1/q² 有无穷多解。</li>
+<li><strong>Hurwitz：</strong> |α−p/q|&lt;1/(√5 q²) 对无穷多 p/q 成立；√5 最优，黄金比（及等价类）饱和它。</li>
+<li><strong>Lagrange（1770）：</strong> α 的连分数最终周期 ⟺ α 是二次无理数（如 √2=[1;2̅]、φ=[1;1̅]）。</li>
+<li><strong>Liouville–Roth：</strong> 代数无理 α：对任何 ε&gt;0，|α−p/q|&gt;1/q^{2+ε} 除有限例外；Liouville 数（如 Σ10^{−k!}）超越。</li>
+<li><strong>丢番图几何连线：</strong> ||qα|| 的最小值问题 ≡ 直线 y=αx 与整点格的距离问题 ≡ 模群作用下的测地线逼近（连接 <a href="/pages/hyperbolic-geometry.html">双曲几何</a> 的 Farey 图）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\alpha=[a_0;a_1,a_2,\dots],\qquad p_n=a_n p_{n-1}+p_{n-2},\ q_n=a_n q_{n-1}+q_{n-2}"></div>
+<div class="formula display" data-tex="\Bigl|\alpha-\frac{p_n}{q_n}\Bigr|<\frac1{q_n q_{n+1}}<\frac1{q_n^2};\qquad \text{Dirichlet: }\Bigl|\alpha-\frac pq\Bigr|<\frac1{q^2}\ \text{无穷多解}"></div>
+<div class="formula display" data-tex="\Bigl|\alpha-\frac pq\Bigr|<\frac{1}{\sqrt5\,q^2}\ \text{无穷多解};\qquad \varphi=\frac{1+\sqrt5}{2}=[1;\overline1]"></div>
+<div class="formula display" data-tex="\pi=[3;7,15,1,292,\dots];\qquad \Bigl|\pi-\frac{355}{113}\Bigr|<\frac1{113\cdot33102}\approx2.7\times10^{-7}"></div>
+</section>
+
+<section>
+<h3>七、延伸——连分数的亲戚们</h3>
+<ul>
+<li><strong>Gauss 映射与遍历论。</strong> 部分商 a_n 的分布由 Gauss 测度 1/((1+x)ln2) 控制（Gauss–Kuzmin 定理）；"黄金比部分商全是 1"是极端零测集行为。→ <a href="/pages/ergodic-theory.html">遍历理论</a> 课。</li>
+<li><strong>模群与 Farey 图。</strong> 收敛子 = 双曲平面中沿测地线逼近的"步点"；连分数与 SL(2,ℤ) 的 cusp 结构、Ford 圆、Farey 序列密不可分。→ <a href="/pages/hyperbolic-geometry.html">双曲几何</a>、<a href="/pages/modular-forms.html">模形式</a> 课。</li>
+<li><strong>超越数理论。</strong> 连分数给出 e=[2;1,2,1,1,4,…] 的规律展开（可证 e 无理甚至超越的工具之一）；Liouville 数、Mahler 分类都从这里出发。</li>
+<li><strong>动力系统与符号动力学。</strong> 旋转数、频率锁定（Arnold 舌头）都靠 ||qα|| 的丢番图性质——"好不好逼近"决定动力系统共振与否（→ <a href="/pages/lorenz-attractor.html">Lorenz</a>/动力系统课）。</li>
+<li><strong>算法与密码。</strong> 连分数的"最佳逼近"用于实数几何算法（浮点转有理数）、丢番图方程的 Pell 解（√D 的周期连分数）、以及 RSA 攻击（Wiener 攻击用 1/q² 逼近 e/N 来还原私钥——→ <a href="/pages/cryptography.html">密码学</a> 课的连接！）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"逼近想当然"</h3>
+<p><strong>陷阱 1："22/7 与 355/113 只是'找得巧'的分数"？</strong> 它们是 π 连分数的<strong>收敛子</strong>——系统性产物，不是碰运气；最佳性定理保证在各自分母量级上没有更好的分数。看到"惊人接近的分数"，第一反应应是"找它的连分数"。</p>
+<p><strong>陷阱 2："逼近误差随分母均匀缩小"？</strong> 收敛子误差按 ~1/q_{n+1} 跳变：大项带来跳变式改善（292→10⁻⁷），平凡段只有渐进改善。误差对 q 的图是"锯齿阶梯"而非光滑曲线（画布右图可见）。</p>
+<p><strong>陷阱 3："|α−p/q|&lt;1/q² 对每个 q 都行"？</strong> 不是每个 q——定理只说<strong>存在无穷多个</strong> q（收敛子的分母）。对给定 q 找最佳逼近是另一个（更难的）问题；把存在性误读成普适性是常见错误。</p>
+<p><strong>陷阱 4："代数数难逼近，所以 e、π 好逼近"？</strong> Roth 只约束代数数；超越数的可逼近性千差万别：Liouville 数可被异常好地逼近（这正是它们超越的原因），而 e 的连分数有规律、π 的看起来"随机"。逼近性与超越性没有简单对应。</p>
+<p><strong>陷阱 5："黄金比最难逼近"被当作"所有方向都难"？</strong> Hurwitz 的"难"指<strong>误差常数</strong>（1/√5 不可超越）；黄金比仍有满足 |α−p/q|&lt;1/q² 的无穷多收敛子。它只是"无法比 1/(√5 q²) 更好"，不是"不能逼近"——别把"最难"理解成"几乎不可逼近"。</p>
+</section>
+
+<section>
+<h3>九、当前状态——前沿连线</h3>
+<ol>
+<li><strong>高维与线性形式。</strong> 从单变量 ||qα|| 到多变量 ||q₁α₁+…+qₙαₙ||（线性型丢番图逼近、Schmidt 子空间定理——Roth 的 n 维推广，2000 年代被"p-adic 与几何"路线推进）——当前数论最活跃的分支之一。</li>
+<li><strong>丢番图几何。</strong> 整点/有理点在代数簇上的分布（Faltings 定理、与 abc 的联系）——Roth 思路的几何化。→ <a href="/pages/algebraic-geometry.html">代数几何</a> 课。</li>
+<li><strong>动力系统视角。</strong> 旋转数与连分数的共振、Siegel 圆盘存在条件（→ <a href="/pages/complex-dynamics.html">复动力系统</a> 课）都依赖 ||qα||；"连分数流形"上测地流与逼近性的对应仍在深化。</li>
+<li><strong>计算与密码。</strong> 连分数的格方法（LLL/连分数在密码分析）持续产出 Wiener 攻击、共谋密钥恢复等结果——丢番图逼近是最古老的数学之一，也是最实用的数学之一。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Dirichlet (1842)</strong>：鸽巢原理的逼近版本——1/q² 无穷多解。</li>
+<li><strong>Hurwitz (1891)</strong>：1/(√5 q²) 与黄金比的最优性。</li>
+<li><strong>Liouville (1844)</strong>：代数数逼近下界与第一批超越数。</li>
+<li><strong>Roth (1955)</strong>：<em>"Rational approximations to algebraic numbers"</em>, <em>Mathematika</em>——2+ε 指数（Fields 1958）。</li>
+<li><strong>Schmidt (1970s)</strong>：子空间定理——Roth 到多变量。</li>
+<li><strong>Khintchine (1924/35)</strong>：度量丢番图逼近（几乎所有的 α 满足什么）——连分数与测度论的结合。</li>
+<li><strong>Wiener (1990)</strong>：用连分数攻 RSA（小私钥攻击）——丢番图逼近进密码学。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——收敛子手算</h3>
+<p><strong>题 1（√2 递推）。</strong> 从 a=[1;2,2,2] 用递推算 p₃/q₃=17/12 与 p₄/q₄=41/29。<strong>提示：</strong>p₃=2·7+3=17、q₃=2·5+2=12；p₄=2·17+7=41、q₄=2·12+5=29。</p>
+<p><strong>题 2（误差界）。</strong> 用 1/(q₄ q₅) 界 |√2−41/29|（q₅=2·29+12=70）。<strong>提示：</strong>1/(29·70)=4.93×10⁻⁴，实际 4.21×10⁻⁴ ✓。</p>
+<p><strong>题 3（π 的 292）。</strong> 核对 355/113≈3.14159292… 与 π 之差的量级，并用 a₄=292 解释上界。<strong>提示：</strong>见例题 2：误差 <1/(113·33102)。</p>
+<p><strong>题 4（黄金比难逼近）。</strong> 说明为何 φ 的连分数全是 1 会"锁死"逼近常数。<strong>提示：</strong>误差 ~1/(a_{n+1}q²)：全 1 ⟹ 每步只靠 1/q² 的"标准"改善，没有大项红利 ⟹ 常数被压在 1/√5（Hurwitz 最优性）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：17/12、41/29。∎</p>
+<p><strong>题 2</strong>：4.93×10⁻⁴（实际 4.21×10⁻⁴）。∎</p>
+<p><strong>题 3</strong>：见例题 2。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布换 α）。</strong> 在画布切换 π、√2、黄金比、e：观察收敛子误差柱逐层下降。π 的第 4 步（a₄=292）误差骤降；黄金比每步只小幅改善——"最难逼近"的直观。</p>
+<p><strong>试试看 2（误差三界）。</strong> 把 |α−p/q|、1/q²、1/(q q_{n+1}) 三条线叠在同一对数图（画布已画）：收敛子总是贴着 1/(q q_{n+1}) 下界走——这说明连分数界"紧到几乎等号"。</p>
+<p><strong>试试看 3（Farey 连接）。</strong> 想 a/b、c/d 是相邻收敛子：|ad−bc|=1——它们对应双曲平面 Farey 图的相邻顶点。提示：相邻收敛子的行列式恒为 ±1，是"最佳逼近"在格点语言里的形式。</p>
+<p><strong>试试看 4（与密码课联动）。</strong> 在 <a href="/pages/cryptography.html">RSA</a> 课回想：小私钥 d 被 Wiener 攻击用"e/N 的连分数 + 1/q² 逼近"还原——本课的误差界直接是攻击的引擎。提示：d 小意味着 e/N 有一个"异常好"的有理逼近（k/d），连分数会把它找出来。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>A. Khinchin, Continued Fractions</strong>（经典小书，全部基础与 Dirichlet/Hurwitz 的优美证明）</p>
+<p>&rarr; <strong>S. Lang, Introduction to Diophantine Approximations</strong>（现代视角）</p>
+<p>&rarr; <strong>C. Elsner, "On the continued fraction of π"（综述）</strong></p>
+<p>&rarr; <strong>普林斯顿数学指南 Part III/IV（数论与解析数论相关条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/real-analysis.html">实分析</a>、<a href="/pages/sieve.html">素数筛</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/ergodic-theory.html">♻️ 遍历理论</a>：Gauss 映射与部分商分布。</p>
+<p>&rarr; <a href="/pages/hyperbolic-geometry.html">🥏 双曲几何</a>：模群、Farey 图与测地线逼近。</p>
+<p>&rarr; <a href="/pages/cryptography.html">🔐 密码学 RSA</a>：Wiener 攻击 = 连分数在密码分析。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：序列、极限与稠密的语言。</p>
+<p>&rarr; <a href="/pages/complex-dynamics.html">🪸 复动力系统</a>：Siegel 圆盘与小除数（逼近性决定共振）。</p>
+<p>&rarr; <a href="/pages/zeta.html">♾️ 黎曼 ζ 函数</a>：解析数论中指数和与逼近估计的工具箱。</p>
+</section>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖参数画曲线、用弦切法加点：E↔模形式如何终结费马大定理" />
+  <meta property="og:title" content="椭圆曲线与 Wiles 之路 — Vibe Math" />
+  <meta property="og:description" content="拖参数画曲线、用弦切法加点：E↔模形式如何终结费马大定理" />
+  <title>椭圆曲线与 Wiles 之路 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🗝️ 椭圆曲线与 Wiles 之路 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">拖参数画曲线、用弦切法加点：E↔模形式如何终结费马大定理</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='elliptic-curves',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/p-adic-numbers.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🥟 p-adic 数与局部域</a>
+  <a href="/pages/higher-category-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⬆️ 高阶范畴论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一条"不是椭圆的曲线"，如何终结了 358 年的悬案</h3>
+<p>椭圆曲线是形如 y² = x³ + ax + b 的光滑三次曲线。名字有欺骗性——它跟椭圆长得毫无关系（名字来自 18 世纪计算椭圆弧长时的"椭圆积分"）。它真正的魅力在于一个不可思议的事实：<strong>这条曲线上的"有理点"（坐标都是分数的点）构成一个群</strong>——任意两个有理点可以用"连弦、找第三交点、翻折"的方式"相加"出第三个有理点。</p>
+<p>就这么一条曲线，藏着一个世纪大案的钥匙。费马在 1637 年断言 xⁿ+yⁿ=zⁿ（n≥3）没有正整数解，并在书边写下"我发现了绝妙的证明，可惜空白太小写不下"。此后 350 年无数人试图补上这个证明，全部失败。直到 1985 年 Frey 提出一个疯狂的想法：<strong>假设费马方程有解，用它造出一条椭圆曲线，然后证明这条曲线"不可能存在"</strong>。1995 年，Wiles（与 Taylor）补上最后一块拼图，证明了一个远超费马问题本身的定理——<strong>模性定理</strong>（每个 Q 上的半稳定椭圆曲线都对应一个模形式），费马大定理作为推论轰然落地。</p>
+<p>为什么"椭圆曲线 ↔ 模形式"的对应如此深刻？因为它把曲线的<strong>代数</strong>性质（有限域上的点数）与<strong>解析</strong>性质（模形式的傅里叶系数）用一条精确的等式焊在一起——这正是 Langlands 纲领（20 世纪数论最大的愿景）在一维情形下的完全实现。椭圆曲线因此是通往现代数论心脏最短的路。</p>
+<div class="key-insight">洞察：椭圆曲线是数论的"瑞士军刀"——它有群结构（可计算）、有几何（是亏格 1 的黎曼面）、有解析化身（复环面与 L 函数）、有算术深度（Mordell–Weil、BSD、模性定理）。同一对象的多副面孔互相翻译，是数论最美的风景。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/modular-forms.html">模形式</a>（本课的镜像主角）、<a href="/pages/galois-theory.html">伽罗瓦理论</a>（伽罗瓦表示语言）。若已读 <a href="/pages/representation-theory.html">群表示论</a> 会更容易理解"伽罗瓦表示"一词。</p></div>
+
+<section>
+<h3>一、一个具体问题——费马大定理如何变成一条曲线的死刑判决</h3>
+<p>把故事按"证据链"排列，每一步都是独立的大定理：</p>
+<ul>
+<li><strong>1637/1670：</strong> 费马断言 xⁿ+yⁿ=zⁿ 无正整数解（n≥3）。n=4 他自己证明（无穷递降），n=3 由 Euler（1753）补上；此后一般情形停滞 150 年。</li>
+<li><strong>1847–1850：</strong> Kummer 引入"理想数"，证明对<strong>正则素数</strong>指数费马成立——这是代数数论的诞生，但离全部素数仍远。</li>
+<li><strong>1985（Frey）：</strong> 若 aᵖ+bᵖ=cᵖ 是反例（p≥5 素数），考虑曲线</li>
+</ul>
+<div class="formula display" data-tex="E_{\text{Frey}}:\ y^{2}=x\,(x-a^{p})(x+b^{p})"></div>
+<p>Frey 观察到它"坏得可疑"：其判别式是 2 的幂乘 (abc)^{2p}，导体只含极少素数（半稳定）。他猜测：<strong>这条曲线不可能来自模形式</strong>——而由 Taniyama–Shimura–Weil 猜想，每条 Q 上椭圆曲线都来自模形式，矛盾。</p>
+<ul>
+<li><strong>1986（Serre）与 1990（Ribet）：</strong> 这条"不可能来自模形式"的断言被精确化并证明：Serre 提出 ε-猜想（模形式对应的伽罗瓦表示的"降级"原则），Ribet 用彻底的方法证明它。于是：<strong>费马反例 ⇒ Frey 曲线非模</strong>。</li>
+<li><strong>1993–1995（Wiles，Taylor–Wiles）：</strong> Wiles 证明<strong>每条 Q 上半稳定椭圆曲线都是模的</strong>。1993 年 6 月他在剑桥宣布证明，审稿中发现漏洞；1994 年 10 月他与学生 Taylor 用"Taylor–Wiles 方法"（patching/伪形变环）修复，1995 年两篇 Annals 论文发表。</li>
+<li><strong>推论（费马大定理）：</strong> 费马反例 ⇒ Frey 曲线是半稳定 ⇒ 模的 ⇒ 非模，矛盾。∎ 350 年悬案关闭。</li>
+<li><strong>2001（BCDT）：</strong> Breuil–Conrad–Diamond–Taylor 去掉"半稳定"限制，证明<strong>全部</strong> Q 上椭圆曲线都是模的——Taniyama–Shimura–Weil 猜想完全成立。</li>
+</ul>
+<div class="key-insight">这条证据链是 20 世纪数论的缩微史：几何（Frey 曲线）、模形式（Serre/Ribet）、形变理论（Wiles/Taylor）、伽罗瓦表示（全部环节的语言）。每一个箭头都是菲尔兹奖级别的数学。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——椭圆曲线的三副面孔</h3>
+<p><strong>(1) 几何面孔：亏格 1 的光滑三次曲线。</strong> y²=x³+ax+b 在实数上是一条或两支曲线（判别式 Δ=−16(4a³+27b²)≠0 保证光滑）。把它放到射影平面并加上无穷远点 O，得到亏格 1 的紧黎曼面——"环面"。</p>
+<p><strong>(2) 群面孔：弦切加法。</strong> 在曲线上定义加法：P+Q+R=O ⟺ P、Q、R 共线。几何操作：连 P、Q 得直线，找第三个交点 R，再关于 x 轴翻折得 P+Q=−R。这个操作对<strong>有理点</strong>封闭（三次方程的第三个根由前两个根与系数有理地决定），于是 E(Q)（有理点全体）成为群。为什么封闭？因为直线与三次曲线交于三个点，已知两个是"有理的"，第三个也必是有理的（三次方程两个有理根 ⇒ 第三个根有理）。</p>
+<p><strong>(3) 解析面孔：复环面与 L 函数。</strong> 复数上，椭圆曲线同构于复环面 ℂ/Λ（Λ 是格），由 Weierstrass ℘ 函数实现——这就是为什么它"长得像环面"。对每个素数 p，数一数曲线 mod p 的点数 N_p，可定义 L 函数（Euler 积）：</p>
+<div class="formula display" data-tex="L(E,s)=\prod_{p}\bigl(1-a_p p^{-s}+\varepsilon_p p^{1-2s}\bigr)^{-1},\qquad a_p=p+1-N_p"></div>
+<p>Hasse 界说 |a_p| ≤ 2√p。L 函数是"曲线的解析化身"，模性定理断言它<strong>等于某个模形式的 L 函数</strong>——这是本课所有奇迹的汇合点。</p>
+</section>
+
+<section>
+<h3>三、例题 1——在 y²=x³+1 上亲手做加法（一步步算完）</h3>
+<p><strong>题目。</strong> E: y²=x³+1。已知点 A=(−1,0)、B=(0,1)、D=(2,3)（都在 E 上：0=−1+1 ✓，1=0+1 ✓，9=8+1 ✓）。计算 A+B 与 2D（倍点）。</p>
+<p><strong>第一步：准备公式。</strong> 两点 P=(x₁,y₁)、Q=(x₂,y₂)，连线斜率 λ=(y₂−y₁)/(x₂−x₁)（P=Q 时用切线斜率 λ=(3x₁²+a)/(2y₁)，此处 a=0）。第三交点 x₃ 由三次方程 x³−(λx+ν)²+1=0…更简单：本曲线 y²=x³+1 代入直线 y=λx+ν 得 x³−(λx+ν)²+1=0，展开是 x 的三次多项式；已知两根 x₁、x₂，第三根 x₃= −(x²项系数) − x₁ − x₂。最后 P+Q=(x₃, −y₃)。</p>
+<p><strong>第二步：A+B。</strong> A=(−1,0)、B=(0,1)：λ=(1−0)/(0−(−1))=1，直线 y=x+1。代入：x³+1=(x+1)² ⟹ x³−x²−2x=0 ⟹ x(x−2)(x+1)=0。根 −1（A）、0（B）、<strong>2</strong>：第三交点 R=(2,3)=D。于是</p>
+<div class="formula display" data-tex="A+B=-R=(2,-3)\qquad\text{（翻折：y 取反）}"></div>
+<p><strong>第三步：倍点 2D。</strong> D=(2,3)：切线斜率 λ=(3x²)/(2y) = (3·4)/(2·3)=12/6=2，切线 y−3=2(x−2)，即 y=2x−1。代入：x³+1=(2x−1)² ⟹ x³−4x²+4x=0 ⟹ x(x−2)²=0。x=2 是二重根（切点），第三根 x=0：交点 (0,−1)。翻折得</p>
+<div class="formula display" data-tex="2D=(0,-1)\qquad\text{（即 }2D=-B\text{，故 }D\text{ 的阶整除 }6\text{）}"></div>
+<p><strong>第四步：验证这是一棵小"群树"。</strong> A 是二阶元（见工作题 1），B 是三阶元：B+B=(0,−1)、3B=O；D 是六阶元。实际上 E(Q) ≅ ℤ/6ℤ（Mordell–Weil + 秩 0）。六个点 O、A、B、−B、D、−D 全部列在曲线上——加法表完整可查。∎</p>
+<p><strong>为什么"有理点加法"这么值钱？</strong> 密码学用它：在 E(F_p) 上定义"离散对数"，目前没有亚指数算法——椭圆曲线密码（ECC）用 256 位密钥达到 RSA 3072 位的安全性。群结构 = 可计算的结构 = 可用的结构。</p>
+</section>
+
+<section>
+<h3>四、例题 2——数点：mod p 的点数与 Hasse 界（一步步算完）</h3>
+<p><strong>题目。</strong> E: y²=x³+1 在 F₅ 上有几个点（含无穷远点 O）？验证 Hasse 界。</p>
+<p><strong>第一步：逐个 x 数 y 解。</strong> 对 x=0,1,2,3,4（mod 5），检查 x³+1 是否为平方剩余（F₅ 的平方是 {0,1,4}）：</p>
+<ul>
+<li>x=0：f=1 → y=±1，2 个点；</li>
+<li>x=1：f=2 ∉ {0,1,4}，0 个点；</li>
+<li>x=2：f=9≡4 → y=±2，2 个点；</li>
+<li>x=3：f=28≡3 ∉ 平方集，0 个点；</li>
+<li>x=4：f=65≡0 → y=0，1 个点。</li>
+</ul>
+<p><strong>第二步：汇总。</strong> 仿射点 2+0+2+0+1=5 个，加无穷远点 O，共</p>
+<div class="formula display" data-tex="N_5=6,\qquad a_5=5+1-6=0,\qquad |a_5|=0\le 2\sqrt5\approx 4.47\ \checkmark"></div>
+<p><strong>第三步：Hasse 界讲了什么。</strong> N_p ≈ p+1（"平均每个 x 有 1 个 y"的朴素预期）的偏差被 √p 控制。这个"平方根偏差"不是巧合——它来自 ℘ 函数与特征和的深刻估计（Weil 猜想在曲线情形的原型！→ <a href="/pages/algebraic-geometry.html">代数几何</a> 课的 Weil 猜想）。L(E,s) 的每个 Euler 因子都由这些 a_p 组成。∎</p>
+<p><strong>模性定理的"实感"。</strong> 模性定理说：这些 a_p（对每个素数 p 定义的一个整数序列）恰好等于某个权 2 模形式 f 的傅里叶系数序列。数论对象（曲线 mod p 数点）与解析对象（模形式系数）——一个族对一族、精确相等。画布上你能拖出曲线并亲手数点 mod p（试试看 4）。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——本课定理清单</h3>
+<ul>
+<li><strong>定义。</strong> E/Q：y²=x³+ax+b，a、b 有理数，判别式 Δ=−16(4a³+27b²)≠0。加无穷远点 O 成射影光滑曲线。</li>
+<li><strong>Mordell（1922）–Weil（1928）：</strong> E(Q) 是有限生成阿贝尔群：E(Q) ≅ ℤ^r ⊕ E(Q)_tors。秩 r 是"曲线上独立有理点的个数"。</li>
+<li><strong>Mazur（1977/78）：</strong> 挠子群 E(Q)_tors 只能是 15 种可能（阶 1–10、12，或某两个 2×偶数的直积）——有理挠点被完全分类。</li>
+<li><strong>Hasse 界：</strong> |p+1−N_p| ≤ 2√p（1930s，Weil 证明）。</li>
+<li><strong>模性定理（Wiles 1995 半稳定；BCDT 2001 全部）：</strong> 对每条 Q 上椭圆曲线 E，存在权 2 级 N 的新形式 f，使 a_p(E)=a_p(f) 对所有好约化素数 p 成立。等价说法：E 的 ℓ-adic 伽罗瓦表示是模的。</li>
+<li><strong>推论（FLT）：</strong> 由 Frey–Serre–Ribet 链，费马大定理成立（n≥3）。</li>
+<li><strong>BSD 猜想（Birch–Swinnerton-Dyer 1965；千禧年问题之一）：</strong> 秩 r = L(E,s) 在 s=1 处零点的阶 ord_{s=1}L(E,s)，且主导系数含精确的算术不变量（Tate–Shafarevich 群阶等）。→ <a href="/pages/millennium-problems.html">千禧年大奖问题</a>。</li>
+</ul>
+<p><strong>关于秩 r 的已知：</strong> 至今不知道是否存在任意大秩的椭圆曲线（已构造出秩 ≥ 28 的例子，但上界无望）；Bhargava–Shankar（2010–2015）用几何不变量理论证明：平均秩 ≤ 0.885……（且正比例椭圆曲线秩 0 或 1）。"大多数曲线秩 0 或 1"在平均意义下已证，逐条判定仍难。</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="E:\ y^{2}=x^{3}+ax+b,\qquad \Delta=-16(4a^{3}+27b^{2})\ne 0"></div>
+<div class="formula display" data-tex="\lambda=\frac{y_2-y_1}{x_2-x_1}\ (\text{弦})\quad\text{或}\quad \frac{3x_1^2+a}{2y_1}\ (\text{切线});\qquad P+Q=-R\ (R\text{ 第三交点})"></div>
+<div class="formula display" data-tex="a_p=p+1-N_p,\quad |a_p|\le 2\sqrt p;\qquad L(E,s)=\prod_p (1-a_p p^{-s}+\varepsilon_p p^{1-2s})^{-1}"></div>
+<div class="formula display" data-tex="E(\mathbb{Q})\cong \mathbb{Z}^{r}\oplus E(\mathbb{Q})_{\mathrm{tors}}\qquad(\text{Mordell–Weil})"></div>
+<div class="formula display" data-tex="\operatorname{ord}_{s=1}L(E,s)=r\qquad(\text{BSD 猜想});\qquad E\ \text{模}\ \Longleftrightarrow\ a_p(E)=a_p(f)\ \forall p\ (\text{模性定理})"></div>
+</section>
+
+<section>
+<h3>七、延伸——椭圆曲线的现代足迹</h3>
+<ul>
+<li><strong>密码学（ECC）。</strong> 椭圆曲线离散对数问题（ECDLP）：已知 P、Q=nP，求 n。256 位椭圆曲线密钥 ≈ 3072 位 RSA。比特币、TLS 都在用——你手机里每天都在跑本课的群律。</li>
+<li><strong>Sato–Tate（已证，2011）。</strong> 角度 θ_p=arccos(a_p/2√p) 随 p 的分布遵循正弦平方律——把 a_p 的"统计"钉死。证明用自守形式的对称幂提升（Clozel–Harris–Taylor 等的长篇工程）。</li>
+<li><strong>Serre 猜想（已证，Khare–Wintenberger 2009）。</strong> 每个奇二维模 p 伽罗瓦表示都来自模形式——比模性定理更广的"模性"纲领的胜利。</li>
+<li><strong>abc 猜想。</strong> 若 abc 猜想成立，可给出费马大定理一个新证明，并一次性解决一大批丢番图问题；Mochizuki（2012）声称用"宇宙际 Teichmüller 理论"证明，但数学界尚未广泛接受——21 世纪数论最大悬案之一。</li>
+<li><strong>更高维。</strong> 椭圆曲线是"算术几何"的最小非平凡对象；K3 曲面、高亏格曲线的 Langlands 对应仍是巨大开放领域。→ <a href="/pages/algebraic-geometry.html">代数几何</a> 课的延伸。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——四个"看起来显然"的错误</h3>
+<p><strong>陷阱 1："椭圆曲线 ≈ 椭圆"？</strong> 不是。椭圆是二次曲线，椭圆曲线是三次曲线；名字来自椭圆积分 ∫dx/√(x³+ax+b)（计算椭圆弧长时的被积函数）。外形也完全不同：椭圆是闭合卵形，y²=x³+ax+b 是开放的（一支或两支）。每次听到"椭圆曲线密码"不要想到"椭圆"。</p>
+<p><strong>陷阱 2："P+Q = (x₁+x₂, y₁+y₂)"？</strong> 群律不是坐标相加！在画布上把 P、Q 的坐标直接相加得到的点几乎从不在曲线上。群律是"弦切法"：先几何（连线找第三点）后翻折。忘记翻折（−R）是最常见的计算错误——P+Q 是第三交点的<strong>关于 x 轴对称点</strong>。</p>
+<p><strong>陷阱 3："模性定理 ⟹ 费马大定理，所以费马问题≈模性定理"？</strong> 反了：模性定理远远强于费马大定理。费马大定理只是它在一族特殊曲线（Frey 曲线）上的推论；而"Frey 方法"（反例造曲线 + 降级矛盾）能否推广到其它丢番图方程是 21 世纪的热门方法学（"模方法"已解决一批指数丢番图方程）。</p>
+<p><strong>陷阱 4："L(E,1) 的阶可以随便算"？</strong> L(E,s) 的解析延拓在 Q 上由模性定理保证（L=模形式 L，整函数），但 BSD 需要 L 在 s=1 的零点阶与秩相等——至今未证；且对一般的数域/更高维对象，连解析延拓都未必已知。把"数值上 L(E,1)≈0"当成"秩 >0 的证据"是合理猜想但<strong>不是证明</strong>（不过 Coates–Wiles、Gross–Zagier、Kolyvagin 已给出大量"秩 ≤1 方向"的深刻结果）。</p>
+</section>
+
+<section>
+<h3>九、当前状态——开放问题与前沿</h3>
+<ol>
+<li><strong>BSD 猜想（千禧年，100 万美元）。</strong> 秩的解析刻画：Coates–Wiles（1977，CM 情形）、Gross–Zagier（1986）+ Kolyvagin（1989）证明"L(E,1)≠0 ⟹ 秩 0；L 在 1 处一阶零点 ⟹ 秩 1"——但高阶零点与"L(E,1)=0 但秩 0"等情形仍开放。</li>
+<li><strong>秩的分布。</strong> 是否存在任意大秩？秩 0/1 的比例？（Goldfeld 猜想：平均秩 → ½，即"一半秩 0 一半秩 1"；Bhargava–Shankar 的 0.885 上界是当前最佳平均结果。）</li>
+<li><strong>广义模性。</strong> Q 上椭圆曲线已完全解决；数域上、以及"模 p 表示"的完整刻画（Serre 猜想各分支）仍有大量开放。Langlands 纲领 = 把"模性"从 2 维推到 n 维。</li>
+<li><strong>有效化与计算。</strong> 大范围有理点搜索（descent）、Tate–Shafarevich 群的计算、秩的确切判定——算法数论的日常前线（sage 里每天都在跑）。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Mordell (1922)</strong>：<em>"On the rational solutions of the indeterminate equation of the third and fourth degrees"</em>——E(Q) 有限生成（Mordell–Weil 的秩部分）。</li>
+<li><strong>Hasse (1933) / Weil (1948)</strong>：曲线 mod p 点数的 √p 界——Weil 猜想的起点。</li>
+<li><strong>Birch–Swinnerton-Dyer (1965)</strong>：BSD 猜想的提出（用计算机数值实验！）。</li>
+<li><strong>Mazur (1977/78)</strong>：有理挠群的完全分类（15 种可能）。</li>
+<li><strong>Frey (1986)</strong>：<em>"Links between stable elliptic curves and certain Diophantine equations"</em>——Frey 曲线：费马反例 ⇒ 半稳定非模曲线。</li>
+<li><strong>Ribet (1990)</strong>：<em>"On modular representations of Gal(ℚ̄/ℚ) arising from modular forms"</em>——ε-猜想证明：费马反例 ⇒ Frey 曲线非模。</li>
+<li><strong>Wiles (1995)</strong>：<em>"Modular elliptic curves and Fermat's last theorem"</em>, <em>Ann. of Math.</em> 141——半稳定模性定理 + 费马大定理。</li>
+<li><strong>Taylor–Wiles (1995)</strong>：<em>"Ring-theoretic properties of certain Hecke algebras"</em>——修补方法，堵住 Wiles 证明的漏洞。</li>
+<li><strong>Breuil–Conrad–Diamond–Taylor (2001)</strong>：<em>"On the modularity of elliptic curves over ℚ"</em>——去掉半稳定条件，模性定理完成。</li>
+<li><strong>Khare–Wintenberger (2009)</strong>：Serre 猜想的证明（与 Dieulefait、Kisin 合作完成）——模 p 表示的模性。</li>
+<li><strong>Bhargava–Shankar (2010–2015)</strong>：椭圆曲线的平均秩上界 0.885——用几何不变量理论计数。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——群律与数点</h3>
+<p><strong>题 1（二阶元）。</strong> 在 y²=x³+1 上验证 A=(−1,0) 满足 2A=O。<strong>提示：</strong>A 处切线斜率 λ=(3x²)/(2y) 分母为 0——切线竖直 x=−1，与曲线交于 A（二重）与 O，故 A+A=O。几何：y=0 的点都是二阶元（关于 x 轴翻折 = 自身）。</p>
+<p><strong>题 2（三阶元）。</strong> 验证 B=(0,1) 满足 3B=O。<strong>提示：</strong>B 处切线水平 y=1，代入得 x³=0——三重交点，故 2B=−B，即 3B=O。或直接算：2B=(0,−1)（翻折），B+2B：连线 x=0 竖直，第三交点 O ⟹ B+2B=O。</p>
+<p><strong>题 3（大一点儿的数点）。</strong> 数 E: y²=x³+1 在 F₇ 上的点数并核对 Hasse 界。<strong>提示：</strong>平方集 mod 7 = {0,1,2,4}。x=0→1（2 点）、1→2（2）、2→9≡2（2）、3→28≡0（1）、4→65≡2（2）、5→126≡0（1）、6→217≡0（1）？6³=216≡6，+1=0 → 1 点。共 2+2+2+1+2+1+1=11 仿射点 +O = 12 = N₇；a₇=8−12=−4，|−4|=4 ≤ 2√7≈5.29 ✓。</p>
+<p><strong>题 4（证据链排序）。</strong> 把下列事件按时间排：Frey 曲线、模性定理（半稳定）、ε-猜想证明、费马写下断言、Kummer 理想数、BCDT 全模性。<strong>提示：</strong>1637（费马）→ 1847（Kummer）→ 1985/86（Frey）→ 1987/90（Serre/Ribet）→ 1995（Wiles/Taylor–Wiles）→ 2001（BCDT）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示：切线竖直 ⇒ 与 O 共线 ⇒ A+A=O。∎</p>
+<p><strong>题 2</strong>：见提示：水平切线三重交点 ⇒ 2B=−B ⇒ 3B=O；B 是三阶元。∎</p>
+<p><strong>题 3</strong>：N₇=12，a₇=8−12=−4，|a₇|=4≤2√7≈5.29。∎</p>
+<p><strong>题 4</strong>：1637 费马 → 1847 Kummer → 1986 Frey → 1990 Ribet（ε-猜想，Serre 1987 提出）→ 1995 Wiles–Taylor（半稳定模性 + FLT）→ 2001 BCDT（全部模性）。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布群律）。</strong> 在画布上把 a=0、b=1（y²=x³+1），在曲线右支放 P≈(−1,0)、Q≈(0,1)：观察弦线、第三交点 R 与结果 −R=(2,−3)——和例题 1 完全一致。再试试倍点：把 P、Q 都放在 (2,3) 附近同一点，观察切线法加倍。</p>
+<p><strong>试试看 2（奇异性）。</strong> 拖动 a、b 使 4a³+27b²=0（画布会警告）：曲线出现尖点或自交点，群律失效——为什么？提示：光滑性（Δ≠0）是群律的前提，奇异三次曲线上没有良定义的群结构（退化情形对应"乘法群"或"加法群"）。</p>
+<p><strong>试试看 3（翻折的意义）。</strong> 在画布上故意"忘记翻折"：手动把第三交点 R 当作结果，验证 R 通常不在"P 与 −P 的和"的轨道上——然后对比程序给出的 P+Q=−R。理解"O 在无穷远"如何让"翻折"成为必要。</p>
+<p><strong>试试看 4（数点与 Hasse）。</strong> 固定 a=0、b=1，对 p=5、7、11 手数或编程数 N_p，验证 |p+1−N_p|≤2√p 与 a_p 序列 {0, −4, ?} 的开头——这正是 L(E,s) 与模形式系数相等的"第一手证据"。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J. Silverman, J. Tate, Rational Points on Elliptic Curves</strong>（本科生就能读的经典，群律与 Mordell–Weil 的直觉版）</p>
+<p>&rarr; <strong>J. Silverman, The Arithmetic of Elliptic Curves</strong>（研究生标准教材）</p>
+<p>&rarr; <strong>F. Diamond, J. Shurman, A First Course in Modular Forms</strong>（模形式一侧）</p>
+<p>&rarr; <strong>Cornell–Silverman–Stevens (eds.), Modular Forms and Fermat's Last Theorem</strong>（Wiles 证明的会议记录）</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/modular-forms.html">模形式</a>、<a href="/pages/galois-theory.html">伽罗瓦理论</a>、<a href="/pages/representation-theory.html">群表示论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/modular-forms.html">🎼 模形式</a>：模性定理把本课的每条曲线配给一个模形式。</p>
+<p>&rarr; <a href="/pages/zeta.html">ζ 黎曼 ζ 函数</a>：L 函数族与 ζ 的血缘，解析数论的工具箱。</p>
+<p>&rarr; <a href="/pages/millennium-problems.html">🏆 千禧年大奖问题</a>：BSD 猜想是其中之一，本课是它的入口。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：伽罗瓦表示是模性定理的语言。</p>
+<p>&rarr; <a href="/pages/representation-theory.html">🎭 群表示论</a>：ℓ-adic 伽罗瓦表示 = 表示论在数论的应用。</p>
+<p>&rarr; <a href="/pages/algebraic-geometry.html">🌱 代数几何</a>：亏格 1 曲线与 Weil 猜想同源的几何背景。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/elliptic-curves.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

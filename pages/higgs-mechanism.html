@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="自发对称破缺——粒子如何获得质量" />
+  <meta property="og:title" content="Higgs 机制 — Vibe Math" />
+  <meta property="og:description" content="自发对称破缺——粒子如何获得质量" />
+  <title>Higgs 机制 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>💎 Higgs 机制 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">自发对称破缺——粒子如何获得质量</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='higgs-mechanism',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/feynman-diagram.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ✴️ 费曼图</a>
+  <a href="/pages/yang-mills-mass-gap.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⚗️ Yang–Mills 与质量缺口 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——质量谱里的三个数字</h3>
+<p>电磁力和弱力本应是同一种力，但它们"搬运工"的质量差得离谱：光子质量是 <strong>0</strong>，而弱力的 W± 有 <strong>80.379 GeV</strong>，Z 有 <strong>91.188 GeV</strong>——差不多是质子质量的 90 倍。</p>
+<div class="formula display" data-tex="m_\gamma=0,\qquad m_W=80.379\,\mathrm{GeV},\qquad m_Z=91.188\,\mathrm{GeV},\qquad m_H=125.25\,\mathrm{GeV}"></div>
+<p>质量直接决定力的作用范围：W、Z 很重，弱力只能跑 ~\(10^{-18}\,\mathrm{m}\)（比原子核还小）；光子没质量，电磁力能传到无限远。于是问题来了：<strong>为什么"本应无质量"的规范玻色子（规范——大白话：同一物理事实可以有不同"写法"，这些等价写法间的自由度就叫规范）会有质量？</strong></p>
+<p>本课回答这个问题的机制叫 <strong>Higgs 机制</strong>：宇宙充满一种看不见的"蜂蜜"（Higgs 场），粒子在蜂蜜里挪得越费劲，质量就越大；而 2012 年欧洲的大型对撞机（LHC）真的撞出了这种"蜂蜜块"——一个质量恰好 125.25 GeV 的新粒子。</p>
+<div class="key-insight">质量=粒子在宇宙"蜂蜜"里挪动费力的程度。而"蜂蜜"并非均匀一片——它自发地凝聚成非零的"黏稠度"（真空期望值 v≈246 GeV），这才让 W、Z 有了质量。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/feynman-diagram.html">费曼图</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、开场问题」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、为什么规范对称性禁止质量？</h3>
+<p>先弄清楚矛盾在哪。电磁力由 U(1) 规范对称性支配，它强制光子质量为零：光子传播子里如果放一个质量项 \(\frac12 m_\gamma^2 A_\mu A^\mu\)，就会破坏规范不变性（在规范变换 \(A_\mu\to A_\mu-\partial_\mu\alpha/e\) 下，\(A_\mu A^\mu\) 不守恒）。<strong>规范对称性=规范玻色子无质量</strong>，这是硬道理。</p>
+<p>可是弱力必须是有质量的：如果 W±、Z⁰ 也像光子一样没质量，弱力会像电磁力一样是长程的，那么原子结构、核聚变、乃至你体内 β 衰变的强度都会彻底改变。实验摆在这里：<strong>W 有 80.379 GeV，Z 有 91.188 GeV。</strong></p>
+<p>更微妙的是费米子质量。弱相互作用只耦合左旋粒子（SU(2)_L 下电子和它的中微子构成一个二重态）。而一个"正常"的费米子质量项 \(m\bar\psi\psi=m(\bar\psi_L\psi_R+\bar\psi_R\psi_L)\) 会把左旋和右旋<strong>混在一起</strong>，这在 SU(2)_L 变换下不保持——因为 \(\psi_L\) 是二重态而 \(\psi_R\) 是单态。所以<strong>规范对称性同时禁止了规范玻色子和费米子的显式质量项</strong>。</p>
+<p>那么，宇宙是如何"绕过去"给出质量的？答案是：<strong>让真空自己破坏对称性，而不是让拉格朗日量破坏。</strong>这就是自发对称破缺。</p>
+<div class="key-insight">关键词是"自发"：拉格朗日量仍然完全尊重规范对称性（方程一条没改），但真空态挑了一个方向、不尊重了。于是粒子谱的质量不再是"写在方程里"的，而是"写在真空里"的。对称性从头到尾都完好——只是被真空"藏"起来了。</div>
+</section>
+
+<section>
+<h3>二、墨西哥帽——自发对称破缺</h3>
+<p>把 Higgs 场 \(\phi\)（一个复标量二重态，含 4 个实分量）的能量写成势能：</p>
+<div class="formula display" data-tex="V(\phi)=-\mu^2|\phi|^2+\lambda|\phi|^4\qquad(\mu^2&gt;0,\ \lambda&gt;0)"></div>
+<p>用真实数字说话：由 m_H=125.25 GeV 与 v=246.22 GeV 反推（例题 1 会算），</p>
+<div class="formula display" data-tex="\lambda=\frac{m_H^2}{2v^2}\approx0.129,\qquad \mu^2=\lambda v^2\approx(88.6\,\mathrm{GeV})^2"></div>
+<p>这个势的形状像一顶<strong>墨西哥帽</strong>：</p>
+<ul>
+<li>\(\phi=0\) 处，\(V''=-\mu^2&lt;0\)——这是<strong>局部极大（不稳定）</strong>，像帽子正中央的"鼓包"；</li>
+<li>半径为 \(|\phi|=v/\sqrt2\) 的整圈是最低点，\(\langle\phi\rangle=v/\sqrt2\approx174\,\mathrm{GeV}\)——帽子边缘的一圈"槽"。</li>
+</ul>
+<p>注意关键细节：<strong>帽子边缘的"槽"是连续一圈</strong>——沿切线移动不改变势能。这"一圈等价的最低点"就是规范对称性的"选择菜单"：真空必须挑其中一点，挑的过程就把对称性破缺了。</p>
+<p>破缺后有两个方向的扰动：<strong>沿径向</strong>（爬出槽底，势能增加）→ 有质量的 Higgs 玻色子；<strong>沿切向</strong>（沿着槽滑，势能不变）→ 无质量的 Goldstone 玻色子。它们一个会出现在谱里，一个会被吃掉（第五节）。</p>
+<div class="formula display" data-tex="v=\sqrt{\frac{\mu^2}{\lambda}}\approx246.22\,\mathrm{GeV},\qquad \langle\phi\rangle=\frac{v}{\sqrt2}\approx174.1\,\mathrm{GeV}"></div>
+</section>
+
+<section>
+<h3>三、教科书例题 1——从势到谱：m_H=125 GeV 从哪来</h3>
+<p><strong>问题：</strong>给定势 \(V(\phi)=-\mu^2|\phi|^2+\lambda|\phi|^4\)，推导 (1) 真空值 v；(2) Higgs 质量 m_H；并代入 m_H=125.25 GeV、v=246.22 GeV 求出 λ 与 μ 的数值。</p>
+<p><strong>第 1 步：求真空（极小值）。</strong>令 \(r=|\phi|\)，对 \(r^2\) 求导：</p>
+<div class="formula display" data-tex="\frac{dV}{d(r^2)}=-\mu^2+2\lambda r^2=0\ \Longrightarrow\ r^2=\frac{\mu^2}{2\lambda}\ \Longrightarrow\ \frac{v}{\sqrt2}=\frac{\mu}{\sqrt{2\lambda}}\ \Longrightarrow\ v=\frac{\mu}{\sqrt\lambda}"></div>
+<p>同时检查径向二阶导：\(d^2V/dr^2=-2\mu^2+12\lambda r^2\)，在 \(r^2=\mu^2/2\lambda\) 处为 \(+4\mu^2&gt;0\)——确实是极小；在 r=0 处为 \(-2\mu^2&lt;0\)——是极大，<strong>这就是"\(\phi=0\) 不稳定"的严格证明</strong>。</p>
+<p><strong>第 2 步：在真空附近展开。</strong>挑径向方向，令 \(\phi(x)=\frac{v+h(x)}{\sqrt2}\)（\(h\) 就是 Higgs 场）。代入势：</p>
+<div class="formula display" data-tex="V=\frac{1}{2}(2\lambda v^2)\,h^2+\underbrace{\lambda v\,h^3+\frac{\lambda}{4}h^4}_{\text{自相互作用}}+\text{常数}"></div>
+<p>二次项系数 \(\frac12(2\lambda v^2)h^2=\frac12 m_H^2 h^2\)，所以</p>
+<div class="formula display" data-tex="m_H^2=2\lambda v^2=2\mu^2"></div>
+<p><strong>第 3 步：代入数字。</strong>已知 \(m_H=125.25\,\mathrm{GeV}\)、\(v=246.22\,\mathrm{GeV}\)：</p>
+<div class="formula display" data-tex="\lambda=\frac{m_H^2}{2v^2}=\frac{(125.25)^2}{2(246.22)^2}=\frac{15\,688}{121\,249}\approx0.1294"></div>
+<div class="formula display" data-tex="\mu=\sqrt{\lambda}\,v=\sqrt{0.1294}\times246.22\approx88.6\,\mathrm{GeV}"></div>
+<p>反过来验算：\(m_H=\sqrt{2}\mu=1.414\times88.6=125.3\,\mathrm{GeV}\) ✓。所以"为什么 Higgs 有 125 GeV 的质量"的回答是：<strong>它由势的"曲率"决定——帽子槽底的弯曲程度（\(\sqrt{2}\mu\)）就是 Higgs 的固有质量。</strong>∎</p>
+<div class="key-insight">这揭示了 Higgs 机制的核心悖论式美感：<strong>真空值 \(v=246\,\mathrm{GeV}\)（来自帽子半径）和 Higgs 质量 \(125\,\mathrm{GeV}\)（来自槽底曲率）是两个独立的量</strong>，都由势的两个参数 μ、λ 决定，但一个是"帽子有多大"，一个是"槽有多弯"。</div>
+</section>
+
+<section>
+<h3>四、教科书例题 2——从 G_F 到 v：验证 W、Z 质量</h3>
+<p><strong>问题：</strong>弱力的费米常数 \(G_F=1.166\,379\times10^{-5}\,\mathrm{GeV}^{-2}\) 是实验测得的。证明 \(v=( \sqrt2 G_F)^{-1/2}\approx246\,\mathrm{GeV}\)，并用它验证 W、Z 的质量。</p>
+<p><strong>第 1 步：写出费米耦合与 v 的关系。</strong>费米理论（点状四费米子相互作用）与电弱理论（W 交换）在低能匹配：</p>
+<div class="formula display" data-tex="\frac{G_F}{\sqrt2}=\frac{g^2}{8m_W^2},\qquad m_W=\frac{gv}{2}\ \Longrightarrow\ m_W^2=\frac{g^2v^2}{4}"></div>
+<p>代入消去 g：</p>
+<div class="formula display" data-tex="\frac{G_F}{\sqrt2}=\frac{g^2}{8\cdot g^2v^2/4}=\frac{1}{2v^2}\ \Longrightarrow\ v=\frac{1}{\sqrt{\sqrt2\,G_F}}"></div>
+<p><strong>第 2 步：代入数字。</strong></p>
+<div class="formula display" data-tex="\sqrt2\,G_F=1.4142\times1.1664\times10^{-5}=1.6495\times10^{-5}\,\mathrm{GeV}^{-2}"></div>
+<div class="formula display" data-tex="v=(1.6495\times10^{-5})^{-1/2}=\sqrt{60\,624}\approx246.2\,\mathrm{GeV}"></div>
+<p>这正好是"电弱破缺的标度"——它<strong>不是猜出来的，而是从 \(\mu\) 衰变测出的 \(G_F\) 反推的</strong>。</p>
+<p><strong>第 3 步：验证 Weinberg 角与 W、Z 质量。</strong>由测得的两个质量反推混合角（在 \(\overline{\mathrm{MS}}\) 方案下 sin²θ_W≈0.231，这里用质量公式给出树级关系）：</p>
+<div class="formula display" data-tex="\cos\theta_W=\frac{m_W}{m_Z}=\frac{80.379}{91.188}=0.8815\ \Longrightarrow\ \sin^2\theta_W=1-(0.8815)^2\approx0.223"></div>
+<p><strong>第 4 步：验证 m_W=gv/2。</strong>用 \(\alpha=1/128\) 得 \(e=\sqrt{4\pi\alpha}=0.3133\)，于是 \(g=e/\sin\theta_W=0.3133/0.4721=0.6636\)：</p>
+<div class="formula display" data-tex="m_W=\frac{gv}{2}=\frac{0.6636\times246.2}{2}\approx81.7\,\mathrm{GeV}\ (\text{树级})"></div>
+<p>树级结果 81.7 GeV 与实验值 80.379 GeV 差约 1.7%——这个残差正是辐射修正（圈图）的贡献，而<strong>LEP 正是靠精确测量这类修正确定了顶夸克质量 m_t≈173 GeV</strong>（见第七节）。∎</p>
+<p>一句话总结这一节的意义：<strong>\(G_F\)、\(m_W\)、\(m_Z\)、\(\sin\theta_W\)、\(v\) 五个量由两个基本参数（g、g'）加 v 联系——多测一个就能预言另一个，能对上就是电弱统一成功的铁证。</strong></p>
+</section>
+<section>
+<h3>五、Goldstone 定理与 Higgs 机制的逃逸</h3>
+<p><strong>Goldstone 定理</strong> (Nambu 1960, Goldstone 1961)：当一个理论的连续整体对称性自发破缺时，粒子谱中必然出现零质量、零自旋的无能隙激发——<strong>Goldstone 玻色子</strong>。这些粒子的数量等于破缺生成元的数量。例如：QCD 的手征对称性自发破缺→π 介子作为赝 Goldstone 玻色子；铁磁体中自旋波 (magnon) 是连续对称破缺的 Goldstone 模。</p>
+<p><strong>但这里有个看似致命的矛盾：</strong>按 Goldstone 定理，电弱破缺会产生无质量的玻色子，而实验一个都没找到！Higgs 机制的"逃逸"就在于——</p>
+<p><strong>Higgs 机制的逃逸——规范对称性是例外：</strong></p>
+<p>Goldstone 定理仅适用于<strong>整体对称性</strong>。Higgs 机制的精髓在于：对称性是<strong>局域的（规范对称性）</strong>，因此对称性破缺的行为完全不同。</p>
+<p>当一个局部规范对称性在 SSB 下破缺时：</p>
+<div class="formula display" data-tex="SU(2)_L\times U(1)_Y\xrightarrow{\text{SSB}}U(1)_{\mathrm{em}}"></div>
+<p>三步逻辑：</p>
+<p>(1) 用规范自由度（幺正规范）将 Goldstone 模式从场中消除（白话：借重选相位坐标的余地，把多余的 Goldstone 模式直接洗掉）。</p>
+<p>(2) 这些"被消除的"Goldstone 玻色子并<strong>没有消失</strong>——它们被规范玻色子"吞食"为第三极化态（纵向）分量。零质量规范玻色子有 2 个极化态（左右螺旋）；大质量规范玻色子有 3 个极化态（螺旋态+纵向）——<strong>被吞食的 Goldstone 正是提供了这缺失的纵向自由度</strong>。</p>
+<p>(3) 规范玻色子获得质量：\(m_W=gv/2,\ m_Z=\sqrt{g^2+g'^2}\,v/2\)，而机制中有一个剩余的物理标量——<strong>Higgs 玻色子</strong>——对应于 v 周围的径向激发。</p>
+<p>关键点：规范对称性在所有能标下都保持完好（Slavnov-Taylor 恒等式保证），包括对称破缺之后。但真空态破坏了对称性，从而筛选出物理质量。在幺正规范中，"不是对称性被破坏——是真空将对称性隐藏了。"</p>
+<p><strong>自由度计数（电弱扇区）</strong>：对称破缺前：SU(2)—3 个零质量规范玻色子 (2×3=6 极化态) + U(1)—1 个零质量规范玻色子 (2 极化态) + Higgs 二重态 (4 实标量场) = 6+2+4 = 12 自由度。对称破缺后：W、Z—3 个大质量规范玻色子 (3×3=9 极化态) + 光子—1 个零质量规范玻色子 (2 极化态) + Higgs 玻色子 (1 标量) = 9+2+1 = 12 自由度——自由度守恒。下一节把它做成一个完整的例题。</p>
+</section>
+
+<section>
+<h3>六、教科书例题 3——自由度守恒：W、Z 怎样"吃"掉 Goldstone</h3>
+<p><strong>问题：</strong>用"极化态计数"证明：Goldstone 玻色子没有消失，它们变成了 W、Z 的纵向极化。</p>
+<p><strong>第 1 步：破缺前，数清所有"能动的部分"。</strong>物理自由度=每个粒子内部独立的"朝向"数：</p>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;">
+<tr style="background:#1a1a2e;color:#e0e0e0;"><th style="text-align:left;padding:8px;">场</th><th style="text-align:left;padding:8px;">粒子数</th><th style="text-align:left;padding:8px;">每个粒子自由度</th><th style="text-align:left;padding:8px;">小计</th></tr>
+<tr><td style="padding:8px;">W⁺,W⁻,W⁰（SU(2) 三胞胎）</td><td style="padding:8px;">3</td><td style="padding:8px;">2（无质量矢量：横极化）</td><td style="padding:8px;">6</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">B（U(1) 单态）</td><td style="padding:8px;">1</td><td style="padding:8px;">2（横极化）</td><td style="padding:8px;">2</td></tr>
+<tr><td style="padding:8px;">Higgs 二重态</td><td style="padding:8px;">4</td><td style="padding:8px;">1（实标量）</td><td style="padding:8px;">4</td></tr>
+<tr style="background:#1a1a2e;color:#e0e0e0;"><td style="padding:8px;">合计</td><td style="padding:8px;"></td><td style="padding:8px;"></td><td style="padding:8px;">12</td></tr>
+</table>
+<p><strong>第 2 步：破缺后，重新分配。</strong>W⁺、W⁻、Z⁰ 变重，每个多出 1 个纵向极化；光子仍无质量（2 个）；4 个实标量中 3 个是 Goldstone，只有 1 个活下来当 Higgs：</p>
+<table style="width:100%;border-collapse:collapse;margin:12px 0;">
+<tr style="background:#1a1a2e;color:#e0e0e0;"><th style="text-align:left;padding:8px;">场</th><th style="text-align:left;padding:8px;">粒子数</th><th style="text-align:left;padding:8px;">每个粒子自由度</th><th style="text-align:left;padding:8px;">小计</th></tr>
+<tr><td style="padding:8px;">W⁺,W⁻,Z⁰（现在有质量）</td><td style="padding:8px;">3</td><td style="padding:8px;">3（横+纵极化）</td><td style="padding:8px;">9</td></tr>
+<tr style="background:#f0f0ff10;"><td style="padding:8px;">光子 γ</td><td style="padding:8px;">1</td><td style="padding:8px;">2（横极化）</td><td style="padding:8px;">2</td></tr>
+<tr><td style="padding:8px;">Higgs 玻色子 h</td><td style="padding:8px;">1</td><td style="padding:8px;">1（实标量）</td><td style="padding:8px;">1</td></tr>
+<tr style="background:#1a1a2e;color:#e0e0e0;"><td style="padding:8px;">合计</td><td style="padding:8px;"></td><td style="padding:8px;"></td><td style="padding:8px;">12</td></tr>
+</table>
+<p><strong>第 3 步：差额的物理解读。</strong>破缺后比破缺前少了 3 个标量自由度、多了 3 个纵向极化——<strong>一一对应，一个不多一个不少</strong>。这正是"W、Z 吃掉 Goldstone"的精确含义：那 3 个无质量 Goldstone 变成了 3 个大质量矢量玻色子的纵向极化，而光子（对应未被破缺的 U(1)_em）保持无质量。</p>
+<p><strong>第 4 步：一个可检验的推论。</strong>正因为纵向极化来自"吃掉的"标量，在<strong>高能极限下 W 的纵向极化行为像标量</strong>——这就是"黄金等价定理"：在 \(\sqrt{s}\gg m_W\) 时，\(W_L W_L\to W_L W_L\) 散射振幅正比于 \(\lambda\)（Higgs 自耦合），若不考虑 Higgs 交换，振幅会随能量增长而违反幺正性（在 ~1 TeV 处破坏）。<strong>这曾在 1990 年代预言：要么有 Higgs，要么有别的"统一机制"在 ~1 TeV 出现。</strong>LHC 找到的是前者。∎</p>
+<div class="key-insight">用一句话记住本例题：<strong>质量不会凭空产生，它只是把"标量的方向自由度"改名为"矢量的纵向极化"。</strong>自由度守恒是最硬的记账本，谁也赖不掉。</div>
+</section>
+
+<section>
+<h3>七、从 1970 年代到 2012 年——四十年追踪</h3>
+<p><strong>理论奠基（1961–1971）</strong>：</p>
+<p>• Glashow (1961) 提出 SU(2)×U(1) 电弱统一规范结构，但未解决规范玻色子质量问题。</p>
+<p>• Higgs (1964)、Englert &amp; Brout (1964)、Guralnik, Hagen &amp; Kibble (1964) 独立发现规范对称性自发破缺产生大质量规范玻色子的机制。</p>
+<p>• Weinberg (1967) 和 Salam (1968) 将 Higgs 机制整合到电弱统一理论中——提出完整的轻子模型，预言了 W、Z 和 Higgs 玻色子。</p>
+<p>• 't Hooft &amp; Veltman (1971) 证明了有规范对称性破缺的 Yang-Mills 理论的可重整性，使得 Weinberg-Salam 模型成为一个一致的量子场论。</p>
+<p><strong>间接验证（1983–2000）</strong>：</p>
+<p>• UA1 和 UA2 在 CERN Spp̄S (1983) 发现 W± 和 Z⁰，证实电弱统一的核心预言 → 1984 年 Nobel 奖 (Rubbia, van der Meer)。</p>
+<p>• LEP (CERN, 1989–2000)：精确测量 Z 线形和 W 质量，其中通过赝观测量的电弱辐射修正发现 m_t ≈ 173 GeV——在 Tevatron 直接发现 top 夸克前就精确确定了其质量！而且通过辐射修正的全局拟合间接约束了 Higgs 质量：m_H &lt; 200 GeV (95% CL)，精确地指出了 Higgs 的"藏身范围"。</p>
+<div class="formula display" data-tex="\Delta r=\frac{3G_F m_W^2}{8\pi^2\sqrt{2}}\left(\frac{m_t^2}{m_W^2}-\frac{11}{3}\frac{m_H^2}{m_Z^2}+\cdots\right)"></div>
+<p>注意这个公式里的关键细节：<strong>m_t 的平方项和 m_H 的平方项符号相反</strong>——顶夸克太重会把 W 质量往上推，Higgs 太重会把它往下拉。LEP 用精确的 W 质量测量反解出两者，先"算出"了 top 的质量，再圈出了 Higgs 的质量范围。这就是"间接发现"的威力。</p>
+<p><strong>直接搜寻（2001–2012）</strong>：</p>
+<p>• Tevatron (Fermilab, 2001–2011)：在 Run II 中对低质量 Higgs (H→bb̄)/WH 关联产生进行搜寻，积累了排除区间和初步的过量（约 2σ）于 125–130 GeV。</p>
+<p>• LHC Run I (2009–2012)：CMS 和 ATLAS 在大约 5 fb⁻¹ (7 TeV) 和 20 fb⁻¹ (8 TeV) 数据中独立观测到约 125 GeV 处的新玻色子——2012 年 7 月 4 日同时宣布。</p>
+<p><strong>2012 年 7 月 4 日——Higgs 发现日</strong>：ATLAS 报告局部显著性 5.9σ，CMS 报告 5.0σ。两个实验在 γγ 和 ZZ→4ℓ 通道中均观察到清晰的峰值，质量约 125 GeV。这是半个世纪寻找的终点——2013 年 Nobel 物理学奖授予 Englert 和 Higgs。</p>
+<p><strong>Higgs 性质测定（2012 至今）</strong>：Run I + Run II (13 TeV, 140 fb⁻¹) 数据的测量结果：信号强度 μ=σ/σ_SM = 1.00±0.06，自旋-宇称测量排除 0⁻（赝标量）和自旋 1 假设——与 0⁺ (CP-even) 高度吻合。与顶夸克 (t̄tH, tH)、矢量玻色子 (VBF, VH) 和 τ 轻子的耦合均被观测到 (&gt;5σ)。这些实验事实的一致程度使 SM Higgs 假说变得几乎不可撼动。</p>
+</section>
+<section>
+<h3>八、关键公式</h3>
+<div class="formula display" data-tex="V(\phi) = -\mu^2|\phi|^2 + \lambda|\phi|^4,\qquad \lambda\approx0.129,\quad \mu\approx88.6\,\mathrm{GeV}"></div>
+<div class="formula display" data-tex="\langle\phi\rangle = \frac{v}{\sqrt{2}} \approx 174.1\ \mathrm{GeV},\quad v \approx 246.22\ \mathrm{GeV},\quad v=(\sqrt2\,G_F)^{-1/2}"></div>
+<div class="formula display" data-tex="m_H^2=2\lambda v^2=2\mu^2,\qquad m_W=\frac{gv}{2},\qquad m_Z=\frac{\sqrt{g^2+g'^2}\,v}{2},\qquad \cos\theta_W=\frac{m_W}{m_Z}"></div>
+</section>
+
+<section>
+<h3>九、试试看（每题附提示）</h3>
+<p>1. 证明 Higgs 玻色子质量 \(m_H=\sqrt{2}\,\mu\)。</p>
+<p><em>提示：把 \(\phi=(v+h)/\sqrt2\) 代入 \(V\)，收集 \(h^2\) 项的系数 \(\frac12 m_H^2\)。二次项来自 \(-\mu^2|\phi|^2\) 和 \(\lambda|\phi|^4\) 的交叉项，两者相加恰好是 \(\lambda v^2h^2\)，而 \(v=\mu/\sqrt\lambda\)。</em></p>
+<p>2. 已知 \(m_H=125.25\,\mathrm{GeV}\)、\(v=246.22\,\mathrm{GeV}\)，反求 λ 与 μ。</p>
+<p><em>提示：\(\lambda=m_H^2/(2v^2)\approx0.129\)；\(\mu=\sqrt{\lambda v^2}=\sqrt{m_H^2/2}\approx88.6\,\mathrm{GeV}\)。注意 \(\mu^2\approx(88.6\,\mathrm{GeV})^2\) 是势的"帽子凹陷深度"的参数。</em></p>
+<p>3. 计算电子与顶夸克的 Yukawa 耦合：\(y_f=\sqrt2\,m_f/v\)。取 \(m_e=0.511\,\mathrm{MeV}\)、\(m_t=172.7\,\mathrm{GeV}\)。</p>
+<p><em>提示：\(y_e=1.414\times0.511\times10^{-3}/246.2\approx2.9\times10^{-6}\)；\(y_t=1.414\times172.7/246.2\approx0.99\)。顶夸克的耦合几乎等于 1——它是标准模型里"最像"Higgs 的粒子，这也让它成为探测 Higgs-Yukawa 相互作用的最佳探针。</em></p>
+<p>4. 解释为什么 \(m_Z&gt;m_W\)：两者都由同一个 v 和质量公式给出，差别只来自 Weinberg 角。</p>
+<p><em>提示：\(m_Z=m_W/\cos\theta_W\)，而 \(\cos\theta_W\approx0.8815&lt;1\)。物理上，Z 同时耦合 U(1)_Y 与 SU(2)_L 两股电流，所以"吃到"的 Goldstone 质量更多——"吃得多、长得重"。</em></p>
+<p>5. 如果 v 是现在的 10 倍，W 质量会变成多少？对弱力的作用范围意味着什么？</p>
+<p><em>提示：\(m_W=gv/2\propto v\)，所以 \(m_W\approx803.8\,\mathrm{GeV}\)；作用范围 \(\propto1/m_W\) 缩到原来的 1/10。这也是"v 是宇宙的定标"这一说法的由来——所有粒子质量都被 v 乘以各自的耦合决定。</em></p>
+</section>
+
+<section><h3>真空稳定性——Higgs 势的终极命运</h3><p>当前测量暗示 Higgs 势可能处于"亚稳态"——在极长时间尺度上可能隧穿到更低能态（真空衰变）。如果发生，光速膨胀的真空气泡将吞噬整个宇宙。但概率极低——宇宙寿命（~\(10^{10}\) 年）远小于隧穿寿命。</p></section><section><h3>前沿：Higgs 势的稳定性与真空衰变</h3><p>Higgs 势在电弱标度附近的形状由四极耦合 λ 决定。当前测量暗示 meta-stability——Higgs 真空在 ~\(10^{100}\) 年后可能隧穿到真真空。但和暴胀宇宙学的"真空能"问题纠缠。仍开放：Higgs 势在 Planck 尺度上的完整演化。</p></section>
+
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：从 \(m_W=80.379\,\mathrm{GeV}\)、\(\sin^2\theta_W=0.223\) 反推 v，并验证它与 \(G_F\) 的关系一致。</p>
+<p><strong>题 2</strong>：计算势在真空处的能量密度 \(V_{\min}=V(v/\sqrt2)\)，并估算它对应的"宇宙学常数"量级（提示：它比观测到的暗能量密度大 ~\(10^{54}\) 倍——这就是"宇宙学常数问题"的根源）。</p>
+<p><strong>题 3</strong>：用"黄金等价定理"论证：若没有 Higgs，\(W_L W_L\to W_L W_L\) 散射会在 ~1 TeV 破坏幺正性；有 Higgs 交换后该增长被抵消。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：\(\cos\theta_W=\sqrt{1-0.223}=0.8815\)，\(g=e/\sin\theta_W=0.3133/0.4721=0.6636\)，故 \(v=2m_W/g=160.76/0.6636\approx242\,\mathrm{GeV}\)（树级；与 \(G_F\) 反推的 246.2 GeV 的 ~1.7% 差异来自辐射修正）。</p>
+<p><strong>题 2</strong>：代入 \(|\phi|^2=\mu^2/2\lambda\)，得 \(V_{\min}=-\mu^4/(4\lambda)=-\lambda v^4/4\approx-0.129\times(246.2)^4/4\,\mathrm{GeV}^4\approx-1.2\times10^8\,\mathrm{GeV}^4\)。换算成能量密度约为 \(10^{46}\,\mathrm{J/m^3}\)，而观测暗能量密度约 \(10^{-9}\,\mathrm{J/m^3}\)——<strong>差 ~55 个数量级</strong>。这是当代物理最大的未解之谜之一。</p>
+<p><strong>题 3</strong>：无 Higgs 时，纵向 W 的对消机制缺失，散射振幅按 \(\propto g^2s/m_W^2\) 增长，在 \(s\sim(4\pi v)^2\approx(1\,\mathrm{TeV})^2\) 违反幺正性。有 Higgs（耦合 \(\lambda v\propto m_H^2/v\)）时，s- 与 t- 道 Higgs 交换恰好抵消增长项。这意味着<strong>Higgs 的耦合强度与质量公式自洽，不是巧合，而是幺正性强制的</strong>——这也是"没有 Higgs 就必有新物理在 ~1 TeV"的论证。</p>
+</p></details>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<p><strong>理论奠基（1964–1967）</strong>：</p>
+<p>• Higgs, P. W. (1964). "Broken Symmetries and the Masses of Gauge Bosons." <em>Physical Review Letters</em> 13, 508. ——明确指出了 Higgs 机制的物理本质：规范玻色子获得质量。</p>
+<p>• Englert, F. &amp; Brout, R. (1964). "Broken Symmetry and the Mass of Gauge Vector Mesons." <em>Physical Review Letters</em> 13, 321. ——独立提出相同的机制。</p>
+<p>• Guralnik, G. S., Hagen, C. R., &amp; Kibble, T. W. B. (1964). "Global Conservation Laws and Massless Particles." <em>Physical Review Letters</em> 13, 585. ——Goldstone 定理与规范对称破缺的系统讨论。</p>
+<p>• Weinberg, S. (1967). "A Model of Leptons." <em>Physical Review Letters</em> 19, 1264. ——将 Higgs 机制电弱统一的完整 Lagrangian — 现代标准模型电弱部分的源头。</p>
+<p><strong>发现论文（2012）</strong>：</p>
+<p>• ATLAS Collaboration (2012). "Observation of a new particle in the search for the Standard Model Higgs boson with the ATLAS detector at the LHC." <em>Physics Letters B</em> 716, 1.</p>
+<p>• CMS Collaboration (2012). "Observation of a new boson at a mass of 125 GeV with the CMS experiment at the LHC." <em>Physics Letters B</em> 716, 30.</p>
+<p><strong>现代综述</strong>：</p>
+<p>• Particle Data Group. "Status of Higgs Boson Physics." 2024 更新，系统汇总了 Run II 全部分析结果。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Peskin &amp; D. Schroeder, An Introduction to QFT</strong></p>
+<p>&rarr; <strong>S. Weinberg, The Quantum Theory of Fields</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/feynman-diagram.html">费曼图</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/feynman-diagram.html">✴️ 费曼图</a>：同一学科分类「量子场论」。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：量子场论核心链。</p>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/higgs-mechanism.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

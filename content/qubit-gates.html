@@ -1,0 +1,110 @@
+<section>
+<h3>〇、直觉入门——先手算一个具体的量子门</h3>
+<p>先不空谈，拿一个带数字的例子直接算一遍。取量子态</p>
+<div class="formula display" data-tex="|\psi\rangle=\cos\frac{\pi}{8}|0\rangle+\sin\frac{\pi}{8}|1\rangle\approx 0.924\,|0\rangle+0.383\,|1\rangle"></div>
+<p>（0.924²+0.383² = 0.854+0.146 = 1.000 ✓，概率总和是 100%。）现在按下一个"X 门"——它的矩阵是</p>
+<div class="formula display" data-tex="X=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad X|0\rangle=|1\rangle,\quad X|1\rangle=|0\rangle"></div>
+<p>把 X 作用上去，就是交换两个系数的位置：</p>
+<div class="formula display" data-tex="X|\psi\rangle=0.924\,X|0\rangle+0.383\,X|1\rangle=0.383\,|0\rangle+0.924\,|1\rangle"></div>
+<p>看清楚发生了什么：原来"0.924 分像 0、0.383 分像 1"，按下 X 门后变成"0.383 分像 0、0.924 分像 1"——<strong>两个振幅互换，测量概率也互换</strong>。普通电脑的开关只有开和关两个档位，量子的"开关"却能同时处于"开一半、关一半"的叠加态。量子门就是按在这种特殊开关上的按钮——每按一下，状态就旋转一下。</p>
+<p>量子门存在，是因为量子计算机的运算全靠一连串这样的"按钮操作"来完成。学会每个按钮的作用，就明白了量子计算机是怎么"做计算"的。</p>
+<div class="key-insight">量子门是翻转量子比特的按钮，量子计算就是一连串按钮操作——只想懂核心思想，看到这里就够了</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、为什么量子门必须是幺正的？——先直觉后严格</h3>
+<p><strong>直觉。</strong>量子态像球面上的一个点：它的"长度"（到球心的距离）永远是 1，测量概率才能加起来等于 100%。一个量子门如果拉伸了态，概率就会失真——所以量子门只能"旋转"（保长度），不能"拉伸"。这就是"幺正"（unitary）最直观的意思：<strong>只旋转、不拉伸</strong>，像把整个球面转一下却不改变任何长度和夹角。</p>
+<p><strong>为什么必须线性且保长度？</strong>两条物理原理：(i) 量子演化是<strong>线性的</strong>——叠加原理要求 U(α|0⟩+β|1⟩)=αU|0⟩+βU|1⟩；(ii) 态的<strong>归一化</strong>必须保持——若 |ψ⟩ 满足 ‖|ψ⟩‖=1，则 U|ψ⟩ 也必须满足 ‖U|ψ⟩‖=1，否则测量概率加起来不等于 1。</p>
+<p><strong>严格结论。</strong>一个线性算符 U 若对一切单位向量保长度，则它<strong>保内积</strong>（由极化恒等式推出），于是 ⟨ψ|U†U|ψ⟩=⟨ψ|ψ⟩ 对一切 |ψ⟩ 成立 ⟹ <strong>U†U = I</strong>——这正是幺正的定义。由此自动得到两个重要推论：</p>
+<div class="formula display" data-tex="U^{\dagger}U=UU^{\dagger}=I\;\Longrightarrow\; U^{-1}=U^{\dagger},\qquad \|U|\psi\rangle\|=\||\psi\rangle\|=1"></div>
+<p>(1) <strong>量子计算是可逆的</strong>：每个门都能"撤回去"（U† 就是撤销按钮），信息不会丢失。(2) 归一化自动保持。用〇节的数字核对：X|ψ⟩ 的系数 0.383、0.924 满足 0.383²+0.924² = 0.854+0.146 = 1.000 ✓——按了门，概率照样是 100%。</p>
+<div class="key-insight">任何单比特量子门都对应 Bloch 球上的一个旋转（SO(3)）；"幺正"就是"保长度、可逆"这两个要求的数学名字。</div>
+</section>
+
+<section>
+<h3>二、单量子比特门——X、Z、T、H（完整例题 1、2）</h3>
+<p>四种最重要的单比特门，各自的矩阵和 Bloch 球几何（参考 <a href="/pages/bloch-sphere.html">Bloch 球</a> 课）：</p>
+<div class="formula display" data-tex="X=\begin{pmatrix}0&1\\1&0\end{pmatrix},\quad Z=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\quad T=\begin{pmatrix}1&0\\0&e^{i\pi/4}\end{pmatrix},\quad H=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}"></div>
+<ul>
+<li><strong>X 门（Pauli-X）</strong>：绕 Bloch 球 x 轴旋转 π，翻转 |0⟩↔|1⟩。</li>
+<li><strong>Z 门</strong>：绕 z 轴转 π，只给 |1⟩ 分量加一个 −1 相位（|0⟩ 不变）。</li>
+<li><strong>T 门</strong>：绕 z 轴转 π/4，只给 |1⟩ 分量加相位 e<sup>iπ/4</sup>。</li>
+<li><strong>H 门（Hadamard）</strong>：绕 (1,0,1) 轴转 π，把 |0⟩ 变成 (|0⟩+|1⟩)/√2——制造叠加态。</li>
+</ul>
+<p><strong>完整例题 1：验证 X 是幺正的（自逆），并核对〇节的数字。</strong>X 的共轭转置 X† = X（实对称）。计算 X²：</p>
+<div class="formula display" data-tex="X^2=\begin{pmatrix}0&1\\1&0\end{pmatrix}\begin{pmatrix}0&1\\1&0\end{pmatrix}=\begin{pmatrix}1&0\\0&1\end{pmatrix}=I\;\Longrightarrow\; X^{\dagger}X=X^2=I\ \checkmark"></div>
+<p>于是 X 是幺正且自逆（X⁻¹=X）——按两下 X 门回到原点，正对应"绕 x 轴转两次 π = 转 2π = 不动"。这解释了〇节：X|ψ⟩=0.383|0⟩+0.924|1⟩，再按一次 X 就回到 0.924|0⟩+0.383|1⟩=|ψ⟩。</p>
+<p><strong>完整例题 2：H 门的矩阵乘法——H²=I。</strong>先看 H 对基态的作用：</p>
+<div class="formula display" data-tex="H|0\rangle=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}\binom{1}{0}=\frac1{\sqrt2}\binom{1}{1}=\frac{|0\rangle+|1\rangle}{\sqrt2},\qquad H|1\rangle=\frac{|0\rangle-|1\rangle}{\sqrt2}"></div>
+<p>再算 H²（两行两列直接乘）：</p>
+<div class="formula display" data-tex="H^2=\frac12\begin{pmatrix}1&1\\1&-1\end{pmatrix}\begin{pmatrix}1&1\\1&-1\end{pmatrix}=\frac12\begin{pmatrix}2&0\\0&2\end{pmatrix}=I"></div>
+<p>所以 H|0⟩=|+⟩（赤道上 +x 轴的点），H²|0⟩=|0⟩——连续按两下 H 回到 |0⟩。这也解释了为什么"制造叠加态"的 H 门本身是幺正的：|+⟩ 的系数 1/√2、1/√2 满足 (1/√2)²+(1/√2)²=1 ✓。</p>
+</section>
+
+<section>
+<h3>三、CNOT——两比特纠缠门（完整例题 3）</h3>
+<p>单比特门只动一个比特；要真正做量子计算，需要<strong>两比特门</strong>——让两个比特互相"看见"。最基础的是 <strong>CNOT（受控非门）</strong>：</p>
+<div class="formula display" data-tex="\text{CNOT}=|0\rangle\langle 0|\otimes I+|1\rangle\langle 1|\otimes X,\qquad \text{CNOT}|c\rangle|t\rangle=|c\rangle|c\oplus t\rangle"></div>
+<p>规则一句话：<strong>控制比特 c=0 时目标不动，c=1 时翻转目标</strong>。逐条列出：</p>
+<div class="formula display" data-tex="|00\rangle\!\to\!|00\rangle,\ \ |01\rangle\!\to\!|01\rangle,\ \ |10\rangle\!\to\!|11\rangle,\ \ |11\rangle\!\to\!|10\rangle"></div>
+<p><strong>完整例题 3：CNOT 把叠加态变成纠缠态。</strong>取控制比特处于叠加态 |+⟩=(|0⟩+|1⟩)/√2，目标比特为 |0⟩：</p>
+<div class="formula display" data-tex="\text{CNOT}|+\rangle|0\rangle=\text{CNOT}\Big(\frac{|0\rangle+|1\rangle}{\sqrt2}\otimes|0\rangle\Big)=\frac{|00\rangle+|11\rangle}{\sqrt2}=|\Phi^+\rangle"></div>
+<p>一步步核对：|00⟩ 控制位是 0，目标不动 → |00⟩；|10⟩ 控制位是 1，目标 0 被翻成 1 → |11⟩。结果 (|00⟩+|11⟩)/√2 正是最大纠缠态 |Φ⁺⟩（见 <a href="/pages/entanglement.html">纠缠</a> 课）！这就是量子计算的威力来源之一：<strong>一个门就可以凭空制造纠缠</strong>，把两个本来独立的比特"绑"成一个整体。经典 NAND 门的量子对应物就是 CNOT（配合单比特门即通用）。</p>
+<div class="key-insight">CNOT 是两比特的纠缠门：控制位 = |1⟩ → 翻转目标位。{任意单比特门 + CNOT} = 通用。它是经典 NAND 的量子版。</div>
+</section>
+<section>
+<h3>四、通用门集与 Solovay–Kitaev 定理——为什么 {H,T,CNOT} 就够了</h3>
+<p>你可能想问：量子门有无穷多种（Bloch 球上每个旋转角都是一个门），凭什么"几个固定按钮"就够了？答案是两条：(1) <strong>{任意单比特门 + CNOT} 是通用的</strong>——任意 n-qubit 酉运算都可以分解成它们的乘积（CNOT 用来在两个比特间建立纠缠，单比特门用来做任意旋转）。(2) <strong>{H,T} 就足以产生任意单比特门</strong>——H 和 T 的乘积在 SU(2) 中稠密，可以任意逼近任何单比特酉门。</p>
+<p>所以 {H,T,CNOT} 构成<strong>通用门集</strong>：任意 n-qubit 酉运算——大白话：酉就是"只旋转、不拉伸"的变换，像把球面整体转一下却不改变任何长度和夹角，量子门都是这类运算——都可以被这些门的乘积任意精确地近似。</p>
+<p>"精确"到什么程度、要花多少个门？这正是 Solovay–Kitaev 定理回答的问题。</p>
+<p><strong>Solovay–Kitaev 定理。</strong>任何单qubit酉门可以被{H,T}的乘积以指数精度<strong>高效</strong>逼近——所需门数与 log^c(1/epsilon)成正比。这是通用量子门集理论的基础——证明了不需要连续参数——大白话："连续"指能一格一格无限微调，连续参数就是能取任意角度的旋钮，理论上要无限多档才能凑出所有角度——就能做通用量子计算。证明用到SU(2)的群论性质——大白话：群就是一套操作，讲究"做完一个还能接着做下一个、结果仍在这套操作里"，例如绕固定点的所有旋转构成一个群——和欧氏算法。</p>
+</section>
+<section>
+<h3>五、量子纠错——表面码</h3>
+<p>现实中的量子比特会出错（退相干、门不完美）。量子纠错的想法：用<strong>多个物理比特编码一个逻辑比特</strong>，让错误能被探测并修复而不破坏逻辑态。</p>
+<p><strong>表面码</strong>：1个逻辑qubit编码到d×d物理qubit阵列。数据比特排成格点，测量比特夹在边上。<strong>稳定子测量</strong>检测错误而不破坏逻辑态（它量的是"整块的性质"，不触碰单个比特的信息）。错误率低于<strong>容错阈值</strong>~1%时，错误率随码距 d 增大而指数下降。Google Willow(2024)：105qubit表面码——错误率随码距增加而指数下降。</p>
+<div class="key-insight">纠错的关键：把逻辑信息"摊开"到整块上，使局部错误探测不出来。这是实用量子计算机的地基。</div>
+</section>
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="H = \frac{1}{\sqrt{2}}\begin{pmatrix}1&1\\1&-1\end{pmatrix},\quad X = \begin{pmatrix}0&1\\1&0\end{pmatrix},\quad Z=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\quad T=\begin{pmatrix}1&0\\0&e^{i\pi/4}\end{pmatrix}"></div>
+<div class="formula display" data-tex="\text{CNOT} = |0\rangle\langle 0|\otimes I + |1\rangle\langle 1|\otimes X,\qquad U^{\dagger}U=I\ (\text{幺正性})"></div>
+<div class="formula display" data-tex="\{H,T,\text{CNOT}\}\ \text{通用},\qquad \{H,T\}\ \text{稠密于}\ SU(2)"></div>
+</section>
+<section>
+<h3>七、试试看（带提示）</h3>
+<p>1. 验证 Z 门幺正且自逆（Z²=I）。<br>提示：Z=diag(1,−1)，Z†=Z，Z²=diag(1,1)=I。几何上：绕 z 轴转两次 π = 转 2π = 不动。</p>
+<p>2. 用矩阵乘法验证 H X H = Z。<br>提示：先算 HX，再乘 H；或用 Bloch 球捷径——H 把 x 轴映到 z 轴（共轭作用），于是"绕 x 转 π"被 H 共轭成"绕 z 转 π"，即 X→Z。</p>
+<p>3. CNOT 作用在 |−⟩|1⟩ 上得到什么？<br>提示：|−⟩=(|0⟩−|1⟩)/√2，目标 |1⟩。控制位为 0 的项 |0⟩|1⟩ 不动，控制位为 1 的项 |1⟩|1⟩ 翻成 |1⟩|0⟩，故结果 (|01⟩−|10⟩)/√2=|Ψ⁻⟩——又一个最大纠缠态。</p>
+<p>4. 为什么量子门不能"拉伸"态的模长？<br>提示：测量概率必须加起来等于 100%。若 ‖U|ψ⟩‖≠‖|ψ⟩‖，归一化就破坏了，某个"概率"会大于 1 或变成负数。</p>
+<p>5. T 门作用在 |ψ⟩=(|0⟩+i|1⟩)/√2 上，Bloch 矢量怎么变？<br>提示：T 绕 z 轴转 π/4，所以 r<sub>z</sub> 不变、相对相位 φ 增加 π/4：原态在赤道 φ=π/2，变到 φ=π/2+π/4=3π/4。</p>
+</section>
+<section>
+<h3>八、工作题（带解答）</h3>
+<p><strong>题 1（幺正性检验）。</strong>对 H、X、Z、T 分别写出 U†U 并验证等于 I。</p>
+<details><summary>显示解答</summary><p>四个矩阵都满足 U†U=I：X、Z、H 是 Hermitian 且自逆（U²=I，故 U†U=I）；T=diag(1,e^{iπ/4})，T†=diag(1,e^{−iπ/4})，T†T=diag(1,1)=I。它们都是合法的量子门。</p></details>
+<p><strong>题 2（复合门手算）。</strong>计算 H T H 对 |0⟩ 的作用，给出测量概率的数值。</p>
+<details><summary>显示解答</summary><p>H|0⟩=|+⟩=(|0⟩+|1⟩)/√2；T|+⟩=(|0⟩+e^{iπ/4}|1⟩)/√2；再作用 H：HT|+⟩ = (1/2)[(1+e^{iπ/4})|0⟩+(1−e^{iπ/4})|1⟩]。振幅 |1+e^{iπ/4}|²=2+√2≈3.414，|1−e^{iπ/4}|²=2−√2≈0.586。概率 P(0)=(2+√2)/4≈0.854，P(1)=(2−√2)/4≈0.146，和为 1 ✓。注意：如果没有 T 门的相位，两个 |1⟩ 振幅会相消成 0——相位不是"白加的"，它改变干涉结果。</p></details>
+<p><strong>题 3（CNOT 矩阵）。</strong>在基 |00⟩,|01⟩,|10⟩,|11⟩ 下写出 CNOT 的 4×4 矩阵，并验证 CNOT²=I。</p>
+<details><summary>显示解答</summary><p>由第四节的效果表，矩阵为 diag 的"交换变形"：CNOT = [[1,0,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,0]]（|10⟩→|11⟩、|11⟩→|10⟩）。CNOT² = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]=I，自逆 ✓。也验证了幺正性 CNOT†CNOT=I。</p></details>
+<p><strong>题 4（H⊗H 作用）。</strong>计算 H⊗H 作用在 |Φ⁺⟩ 上，验证结果仍是 |Φ⁺⟩。</p>
+<details><summary>显示解答</summary><p>(H⊗H)|Φ⁺⟩ = (H⊗H)(|00⟩+|11⟩)/√2 = (|+⟩|+⟩+|−⟩|−⟩)/√2。而 |++⟩+|−−⟩ = ½(|00⟩+|01⟩+|10⟩+|11⟩)+½(|00⟩−|01⟩−|10⟩+|11⟩) = |00⟩+|11⟩。故 (H⊗H)|Φ⁺⟩=(|00⟩+|11⟩)/√2=|Φ⁺⟩ ✓。H⊗H 是 |Φ⁺⟩ 的稳定子。</p></details>
+<p><strong>题 5（对易性）。</strong>计算 XZ 与 ZX 的矩阵，说明二者不同。</p>
+<details><summary>显示解答</summary><p>XZ = [[0,−1],[1,0]]，ZX = [[0,1],[−1,0]] = −XZ。两门不交换（XZ≠ZX）——这正是不确定性原理（不对易算符）在量子门层面的体现：<strong>按的顺序不同，结果不同</strong>。</p></details>
+</section>
+<section><h3>前沿：量子纠错与逻辑qubit的突破</h3><p>Google Willow(2024):105qubit表面码——错误率随码距指数下降,首次实现"below threshold"。Quantinuum(2024):用离子阱+颜色码实现了12个逻辑qubit。竞赛仍在进行——超导、离子阱、中性原子三条路线。仍开放:百万qubit的工程可行性和拓扑纠错——大白话：拓扑研究"整体怎么连通、有没有洞"这类结构，拓扑纠错就是把信息藏在不被局部小毛病破坏的整体几何里——的物理实现。</p></section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Nielsen & I. Chuang, Quantum Computation and Quantum Information</strong></p>
+<p>&rarr; <strong>J. Preskill, Lecture Notes on Quantum Computation</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/bloch-sphere.html">Bloch 球</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/bloch-sphere.html">🔮 Bloch 球</a>：量子信息核心链。</p>
+<p>&rarr; <a href="/pages/entanglement.html">🪢 量子纠缠</a>：量子信息核心链。</p>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一难度层次。</p>
+</section>

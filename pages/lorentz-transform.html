@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖动速度，看时间膨胀和长度收缩" />
+  <meta property="og:title" content="Lorentz 变换 — Vibe Math" />
+  <meta property="og:description" content="拖动速度，看时间膨胀和长度收缩" />
+  <title>Lorentz 变换 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🚀 Lorentz 变换 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">拖动速度，看时间膨胀和长度收缩</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='lorentz-transform',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/light-cone.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 💫 光锥与时空</a>
+  <a href="/pages/gravitational-lens.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔭 引力透镜 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——v=0.6c 的飞船：γ=1.25，时间真的会变慢吗？</h3>
+<p>一艘飞船相对地面以 v = 0.6c 匀速飞行。先用具体数字把后果算出来。定义</p>
+<div class="formula display" data-tex="\gamma=\frac{1}{\sqrt{1-v^2/c^2}}=\frac{1}{\sqrt{1-0.36}}=\frac{1}{\sqrt{0.64}}=\frac{1}{0.8}=1.25"></div>
+<p>γ = 1.25 这个数字会反复出现：<strong>时间膨胀</strong>——飞船上过 1 秒，地面看到 1.25 秒；<strong>长度收缩</strong>——一艘地面测得长 100 m 的飞船，在地面看来只有 100/1.25 = 80 m。再举一个更惊人的：如果地面看到飞船飞了 10 年，飞船自己的钟只走了 10/1.25 = 8 年。</p>
+<p>这些结论违背直觉：为什么"运动"会偷走时间、压短尺子？答案是：<strong>不是尺和钟出了问题，而是"时间"和"空间"本身在参考系之间是混在一起换算的。</strong>Lorentz 变换就是这套换算的精确公式。</p>
+<div class="key-insight">一句话：光速不变逼出来的规矩——换个参考系看时空，时间会变慢、长度会缩短。只想懂核心思想，看到这里就够了。</div>
+</section>
+
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/light-cone.html">光锥与时空</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、从两条公理到 Lorentz 变换——为什么光速不变需要一种新的变换</h3>
+<p>先问一个"为什么"：牛顿时代的<strong>伽利略变换</strong> x' = x − vt、t' = t 有什么毛病？它假设时间绝对、空间绝对。但光速不变原理（公理 1：光速在所有惯性系中相同）直接跟它打架：在伽利略变换下，一束光相对运动参考系的速度会被"加"上参考系速度 v，光速就变了。所以伽利略变换必须被废弃。</p>
+<p>Lorentz 变换是从两条公理逼出来的唯一自洽答案：</p>
+<ul>
+<li><strong>公理 1（光速不变）</strong>：光速在所有惯性系中相同。</li>
+<li><strong>公理 2（相对性原理）</strong>：物理定律在所有惯性系中形式相同。</li>
+</ul>
+<p>从这两条出发 → 时空变换必须是<strong>线性的</strong>且保持光速 → 唯一解：</p>
+<div class="formula display" data-tex="t'=\gamma\left(t-\frac{vx}{c^2}\right),\qquad x'=\gamma(x-vt),\qquad \gamma=\frac{1}{\sqrt{1-v^2/c^2}}"></div>
+<p>y' = y、z' = z。当 v ≪ c 时 γ ≈ 1，t' ≈ t − vx/c²，x' ≈ x − vt——退化成伽利略变换（vx/c² 一项小到可忽略）。<strong>Lorentz 变换不是被"发明"的——是被逼出来的</strong>：它是仅有的、同时满足两条公理的自洽选择（完整推导见附 A）。</p>
+<div class="key-insight">拖动速度滑块看坐标轴如何倾斜。蓝色=静止参考系。红色=运动参考系——x'轴和ct'轴向中间"挤压"。这不是"空间收缩"——是不同参考系中"同时"的定义不同。</div>
+</section>
+
+<section>
+<h3>二、手算一个完整例子——两个参考系之间到底怎么换算</h3>
+<p><strong>例 1（一步步算：对一个事件的 Lorentz 变换）。</strong>设 S' 相对 S 以 v = 0.6c 沿 x 轴运动。事件 E 在 S 中坐标为 (t, x) = (4 s, 2.4×10⁸ m)。它落在什么位置？</p>
+<p>① <strong>取 γ：</strong>γ = 1/√(1−0.6²) = 1.25（开场问题算过）。</p>
+<p>② <strong>先算 vx/c² 的量纲核对：</strong>vx/c² = 0.6c × 2.4×10⁸ / c² = 0.6 × 2.4×10⁸ / c = 1.44×10⁸/3×10⁸ = 0.48 s。这是"时间校正项"，单位是秒，说明它在 t 上是不可忽略的。</p>
+<p>③ <strong>变换时间：</strong>t' = γ(t − vx/c²) = 1.25 × (4 − 0.48) = 1.25 × 3.52 = <strong>4.40 s</strong>。</p>
+<p>④ <strong>变换位置：</strong>x' = γ(x − vt) = 1.25 × (2.4×10⁸ − 0.6×3×10⁸×4) = 1.25 × (2.4×10⁸ − 7.2×10⁸) = 1.25 × (−4.8×10⁸) = <strong>−6.0×10⁸ m</strong>。</p>
+<p>⑤ <strong>核对固有时：</strong>在 S 中两参考系原点重合的事件沿此事件的间隔：Δs² = −c²t² + x² = −(3×10⁸×4)² + (2.4×10⁸)² = −1.44×10¹⁸ + 0.058×10¹⁸ ≈ −1.38×10¹⁸。在 S' 中 Δs'² = −(3×10⁸×4.40)² + (−6.0×10⁸)² = −1.74×10¹⁸ + 0.36×10¹⁸ = −1.38×10¹⁸。<strong>间隔不变 ✓</strong>。∎</p>
+<p>这个例子演示了全课的核心：变换不是"移动坐标"，而是两个参考系对<strong>同一个事件</strong>给出不同的 (t, x)，但两者通过 γ 和 v 严格换算，且间隔 ds² 保持不变。</p>
+</section>
+
+<section>
+<h3>三、三个相对论效应——从公式到具体数字</h3>
+<p><strong>时间膨胀</strong>：ΔT = γ τ₀，动钟变慢。τ₀ 是静止于参考系内的钟读数（固有时）。例：μ 子静止寿命 2.2 μs，若以 0.99c 运动，γ ≈ 7，地面测得寿命 ≈ 7 × 2.2 = 15.4 μs。</p>
+<p><strong>长度收缩</strong>：L = L₀/γ，动尺缩短。<strong>这不是</strong>"物质被压扁"——而是在运动参考系中<strong>同时</strong>测量两端的结果（附 C 证明）。例：0.99c 的 μ 子，经典算只能走 0.99c×2.2μs ≈ 0.66 km；考虑膨胀后走 0.99c×15.4μs ≈ 4.6 km——能穿透约 10 km 的大气层（这正是 μ 子能被地面观测到的原因）。</p>
+<p><strong>速度加法</strong>：u = (u' + v)/(1 + u'v/c²)。例：两束相向的 0.9c——不是 1.8c，而是</p>
+<div class="formula display" data-tex="u=\frac{0.9c+0.9c}{1+(0.9c)(0.9c)/c^2}=\frac{1.8c}{1.81}=0.994c"></div>
+<p>为什么两个"0.9c"加起来小于 c？因为速度加法不是普通加法——它由 Lorentz 变换微分而来（附 B），并且保证 |u| 永远到不了 c。</p>
+</section>
+
+<section>
+<h3>四、四维形式——时空的统一语言</h3>
+<p>把三维位置和 c 倍时间并成一个矢量 x^μ = (ct, x, y, z)。Lorentz 变换 = 保持 <strong>η_μν = diag(−1, 1, 1, 1)</strong> 的线性变换：x'^μ = Λ^μ_ν x^ν。间隔</p>
+<div class="formula display" data-tex="ds^2=\eta_{\mu\nu}\,dx^\mu dx^\nu = -c^2dt^2+dx^2+dy^2+dz^2"></div>
+<p>在 Lorentz 变换下<strong>不变</strong>——所有相对论效应（时间膨胀、长度收缩、同时性相对性）都源于这一个不变性。一旦写成四维形式，动量 p^μ = (E/c, p) 同样协变，"能量-动量守恒"就是同一个矢量的守恒。</p>
+</section>
+
+<section>
+<h3>五、关键公式</h3>
+<div class="formula display" data-tex="t' = \gamma(t - vx/c^2),\quad x' = \gamma(x - vt),\quad \gamma = \frac{1}{\sqrt{1-v^2/c^2}}"></div>
+<div class="formula display" data-tex="u = \frac{u' + v}{1 + u'v/c^2}\quad\text{(速度加法)}"></div>
+<div class="formula display" data-tex="\Delta T = \gamma\tau_0\quad\text{(时间膨胀)},\qquad L = \frac{L_0}{\gamma}\quad\text{(长度收缩)}"></div>
+</section>
+
+<section>
+<h3>六、试试看（每题附提示）</h3>
+<p><strong>1.（计算 γ）</strong> 粒子以 v = 0.6c 运动。求 γ，以及固有寿命 2 μs 的粒子在地面系中存活多久。</p>
+<p><em>提示：γ = 1/√(1−0.36) = 1.25。存活时间 ΔT = γτ₀ = 1.25 × 2 = 2.5 μs。这一步练的是"先算 γ，再代入膨胀公式"。</em></p>
+<p><strong>2.（速度加法）</strong> 火箭以 v = 0.75c 相对地面飞行，相对火箭以 u' = 0.75c 向前发射导弹。导弹相对地面的速度？若 u' = c 呢？</p>
+<p><em>提示：u = (0.75c+0.75c)/(1+0.75×0.75) = 1.5c/1.5625 = 0.96c。若 u' = c：u = (c+0.75c)/(1+0.75) = c——光速在一切参考系中不变，公式自动保证。</em></p>
+<p><strong>3.（时间膨胀/长度收缩验证）</strong> μ 子在 10 km 高空以 v = 0.999c 产生，固有寿命 τ₀ = 2.2 μs。经典计算它飞多远？相对论呢？能到地面吗？</p>
+<p><em>提示：经典 0.999c×2.2μs ≈ 0.66 km ≪ 10 km。相对论：γ = 1/√(1−0.999²) ≈ 22.4，地面寿命 Δt = γτ₀ ≈ 49 μs，飞行 ≈ 14.7 km &gt; 10 km。也可换到 μ 子系：大气收缩为 10/22.4 ≈ 0.45 km，2.2 μs 内追上。</em></p>
+<p><strong>4.（直觉）</strong> 为什么"长度收缩"不是把尺子压扁？如果你在运动的尺子旁边放一列静止的尺子，测量时最容易犯什么错？</p>
+<p><em>提示：L = L₀/γ 的推导要求"同时读取两端"（附 C 第 2 部分）。若不同时读，读到的两点不是同一物理杆——所以收缩是"同时性定义的几何后果"，不是材料应力。</em></p>
+</section>
+
+<section><h3>Thomas进动——Lorentz boost的非交换性</h3><p>两个不同方向的Lorentz <strong>boost</strong>（沿某一方向的速度变换）复合=一个boost+一个纯旋转。这个旋转叫Thomas进动——电子自旋在原子中的精细结构修正。Lorentz群的非交换性是它最微妙(也最容易忽略)的几何特征。</p></section><section><h3>前沿：Lorentz对称性的可能破缺</h3><p>某些量子引力候选理论(如Horava-Lifshitz引力)在高能破坏Lorentz对称性。Fermi-LAT和IceCube在极高能光子/中微子中搜索Lorentz破缺——至今没有发现。仍开放:Lorentz对称性是绝对的还是仅仅是低能近似？</p></section>
+
+<section>
+<h3>附A· 从光速不变原理推导 Lorentz 变换（完整推导）</h3>
+<p><strong>第1步（线性）</strong>：时空均匀性⇒变换线性；令 t=t'=0 时两原点重合，故</p>
+<div class="formula display" data-tex="x'=A(v)x+B(v)t,\qquad t'=C(v)x+D(v)t"></div>
+<p><strong>第2步（原点运动）</strong>：S' 原点 x'=0 在 S 中以速度 v 运动，即 x=vt 时 x'=0，得 B=−Av，于是 x'=A(x−vt)。</p>
+<p><strong>第3步（光速不变）</strong>：S 中的光信号满足 x=ct 或 x=−ct，在 S' 中必须为 x'=ct' 或 x'=−ct'。代入 x'=A(x−vt)、t'=Cx+Dt：</p>
+<div class="formula display" data-tex="A(c-v)=c(D+Cc),\qquad A(c+v)=c(D-Cc)"></div>
+<p>两式相加、相减得 D=A，C=−Av/c²。故</p>
+<div class="formula display" data-tex="t'=A\left(t-\frac{v}{c^2}x\right),\qquad x'=A(x-vt)"></div>
+<p><strong>第4步（相对性原理确定 A）</strong>：逆变换与正变换同形，x=A(x'+vt')。代入上两式：</p>
+<div class="formula display" data-tex="x=A\left[A(x-vt)+vA\left(t-\frac{v}{c^2}x\right)\right]=A^2\left(1-\frac{v^2}{c^2}\right)x\ \Rightarrow\ A^2=\frac{1}{1-v^2/c^2}"></div>
+<p>取 A&gt;0，得 A=γ=1/√(1−v²/c²)。唯一自洽解：</p>
+<div class="formula display" data-tex="t'=\gamma\left(t-\frac{vx}{c^2}\right),\quad x'=\gamma(x-vt),\quad y'=y,\ z'=z"></div>
+<p>可验证 v→0 时退化回伽利略变换，且 Λ^T η Λ = η。∎</p>
+</section>
+
+<section>
+<h3>附B· 速度加法公式的完整推导</h3>
+<p>设粒子在 S' 中以速度 u'=dx'/dt' 沿 x' 轴运动。微分 Lorentz 变换：</p>
+<div class="formula display" data-tex="dx'=\gamma(dx-v\,dt),\qquad dt'=\gamma\left(dt-\frac{v}{c^2}dx\right)"></div>
+<p>于是粒子在 S 中的速度 u=dx/dt 为</p>
+<div class="formula display" data-tex="u=\frac{dx}{dt}=\frac{dx'+v\,dt'}{dt'+\frac{v}{c^2}dx'}=\frac{u'+v}{1+u'v/c^2}"></div>
+<p><strong>推论1</strong>：u'=c ⇒ u=(c+v)/(1+v/c)=c——光速在一切惯性系中不变，与公理自洽。</p>
+<p><strong>推论2</strong>：|u'|&lt;c 且 |v|&lt;c ⇒ |u|&lt;c。c 是所有速度的上界。</p>
+<p><strong>推论3</strong>：|v|,|u'|≪c 时 u≈u'+v，回归伽利略加法。∎</p>
+</section>
+
+<section>
+<h3>附C· 时间膨胀与长度收缩的证明</h3>
+<p><strong>时间膨胀</strong>：令一只钟静止于 S'，其两次滴答间 Δx'=0、ΔT'=τ₀（固有时）。由逆变换</p>
+<div class="formula display" data-tex="\Delta T=\gamma\left(\Delta T'+\frac{v}{c^2}\Delta x'\right)=\gamma\,\tau_0\ \Rightarrow\ \Delta T=\gamma\tau_0&gt;\tau_0"></div>
+<p>运动钟变慢。∎</p>
+<p><strong>长度收缩</strong>：设杆静止于 S'，固有长度 L₀=Δx'。在 S 中测长度必须<strong>同时</strong>读取两端：Δt=0。由正变换</p>
+<div class="formula display" data-tex="\Delta x'=\gamma(\Delta x-v\,\Delta t)=\gamma\,\Delta x\quad(\Delta t=0)\ \Rightarrow\ L_0=\gamma L\ \Rightarrow\ L=L_0/\gamma&lt;L_0"></div>
+<p>运动杆缩短。注意：这是同时性定义不同的几何后果，杆内部无应力形变。∎</p>
+</section>
+
+<section>
+<h3>附D· 标准反例：同时性是相对的</h3>
+<p><strong>构造</strong>：车厢以速度 v 运动（S' 为车厢系）。车厢中央 C 在 t'=0 同时向车头 F（x'=+L）和车尾 B（x'=−L）发射光脉冲，两脉冲在 S' 中同时到达两端：t'_F=t'_B=L/c。由 Lorentz 变换 t=γ(t'+vx'/c²)：</p>
+<div class="formula display" data-tex="t'_F=t'_B=\frac{L}{c},\quad \text{而在 S 中}\quad t_F=\frac{\gamma L}{c}\Big(1+\frac{v}{c}\Big),\ t_B=\frac{\gamma L}{c}\Big(1-\frac{v}{c}\Big)\ \Rightarrow\ t_F&gt;t_B"></div>
+<p>即光到车头与光到车尾在 S' 中同时，在 S 中不同时——车尾的光先到（t_B&lt;t_F），"同时"的判定依赖参考系。</p>
+<p><strong>后果</strong>：同时性依赖参考系，不存在绝对的现在。这直接证伪了经典力学的绝对同时性假设——正是相对论与牛顿时空观的根本分歧。∎</p>
+</section>
+
+<section>
+<h3>附E· 工作题</h3>
+<p><strong>1.（计算 γ）</strong> 粒子以 v=0.6c 运动。求 γ，以及固有寿命 2μs 的粒子在地面系中存活多久。</p>
+<details><summary>显示解答</summary><p>γ=1/√(1−0.6²)=1/0.8=1.25。地面系寿命 Δt=γ·2μs=2.5μs。</p></details>
+<p><strong>2.（速度加法）</strong> 火箭以 v=0.75c 相对地面飞行，相对火箭以 u'=0.75c 向前发射导弹。导弹相对地面的速度？若 u'=c 呢？</p>
+<details><summary>显示解答</summary><p>u=(0.75c+0.75c)/(1+0.75×0.75)=1.5c/1.5625=0.96c。若 u'=c：u=(c+0.75c)/(1+0.75)=c——光速不变。</p></details>
+<p><strong>3.（时间膨胀/长度收缩验证）</strong> μ 子在 10km 高空以 v=0.999c 产生，固有寿命 τ₀=2.2μs。经典计算它飞多远？相对论呢？能到地面吗？</p>
+<details><summary>显示解答</summary><p>经典：0.999c×2.2μs≈0.66km≪10km，到不了地面。相对论：γ=1/√(1−0.999²)≈22.4，地面寿命 Δt=γτ₀≈49μs，飞行≈0.999c×49μs≈14.7km&gt;10km，能到达。在 μ 子系中大气厚度收缩为 10/γ≈0.45km，2.2μs 内即被追上——两系结论一致。∎</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Carroll, Spacetime and Geometry</strong></p>
+<p>&rarr; <strong>R. Wald, General Relativity</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/light-cone.html">光锥与时空</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <strong>光锥与时空</strong>：Lorentz变换保持时空间隔ds<sup>2</sup>不变——光锥将时空分为类时、类光和类空三个区域，因果结构正是Lorentz不变的直接体现。</p>
+<p>&rarr; <strong>引力透镜</strong>：光线在引力场中的偏折由广义相对论描述——在局域惯性系中Maxwell方程取狭义相对论形式，Lorentz变换是连接局部惯性系和全局坐标系的桥梁。</p>
+<p>&rarr; <strong>电磁学相关</strong>：Maxwell方程在Lorentz变换下保持形式不变——这是Einstein发展狭义相对论的历史出发点：电磁学和相对性原理的冲突必须由Lorentz变换来调和。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/lorentz-transform.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

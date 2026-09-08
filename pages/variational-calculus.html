@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Euler-Lagrange方程——最优路径的数学" />
+  <meta property="og:title" content="变分法 — Vibe Math" />
+  <meta property="og:description" content="Euler-Lagrange方程——最优路径的数学" />
+  <title>变分法 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📐 变分法 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Euler-Lagrange方程——最优路径的数学</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='variational-calculus',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/high-dim-geometry.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 📦 高维几何与测度集中</a>
+  <a href="/pages/classical-mechanics.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎢 经典力学与最小作用量 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——从千万条路里挑出最省的那一条</h3>
+<p>两点之间直线最短，但如果是滑滑梯呢？最快的路不是直线，而是一条先陡后平的曲线（摆线）。变分法就是专门回答这种问题的方法：在无数种可能的曲线里，找到让时间、路程或能量最小的那一条。</p>
+<p>物理里的"东西自然会选最省力的走法"、地图导航的最优路线，背后都是同一套思想。</p>
+<div class="key-insight">一句话：把"找最好的一条路"变成算账，看哪条路"最划算"。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/derivative.html">导数与切线</a>、<a href="/pages/riemann-integral.html">黎曼积分</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——最速降线：直线不是最快的（先算一笔账）</h3>
+<p>问题（Bernoulli, 1696）：质点只在重力下从 A=(0,0) 沿曲线滑到 B=(x₁,y₁)，哪条曲线用时最短？大多数人会猜直线——毕竟"两点之间直线最短"。但把时间算出来，直线就输了。</p>
+<p><strong>具体的账。</strong> 取 B=(1,1)，重力常数 g=1。速度由能量守恒给出：v = √(2gy)。沿曲线 y(x) 滑行的时间是</p>
+<div class="formula display" data-tex="T[y]=\int_0^{1}\frac{\sqrt{1+y'(x)^2}}{\sqrt{2gy(x)}}\,dx"></div>
+<p><strong>直线 y=x：</strong> v = √(2gx)，ds/dx = √2，故</p>
+<div class="formula display" data-tex="T_{\text{line}}=\int_0^1\frac{\sqrt{2}}{\sqrt{2gx}}\,dx=\frac{1}{\sqrt{g}}\cdot 2=2.00\quad(g=1)"></div>
+<p><strong>摆线（旋轮线）：</strong> 参数方程 x = R(θ−sinθ)、y = R(1−cosθ)，调整 R 让它恰好穿过 (1,1)。在 y=x 上取点需 1−cosθ = θ−sinθ，解得 θ* ≈ 2.41 rad，于是 R ≈ 0.575，</p>
+<div class="formula display" data-tex="T_{\text{cycloid}}=\sqrt{R/g}\,\theta^*\approx\sqrt{0.575}\cdot 2.41\approx 1.83\ (g=1)"></div>
+<p><strong>结论：</strong> 1.83 &lt; 2.00——摆线比直线快了约 8.5%。这个反直觉的数值结果，是整门变分法的入口：<strong>我们不是在一堆"候选值"里找最小，而是在一个"无穷维的曲线空间"里找最小</strong>。单变量微积分管不了这种问题，需要新的工具。</p>
+</section>
+
+<section>
+<h3>二、泛函与变分——从"函数"到"函数的函数"（直觉→严格）</h3>
+<p>微积分研究函数 y(x)；变分法研究<strong>泛函</strong>——输入是整条函数 y、输出是数：</p>
+<div class="formula display" data-tex="J[y]=\int_a^b L(x,y(x),y'(x))\,dx"></div>
+<p>（例如最速降线的 T[y] 就是 L = √(1+y'²)/√(2gy) 的泛函。）</p>
+<p><strong>极值条件怎么写？</strong> 一元函数在极值点导数为零；泛函的对应物是：若 y₀ 是极小元，则往任意方向"微扰"一点，J 值不该下降。把扰动用单参数写成 y = y₀ + εη，其中 η 是端点为零的光滑函数（η(a)=η(b)=0，保证曲线仍从 A 到 B）。定义一元函数</p>
+<div class="formula display" data-tex="\phi(\varepsilon)=J[y_0+\varepsilon\eta]"></div>
+<p>极小条件就是 φ'(0) = 0 对<strong>一切</strong> η 成立。这样"在函数空间中取极值"就被翻译成"一族一元函数的导数条件"——可算了。</p>
+<p><strong>为什么端点要求 η(a)=η(b)=0？</strong> 因为问题是"固定端点的最短曲线"，扰动不能把起点终点挪走；若允许端点移动，会出现额外的边界项（自然边界条件），那是另一套（更复杂）的理论。</p>
+</section>
+
+<section>
+<h3>三、Euler-Lagrange 方程——完整推导</h3>
+<p>设泛函 J[y] = ∫<sub>a</sub><sup>b</sup> L(x, y, y') dx 在 y₀ 处取极值。取变分 y = y₀ + ε·η，其中 η(a)=η(b)=0（固定端点）。极值条件：φ'(0) = 0 对一切 η 成立。</p>
+<p>直接计算（交换求导与积分）：</p>
+<div class="formula display" data-tex="\phi'(0) = \int_a^b \left[ \frac{\partial L}{\partial y}\eta + \frac{\partial L}{\partial y'}\eta' \right] dx"></div>
+<p>对第二项分部积分，边界项消失（η(a)=η(b)=0）：</p>
+<div class="formula display" data-tex="\phi'(0) = \int_a^b \left[ \frac{\partial L}{\partial y} - \frac{d}{dx}\frac{\partial L}{\partial y'} \right]\eta\, dx"></div>
+<p>由于 η 任意，被积函数必须处处为零（变分法基本引理）：</p>
+<div class="formula display" data-tex="\frac{\partial L}{\partial y} - \frac{d}{dx}\frac{\partial L}{\partial y'} = 0"></div>
+<p><strong>为什么这个方程配当"一切的起点"？</strong> 它把"整条曲线的极值"压成了"每一点都必须满足的一条二阶常微分方程"——无穷维问题塌缩成有限维约束。<strong>变分法基本引理</strong>"若 ∫f·η dx=0 对所有光滑 η 成立则 f≡0"是核心跳板：它保证被积函数逐点为 0，而不是"只在一个可测集合上非零"。ε→0 时，若 L 有界可积，φ(ε) 与 J 在同一点取极值。</p>
+<p><strong>物理意义。</strong> 经典力学（最小作用量原理）、几何光学（Fermat 原理）、弹性力学都归结为这一个方程。Hamilton 力学、Noether 定理、最优控制，全部从这里生长。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="\frac{\partial L}{\partial y} - \frac{d}{dx}\frac{\partial L}{\partial y'} = 0\quad(\text{Euler-Lagrange})"></div>
+<div class="formula display" data-tex="L-y'\frac{\partial L}{\partial y'}=\text{const}\quad(\text{Beltrami, } L\text{ 不显含 }x)"></div>
+<div class="formula display" data-tex="Q=\frac{\partial L}{\partial \dot{q}}\,\delta q-K\quad(\text{Noether 守恒量})"></div>
+</section>
+
+<section>
+<h3>五、例题 1——平面上两点间最短曲线是直线（一步步算完）</h3>
+<p><strong>题目。</strong> 在欧氏平面上，求从 (0,0) 到 (1,2) 的最短曲线，用 Euler-Lagrange 方程。</p>
+<p><strong>第一步：写泛函。</strong> 弧长微元 ds = √(1+y'²)dx，故</p>
+<div class="formula display" data-tex="J[y]=\int_0^1 \sqrt{1+y'(x)^2}\,dx,\qquad y(0)=0,\ y(1)=2"></div>
+<p><strong>第二步：写出 EL 方程。</strong> L = √(1+y'²) 既不显含 x 也不显含 y。∂L/∂y = 0，∂L/∂y' = y'/√(1+y'²)，故 EL 给出</p>
+<div class="formula display" data-tex="0-\frac{d}{dx}\frac{y'}{\sqrt{1+y'^2}}=0\quad\Longrightarrow\quad\frac{y'}{\sqrt{1+y'^2}}=C"></div>
+<p><strong>第三步：解方程。</strong> 上式 ⟹ y' = C√(1+y'²) ⟹ y'²(1−C²) = C² ⟹ y' = C/√(1−C²) =: m，常数斜率。</p>
+<p><strong>第四步：用边界条件定常数。</strong> y = mx+b，y(0)=0 ⟹ b=0，y(1)=2 ⟹ m=2，故</p>
+<div class="formula display" data-tex="y=2x,\qquad \text{长度}=\int_0^1\sqrt{1+4}\,dx=\sqrt{5}\approx 2.236"></div>
+<p>∎</p>
+<p><strong>为什么"最短"而不是"最长"？</strong> 同样的方程给出直线；它显然是局部极小（任何弯折都增加弧长）。这个例子展示的"解出常微分方程 + 边界条件定常数"流程，是后面一切变分问题的模板。</p>
+</section>
+
+<section>
+<h3>六、例题 2——最速降线的完整解答（一步步算完）</h3>
+<p><strong>题目。</strong> 求质点在重力下从 A(0,0) 到 B(x₁,y₁) 用时最短的曲线。速度由能量守恒 v = √(2gy)。用时泛函：</p>
+<div class="formula display" data-tex="T[y] = \int_0^{x_1} \frac{\sqrt{1+y'^2}}{\sqrt{2gy}}\, dx"></div>
+<p><strong>第一步：用 Beltrami 首积分。</strong> L 不显含 x（L = L(y,y')），故有"能量"型首积分（EL 方程的 Beltrami 形式）：</p>
+<div class="formula display" data-tex="L - y'\frac{\partial L}{\partial y'} = \text{const}"></div>
+<p><strong>第二步：代入化简。</strong> 代入 L = √(1+y'²)/√(2gy)：</p>
+<div class="formula display" data-tex="\frac{\sqrt{1+y'^2}}{\sqrt{2gy}}-\frac{y'^2}{\sqrt{2gy}\sqrt{1+y'^2}}=\frac{1}{\sqrt{2gy(1+y'^2)}}=C"></div>
+<p>整理得</p>
+<div class="formula display" data-tex="y(1+y'^2) = \frac{1}{2gC^2} \equiv 2R"></div>
+<p><strong>第三步：参数化积分。</strong> 令 y' = cot(θ/2)，则 y = 2R sin²(θ/2) = R(1−cosθ)，且 dx = dy/y' = R sinθ·(tan(θ/2))dθ = R(1−cosθ)dθ，积分得到参数方程：</p>
+<div class="formula display" data-tex="x = R(\theta - \sin\theta),\qquad y = R(1 - \cos\theta)"></div>
+<p><strong>第四步：识别曲线。</strong> 这正是<strong>摆线（旋轮线）</strong>——半径为 R 的圆滚动时，圆周上一点的轨迹。常数 R 由"曲线必须经过 B"唯一确定。∎</p>
+<p><strong>历史。</strong> Bernoulli（1696）提出的问题由 Newton、Leibniz、l'Hôpital、两兄弟 Bernoulli 各自解决，是变分法诞生的标志性事件。第一节算出的数值 1.83 &lt; 2.00 正是这条曲线的预言。</p>
+</section>
+
+<section>
+<h3>七、Noether 定理——对称性与守恒律的变分证明</h3>
+<p>Lagrangian 在变换 q → q + εδq 下不变（允许改变一个全导数）→ 守恒量：</p>
+<div class="formula display" data-tex="Q=\frac{\partial L}{\partial \dot{q}}\,\delta q-K\quad\text{(Noether 守恒量)}"></div>
+<p>其中 K 是 L 改变量的"全导数项"（若 L 完全不变则 K=0）。<strong>为什么对称性会"产出"守恒量？</strong> 因为变换不改变作用量 ⟹ J 在变分方向 δq 上的一阶变分为零 ⟹ EL 方程的某个组合变成全导数 ⟹ 某个量沿任何真实运动保持常数。</p>
+<ul>
+  <li>时间平移不变 → <strong>能量守恒</strong>（Q = 哈密顿量）。</li>
+  <li>空间平移不变 → <strong>动量守恒</strong>（Q = 广义动量）。</li>
+  <li>旋转不变 → <strong>角动量守恒</strong>。</li>
+  <li>规范不变 → <strong>电荷守恒</strong>。</li>
+</ul>
+<p>这是变分法在物理学中最灿烂的应用：一条纯数学的"对称性→守恒量"机制，同时解释力学、电磁学与粒子物理里的全部守恒定律。</p>
+</section>
+
+<section>
+<h3>八、例题 3——最小旋转面：悬链线（一步步算完）</h3>
+<p><strong>题目。</strong> 一条曲线绕 x 轴旋转，生成一个曲面，两端固定在两个圆圈上。求使曲面面积最小的曲线形状。</p>
+<p><strong>第一步：写泛函。</strong> 旋转面的面积微元 dA = 2πy·ds = 2πy√(1+y'²)dx，故</p>
+<div class="formula display" data-tex="A[y]=2\pi\int y\sqrt{1+y'^2}\,dx\quad\Longrightarrow\quad L=2\pi y\sqrt{1+y'^2}"></div>
+<p><strong>第二步：Beltrami 首积分。</strong> L 不显含 x：</p>
+<div class="formula display" data-tex="L-y'\frac{\partial L}{\partial y'}=\frac{2\pi y}{\sqrt{1+y'^2}}=\text{const}=2\pi R"></div>
+<p><strong>第三步：解一阶方程。</strong> y/√(1+y'²) = R ⟹ y² = R²(1+y'²) ⟹ y' = √(y²/R²−1)。分离变量：dy/√(y²/R²−1) = dx，积分得</p>
+<div class="formula display" data-tex="R\,\mathrm{arcosh}\frac{y}{R}=x-x_0\quad\Longrightarrow\quad y=R\cosh\frac{x-x_0}{R}"></div>
+<p><strong>第四步：识别曲线。</strong> 这是<strong>悬链线</strong>（catenary）。绕轴旋转生成的<strong>悬链面</strong>正是肥皂膜在两圆圈间张成的形状——这个"实验现象 = 变分解"的对应是变分法最直观的例子。常数 R、x₀ 由两端圆圈的位置确定。∎</p>
+<p><strong>边界效应提醒。</strong> 若两端圆圈离得太远，悬链面可能不存在（极小曲面缩成一个"领口"或断开）——这提示约束变分问题可能根本没有光滑解，是后面"病理例子"（第十节）的伏笔。</p>
+</section>
+
+<section>
+<h3>九、带约束的变分——拉格朗日乘子与反例</h3>
+<p>若泛函 J[y] 在约束 G[y]=0 下取极值，不能直接令 δJ=0。正确定法：构造 <strong>F = L + λ·G</strong>，对 F 应用 EL 方程，λ 为拉格朗日乘子。<strong>为什么 λ 是必要的？</strong> 因为在约束流形上，极小元处的变分不必对一切 η 消失，而只对"保持约束的方向"消失——λ 正是用来吸收约束曲面的"法向贡献"的。</p>
+<p><strong>经典例子</strong>：在长度固定的曲线中找面积最大者（等周问题）→ 答案是圆。这是"约束变分"最著名的结果，其证明对任意曲线族成立。</p>
+<p><strong>病理例子</strong>：泛函 J[y]=∫y²dx 在约束 ∫(y')²dx=1 下，极小元不存在（可达下确界 0 但无函数达到）——说明约束变分可能需要放宽到函数空间之外（分布、测度）。这个例子展示了变分法的边界：<strong>极值问题不一定有光滑解，需要把空间扩大</strong>。</p>
+</section>
+
+<section>
+<h3>十、Pontryagin 最大值原理——最优控制的变分法</h3>
+<p>变分法在控制论中的推广：最小化 J=∫L(x,u)dt，约束 ẋ=f(x,u)。最优控制满足 Hamiltonian 边界值问题——把 EL 方程改造成"状态 + 协态"的两点边值系统。阿波罗登月轨迹优化和现代机器人运动规划的数学基础。</p>
+<p><strong>为什么变分法不够用？</strong> 经典变分假设"控制"是光滑函数；工程里的最优控制常是开关式的（bang-bang），不可微。Pontryagin 原理用"哈密顿量最大"代替"变分为零"，允许不可微的最优控制，并给出必要条件。</p>
+</section>
+
+<section>
+<h3>十一、Plateau 问题——极小曲面</h3>
+<p>给定空间闭合曲线为边界，存在以其为边界的极小面积曲面吗？Douglas 和 Rado（1930-31）独立解决了二维 Plateau 问题→1936年Fields奖。三维以上——几何测度论（Almgren, Federer, Fleming）用整流和电流给出了解答。</p>
+<p><strong>为什么 Plateau 是变分法的"深水区"？</strong> 极小曲面的面积泛函不是严格凸的、解可能有奇点、允许的曲面类（分片光滑? Lipschitz? 整流?）本身就需要设计。这里"直接法"（极小化序列 + 弱收敛）第一次需要真正硬的分析工具——几何测度论由此诞生。</p>
+</section>
+
+<section>
+<h3>十二、直接法与近代方向——Sobolev 空间与弱解</h3>
+<p>并非所有问题都能解出欧拉-拉格朗日方程。近代<strong>直接法</strong>绕开方程，直接讨论泛函：</p>
+<ul>
+  <li>取极小化序列 → <strong>弱紧致性</strong>（Sobolev 嵌入）→ <strong>弱下半连续性</strong> → 极限是极小元。</li>
+  <li>泛函要"弱下半连续"才能保证极限元不把 J 抬高——这是凸性条件的分析化身。</li>
+  <li>解往往只在 Sobolev 空间 W^{k,p} 里（允许弱导数），不光滑。</li>
+</ul>
+<p>这一路线把变分法从"解 ODE"升级为"非线性泛函分析"，是 Plateau 问题、最优传输、图像处理的公共工具箱。</p>
+</section>
+
+<section>
+<h3>十三、关键文献</h3>
+<p>Bernoulli（1696, 最速降线问题的提出——变分法的发令枪）。Euler（1744,"Methodus inveniendi..."——Euler-Lagrange 方程的系统推导）。Lagrange（1755, 从变分原理导出力学方程）。Legendre（1786, 极值的二阶条件）。Hamilton（1834, 最小作用原理的现代形式）。Noether（1918, 对称性与守恒律定理）。Douglas &amp; Rado（1931, 二维 Plateau 问题的解决——1936年Fields奖）。Pontryagin（1962, 最优控制的最大值原理）。</p>
+</section>
+
+<section>
+<h3>十四、工作题</h3>
+<p><strong>题 1</strong>：求欧氏平面上两点间最短曲线，用 EL 方程。（完整解答见例题 1。）</p>
+<p><strong>题 2</strong>：最小旋转面——绕轴旋转连接两点的曲线，使其面积最小。（完整解答见例题 3。）</p>
+<p><strong>题 3</strong>：用变分法基本引理证明若 ∫ₐᵇ f(x)η(x)dx=0 对所有光滑 η 成立，则 f≡0。</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：取弧长参数，L=√(1+y'²) 不显含 x，Beltrami：L−y'L<sub>y'</sub>=1/√(1+y'²)=C ⟹ y'=const ⟹ y=ax+b，直线。∎</p>
+<p><strong>题 2</strong>：L=2πy√(1+y'²)。Beltrami 首积分 L−y'L<sub>y'</sub> = 2πy/√(1+y'²) = 2πR ⟹ y/√(1+y'²)=R ⟹ dy/dx = √(y²−R²)/R，积分得 y=R·cosh((x−x₀)/R)——皂膜实验的形状。（完整计算见例题 3。）∎</p>
+<p><strong>题 3</strong>：若 f(x₀)≠0，取 η 在 x₀ 附近小邻域内取 f 同号的光滑鼓包，则积分非零，矛盾。∎</p>
+</p></details>
+</section>
+
+<section>
+<h3>十五、试试看（每题附提示）</h3>
+<p><strong>试试看 1（可解的具体泛函）。</strong> 求 J[y]=∫₀¹(y'²+y)dx 在 y(0)=y(1)=0 下的极小元。<strong>提示：</strong>∂L/∂y=1、∂L/∂y'=2y'，EL 给 1−2y''=0，即 y''=1/2；解 y=x²/4+Ax+B 再定 A、B，得 y=x(x−1)/4。</p>
+<p><strong>试试看 2（Beltrami 的再应用）。</strong> 把最速降线问题的前两步（得到 2R 常数）自己再做一遍，核对第六节。<strong>提示：</strong>L=√(1+y'²)/√(2gy)，L−y'L_{y'} = 1/(√(2gy)√(1+y'²)) = C ⟹ y(1+y'²) = 1/(2gC²)。</p>
+<p><strong>试试看 3（等周问题的乘子设置）。</strong> 最大化 A[y]=∫y dx，约束长度 ∫√(1+y'²)dx = ℓ。写出 F 与对应的 EL。<strong>提示：</strong>F = y + λ√(1+y'²)；∂F/∂y' = λy'/√(1+y'²)；EL: 1 − λ d/dx(y'/√(1+y'²)) = 0。左端可整理成"曲率 = 常数"，即圆。</p>
+<p><strong>试试看 4（Noether 验证）。</strong> 自由粒子 L = ẋ²/2 关于空间平移不变，验证动量守恒。<strong>提示：</strong>δq = ε（平移），K=0（L 不变），Q = (∂L/∂ẋ)·1 = ẋ，故速度 = 动量 = 常数。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>I. M. Gelfand &amp; S. V. Fomin, Calculus of Variations</strong></p>
+<p>&rarr; <strong>B. Dacorogna, Introduction to the Calculus of Variations</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/derivative.html">导数与切线</a>、<a href="/pages/riemann-integral.html">黎曼积分</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/operator-algebras.html">🔮 算子代数</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：同一学科分类「分析」。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：同一学科分类「分析」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/variational-calculus.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

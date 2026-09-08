@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖拽三角形顶点：内角和 <180°，面积 = π−内角和" />
+  <meta property="og:title" content="双曲几何与庞加莱圆盘 — Vibe Math" />
+  <meta property="og:description" content="拖拽三角形顶点：内角和 <180°，面积 = π−内角和" />
+  <title>双曲几何与庞加莱圆盘 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🥏 双曲几何与庞加莱圆盘 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">拖拽三角形顶点：内角和 <180°，面积 = π−内角和</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='hyperbolic-geometry',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/symplectic-geometry.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🌊 辛几何</a>
+  <a href="/pages/algebraic-K-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🔧 代数K理论 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——生活在圆盘里：那里"直线"会弯、三角形会瘦、平行线多到数不清</h3>
+<p>想象一个二维世界，居民全都住在一个<strong>圆盘</strong>内部，圆盘的边界是"无穷远"——永远走不到，就像我们永远走不到宇宙尽头。这个世界的"直线"（最短路径，数学家叫<strong>测地线</strong>）不是笔直的，而是<strong>与圆盘边界垂直相交的圆弧</strong>。你朝"正前方"一直走，走的是一条弧线，却永远到不了边界——边界在无穷远处。</p>
+<p>这就是<strong>庞加莱圆盘</strong>：双曲几何最著名的模型。在这里，欧几里得的直觉一条条失效：</p>
+<ul>
+<li>三角形的内角和 <strong>小于 180°</strong>（越大的三角形越"瘦"）；</li>
+<li>过直线外一点，可以作<strong>无穷多条</strong>与该直线不相交的"平行线"（欧几里得说只有一条！）；</li>
+<li>三角形的面积有上界 π，最大的是"理想三角形"（顶点全在无穷远边界上）；</li>
+<li>每个点附近的"空间密度"越靠近边界越密——同一张圆盘图，越靠边的地方实际"面积越大"。</li>
+</ul>
+<p>这个奇怪的世界不是幻想：它是数学史上第一个被认真对待的"非欧几何"。欧几里得的第五公设（平行公设）两千年来被无数人尝试证明，19 世纪 Lobachevsky、Bolyai（以及秘而不宣的 Gauss）独立发现：<strong>否定它也能得到完全自洽的几何</strong>。后来 Klein、Poincaré 给出优雅的模型，Beltrami 证明它与欧氏几何同样"可靠"（相对相容性）。双曲几何由此开启了"几何可以不止一种"的现代观念，并最终长成黎曼几何、相对论时空与低维拓扑的基石。</p>
+<div class="key-insight">洞察：庞加莱圆盘是"负曲率空间"的平面地图：度量 ds = 2|dz|/(1−|z|²) 让边界方向"空间无限"。圆盘保角（双曲角 = 欧氏角）所以角度可以直接量；测地线是垂直于边界的圆弧；曲率处处 −1。高斯–博内定理把"内角和亏欠"与"面积"焊在一起：面积 = π −（内角和）。这个等式是本课画布的核心。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/geodesic.html">测地线</a>（"直线=最短路径"的现代观点）、<a href="/pages/complex-plane.html">复平面</a>（单位圆盘 = |z|&lt;1）。若好奇"负曲率"与黎曼几何的关系可顺带看 <a href="/pages/curvature.html">曲率</a> 课。</p></div>
+
+<section>
+<h3>一、一个具体问题——第五公设：两千年攻不破的"显然"</h3>
+<p>欧几里得《几何原本》的五条公设里，前四条朴素到近乎废话（"任意两点可连一直线"……），第五条却长得可疑：</p>
+<div class="formula display" data-tex="\text{过直线外一点，恰有一条直线与之平行}\qquad(\text{第五公设 / 平行公设})"></div>
+<p>两千年来数学家们相信它"理应"是定理，拼命想从前四条推出它。最有名的失败者是 Saccheri（1733）：他假设第五公设<strong>不成立</strong>想推出矛盾，却一路推出了自洽的"奇怪几何"（三角形内角和小于 180°），在离发现只差一步时写道"这违背直线的本性"而放弃。Lambert 也走到边缘又退回去。这些"失败"其实已经握住了答案——只是没人敢相信几何可以不唯一。</p>
+<p>19 世纪 20–30 年代，Lobachevsky（俄国）与 Bolyai（匈牙利）先后发表"虚几何"，Gauss 在私人信件中承认自己早已发现但不敢发表（怕"Boeotia 人的叫嚷"）。随后是决定性的一步——<strong>模型</strong>：</p>
+<ul>
+<li><strong>Beltrami（1868）：</strong> 在伪球面（负曲率曲面）上实现双曲几何的局部模型，并给出圆盘/Klein 投影模型——把双曲几何"翻译"进欧氏几何内部，证明：<strong>只要欧氏几何无矛盾，双曲几何也无矛盾</strong>（相对相容性）。</li>
+<li><strong>Klein（1871）与 Poincaré（1882）：</strong> 给出更优雅的模型；庞加莱圆盘<strong>保角</strong>（不保长，但角度精确），且与复分析天然接轨——Möbius 变换、模形式、极限集全部住进这个圆盘。</li>
+</ul>
+<p><strong>为什么这改变了数学？</strong> 第五公设之争的落幕意味着：几何的公理不是"关于唯一真实空间的真理"，而是<strong>可以选择的规则</strong>。黎曼随即发明任意曲率的流形几何；爱因斯坦的相对论（引力 = 时空弯曲）用的正是这套"弯曲几何"。一门"反直觉"的纯数学，百年后成了物理的基础语言——这是数学"无用之用"最著名的案例。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——圆盘里的度量与测地线</h3>
+<p><strong>圆盘的度量。</strong> 庞加莱圆盘 D={z:|z|&lt;1} 上，双曲弧长元是</p>
+<div class="formula display" data-tex="ds=\frac{2\,|dz|}{1-|z|^{2}}\qquad(\text{越靠边界，同样 }|dz|\text{ 越“长”})"></div>
+<p>在 0 附近 ds≈2|dz|（近似欧氏，只是放大 2 倍）；越靠近边界分母越小、ds 越大——所以边界在无穷远处：从 0 走到半径 r 的双曲距离是</p>
+<div class="formula display" data-tex="d(0,r)=2\operatorname{arctanh} r=\ln\frac{1+r}{1-r}\xrightarrow{r\to 1^{-}}\infty"></div>
+<p>沿一条直径走完需要<strong>无穷长的脚步</strong>——圆盘里没有"边界"可以到达。</p>
+<p><strong>测地线 = 垂直于边界的圆弧。</strong> 圆盘的双曲"直线"是单位圆的正交圆弧（含直径）。为什么？可以验证：这样的圆弧长度在该度量下局部最短；也可以从等距群看：保持圆盘的 Möbius 变换（庞加莱变换）是等距，它们把测地线送到测地线，而把"0 处的欧氏直线"（直径）送到正交圆弧——测地线的形状因此被等距群完全确定。</p>
+<p><strong>保角性（共形）。</strong> 圆盘模型 ds 是 |dz| 的标量倍，所以双曲角度 = 欧氏角度。<strong>角度可以直接在图上量</strong>——这是庞加莱圆盘比 Klein 模型方便的地方（Klein 模型测地线是直线但不保角）。本课画布的量角器正是利用这一点。</p>
+</section>
+
+<section>
+<h3>三、例题 1——距离计算：从圆心走向边界要走多远（一步步算完）</h3>
+<p><strong>题目。</strong> (a) 计算 0 到 1/2（实轴上）的双曲距离；(b) 说明为什么任何点都到不了边界。</p>
+<p><strong>第一步：沿径向积分。</strong> 从 0 到 r 沿实轴的测地线（直径）上，ds=2dx/(1−x²)：</p>
+<div class="formula display" data-tex="d(0,r)=\int_0^r\frac{2\,dx}{1-x^2}=2\operatorname{arctanh} r=\ln\frac{1+r}{1-r}"></div>
+<p><strong>第二步：(a) 代入 r=1/2。</strong></p>
+<div class="formula display" data-tex="d(0,\tfrac12)=\ln\frac{1+\tfrac12}{1-\tfrac12}=\ln 3\approx 1.0986\qquad\blacksquare"></div>
+<p><strong>第三步：(b) 让 r→1。</strong> (1+r)/(1−r)→∞，故 d→∞——<strong>边界在无穷远</strong>。欧氏视角里"圆内有限"，双曲度量把它撑成无限大。∎</p>
+<p><strong>第四步：尺度感。</strong> 双曲距离 1 的点在 r = tanh(1/2) = (e−1)/(e+1) ≈ 0.462 处；双曲距离 2 在 r≈0.964；双曲距离 5 在 r≈0.9999。靠近边界的"一毫米"欧氏距离，双曲地说可能是"一光年"——庞加莱圆盘像是把无穷远压进了一个有限圆，越靠边压缩得越狠。</p>
+</section>
+
+<section>
+<h3>四、例题 2——三角形的瘦身：内角和、面积与 π（一步步算完）</h3>
+<p><strong>题目。</strong> (a) 在圆盘里取三个边界点（理想顶点），求其三角形内角和与面积；(b) 一般三角形内角和能多大？</p>
+<p><strong>第一步：理想三角形。</strong> 三个顶点都在边界（无穷远处）的三角形，每个内角都是 0（两条"直线"在无穷远点相遇的夹角趋于 0）：</p>
+<div class="formula display" data-tex="\text{内角和}=0^{\circ},\qquad \text{面积}=\pi-0=\pi\qquad(\text{高斯–博内，}K=-1)</div>
+<p><strong>第二步：高斯–博内公式（单位负曲率）。</strong> 对双曲三角形，</p>
+<div class="formula display" data-tex="\alpha+\beta+\gamma=\pi-\operatorname{Area}(\Delta)\qquad\Longleftrightarrow\qquad \operatorname{Area}(\Delta)=\pi-(\alpha+\beta+\gamma)"></div>
+<p><strong>第三步：(b) 上界。</strong> 面积 ≥0 ⟹ 内角和 ≤π=180°；面积最大 π 只在理想三角形（退化极限）达到。<strong>双曲三角形的面积永远不会超过 π</strong>——不管你把顶点拖得多"大"（画布上试试：往边界拖，三角形变瘦但面积最多到 ~3.14）。∎</p>
+<p><strong>第四步：对比欧氏。</strong> 欧氏三角形面积无界、内角和恒为 180°；球面（正曲率）三角形面积 = 内角和 − π、无上界；双曲是第三种也是最后一种二维常曲率几何（曲率 0、+1、−1 三兄弟），由高斯的《绝妙定理》统一为"内蕴曲率"的语言。∎</p>
+<p><strong>第五步：密铺的伏笔。</strong> 因为面积有界，你可以在圆盘里放<strong>无限多</strong>个全等三角形/正多边形而不溢出——正七边形以每顶点 3 个的方式密铺圆盘（{7,3} 密铺），就是 Escher 名画《圆极限 III》的数学原形；密铺的"无穷尽头"呈现分形般的极限集。</p>
+</section>
+
+<section>
+<h3>五、严格陈述——圆盘模型的核心定理</h3>
+<ul>
+<li><strong>模型。</strong> D={z:|z|&lt;1}，ds=2|dz|/(1−|z|²)。曲率恒为 −1。</li>
+<li><strong>测地线。</strong> 与单位圆正交的圆弧与直径。任意两点间唯一。</li>
+<li><strong>等距群。</strong> 保持 D 的 Möbius 变换 z ↦ e^{iθ}(z−a)/(1−āz)（|a|&lt;1）构成全部（定向）等距；它 3-传递地作用在边界上。</li>
+<li><strong>上半平面模型。</strong> H={z:Im z&gt;0}，ds=|dz|/Im z，与圆盘由 Cayley 变换共形等价；模形式（→ <a href="/pages/modular-forms.html">模形式</a> 课）住在上半平面。两个模型是同一几何的两张地图。</li>
+<li><strong>高斯–博内。</strong> 对双曲三角形（及多边形）：面积 = (n−2)π − Σ内角（n=3 时即 π−Σ）。推论：内角和 &lt; π、面积 ≤ π。</li>
+<li><strong>平行公设的图景。</strong> 过直线 ℓ 外一点 r：有<strong>无穷多条</strong>直线与 ℓ 不相交（它们夹在两条"极限平行线"之间，那两条在无穷远处与 ℓ 相遇）；恰好一条与 ℓ 垂直（垂线）。欧氏"恰有一条"被"一束"取代。</li>
+<li><strong>与黎曼几何。</strong> 双曲几何 = 常负曲率 −1 的完备单连通空间 H²；任何完备、单连通、常负曲率曲面都等距于 H²（黎曼覆盖理论）。亏格 ≥2 的曲面都带有双曲度量（单值化定理）——双曲几何因此统治了"多洞曲面"的世界。→ <a href="/pages/riemann-surface.html">黎曼面</a>、<a href="/pages/geodesic.html">测地线</a> 课。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="ds=\frac{2|dz|}{1-|z|^{2}}\ (\text{圆盘});\qquad ds=\frac{|dz|}{\operatorname{Im} z}\ (\text{上半平面});\qquad K=-1"></div>
+<div class="formula display" data-tex="d(0,r)=2\operatorname{arctanh} r=\ln\frac{1+r}{1-r}\xrightarrow{r\to1}\infty"></div>
+<div class="formula display" data-tex="\operatorname{Area}(\Delta)=\pi-(\alpha+\beta+\gamma);\qquad \text{内角和}<\pi;\qquad \text{Area}\le\pi"></div>
+<div class="formula display" data-tex="\text{等距： }z\mapsto e^{i\theta}\frac{z-a}{1-\bar a z}\ (|a|<1);\qquad \text{测地线 }\perp\text{ 边界}"></div>
+</section>
+
+<section>
+<h3>七、延伸——负曲率世界的现代足迹</h3>
+<ul>
+<li><strong>相对论与洛伦兹模型。</strong> 狭义相对论的速度空间是双曲的：两个速度的"夹角"用快速性（rapidity）度量，洛伦兹变换就是双曲旋转。双曲几何的另一个模型（Minkowski 模型）把时间-空间与负曲率直接挂钩。→ <a href="/pages/lorentz-transform.html">Lorentz 变换</a>、<a href="/pages/light-cone.html">光锥</a> 课。</li>
+<li><strong>黎曼面与模空间。</strong> 亏格 ≥2 的黎曼面都是 H/Γ（Γ 是等距群的离散子群，即"密铺的对称群"）；模空间与 Teichmüller 空间的几何就是双曲几何。模形式的很多深结果来自这个"上半平面上的算术群作用"。→ <a href="/pages/riemann-surface.html">黎曼面</a>、<a href="/pages/modular-forms.html">模形式</a> 课。</li>
+<li><strong>三维与几何化。</strong> Thurston 的几何化猜想说每个三维流形可分解成八种几何的块，其中<strong>双曲几何 H³</strong> 是最丰富的一块；Perelman 2002–03 用 Ricci 流证明之（含庞加莱猜想）。"负曲率"从二维平面升格为三维宇宙的形状。→ <a href="/pages/poincare-conjecture.html">庞加莱猜想</a> 课。</li>
+<li><strong>群论：Gromov 双曲群。</strong> 把"负曲率"翻译成度量空间的语言（三角形"瘦"），得到 Gromov 双曲空间与双曲群——字度量下"像树一样分叉"的群。→ <a href="/pages/geometric-group-theory.html">几何群论</a> 课。</li>
+<li><strong>复分析与分形。</strong> 克莱因群的极限集（圆盘密铺的"无穷尽头"）产生分形；Jørgensen、Thurston 用双曲体积研究三维流形。庞加莱圆盘也是 Hardy 空间、Blaschke 乘积等复分析理论的舞台。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——四个"直觉陷阱"</h3>
+<p><strong>陷阱 1："双曲几何自相矛盾，因为三角形内角和必须等于 180°"？</strong> "必须"来自欧氏直觉，不是逻辑。Beltrami 的模型证明：若欧氏几何无矛盾，双曲几何也无矛盾——两者是<strong>不同的公理系统</strong>，各自自洽。第五公设之争的遗产恰恰是：几何没有唯一的"真"。</p>
+<p><strong>陷阱 2："圆盘里的弧是弯的，所以'直线'是弯的？"</strong> 在圆盘模型的<strong>图上</strong>它是弧，但在<strong>双曲度量本身</strong>里它是"直线"（测地线 = 最短路径）。"弯"是地图投影的错觉——就像墨卡托地图上格陵兰被拉变形。度量决定什么是直线：把圆盘换成保角的另一张地图（上半平面），同一批测地线看起来又不一样。</p>
+<p><strong>陷阱 3："保角 ⟹ 保长，所以可以直接量长度"？</strong> 不。圆盘保角（角度准）但<strong>不保长</strong>（ds 带权重 2/(1−|z|²)）也不保面积。画布上能量角（保角性）但不能直接用尺子量边——边长要用公式 d=2 arctanh|…| 算。</p>
+<p><strong>陷阱 4："过线外一点有两条平行线（极限平行），所以平行线唯一性只是'2 不是 1'"？</strong> 更准确：过点 r 与直线 ℓ 不相交的直线有<strong>无穷多条</strong>；其中两条是"极限平行"（在无穷远与 ℓ 相遇/渐近），其余与 ℓ 既不交也不渐近（叫超平行）。欧氏与双曲的差别不是 1 对 2，而是 1 对 <strong>无穷</strong>。</p>
+</section>
+
+<section>
+<h3>九、当前状态——双曲几何的现代疆域</h3>
+<ol>
+<li><strong>双曲三维流形。</strong> 双曲体积是最强的不变量（Mostow 刚性 1968：同体积同构！）；Thurston 的几何化与 Perelman 的 Ricci 流证明让"宇宙的双曲块"成为 3-流形理论的日常。体积猜想的解析侧（量子不变量 → 双曲体积）仍开放。</li>
+<li><strong>Teichmüller 与模空间。</strong> 亏格 g 曲面的 Teichmüller 空间是 6g−6 维的双曲型复流形；其边界紧化、地震映射、WP 度量等仍是活跃领域，与动力系统（Thurston 拉绳）交叉。</li>
+<li><strong>Gromov 双曲与负曲率度量空间。</strong> 双曲群的字问题可解、指数增长、边界是拓扑空间——"负曲率"以粗几何的方式统治群论。CAT(0) 与双曲之间的边界地带仍在开垦。</li>
+<li><strong>应用回流。</strong> 复杂网络嵌入双曲圆盘（树状结构"自然"地住在负曲率里）、量子引力中的 AdS/CFT（反德西特空间 = 双曲，与共形场论的边界对应）——双曲几何在 21 世纪从纯数学重新走向物理与数据科学。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Lobachevsky (1829)</strong>：<em>"论几何基础"</em>——双曲几何的发表（俄国《喀山通讯》）。</li>
+<li><strong>Bolyai (1832)</strong>：<em>"绝对空间的科学"</em>——独立发现（附于父亲著作的附录）。</li>
+<li><strong>Beltrami (1868)</strong>：伪球面与圆盘/Klein 模型的论文——双曲几何的相容性证明（相对欧氏几何）。</li>
+<li><strong>Klein (1871)</strong>：用射影几何统一三种常曲率几何（Erlangen 纲领的序曲）。</li>
+<li><strong>Poincaré (1882)</strong>：圆盘模型与 Fuchs 群——双曲几何与复分析、群论的第一次大结合。</li>
+<li><strong>Mostow (1968)</strong>：刚性定理——双曲流形由体积/基本群决定。</li>
+<li><strong>Thurston (1970s–80)</strong>：几何化猜想与双曲流形理论——《三维流形的几何与拓扑》讲义。</li>
+<li><strong>Gromov (1987)</strong>：<em>"Hyperbolic groups"</em>——双曲群，负曲率的群论化。</li>
+<li><strong>Perelman (2002–03)</strong>：Ricci 流证明几何化猜想（含庞加莱猜想）——双曲块在 3-流形中的统治地位被确认。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——距离、面积与平行</h3>
+<p><strong>题 1（径向距离）。</strong> 计算双曲距离 d(0, 1/3)。<strong>提示：</strong>ln((1+1/3)/(1−1/3)) = ln 2 ≈ 0.693。</p>
+<p><strong>题 2（到边界）。</strong> 一个点在 r=0.9 处，它到圆心还有多远？<strong>提示：</strong>d(0,0.9)=ln(1.9/0.1)=ln 19≈2.944——欧氏半径只差 0.1，双曲距离却接近 3 个"单位"，因为越靠边 ds 越大。</p>
+<p><strong>题 3（面积上界）。</strong> 证明双曲三角形面积 ≤ π，并指出取等的"极限"对象。<strong>提示：</strong>面积=π−Σ角≥0（角非负）；取等需 Σ角=0 ⟹ 理想三角形（顶点全在边界）。</p>
+<p><strong>题 4（{7,3} 密铺）。</strong> 正七边形密铺圆盘、每顶点 3 个（内角 120°=2π/3）。求每个正七边形的双曲面积。<strong>提示：</strong>多边形高斯–博内：面积=(n−2)π−nθ = 5π−7·(2π/3)=5π−14π/3=π/3≈1.047。每顶点 3 个七边形 ⟹ 顶角 2π/3，确实可行且面积为正。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：ln 2 ≈ 0.693。∎</p>
+<p><strong>题 2</strong>：ln 19 ≈ 2.944。∎</p>
+<p><strong>题 3</strong>：见提示：面积 = π−(α+β+γ) ≤ π，等号只在理想三角形（退化）取到。∎</p>
+<p><strong>题 4</strong>：每个七边形面积 π/3；Escher《圆极限 III》画的就是它（及其对偶密铺）。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布拖顶点）。</strong> 拖动画布的三角形顶点：内角和实时显示（恒 &lt;180°），面积 = π−内角和 同步更新。把三个顶点都往边界拖：内角和 → 0、面积 → π——那就是理想三角形。</p>
+<p><strong>试试看 2（平行线风暴）。</strong> 在圆盘里画一条"直线"（测地线弧）和一个线外点 r：过 r 能作多少条不与该直线相交的测地线？提示：介于两条"极限平行线"（各自渐近该直线的一个无穷远端点）之间的整个扇形都是——无穷多条。欧氏只给一条，双曲给一束。</p>
+<p><strong>试试看 3（等距的魔术）。</strong> 圆盘的等距变换 z↦(z−a)/(1−āz) 把 0 送到 a：整幅测地线图案被"平移"但仍保角保距。想象沿着一条测地线"走"——圆盘中心会跟着移动，边界永远够不到。提示：这就是"圆盘里没有尽头"的等距语言。</p>
+<p><strong>试试看 4（与曲率课对照）。</strong> 在 <a href="/pages/curvature.html">曲率</a> 课里，高斯曲率 K 由内角和亏欠测量；本课 K≡−1，故内角和亏欠 = 面积（无单位缩放差）。球面 K=+1 时内角和 &gt;180°——把本课的三角形搬到球面上，直觉会再次翻转。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J. Anderson, Hyperbolic Geometry</strong>（Springer，本科生可读的现代导论）</p>
+<p>&rarr; <strong>R. Bonola, Non-Euclidean Geometry</strong>（历史经典——第五公设两千年的完整故事）</p>
+<p>&rarr; <strong>W. Thurston, Three-Dimensional Geometry and Topology</strong>（双曲三维的圣经，前几章是二维的优雅导论）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.14（几何）与 IV.9（微分几何）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/geodesic.html">测地线</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/geodesic.html">📏 测地线</a>：双曲的"直线"是测地线的特例（负曲率）。</p>
+<p>&rarr; <a href="/pages/curvature.html">🔍 曲率</a>：高斯–博内把内角和亏欠与曲率焊在一起。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🌐 黎曼面</a>：亏格 ≥2 的黎曼面 = 上半平面/圆盘模离散等距群。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎼 模形式</a>：模群住在双曲上半平面上，模形式是它的函数。</p>
+<p>&rarr; <a href="/pages/geometric-group-theory.html">🧊 几何群论</a>：Gromov 把负曲率变成群的语言（双曲群）。</p>
+<p>&rarr; <a href="/pages/lorentz-transform.html">💫 Lorentz 变换</a>：双曲旋转就是相对论的速度加法（Minkowski 模型）。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/hyperbolic-geometry.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

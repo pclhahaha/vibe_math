@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="从联络曲率到禁闭：四维规范场的千禧年构造问题" />
+  <meta property="og:title" content="Yang–Mills 与质量缺口 — Vibe Math" />
+  <meta property="og:description" content="从联络曲率到禁闭：四维规范场的千禧年构造问题" />
+  <title>Yang–Mills 与质量缺口 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⚗️ Yang–Mills 与质量缺口 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">从联络曲率到禁闭：四维规范场的千禧年构造问题</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='yang-mills-mass-gap',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/higgs-mechanism.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 💎 Higgs 机制</a>
+  <a href="/pages/knot-invariant.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🪢 纽结不变量 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把"整体对称"升级成"处处可变的对称"，代价是深刻的非线性的世界</h3>
+<p>Maxwell 电磁理论有一个优雅的秘密：它可以被理解为<strong>U(1) 规范理论</strong>——要求理论在每一点允许独立的相位旋转（局部对称），就"被迫"引入电磁势 A 与场强 F=dA。1954 年，杨振宁与 Mills 问：若把 U(1)（一维旋转）换成非交换群 SU(2)（自旋空间的旋转，→ <a href="/pages/representation-theory.html">群表示论</a> 课）会怎样？答案是一场灾难与一次重生：</p>
+<div class="formula display" data-tex="\mathcal{L}_{\mathrm{YM}}=-\frac14\operatorname{Tr}(F_{\mu\nu}F^{\mu\nu}),\qquad F=dA+A\wedge A\qquad(\text{非阿贝尔：场自带电荷})"></div>
+<p>多了 A∧A 这一项——规范场<strong>自己与自己作用</strong>（胶子带色荷），理论立刻非线性。这个 Yang–Mills 理论后来成为强相互作用（QCD）与电弱统一理论的骨架，但也留下了一个悬而未决的数学问题：</p>
+<p><strong>质量缺口（mass gap）。</strong> 微扰论里 Yang–Mills 场的量子是无质量的（像光子），可实验中的强子（质子 938 MeV、ρ 介子 780 MeV）却有实在的质量——而 QCD 的拉氏量里根本没有质量参数！质量的来源是<strong>非微扰</strong>的：胶子自耦合导致夸克禁闭、色通量管绷紧、低能谱出现能隙。把这件事变成严格数学（四维 Yang–Mills 量子场论的存在性 + 谱间隙为正），就是克雷研究所千禧年七题中唯一的量子场论问题——<strong>Yang–Mills 存在性与质量缺口</strong>。</p>
+<div class="key-insight">洞察：Yang–Mills 的数学核心是"非阿贝尔联络的量子化"。经典一侧完全成熟（纤维丛上的联络与曲率、→ <a href="/pages/fiber-bundle.html">纤维丛</a>、<a href="/pages/differential-forms.html">微分形式</a> 课）；量子一侧微扰论成熟（费曼图、重整化、渐近自由）；<strong>非微扰的严格构造</strong>却卡了半个世纪——格点规范理论给了物理上几乎确定的答案（质子质量被数值算到 1% 内），数学证明仍付之阙如。"物理远超数学"在此达到极致。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/fiber-bundle.html">纤维丛</a>（联络=平行移动）、<a href="/pages/differential-forms.html">微分形式</a>（曲率 2-形式）、<a href="/pages/feynman-diagram.html">费曼图</a>（路径积分与微扰）、<a href="/pages/standard-model.html">标准模型</a>（为何重要）。量子力学背景见 <a href="/pages/uncertainty.html">不确定性</a> 等课。</p></div>
+
+<section>
+<h3>一、一个具体问题——千禧年陈述到底要求什么</h3>
+<p><strong>Clay 问题的精确要求（Jaffe–Witten 2000）：</strong> 对四维时空与任意紧致单纯李群 G（如 SU(N)），构造满足以下性质的量子 Yang–Mills 理论，并证明<strong>质量缺口</strong>：</p>
+<ul>
+<li><strong>存在性：</strong> 满足 Wightman 公理（或等价物）的非平凡四维量子场论——有希尔伯特空间、洛伦兹不变的态空间、场算符、正定性与局部性；理论重现微扰展开（渐近自由）。</li>
+<li><strong>质量缺口：</strong> 哈密顿量的谱在真空之上有空隙：最低激发能量 &gt; 0（相关函数在欧氏空间指数衰减 e^{−m|x|}）。</li>
+</ul>
+<p><strong>物理背景（为什么相信存在）：</strong></p>
+<ul>
+<li><strong>微扰：</strong> 't Hooft–Veltman（1971）证明 Yang–Mills 可重整化；Gross–Wilczek、Politzer（1973）发现<strong>渐近自由</strong>——耦合常数随能量升高而变小，解释为何 QCD 高能端可用微扰论、低能端禁闭。</li>
+<li><strong>非微扰（Wilson 1974）：</strong> 格点规范理论在欧氏格点上给出<strong>严格定义</strong>的截断理论；强耦合展开证明<strong>面积律 ⟹ 禁闭</strong>（例题 2）。</li>
+<li><strong>数值（Durr 等 2008，Science）：</strong> 格点 QCD 从第一性原理算出质子、π 介子等强子质量，与实验吻合到百分级——物理上"理论正确"已无悬念。</li>
+</ul>
+<p>数学上缺的是<strong>连续极限的存在性证明</strong>（格点间距 →0 时理论的重整化群极限）与谱间隙的严格下界。这正是问题被称为"构造性量子场论最后一块拼图"的原因。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——为什么"自耦合"会造出质量</h3>
+<p><strong>联络 = 平行移动（→ <a href="/pages/fiber-bundle.html">纤维丛</a> 课）。</strong> 规范势 A 是主丛上的联络 1-形式；曲率（场强）F=dA+g[A,A]。阿贝尔时 [A,A]=0（光子不携带电荷，电磁波自由传播、无质量）；非阿贝尔时胶子带色荷，自身是源：</p>
+<div class="formula display" data-tex="D_\mu F^{\mu\nu}=0,\qquad D=\partial+g[A,\ \cdot\ ]\qquad(\text{非线性的场方程})"></div>
+<p><strong>禁闭的物理图像。</strong> 两个色荷之间的场线不散开（像 QED 的 1/R），而是被胶子自耦合"拧成一根<strong>色通量管</strong>"：势能 V(R)≈σR 线性增长。拉开夸克需要无限能量 ⟹ 夸克永远被禁闭在强子里（夸克禁闭），而通量管的张力 σ 给出正的质量尺度——<strong>质量缺口是禁闭的谱表现</strong>。</p>
+<p><strong>跑动耦合。</strong> 渐近自由意味着"短距离（高能）弱、长距离（低能）强"：量子涨落让耦合在红外爆炸。质量缺口出现的能量尺度由维数转置（dimensional transmutation）决定：经典无质量的理论产生一个非微扰质量标度 Λ_QCD≈200 MeV——"无质量参数的拉氏量造出有质量的粒子谱"，这正是问题名字里"质量"的出处。</p>
+</section>
+
+<section>
+<h3>三、例题 1——阿贝尔 vs 非阿贝尔：场强展开逐项对照（一步步算完）</h3>
+<p><strong>题目。</strong> 把 U(1) 与 SU(2) 的场强并列展开，指出非线性项的出现位置。</p>
+<p><strong>第一步：阿贝尔。</strong> A 是 1 个分量场：F=∂_μA_ν−∂_νA_μ。场方程 ∂_μF^{μν}=0 <strong>线性</strong>——叠加原理成立（光不散射光，到经典阶）。</p>
+<p><strong>第二步：非阿贝尔。</strong> A=A^a T^a（a=1,2,3，T^a 是 SU(2) 生成元），分量场强</p>
+<div class="formula display" data-tex="F^{a}_{\mu\nu}=\partial_\mu A^{a}_{\nu}-\partial_\nu A^{a}_{\mu}+g\,f^{abc}A^{b}_{\mu}A^{c}_{\nu}\qquad(f^{abc}=\varepsilon^{abc}\ \text{对 SU(2)})"></div>
+<p>第三项来自 A∧A；ε^{abc} 使 A¹A² 项出现在 F³ 里——<strong>不同"颜色分量"互相缠绕</strong>。</p>
+<p><strong>第三步：场方程。</strong> D_μF^{aμν}=∂_μF^{aμν}+gε^{abc}A^b_μF^{cμν}=0：第二项 = "胶子电流"——胶子场自己是色流的源。∎</p>
+<p><strong>第四步：读结论。</strong> 非线性（自耦合）⟹ 没有自由传播的无质量粒子解 ⟹ 微扰的"胶子"只是计算工具，真实谱由禁闭决定。U(1) 的整个故事（光子无质量、库仑 1/R）在非阿贝尔里都要重写——这就是 Yang–Mills 与 Maxwell 的本质差异，也是质量缺口的种子。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——格点强耦合：Wilson 圈的面积律与禁闭（论证概要）</h3>
+<p><strong>题目。</strong> 在格点规范理论中说明：强耦合下 Wilson 圈满足面积律，从而势能线性增长（禁闭）。</p>
+<p><strong>第一步：格点作用量与 Wilson 圈。</strong> 每根键上放群元 U（平行移动的离散版）；作用量是基本小方块（plaquette）上 U 的乘积的迹：S=βΣ(1−Re Tr U_□)，β∝1/g²。Wilson 圈 W(C)=⟨Tr ∏_{e∈C}U_e⟩ 探测"沿回路 C 平行移动一圈"。</p>
+<p><strong>第二步：强耦合（β 小 ⟹ g 大）展开。</strong> 把 e^{S} 展开成 β 的幂级数：对矩形回路（面积 A、周长 P），领头非零项来自"沿回路内部把每个 plaquette 填平"的项，每块给一个 β 因子、颜色计数给 N 因子（大 N）：</p>
+<div class="formula display" data-tex="\langle W(C)\rangle\approx\Bigl(\frac{\beta}{N^{2}}\Bigr)^{A}\cdot(1+O(\beta^2))\quad\Longrightarrow\quad -\ln\langle W(C)\rangle\approx A\cdot\sigma,\quad \sigma=-\ln\frac{\beta}{N^{2}}>0"></div>
+<p><strong>面积律</strong>：Wilson 圈按<strong>面积</strong>指数衰减（不是周长）——σ 是弦张力。∎</p>
+<p><strong>第三步：从面积律到线性势。</strong> 由 V(R)=−lim_{T→∞} (1/T)ln⟨W(R×T)⟩：面积律 ⟹ V(R)=σR（线性禁闭势）。∎</p>
+<p><strong>第四步：质量缺口的格点证据。</strong> 弦张力 σ&gt;0 ⟹ 最低激发有正的能量尺度（通量管的质量 ~√σ）；数值格点 QCD 直接测到 σ≈(440 MeV)² 与 0^+ 胶球质量 ~1.7 GeV 等——<strong>格点给质量缺口提供了物理证明的全部要素，只差数学的连续极限</strong>。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——目标与已知的清单</h3>
+<ul>
+<li><strong>经典理论（完全成熟）：</strong> 主丛上联络 A 与曲率 F=D A=dA+g[A,A]；Yang–Mills 方程 D*F=0 与 Bianchi 恒等式 DF=0；能量正定；瞬子解（自对偶 F=*F）由拓扑量子数分类。</li>
+<li><strong>微扰量子（成熟）：</strong> Faddeev–Popov 规范固定、BRST、维数正规化；Yang–Mills 可重整化（'t Hooft–Veltman 1971）；渐近自由（Gross–Wilczek、Politzer 1973）⟹ 微扰展开在高能端有意义。</li>
+<li><strong>格点定义（部分严格）：</strong> Wilson（1974）欧氏格点作用量给出有限体积有限格距上的严格概率测度；强耦合面积律严格（禁闭）。连续极限的重整化群收敛：数值上确凿（Durr 2008 强子谱），数学证明开放。</li>
+<li><strong>公理化框架：</strong> 目标理论应满足 Wightman 公理（谱正性、洛伦兹协变、局部性、正定度规）或等价物；低维类似物已构造（2D YM、3D 的 Balaban–Magnen–Sénéor–Rivasseau 1980s 部分构造；4D 无）。</li>
+<li><strong>质量缺口：</strong> 谱 gap&gt;0 与欧氏相关函数指数衰减；物理由禁闭（面积律）产生，数学上两者关系仍需严格化。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\mathcal{L}_{\mathrm{YM}}=-\frac{1}{4g^2}\operatorname{Tr} F_{\mu\nu}F^{\mu\nu},\qquad F=dA+g[A,A]"></div>
+<div class="formula display" data-tex="D_\mu F^{\mu\nu}=0,\quad D_\mu=\partial_\mu+g[A_\mu,\ \cdot\ ];\qquad \text{Bianchi: }D\wedge F=0"></div>
+<div class="formula display" data-tex="\langle W(C)\rangle\sim e^{-\sigma A(C)}\ (\text{面积律});\qquad V(R)\sim\sigma R\ (\text{禁闭});\qquad \text{谱 gap}>0"></div>
+<div class="formula display" data-tex="\alpha_s(Q^2)\sim\frac{1}{\beta_0\ln(Q^2/\Lambda^2)}\to0\ (Q\to\infty)\qquad(\text{渐近自由})"></div>
+</section>
+
+<section>
+<h3>七、延伸——Yang–Mills 回赠给数学的礼物</h3>
+<ul>
+<li><strong>四维流形拓扑。</strong> 经典 Yang–Mills 的瞬子方程给出四维流形上的光滑结构不变量：Donaldson（1983）用模空间证明四维的"怪异光滑结构"；Seiberg–Witten（1994）用超对称约化给出更易用的不变量——<strong>规范理论是现代四维拓扑的头号工具</strong>（→ <a href="/pages/poincare-conjecture.html">庞加莱猜想</a>、<a href="/pages/fiber-bundle.html">纤维丛</a> 课）。</li>
+<li><strong>标准模型。</strong> 电弱统一 = SU(2)×U(1) 规范 + Higgs 机制（→ <a href="/pages/higgs-mechanism.html">Higgs</a>、<a href="/pages/standard-model.html">标准模型</a> 课）；QCD=SU(3)。质量缺口是"无 Higgs 时的动力学生成质量"的样板。</li>
+<li><strong>对偶与弦论。</strong> AdS/CFT（Maldacena 1997）：四维 N=4 超对称 Yang–Mills ↔ 五维反德西特引力——强耦合规范理论变成弱引力；"质量缺口从何而来"在弦论侧与 AdS 软墙等机制相连，仍未闭合。</li>
+<li><strong>数学物理方法论。</strong> 路径积分测度不存在 ⟹ 格点/公理化/代数量子场论（AQFT，→ <a href="/pages/operator-algebras.html">算子代数</a>）三路并进——构造性 QFT 是二十世纪数学物理最大的方法论遗产之一。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"质量想当然"</h3>
+<p><strong>陷阱 1："质量缺口 = 规范玻色子有质量（像 W/Z）"？</strong> 不对。W/Z 质量来自<strong>Higgs 机制</strong>（自发对称破缺）；Yang–Mills 的质量缺口是<strong>动力学</strong>的（禁闭），拉氏量里没有质量项、没有 Higgs——"无中生有"正是它的深刻之处。别把两个"生成质量"混为一谈。</p>
+<p><strong>陷阱 2："渐近自由 = 高能可微扰 = 理论平凡"？</strong> 渐近自由说短距离耦合趋零（紫外安全），但红外（低能）耦合爆炸、禁闭——理论的本质在红外，非微扰。高能好算 ≠ 理论简单。</p>
+<p><strong>陷阱 3："格点 QCD 已解决千禧年问题"？</strong> 格点给出<strong>截断</strong>（有限格距）理论的严格定义与强耦合禁闭证明、数值强子谱——但"格距→0 的连续极限存在且给出唯一洛伦兹不变理论"的数学证明仍是开放。数值"几乎证明"与严格证明之间隔着的正是问题的核心难点。</p>
+<p><strong>陷阱 4："微扰论看到无质量胶子 = 谱里有无质量粒子"？</strong> 微扰的"胶子"不是物理态（禁闭），真实谱是强子与胶球。用微扰对象直接读谱是常见错误——质量缺口恰是"微扰图像失效"的标志。</p>
+<p><strong>陷阱 5："禁闭 ⟹ 质量缺口（或反之）已严格证明"？</strong> 物理上同一机制（面积律 ⟹ 线性势 ⟹ gap）高度可信，数学上 4D 的严格链条未完成；甚至"禁闭与 gap 是否必然互相蕴含"的一般陈述也未被证明。把物理直觉当成定理是学习这条路时最大的风险。</p>
+</section>
+
+<section>
+<h3>九、当前状态——千禧年的坐标</h3>
+<ol>
+<li><strong>物理侧近乎闭环。</strong> 格点 QCD 数值（强子谱、弦张力、胶球质量）与实验一致；QCD 作为强相互作用理论无争议。物理学家普遍相信质量缺口成立，问题在"怎么证明"。</li>
+<li><strong>数学侧构造策略。</strong> 连续极限的严格构造仍是开放；路线有：格点重整化群分析（4D 的 Balaban 纲领）、随机几何/正则化路径积分的新工具（近年随机偏微分方程方法、White 噪声分析）、以及超对称/大 N 极限下的辅助结构。迄今 4D 无完整构造。</li>
+<li><strong>低维先行。</strong> 2D Yang–Mills（严格可解）、3D 部分构造（80s 渐近自由端点）成功；4D 是"维度诅咒"与"紫外-红外纠缠"的交叉点——任何进展都将是构造性 QFT 的里程碑。</li>
+<li><strong>与其它千禧年/大问题的接口。</strong> Navier–Stokes（→ <a href="/pages/navier-stokes.html">NS</a> 课）同为非线性场的正则性问题；弦论侧 AdS/CFT 给出强耦合对偶却仍未触及 4D YM 本身。质量缺口问题因此横跨分析、几何、概率与物理——七题中最"贵"的一题。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Yang–Mills (1954)</strong>：<em>"Conservation of isotopic spin and isotopic gauge invariance"</em>——非阿贝尔规范理论的诞生。</li>
+<li><strong>Faddeev–Popov (1967)</strong>：规范固定与鬼场——路径积分量子化的基石。</li>
+<li><strong>'t Hooft–Veltman (1971/72)</strong>：Yang–Mills 可重整化（维数正规化）。</li>
+<li><strong>Gross–Wilczek (1973) / Politzer (1973)</strong>：渐近自由——QCD 的确立（2004 诺奖）。</li>
+<li><strong>Wilson (1974)</strong>：<em>"Confinement of quarks"</em>——格点规范理论：强耦合面积律与禁闭。</li>
+<li><strong>'t Hooft (1976) / Polyakov (1977)</strong>：瞬子——经典解与量子隧穿。</li>
+<li><strong>Donaldson (1983)</strong>：规范理论不变量与四维光滑结构。</li>
+<li><strong>Seiberg–Witten (1994)</strong>：四维流形的新不变量（超对称 Yang–Mills）。</li>
+<li><strong>Jaffe–Witten (2000)</strong>：千禧年问题陈述（Clay）——Yang–Mills 存在性与质量缺口。</li>
+<li><strong>Durr 等 (2008)</strong>：<em>"Ab initio determination of light hadron masses"</em>, <em>Science</em>——格点 QCD 从第一性原理算出强子谱。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——手算与判据</h3>
+<p><strong>题 1（场强分量）。</strong> SU(2) 中若只有 A¹≠0 其余为零，F³ 里有没有非线性项？<strong>提示：</strong>F³=∂A³−∂A³+gε^{312}A¹A²？需要 A¹、A² 同时非零——单分量时 ε 项为零，非线性需要两个不同颜色分量共存。</p>
+<p><strong>题 2（Bianchi）。</strong> 说明为什么非阿贝尔 Bianchi 恒等式 DF=0 包含 A∧F 项，而阿贝尔只有 ∂F=0。<strong>提示：</strong>D=d+g[A,·] 作用于 F 时 [A,F]≠0（F 也是伴随值）。</p>
+<p><strong>题 3（面积 vs 周长）。</strong> 为什么"Wilson 圈按面积指数衰减"说明禁闭，按周长则说明无质量粒子？<strong>提示：</strong>V(R)=−lim(1/T)ln⟨W⟩：面积律 σRT ⟹ V=σR 线性；周长律 m(R+T) ⟹ V→常数（屏蔽/自由）。</p>
+<p><strong>题 4（维度转置）。</strong> 说明：经典无标度的理论如何产生质量尺度。<strong>提示：</strong>渐近自由使耦合无量纲却随能标跑动，耦合的"量值"定义在某个 Λ 上（dimensional transmutation）：Λ_QCD 取代耦合成为参数，质量的量级 ~Λ_QCD。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：无（需两分量）。∎</p>
+<p><strong>题 2</strong>：见提示。∎</p>
+<p><strong>题 3</strong>：面积律 ⟹ 线性禁闭势；周长律 ⟹ 无质量传播。∎</p>
+<p><strong>题 4</strong>：dimensional transmutation。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布禁闭势）。</strong> 把弦张力 σ 从 0 拉到 1：V(R)=σR 从"自由（库仑）"变成线性井——再把 Wilson 圈的对数衰减图从周长律切到面积律，感受两个判据的差异。</p>
+<p><strong>试试看 2（渐近自由曲线）。</strong> 观察 α_s(Q) 随能量下降（QCD）而 α_EM 上升——方向相反的两个世界：一个红外禁闭、一个红外自由（光子）。提示：这就是"为什么有原子、没有自由夸克"的耦合学答案。</p>
+<p><strong>试试看 3（跨课对照）。</strong> 在 <a href="/pages/fiber-bundle.html">纤维丛</a> 课复习联络-曲率的几何；在 <a href="/pages/differential-forms.html">微分形式</a> 课复习 d²=0 与 Bianchi；在 <a href="/pages/feynman-diagram.html">费曼图</a> 课复习微扰的辉煌——把三课拼起来就是 Yang–Mills 的完整地图。</p>
+<p><strong>试试看 4（与 4-流形联动）。</strong> 在 <a href="/pages/poincare-conjecture.html">庞加莱猜想</a> 课的背景里回想：四维的"怪异光滑结构"由 Donaldson 的规范理论不变量揭示——同一套 Yang–Mills，一边通向粒子物理的千禧年，一边通向四维拓扑的诺贝尔级发现。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>M. Peskin, D. Schroeder, An Introduction to Quantum Field Theory</strong>（标准教材：规范量子化到渐近自由）</p>
+<p>&rarr; <strong>G. 't Hooft, 50 Years of Yang–Mills Theory</strong>（纪念文集，历史与展望）</p>
+<p>&rarr; <strong>J. Jaffe, E. Witten, "Quantum Yang–Mills Theory"（Clay Millenium 陈述，网上免费）</strong>：问题的精确数学表述</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.26（数学物理）与 IV.18 等</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/fiber-bundle.html">纤维丛</a>、<a href="/pages/differential-forms.html">微分形式与外微分</a>、<a href="/pages/feynman-diagram.html">费曼图</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fiber-bundle.html">🧵 纤维丛</a>：联络与曲率 = 规范势与场强的几何。</p>
+<p>&rarr; <a href="/pages/differential-forms.html">🌀 微分形式</a>：F=dA+A∧A 的语言与 Bianchi 恒等式。</p>
+<p>&rarr; <a href="/pages/feynman-diagram.html">📊 费曼图</a>：路径积分微扰论与重整化的工程面。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🌌 标准模型</a>：SU(3)×SU(2)×U(1) 是 Yang–Mills 的物理之家。</p>
+<p>&rarr; <a href="/pages/higgs-mechanism.html">🧲 Higgs 机制</a>：对比：Higgs 质量 vs 动力学质量缺口。</p>
+<p>&rarr; <a href="/pages/poincare-conjecture.html">🌌 庞加莱猜想</a>：四维拓扑中的规范理论不变量（Donaldson/Seiberg–Witten）。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/yang-mills-mass-gap.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

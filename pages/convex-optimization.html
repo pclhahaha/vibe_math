@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="滚球下山看收敛：凸性让局部最优成为全局最优" />
+  <meta property="og:title" content="凸优化与梯度流 — Vibe Math" />
+  <meta property="og:description" content="滚球下山看收敛：凸性让局部最优成为全局最优" />
+  <title>凸优化与梯度流 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⚖️ 凸优化与梯度流 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">滚球下山看收敛：凸性让局部最优成为全局最优</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='convex-optimization',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/optimal-transport.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🚚 最优传输</a>
+  <a href="/pages/soliton.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌊 孤子 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把球放在碗里：凸性 = 只有一个谷底</h3>
+<p>最优化问题无处不在：训练神经网络要最小化损失、公司要最大化利润、路由器要最小化延迟、物理系统要最小化能量。它们共享一个几何图景：在"曲面"上找最低点。若曲面是<strong>凸的</strong>（像一口碗，任意两点连线都在碗内），最优化就有了一个奢侈的保证：</p>
+<div class="formula display" data-tex="f\ \text{凸}\quad\Longrightarrow\quad\text{任何局部最小都是全局最小};\qquad \nabla f(x)=0\iff x\ \text{是全局最优}"></div>
+<p>非凸曲面（连绵山丘）里"站在小坑底"无法知道外面有没有更深的谷；凸碗则不同——<strong>看得见的最低点就是最低点</strong>。更妙的是，这个几何性质带来<strong>可证明的算法性能</strong>：梯度下降（顺着"最陡下降"方向滚球）的收敛率有精确上界，步长、条件数、加速方法都有完整理论。凸优化因此是现代"可保证的最优化"的脊梁：线性规划、SVM、逻辑回归、最优传输（→ <a href="/pages/optimal-transport.html">最优传输</a> 课）、压缩感知、以及量子信息里的半定规划，全是凸问题。</p>
+<div class="key-insight">洞察：凸优化的口号是"结构换保证"——承认目标函数形状好，就换来全局性 + 收敛率 + 对偶间隙为零。梯度下降的收敛有三档：光滑凸 ~1/k、强凸线性 (1−μ/L)^k、Nesterov 加速 ~1/k²（对一阶方法最优，无可再快）。画布上滚球时，你会看到这三档速率以不同斜率呈现。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/gradient.html">梯度与方向导数</a>（下山的方向）、<a href="/pages/linear-transform.html">线性变换</a>（Hessian 与特征值）、<a href="/pages/optimal-transport.html">最优传输</a>（可选的经典应用）。与 <a href="/pages/convex-geometry.html">凸几何</a>、<a href="/pages/high-dim-geometry.html">高维几何</a> 深度相连。</p></div>
+
+<section>
+<h3>一、一个具体问题——"我到底在优化什么"：凸问题的版图与两场革命</h3>
+<p><strong>按结构分类。</strong></p>
+<ul>
+<li><strong>无约束光滑：</strong> min f(x)，f 光滑（梯度可用）。</li>
+<li><strong>线性规划（LP）：</strong> min cᵀx s.t. Ax≤b——多面体上的线性目标。Kantorovich（1939）与 Dantzig（1947 单纯形法）；1979 Khachiyan 椭圆法证明 LP 多项式时间；1984 Karmarkar 内点法给出实用多项式算法。</li>
+<li><strong>凸二次与半定规划（SDP）：</strong> 目标/约束含二次型或矩阵半正定锥——谱范数、特征值问题、量子态区分都能写成 SDP。</li>
+<li><strong>通用凸问题：</strong> 机器学习损失（岭回归、逻辑回归、SVM）、最优传输、稀疏恢复（LASSO）。</li>
+</ul>
+<p><strong>两场"革命"。</strong> 第一场：1980 年代的内点法把 LP 从"组合味道"变成"连续优化"（自协调障碍函数，Nesterov–Nemirovskii 统一框架）；第二场：21 世纪机器学习把"大而简单"的凸问题（亿万变量、结构稀疏）变成一阶方法（SGD 及其方差缩减）的主场——<strong>规模改变方法</strong>：算出足够好的解比算"精确解"更重要。</p>
+<p><strong>诚实声明。</strong> 深度学习的目标非凸；但现代实践表明其地形在过参数化下远比随机函数温和（鞍点而非坏局部极小主导，→ <a href="/pages/high-dim-geometry.html">高维几何</a>）。凸优化提供的是<strong>理解与下限</strong>：无结构问题不能指望多项式步内求解（Nemirovsky–Yudin oracle 下界）——结构（凸、光滑、强凸、稀疏、低秩）是效率的唯一来源。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——梯度下降的收敛几何</h3>
+<p><strong>算法。</strong> x_{k+1}=x_k−η∇f(x_k)。对 L-光滑凸 f（‖∇f(x)−∇f(y)‖≤L‖x−y‖），取 η=1/L：</p>
+<div class="formula display" data-tex="f(x_{k+1})\le f(x_k)-\frac{1}{2L}\|\nabla f(x_k)\|^{2}\ \Longrightarrow\ f(x_k)-f^{*}\le\frac{L\|x_0-x^{*}\|^{2}}{2k}\qquad(O(1/k))"></div>
+<p>若 f 还强凸（f−μ‖·‖²/2 凸，条件数 κ=L/μ）：</p>
+<div class="formula display" data-tex="f(x_k)-f^{*}\le\Bigl(1-\frac{\mu}{L}\Bigr)^{k}\bigl(f(x_0)-f^{*}\bigr)\qquad(\text{线性收敛，几何率 }1-1/\kappa)"></div>
+<p><strong>直觉。</strong> L 限制"一步能走多远"，μ 保证"每走一步谷底必被拉近固定比例"；κ=L/μ 决定椭圆谷的瘦长程度——<strong>预条件/坐标变换（把椭圆变圆）</strong>因此是一切加速的几何母题。</p>
+<p><strong>Nesterov 加速。</strong> 只加一项动量（重球）就能把光滑凸提升到 <strong>O(1/k²)</strong>；Nemirovsky–Yudin 证明：对只用一阶 oracle 的算法，1/k² 是<strong>信息论最优</strong>。动量 = 让轨迹沿"抛物线"而非"直线"逼近——画布上对比两条路径一目了然。</p>
+</section>
+
+<section>
+<h3>三、例题 1——一维梯度下降的精确速率（一步步算完）</h3>
+<p><strong>题目。</strong> f(x)=½(x−3)²（L=μ=1，κ=1）。从 x₀=0 出发、η=0.5，迭代 5 步并核对收敛率。</p>
+<p><strong>第一步：迭代式。</strong> ∇f=x−3 ⟹ x_{k+1}=x_k−0.5(x_k−3)=0.5x_k+1.5。</p>
+<p><strong>第二步：数值表。</strong></p>
+<div class="formula display" data-tex="x_0=0,\ x_1=1.5,\ x_2=2.25,\ x_3=2.625,\ x_4=2.8125,\ x_5=2.90625\quad\Longrightarrow\quad x_k=3-3\cdot(0.5)^{k}"></div>
+<p><strong>第三步：核对几何率。</strong> |x_k−3|=3·(0.5)^k：误差每步精确减半 ⟹ 线性收敛；f(x_k)−f*=½(3·0.5^k)²=½·9·0.25^k。∎</p>
+<p><strong>第四步：κ 的作用。</strong> 一般 f 的收敛率是 (1−1/κ)^k：κ=100 时每步只乘 0.99，把误差压 100 倍要 ~460 步；κ=1 时几步即达。<strong>条件数决定一切</strong>——预条件与牛顿方向的存在理由。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——对偶：从约束到影子价格（一步步算完）</h3>
+<p><strong>题目。</strong> 求解 min (x−2)² s.t. x≤1，并构造拉格朗日对偶验证强对偶。</p>
+<p><strong>第一步：原始解。</strong> 无约束最小在 x=2（不可行）；可行集 x≤1 上 f 递减，故 <strong>x*=1、f*=1</strong>。</p>
+<p><strong>第二步：对偶函数。</strong> L(x,λ)=(x−2)²+λ(x−1)（λ≥0）；g(λ)=min_x L：2(x−2)+λ=0 ⟹ x=2−λ/2：</p>
+<div class="formula display" data-tex="g(\lambda)=\frac{\lambda^{2}}{4}+\lambda\Bigl(1-\frac{\lambda}{2}\Bigr)=\lambda-\frac{\lambda^{2}}{4}\qquad(\lambda\ge0)"></div>
+<p><strong>第三步：对偶解与强对偶。</strong> g′(λ)=1−λ/2=0 ⟹ λ=2、g(2)=1：</p>
+<div class="formula display" data-tex="\min f=1=\max_{\lambda\ge0}g(\lambda)\qquad(\text{强对偶，对偶间隙 }0)"></div>
+<p><strong>第四步：影子价格。</strong> λ*=2：约束放宽为 x≤1+ε 时最优值约下降 2ε（KKT 互补松弛 λ(x−1)=0 在 x=1 处自动满足）。<strong>对偶乘子 = "资源的边际价值"</strong>——这就是经济学里对偶的用途。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>凸性判据：</strong> f 凸 ⟺ f(y)≥f(x)+∇f(x)·(y−x)（一阶）⟺ ∇²f⪰0（光滑时）；Jensen：f(θx+(1−θ)y)≤θf(x)+(1−θ)f(y)。</li>
+<li><strong>全局最优：</strong> 凸 f 的驻点即全局最优；最优解集为凸集。</li>
+<li><strong>GD 收敛：</strong> L-光滑凸 O(1/k)；L-光滑 + μ-强凸线性 (1−μ/L)^k。</li>
+<li><strong>加速最优性：</strong> Nesterov 动量 O(1/k²)；Nemirovsky–Yudin oracle 下界证明一阶方法无法更快。</li>
+<li><strong>对偶：</strong> 弱对偶恒成立；Slater 约束资格 ⟹ 强对偶；KKT（平稳、原始/对偶可行、互补松弛）刻画最优。</li>
+<li><strong>LP 复杂度：</strong> 单纯形实用但最坏指数；椭圆法（1979）/内点法（1984）多项式。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="x_{k+1}=x_k-\eta\nabla f(x_k);\qquad \text{光滑凸: }f(x_k)-f^{*}\le\frac{L\|x_0-x^{*}\|^2}{2k}"></div>
+<div class="formula display" data-tex="\text{强凸: }f(x_k)-f^{*}\le\Bigl(1-\frac{\mu}{L}\Bigr)^{k}(f_0-f^{*});\qquad \kappa=\frac{L}{\mu}"></div>
+<div class="formula display" data-tex="\text{Nesterov: }O(1/k^{2})\ (\text{最优});\qquad \min f=\max_{\lambda\ge0}\min_x L(x,\lambda)\ (\text{强对偶})"></div>
+</section>
+
+<section>
+<h3>七、延伸——凸优化是现代科学的通用语言</h3>
+<ul>
+<li><strong>机器学习。</strong> 岭回归/逻辑回归/SVM 的目标都凸；核方法进"凸的再生核空间"；LASSO/压缩感知用 ℓ₁ 松弛做稀疏恢复（→ <a href="/pages/fourier-transform.html">傅里叶变换</a>）；SGD（Robbins–Monro 1951）+ 方差缩减（SVRG 等）支撑亿万样本训练。</li>
+<li><strong>最优传输。</strong> Kantorovich 对偶正是凸对偶：min 运输成本 = max 势函数差——<a href="/pages/optimal-transport.html">最优传输</a> 课的对偶理论全是本课对偶的化身。</li>
+<li><strong>物理与变分。</strong> 最小作用量（→ <a href="/pages/classical-mechanics.html">经典力学</a>）、熵最大（→ <a href="/pages/entropy.html">熵</a>）、弹性能量极小都是（近）凸变分问题；"自然趋近能量最低"= 物理版梯度流（Wasserstein 梯度流：扩散 = 熵的梯度流！）。</li>
+<li><strong>量子信息。</strong> 态区分、纠缠见证、信道容量都写成 SDP——半定规划是量子理论的"计算后端"（→ <a href="/pages/bloch-sphere.html">Bloch</a>、<a href="/pages/entanglement.html">纠缠</a> 课）。</li>
+<li><strong>经济学。</strong> 对偶 = 影子价格；均衡（Arrow–Debreu）用不动点与凸分离定理证存在性——凸性在"看不见的手"的数学里。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"优化想当然"</h3>
+<p><strong>陷阱 1："非凸 = 不可能优化"？</strong> 非凸但有结构（低秩恢复、相位恢复满足 RIP/景观条件）仍可高效求解；深度学习过参数化下"坏局部极小罕见"。凸是充分保证，不是优化全部。</p>
+<p><strong>陷阱 2："梯度下降总收敛到全局最小"？</strong> 只在凸（或好景观）下成立；步长过大发散、过小龟速；非凸下 GD 只保证到驻点（可能卡鞍点，需扰动逃出）。</p>
+<p><strong>陷阱 3："对偶总是强对偶"？</strong> 需要 Slater 等约束资格。反例：min x s.t. x²≤0——可行集 {0} 非 Slater，对偶有间隙。弱对偶恒真，强对偶要资格。</p>
+<p><strong>陷阱 4："机器学习损失都是凸的"？</strong> 线性模型 + 凸损失才凸；深度网络损失几乎必然非凸。"凸损失"是 SVM/逻辑回归时代的说法，别套到深度学习上。</p>
+<p><strong>陷阱 5："1/k² 最快 = 一阶方法到头"？</strong> 1/k² 是"只用梯度、无更多结构"的下界；牛顿/拟牛顿用二阶信息局部二次收敛，随机/坐标方法在各自场景更优。下界属于方法类，不是全世界的边界。</p>
+</section>
+
+<section>
+<h3>九、当前状态——优化理论的前沿</h3>
+<ol>
+<li><strong>大规模一阶与随机优化。</strong> SGD 方差缩减（SVRG/SAGA/SARAH）、随机坐标下降、mini-batch 理论——"每次只摸一个样本"的收敛保证是现代 ML 引擎。</li>
+<li><strong>加速与分裂的统一点。</strong> O(1/k²) 加速推广到算子分裂（加速 ADMM/原始对偶）、随机与复合情形；"动量为何快"的变分/几何解释是热点。</li>
+<li><strong>非凸景观理论。</strong> 矩阵感知、相位恢复、张量分解的"无坏极小"证明——landscape 分析成为信号处理与 ML 的共同语言。</li>
+<li><strong>量子与分布式。</strong> 量子优化下界、联邦学习的通信-精度权衡、差分隐私优化——工具箱仍在扩张。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Cauchy (1847)</strong>：梯度下降（最陡下降）——最优化第一算法。</li>
+<li><strong>Kantorovich (1939/42)</strong>：运输问题与 LP 对偶的开端。</li>
+<li><strong>Dantzig (1947)</strong>：单纯形法。</li>
+<li><strong>Robbins–Monro (1951)</strong>：随机逼近（SGD 之祖）。</li>
+<li><strong>Khachiyan (1979)</strong>：LP 的椭圆法（首次多项式时间）。</li>
+<li><strong>Karmarkar (1984)</strong>：LP 内点法（实用多项式）。</li>
+<li><strong>Nesterov (1983)</strong>：加速梯度法 O(1/k²)。</li>
+<li><strong>Nemirovsky–Yudin (1983)</strong>：信息复杂度与 oracle 下界。</li>
+<li><strong>Johnson–Zhang (2013)</strong>：SVRG——方差缩减线性收敛。</li>
+<li><strong>Boyd–Vandenberghe (2004)</strong>：<em>Convex Optimization</em>（标准教材）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——一维手算</h3>
+<p><strong>题 1（几何率）。</strong> f=½(x−3)²、η=0.5、x₀=0：列出前 5 步并核对 x_k=3−3·0.5^k。<strong>提示：</strong>x_{k+1}=0.5x_k+1.5。</p>
+<p><strong>题 2（κ=1 一步到位）。</strong> f=½(x−1)²、η=1/L=1：从 x₀=5 迭代，何时到 1±10⁻³？<strong>提示：</strong>x₁=1（一步收敛，κ=1）。</p>
+<p><strong>题 3（互补松弛）。</strong> 例题 2 中 λ=2：验证 KKT 互补松弛 λ(x−1)=0。<strong>提示：</strong>x=1 处约束活跃。</p>
+<p><strong>题 4（Jensen）。</strong> 用凸性证明 x、y&gt;0 时算术平均 ≥ 几何平均。<strong>提示：</strong>−ln 凸 ⟹ −ln((x+y)/2)≤(−ln x−ln y)/2 ⟹ (x+y)/2≥√(xy)。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见例题 1：x_k=3−3·0.5^k。∎</p>
+<p><strong>题 2</strong>：一步收敛（x₁=1）。∎</p>
+<p><strong>题 3</strong>：见提示。∎</p>
+<p><strong>题 4</strong>：见提示。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布滚球）。</strong> 把 a、b 从 (1,1) 拖到 (1,30)：椭圆谷变瘦、路径变锯齿、收敛变慢——条件数 30 的实感。开"动量"对比路径与到 ε 的步数。</p>
+<p><strong>试试看 2（速率读数）。</strong> 对照画布收敛曲线与第五节公式：κ≈1 时线性率肉眼可见，κ 大时 O(1/k) 拖尾明显——公式斜率 = 图形斜率。</p>
+<p><strong>试试看 3（对偶 = 定价）。</strong> 把例题 2 想成一个"只能买到 ≤1 单位"的资源问题：λ*=2 回答"再买一单位值 2 块钱吗"。提示：对偶变量总可以当"约束的边际价格"读。</p>
+<p><strong>试试看 4（跨课连线）。</strong> <a href="/pages/optimal-transport.html">最优传输</a> 的 Kantorovich 势、<a href="/pages/entropy.html">熵</a> 最大化里的温度、<a href="/pages/svd.html">SVD</a> 的谱范数（=SDP）——同一套凸对偶在课程地图的不同角落反复出现。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>S. Boyd, L. Vandenberghe, Convex Optimization</strong>（标准教材，网上免费）</p>
+<p>&rarr; <strong>Y. Nesterov, Lectures on Convex Optimization</strong>（加速与下界的权威）</p>
+<p>&rarr; <strong>S. Bubeck, Convex Optimization: Algorithms and Complexity</strong>（从 0 到 1/k² 最优性的最短路径）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV（分析/几何相关条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/gradient.html">梯度与方向导数</a>、<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/optimal-transport.html">最优传输</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/gradient.html">🧭 梯度与方向导数</a>：下山的方向就是梯度。</p>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：Kantorovich 对偶 = 凸对偶的经典应用。</p>
+<p>&rarr; <a href="/pages/convex-geometry.html">🧊 凸几何</a>：凸集/凸函数/分离定理的几何母体。</p>
+<p>&rarr; <a href="/pages/entropy.html">🎲 熵与信息</a>：熵最大化的对偶变量 = 温度/化学势。</p>
+<p>&rarr; <a href="/pages/svd.html">📉 奇异值分解</a>：谱范数 = 最大奇异值，本身是 SDP。</p>
+<p>&rarr; <a href="/pages/fourier-transform.html">🎚️ 傅里叶变换</a>：LASSO/压缩感知 = ℓ₁ 凸松弛的稀疏恢复。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/convex-optimization.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

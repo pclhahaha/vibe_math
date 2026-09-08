@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="拖 d 看格点环：唯一分解为何失效，理想类如何修复" />
+  <meta property="og:title" content="代数数论：数域与理想类 — Vibe Math" />
+  <meta property="og:description" content="拖 d 看格点环：唯一分解为何失效，理想类如何修复" />
+  <title>代数数论：数域与理想类 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🏰 代数数论：数域与理想类 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">拖 d 看格点环：唯一分解为何失效，理想类如何修复</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='algebraic-number-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/modular-forms.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🎵 模形式</a>
+  <a href="/pages/p-adic-numbers.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🥟 p-adic 数与局部域 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——整数不够用时，把"数"换成"理想"</h3>
+<p>数论研究整数，可很多问题一深入就需要"更大的整数环"。最著名的例子：费马大定理在 19 世纪中期（→ <a href="/pages/elliptic-curves.html">椭圆曲线与 Wiles</a> 课的历史前传）被 Kummer 用<strong>分圆整数</strong>进攻：把 xᵖ+yᵖ=zᵖ 的左端在 ℤ[ζ_p]（ζ_p 是 p 次单位根）里分解成一次因子。方法成败系于一件事：<strong>这个环里唯一分解还成立吗？</strong></p>
+<p>答案让整个 19 世纪数论界震动：<strong>常常不成立</strong>。最简反例在 ℤ[√−5] 里：</p>
+<div class="formula display" data-tex="6=2\cdot3=(1+\sqrt{-5})(1-\sqrt{-5})\qquad(\text{两种不同的不可约分解！})"></div>
+<p>2、3、1±√−5 全都"不可再分"（不可约），却给出两种分解——普通意义下的唯一分解定理崩塌了。Kummer 的补救是天才的一跃：<strong>与其盯住"元素"，不如盯住"理想"</strong>。Dedekind 随后证明：在数域的代数整数环里，<strong>每个非零理想都能唯一分解成素理想的乘积</strong>——唯一分解没有死，只是从"元素层"搬到了"理想层"。而"元素层与理想层的落差"被一个群精确测量：<strong>理想类群</strong>，其阶叫<strong>类数 h</strong>。h=1 ⟺ 环本身是唯一分解整环（UFD）。</p>
+<div class="key-insight">洞察：代数数论的一课是"结构救场"——元素分解失败时，理想分解照常工作。理想类群 h 是数域最重要的不变量：它有限（Minkowski 几何数论）、与 ζ_K 函数在 s=1 的留数成正比（类数公式）、控制费马方程与椭圆曲线（BSD 的同类物）的命运。画布上切换 ℤ[i]（h=1）与 ℤ[√−5]（h=2），看同一句"6 的两种分解"在格点上的模样。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/galois-theory.html">伽罗瓦理论</a>（有限扩张的语言）、<a href="/pages/commutative-algebra.html">交换代数</a>（理想与环）、<a href="/pages/modular-forms.html">模形式</a> 或 <a href="/pages/elliptic-curves.html">椭圆曲线</a>（现代数论语境）。类数公式与 <a href="/pages/zeta.html">ζ 函数</a>、<a href="/pages/representation-theory.html">群表示论</a>（Chebotarev）相连。</p></div>
+
+<section>
+<h3>一、一个具体问题——Kummer 的理想数与"正则素数"</h3>
+<p><strong>分圆进攻费马大定理。</strong> 对奇素数 p，在 ℤ[ζ_p] 中 xᵖ+yᵖ=∏_{i=0}^{p−1}(x+ζ_pⁱy)。若能证明这些因子两两互素且每个都是 p 次幂（到单位），就得到矛盾。Kummer（1844–47）发现这条路在 ℤ[ζ_p] 唯一分解<strong>失效</strong>时走不通，于是发明<strong>理想数</strong>并证明：只要 p 不整除类数 h(ℚ(ζ_p))（这样的 p 叫<strong>正则素数</strong>），费马大定理对指数 p 成立。所有 100 以内的奇素数只有 37、59、67 非正则——理想数一举解决了当时几乎全部指数。</p>
+<p><strong>Dedekind 的整理。</strong> 把"理想数"系统化为环论：数域 K/ℚ（有限扩张）的<strong>代数整数环</strong> O_K={α∈K：α 是某个首一整数系数多项式的根}。O_K 是 Dedekind 整环：每个非零理想唯一分解为素理想之积。例：ℤ[i] 是 PID（进而 UFD）；ℤ[√−5] 不是 UFD 但仍是 Dedekind 环。</p>
+<p><strong>两个数域级问题贯穿全课。</strong> (1) O_K 的单位有多少？（Dirichlet 单位定理：秩 r₁+r₂−1。）(2) 元素分解与理想分解差多少？（类群，Minkowski 证明有限。）再加上 (3) 有理素数 p 在 O_K 中如何分解（分裂/惯性/分歧），就有了一幅相当完整的数域图景——它是现代数论（L 函数、Langlands、算术统计）的起跑线。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——从"元素"到"理想"：一次视角升级</h3>
+<p><strong>为什么理想分解总能成功？</strong> 素元（元素层）在 ℤ[√−5] 里会"劈叉"：2 不是素元（整除乘积 6=(1+√−5)(1−√−5) 却不整除任一分量），但理想 (2,1+√−5) 是<strong>素理想</strong>。粗略地说：每个"劈叉的素元"对应多个素理想，元素是"把几个素理想捆在一起"的结果。Dedekind 整环里理想分解因此"无劈叉地"成立。</p>
+<p><strong>类群 = 理想的"主"程度。</strong> 记主理想全体为 P（由单个元素生成），非零理想全体为 I。I/P 的商叫<strong>理想类群</strong> Cl(K)：它测度"有多少理想不是主理想"。ℤ[i] 每个理想都主（PID）⟹ h=1；ℤ[√−5] 里 (2,1+√−5) 非主 ⟹ h&gt;1（实际 h=2，其平方 (2,1+√−5)²=(2) 为主）。</p>
+<p><strong>Minkowski 的几何（1893）。</strong> 把 O_K 看作 ℝ^{r₁+2r₂} 里的格（实嵌入 r₁ 个、复嵌入 r₂ 对），用凸体定理得到：每个理想类有一个"不太大"的代表，其范数受<strong>Minkowski 界</strong>限制：</p>
+<div class="formula display" data-tex="|\mathrm{N}(\mathfrak a)|\le \Bigl(\frac{4}{\pi}\Bigr)^{r_2}\frac{n!}{n^{n}}\sqrt{|\Delta_K|}\qquad(\text{Minkowski 界 ⟹ 类数有限且可算})"></div>
+<p>——几何数论的第一次大胜：<strong>有限性来自格点几何</strong>。画布展示的"格点 + 范数圆盘"正是这层几何的最小样本。</p>
+</section>
+
+<section>
+<h3>三、例题 1——ℤ[√−5] 的两种分解（一步步算完）</h3>
+<p><strong>题目。</strong> 证明 6 在 ℤ[√−5] 中有两种本质不同的不可约分解，并指出类数 h=2 的踪迹。</p>
+<p><strong>第一步：范数工具。</strong> N(a+b√−5)=a²+5b²（乘性）。单位 = N=1 者 = ±1。</p>
+<p><strong>第二步：四个元素都不可约。</strong> 以 2 为例：若 2=αβ（非单位），则 4=N(α)N(β)；N=2 或 4? 分拆 (2,2) 或 (1,4)：N(α)=2 ⟹ a²+5b²=2 无解；N=1 或 4 对应单位×2。故 2 不可约。3：9 的分拆需 N=3（a²+5b²=3 无解）或 9（自乘）——不可约。N(1±√−5)=6 同理不可约（N=2、3 无解）。∎</p>
+<p><strong>第三步：分解确实不同。</strong> 2·3=6 与 (1+√−5)(1−√−5)=1+5=6 都对，且四个因子互不关联（范数 4、9、6、6 各异）。若 UFD，两个分解会因子一一对应到单位——不成立。∎</p>
+<p><strong>第四步：h=2 的痕迹。</strong> 理想 (2,1+√−5) 非主（若有元素生成，其范数须整除 2 且=2，无解）：非平凡类。而 (2,1+√−5)²=(2)（主）⟹ 类阶 2 ⟹ h=2。∎</p>
+<p><strong>第五步：对照 ℤ[i]。</strong> 同样的数 6：2=(1+i)(1−i) 在 ℤ[i] 中可继续分，最终 6=… 的唯一分解存在（画布会列出 ℤ[i] 与 ℤ[√−5] 对 6 的不同因子链数目）。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——ℤ[i] 与两平方和定理（一步步算完）</h3>
+<p><strong>题目。</strong> 用 ℤ[i] 的分解证明：奇素数 p = a²+b² ⟺ p≡1 (mod 4)。</p>
+<p><strong>第一步：ℤ[i] 是欧几里得环 ⟹ PID ⟹ UFD。</strong> 带余除法：对任意 α、β，取高斯整数商 q 使 N(α/β−q)≤1/2，则 N(α−βq)&lt;N(β)。所以 ℤ[i] 每个理想主。∎</p>
+<p><strong>第二步：p 在 ℤ[i] 的素元分类。</strong> 素元 π 的范数要么是 p 或 p²。N(π)=p² 时 π=p·单位（p 惯性，inert）；N(π)=p 时 p=ππ̅（p 分裂，split）；p=2 时 2=−i(1+i)²（分歧，ramify）。</p>
+<p><strong>第三步：用 −1 的平方性翻译。</strong> p 分裂（p=ππ̅，π 非实）⟺ 存在 a+b i 使 a²+b²=p ⟺ −1 是 mod p 的平方剩余（(a/b)²≡−1）。由 Euler 准则：</p>
+<div class="formula display" data-tex">(-1)^{(p-1)/2}\equiv1\pmod p\iff p\equiv1\pmod4\qquad\blacksquare"></div>
+<p><strong>第四步：数字核对。</strong> 5=2²+1²=(2+i)(2−i) ✓（5≡1 mod 4）；13=3²+2²=(3+2i)(3−2i) ✓；7≡3 mod 4：7 在 ℤ[i] 中素（inert），不可写成两平方和 ✓；2=1²+1²（唯一的例外素数）。∎</p>
+<p><strong>第五步：为什么这重要？</strong> "一个二次剩余条件 ⟺ 一个整数方程可解"——数域里的素元分解把丢番图问题翻译成分裂问题；同样的剧本（Chebotarev、类域论、Langlands）统治现代数论。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>基本对象：</strong> 数域 K（ℚ 的有限扩张，n=[K:ℚ]）；O_K 代数整数环（Dedekind 整环）；判别式 Δ_K、嵌入 (r₁, r₂)、r₁+2r₂=n。</li>
+<li><strong>Dedekind 唯一分解：</strong> O_K 的非零真理想唯一分解为素理想之积。</li>
+<li><strong>类群有限（Minkowski 1893）：</strong> Cl(K)=I/P 是有限阿贝尔群，阶 h_K（类数）；Minkowski 界给出每个类的"小代表"。</li>
+<li><strong>Dirichlet 单位定理（1846）：</strong> O_K^× ≅ μ_K × ℤ^{r₁+r₂−1}（μ_K 是单位根）。例：ℤ[√2]^×={±(1+√2)^k}；ℚ(ζ_p) 秩 (p−1)/2−1。</li>
+<li><strong>素数分解与 Frobenius/Chebotarev：</strong> 伽罗瓦扩张中 unramified 素理想 p 的 Frobenius 共轭类决定 p 在 K 中的分裂型；Chebotarev 密度定理：p 的 Frobenius 落在共轭类 C 的密度 = |C|/|G|——素数"均匀"分布在伽罗瓦群的共轭类上（→ <a href="/pages/representation-theory.html">群表示论</a>）。</li>
+<li><strong>类数公式（解析侧）：</strong> ζ_K(s) 的极点留数 = 2^{r₁}(2π)^{r₂}h_K·Reg_K/(w_K·√|Δ_K|)——类数藏在 Dedekind ζ 函数里（→ <a href="/pages/zeta.html">ζ</a>）。BSD 猜想正是这个公式在椭圆曲线上的类比（→ <a href="/pages/elliptic-curves.html">椭圆曲线</a>）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="6=2\cdot3=(1+\sqrt{-5})(1-\sqrt{-5});\qquad \mathrm N(a+b\sqrt{-5})=a^{2}+5b^{2}"></div>
+<div class="formula display" data-tex="\text{理想}\ \mathfrak a=\prod \mathfrak p^{v_p(\mathfrak a)}\ (\text{唯一});\qquad h_K=|\mathrm{Cl}(K)|<\infty"></div>
+<div class="formula display" data-tex="\text{单位秩 }r_1+r_2-1;\qquad p=a^{2}+b^{2}\iff p\equiv1\pmod4\ (\text{两平方和})"></div>
+<div class="formula display" data-tex="\operatorname{Res}_{s=1}\zeta_K(s)=\frac{2^{r_1}(2\pi)^{r_2}h_K\,\mathrm{Reg}_K}{w_K\sqrt{|\Delta_K|}}\qquad(\text{类数公式})"></div>
+</section>
+
+<section>
+<h3>七、延伸——数域的现代足迹</h3>
+<ul>
+<li><strong>Kummer 章节的结局。</strong> 正则素数方法止步于指数 p∤h(ℚ(ζ_p))；费马大定理最终由椭圆曲线路线（Wiles，→ <a href="/pages/elliptic-curves.html">Wiles</a> 课）完成——但理想数仍是代数数论的 DNA。</li>
+<li><strong>类数与 L 函数。</strong> 类数公式把"有限群大小"与"解析函数留数"焊在一起；BSD（→ <a href="/pages/elliptic-curves.html">椭圆曲线</a>）、Tamagawa 数公式都是它的后裔。Iwasawa 理论在 ℤ_p-扩张里研究类数的增长——当代算术的重镇。</li>
+<li><strong>Chebotarev 与现代统计。</strong> 素数按共轭类均匀分裂 ⟹ 数域的不变量（类数奇偶、分解型）服从统计规律：Cohen–Lenstra 猜想预言类群的分布——"随机群论"进入数论。</li>
+<li><strong>计算数论与密码。</strong> 类群的计算（类群算法）、基于类群的密码方案（NICE 等）、以及数域筛法（NFS，分解大整数的最强算法，→ <a href="/pages/cryptography.html">RSA</a> 课）——数域同时是密码的朋友与对手。</li>
+<li><strong>与模形式/自守形式。</strong> 数域的 ζ 与自守形式（Hilbert 模形式等）的 L 函数对应——Langlands 纲领把"数域上的伽罗瓦表示"与"自守形式"配对（→ <a href="/pages/modular-forms.html">模形式</a>）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"数域想当然"</h3>
+<p><strong>陷阱 1："O_K 一定是 UFD"？</strong> 不是。UFD ⟺ 类数 1；ℤ[√−5]（h=2）就是反例。Dedekind 保证的是<strong>理想</strong>的唯一分解，不是元素的。把两层混为一谈是入门第一坑。</p>
+<p><strong>陷阱 2："O_K 总等于 ℤ[α]"（单一生成元）？</strong> 对"单项环"域成立，一般域未必（反例：Dedekind 的经典例子，X³−X²−2X−8 定义的三次域其 O_K 不含单项生成元）。"monogenic"与否是研究课题，不是默认。</p>
+<p><strong>陷阱 3："单位只有 ±1"？</strong> 实域（r₁+r₂−1&gt;0）有无穷多单位：ℤ[√2]^× 由 1+√2 生成（佩尔方程的单位解！）。"单位平凡"只是虚二次域（除 ℤ[i]、ℤ[ω]）的特权。</p>
+<p><strong>陷阱 4："正则素数 = 费马大定理全解"？</strong> 正则只覆盖 p∤h(ℚ(ζ_p))；37、59、67 等非正则指数需要别的方法（Wiles 的模性路线最终通吃）。把 Kummer 的里程碑当终点是历史错觉。</p>
+<p><strong>陷阱 5："范数整除 = 元素整除"？</strong> N(γ)|N(t) 是 γ|t 的必要不充分条件（理想层 vs 元素层再次出现）。判整除要做真实的环内除法，不能只看范数。</p>
+</section>
+
+<section>
+<h3>九、当前状态——数域理论的前沿</h3>
+<ol>
+<li><strong>类群计算与 Cohen–Lenstra。</strong> 类数/类群的高效算法成熟；Cohen–Lenstra（1983）预言 p-部分类群的统计分布——大量数值与部分证明（近年在"平均意义"上取得进展），仍缺一般证明。</li>
+<li><strong>Iwasawa 理论。</strong> ℤ_p-扩张中的类数增长、主猜想（与 p-adic L 函数）——Mazur–Wiles 等证明后仍是算术几何中心（→ <a href="/pages/elliptic-curves.html">椭圆曲线</a>、<a href="/pages/zeta.html">ζ</a>）。</li>
+<li><strong>有效与显式。</strong> 显式类数界、Chebotarev 的有效版本（与黎曼假设的算术后果）、判别式下界——解析与代数数论的日常交锋。</li>
+<li><strong>与 Langlands/算术统计。</strong> 数域的 L 函数在 s=1 中心值分布（随机矩阵预测）、自守提升——"数域版 BSD/随机矩阵"是当代热点。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Kummer (1844–47)</strong>：理想数与正则素数——理想数理论的开创（FLT 方向）。</li>
+<li><strong>Dirichlet (1846)</strong>：单位定理（及类数公式雏形）。</li>
+<li><strong>Dedekind (1871)</strong>：代数整数与 Dedekind 整环、理想的素分解。</li>
+<li><strong>Minkowski (1893)</strong>：几何数论与类数有限性（Minkowski 界）。</li>
+<li><strong>Chebotarev (1922)</strong>：密度定理——素数按共轭类分裂的均匀性。</li>
+<li><strong>Hecke (1917)</strong>：Dedekind ζ 与类数公式的现代形式。</li>
+<li><strong>Cohen–Lenstra (1983)</strong>：类群统计分布猜想。</li>
+<li><strong>Mazur–Wiles (1984)</strong>：Iwasawa 主猜想（类数增长的解析刻画）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——范数与分解</h3>
+<p><strong>题 1（范数不可约）。</strong> 证明 7 在 ℤ[√−5] 中不可约。<strong>提示：</strong>N=7 需 a²+5b²=7：b=0 时 7 非平方、b=±1 时 a²=2 无解——不可约（事实上 7 是素元/惯性）。</p>
+<p><strong>题 2（两平方和）。</strong> 验证 29=？两平方和并写 ℤ[i] 分解。<strong>提示：</strong>29=5²+2²=(5+2i)(5−2i)；29≡1 mod 4 ✓。</p>
+<p><strong>题 3（单位）。</strong> 列出 ℤ[√2] 的前几个单位并写出递推。<strong>提示：</strong>±(1+√2)^k：1+√2、3+2√2（(1+√2)²=3+2√2）、7+5√2…；佩尔方程 a²−2b²=1。</p>
+<p><strong>题 4（类数辨认）。</strong> 为什么 (2,1+√−5) 非主理想能推出 ℤ[√−5] 不是 UFD？<strong>提示：</strong>若环是 UFD+PID 则所有理想主；此理想非主 ⟹ 非 PID ⟹ 非 UFD（对 Dedekind 环 UFD ⟺ PID）。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示：范数方程无解。∎</p>
+<p><strong>题 2</strong>：29=5²+2²。∎</p>
+<p><strong>题 3</strong>：±(1+√2)^k。∎</p>
+<p><strong>题 4</strong>：Dedekind 环中 UFD ⟺ PID ⟺ 类数 1。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布格点）。</strong> 切换 d=−1、−2、−5：观察 ℤ[√d] 在复平面上的格点与范数圆。d=−5 时 6 有两个因子链、d=−1 时只有一条——因子链计数直接显示类数的"味道"。</p>
+<p><strong>试试看 2（类数表）。</strong> 用画布的 h 数值对照正文：虚二次域 h=1 恰好是 Heegner 数 {−1,−2,−3,−7,−11,−19,−43,−67,−163}（Stark–Heegner 定理）——"刚好 9 个"是数论著名巧合。提示：e^{π√163} 接近整数即由此而来。</p>
+<p><strong>试试看 3（与椭圆曲线对表）。</strong> 把类数公式与 BSD（→ <a href="/pages/elliptic-curves.html">椭圆曲线</a> 课）并排：ζ_K(1) 留数 ↔ L(E,1)——同一个"L 函数特殊值 = 代数不变量"剧本在两条线上上演。</p>
+<p><strong>试试看 4（几何数论）。</strong> Minkowski 的"凸体含非零格点"定理与 <a href="/pages/high-dim-geometry.html">高维几何</a> 课的格点直觉、以及格的密码应用（下轮课程的 LLL/SVP）是同一颗种子：凸性 + 格点 = 数论与几何的接口。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J. Neukirch, Algebraic Number Theory</strong>（标准研究生教材）</p>
+<p>&rarr; <strong>S. Lang, Algebraic Number Theory</strong>（经典）</p>
+<p>&rarr; <strong>D. Marcus, Number Fields</strong>（友好入门，习题极佳）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.1（代数数）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/galois-theory.html">伽罗瓦理论</a>、<a href="/pages/commutative-algebra.html">交换代数</a>、<a href="/pages/zeta.html">黎曼 ζ 函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：数域=有限伽罗瓦扩张的舞台。</p>
+<p>&rarr; <a href="/pages/commutative-algebra.html">💍 交换代数</a>：Dedekind 整环与理想的代数语言。</p>
+<p>&rarr; <a href="/pages/elliptic-curves.html">🗝️ 椭圆曲线与 Wiles</a>：BSD = 类数公式的椭圆曲线版。</p>
+<p>&rarr; <a href="/pages/zeta.html">♾️ 黎曼 ζ 函数</a>：Dedekind ζ 与类数公式的解析侧。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎼 模形式</a>：Langlands：数域的伽罗瓦表示 ↔ 自守形式。</p>
+<p>&rarr; <a href="/pages/cryptography.html">🔐 密码学 RSA</a>：数域筛法（NFS）——数域的"反噬"。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/algebraic-number-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

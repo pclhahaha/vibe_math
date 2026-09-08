@@ -1,0 +1,157 @@
+<section>
+<h3>〇、直觉入门——两个方向相反却天生一对的"翻译官"</h3>
+<p>想象有个箱子，能把任何玩具自由地"变成"能拼搭的乐高块，还有个反向的箱子，能把乐高块"变回"普通玩具。如果你先变过去再变回来，玩具虽然回到原样，中间却多了一段"乐高味"的记忆——这一对操作就是伴随函子。</p>
+<p>数学里很多"最自然、最好的构造"（比如把一个集合变成最自由的结构）全都是这种成双成对的关系，伴随函子就是它们的总名称。</p>
+<div class="key-insight">一句话：两个方向相反的构造，只要配合得严丝合缝，就是一对"天生一对"的伴随。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/abstract-algebra.html">抽象代数</a>、<a href="/pages/set-theory.html">集合论</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体问题先行——三个"最自然"的构造，为何总成双成对？</h3>
+<p>先看三个看似无关的问题，它们都在问同一件事：</p>
+<ul>
+  <li><strong>问题 A（自由群）</strong>：给定一个集合 X = {a, b, c}，要把 X 的"自由拼法"变成一个群。什么群才是"最自由"的？——以 X 为生成元、除了群公理不再多压任何关系的群。问题是：怎么严谨地描述"最自由"？</li>
+  <li><strong>问题 B（多项式环）</strong>：给定集合 X，要构造"X 上最自由"的交换环——答案是多变元多项式环 ℤ[X]。为什么"自由环"长得像多项式？</li>
+  <li><strong>问题 C（紧化）</strong>：给一个拓扑空间 X，想把它塞进一个"又紧又 Hausdorff"的空间，又不想丢太多信息——答案 Stone-Čech 紧化 βX。凭什么说 βX 是"最经济的塞法"？</li>
+</ul>
+<p>三者的共同点：它们都是"把 X 变成带更多结构的东西"，而且是"保持信息最少、最省事"的那种。反过来，每个这种构造都配着一个"把结构扔掉"的遗忘函子。数学家发现：<strong>"最自由构造"= "遗忘函子的左伴随"</strong>。三个问题其实是同一个定理的不同投影——这就是为什么值得给伴随函子起个专门的名字。</p>
+<div class="key-insight">F⊣G 的意思是：左边"造结构"，右边"拆结构"，两者互相配合、方向相反、不多不少。自由群、多项式环、Stone-Čech 紧致化、Abel 化——所有这些"最优构造"都是同一个现象：一个左伴随。</div>
+</section>
+
+<section>
+<h3>二、定义——伴随函子：从直觉到 Hom 集自然同构</h3>
+<p><strong>逐步铺垫。</strong> 先想清楚"最自由"的精确含义。对问题 A：X = {a, b, c} 的自由群 F(X) 为什么比任何别的群更"自由"？因为给定任意群 G 和任意"把每个字母指派成一个元素"的函数 f: X → U(G)（这里 U 把群忘成集合），这个指派都能<strong>唯一地</strong>扩展成群同态 F(f): F(X) → G——由"字母怎么走，词就怎么走"唯一决定。于是：</p>
+<div class="formula display" data-tex="\text{群同态 }F(X)\to G\quad\longleftrightarrow\quad\text{集合函数 }X\to U(G)"></div>
+<p>把"一一对应"翻译成 Hom 集的语言，就得到伴随的严格定义。</p>
+<p><strong>严格定义。</strong> 设 F: 𝒞 → 𝒟 与 G: 𝒟 → 𝒞 是两个函子。称 F 是 G 的<strong>左伴随</strong>、G 是 F 的<strong>右伴随</strong>（记作 F ⊣ G），若对每个对象 X ∈ 𝒞、Y ∈ 𝒟，存在双射</p>
+<div class="formula display" data-tex="\varphi_{X,Y}:\ \mathrm{Hom}_{\mathcal{D}}(FX,Y)\;\xrightarrow{\;\cong\;}\;\mathrm{Hom}_{\mathcal{C}}(X,GY)"></div>
+<p>并且这个双射<strong>自然于 X 与 Y</strong>：对任意态射 x: X′→X、y: Y→Y′，下图交换（追四个角即可验证）。</p>
+<p><strong>为什么要定义成"Hom 集的自然同构"？</strong> 因为"最自由/最优"的直觉写下来就是一句"对任意 Y，都有唯一的方式……"——这正是 Hom 集元素所描述的（一个态射就是一条"唯一出路"）。把"唯一存在"升级成"双射"，就把泛性质放进了一个可以相互比较、可以参与计算的代数框架里。伴随之所以强大，正是因为它把泛性质的"存在唯一"翻译成了<strong>等值式</strong>，可以像解方程一样摆弄。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 1 —— 逐步验证「自由群 ⊣ 遗忘」。</strong><br>
+<strong>任务</strong>：验证 F: Set → Grp（X ↦ 自由群 F(X)）与 U: Grp → Set（遗忘）构成伴随，并确认双射自然。<br>
+<strong>第 1 步（正方向）</strong>：对每个集合 X、群 G，定义 φ(f) = f ∘ ι_X，其中 ι_X: X → F(X) 把每个字母 x 送入对应的既约词，f: F(X)→G 是群同态。于是 φ(f) 是集合函数 X → U(G)。<br>
+<strong>第 2 步（反方向）</strong>：给集合函数 g: X → U(G)，定义 F(g): F(X)→G 为对既约词 x₁^{e₁}⋯xₙ^{eₙ} 取 g(x₁)^{e₁}⋯g(xₙ)^{eₙ}，空词取单位元。群公理之外没有别的限制，所以它是良定的同态。<br>
+<strong>第 3 步（互逆）</strong>：ψ∘φ = id——f 先限制到 X 再唯一扩展，唯一性强制结果等于 f；φ∘ψ = id——g 扩展成同态后限制回 X，每个字母仍是 g(x)。所以 φ 是双射。<br>
+<strong>第 4 步（自然性）</strong>：取 h: X′→X、k: G→G′。验证 φ(k ∘ f ∘ F(h)) = U(k) ∘ φ(f) ∘ h：左边 = (k∘f∘F(h))∘ι_{X′} = k∘f∘h，右边 = k∘(f∘ι_X)∘h = k∘f∘h。相等。∎</div>
+<p>这套"限制到生成元 + 唯一扩展"的验证模式在数学里反复出现：<strong>只要左边是自由构造、右边是遗忘，验证就永远长这样。</strong>下面试试你自己推一遍一个类似但不同的例子。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 1.</strong> 验证「Abel 化 ⊣ 包含」：令 ab: Grp → Ab 把 G 送到 G/[G,G]，incl: Ab → Grp 为包含。写出 φ: Hom_Ab(ab(G), A) ≅ Hom_Grp(G, incl(A)) 的正反两个方向。<br><em>提示：</em>正方向用"商映射的泛性质"（G 的同态到 Abel 群必须穿过 [G,G]）；反方向把 Abel 群 A 的同态也当作 Grp 的同态。互逆性来自商泛性质的唯一性。</div>
+</section>
+
+<section>
+<h3>三、单位、余单位与三角恒等式——伴随的"内置芯片"</h3>
+<p>Hom 集双射是"对外接口"，而伴随真正运转靠的是内部两条"线"：<strong>单位（unit）</strong> η: 1_𝒞 ⇒ GF 与 <strong>余单位（counit）</strong> ε: FG ⇒ 1_𝒟。它们是怎么来的？对每个 X，取 φ⁻¹(1_{GX}) ∈ Hom(FX, GX)……不对，更直接：令 η_X := φ⁻¹_{X,GX}(1_{GX}): X → GFX，ε_Y := φ_{FY,Y}(1_{FY}): FGY → Y。直觉上，η_X 是"把 X 注入它的自由版本"的泛映射，ε_Y 是"从自由版本求值回 Y"。</p>
+<p>二者必须满足<strong>三角恒等式</strong>：</p>
+<div class="formula display" data-tex="G\xrightarrow{\;\eta G\;}GFG\xrightarrow{\;G\varepsilon\;}G=\mathrm{id}_G,\qquad F\xrightarrow{\;F\eta\;}FGF\xrightarrow{\;\varepsilon F\;}F=\mathrm{id}_F"></div>
+<p><strong>为什么要有这两条恒等式？</strong> 因为"注入再求值，应该等于没做任何事"——这正是"一对翻译官"严丝合缝的意思。反过来，只要给出一对自然变换 η, ε 满足三角恒等式，就唯一地还原出整个伴随（Mac Lane 定理 IV.1）；此时 η_X = φ⁻¹(1_{GX})、ε_Y = φ(1_{FY})，两者互为逆构造。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 2 —— 多项式环伴随的三角恒等式。</strong><br>
+<strong>任务</strong>：对 F: Set → CRing（X ↦ ℤ[X]）⊣ U: CRing → Set，写出 η 与 ε 并验证两条三角恒等式。<br>
+<strong>第 1 步（写出 η、ε）</strong>：η_X: X → U(ℤ[X])，x ↦ 单变元 x（生成元）；ε_A: ℤ[A] → A，把多项式的每一项 n·a₁⋯a_k 求值为 A 中的乘积。<br>
+<strong>第 2 步（恒等式一，Gε∘ηG = id_G）</strong>：对交换环 A，取元素 a ∈ U(A)。先走 η_{U(A)}：a ↦ 生成元 a；再走 U(ε_A)：把"a"求值回 a。合成是恒等。<br>
+<strong>第 3 步（恒等式二，εF∘Fη = id_F）</strong>：对集合 X 与生成元 x ∈ ℤ[X]：F(η_X) 把 x 看作"ℤ[X] 里的元素"送入 ℤ[ℤ[X]]，然后 ε_{ℤ[X]} 把它求值回 x。合成是恒等。∎</div>
+<p>这个例子的味道值得记住：<strong>η 是"把元素当生成元"，ε 是"把生成元代回求值"</strong>——多项式环恰好是这套语言的完美舞台。</p>
+</section>
+
+<section>
+<h3>四、经典实例画廊——从代数到拓扑到逻辑</h3>
+<p>下面把"最优构造 = 左伴随"这个模式横着铺开，每一行都是一门学科的招牌定理：</p>
+<p><strong>自由 ⊣ 遗忘。</strong> 自由群函子 F: Set→Grp ⊣ U: Grp→Set。单位 η_X 将集合 X 的每个元素注入为自由群 F(X) 的单个生成元；余单位 ε_G 将 F(U(G)) 中的形式词在 G 中求值。此范式适用于所有代数结构：自由环、自由模（即基环上的自由模函子）、自由 R-代数（即张量代数）、自由交换代数（即多项式环）、Abel 化（自由 Abel 群 ⊣ 遗忘）——所有泛代数中"自由构造"的本质都是左伴随。</p>
+<p><strong>张量积 ⊣ Hom。</strong> 对双模 {}_RM_S，−⊗_R M: Mod-R→Mod-S ⊣ Hom_S(M,−): Mod-S→Mod-R。在更一般的对称幺半闭范畴中，内 Hom 定义了闭结构。"态-算子对应"的数学表述就是张量-Hom 伴随：Vect 中 V⊗W→U 的线性映射 与 W→Hom(V,U) 的线性映射一一对应——这是量子力学中"态向量+算子"二元结构的范畴论根源。</p>
+<p><strong>层论的六函子体系。</strong> 对连续映射 f: X→Y，层范畴之间有 f_*: Sh(X)→Sh(Y) ⊣ f^*: Sh(Y)→Sh(X)。进一步，若 f 紧合同调，有 f_!: Sh(X)→Sh(Y) ⊣ f^!: Sh(Y)→Sh(X)——两组伴随构成 Grothendieck 的六函子形式体系（f^*, f_*, f_!, f^!, ⊗, Hom）。这是 étale 上同调、D-模理论、perverse 层、几何 Langlands 纲领的范畴论骨架。</p>
+<p><strong>Σ ⊣ Δ ⊣ Π——topos 中的量词。</strong> 在 topos ℰ 中，常值层（对角）函子 Δ: ℰ→ℰ^J 有两个伴随：左伴随 Σ（余极限/存在量词）和右伴随 Π（极限/全称量词）。这给出了 topos 内逻辑的形式解释：如 ℰ = Set，则函数 f: X→Y 诱导 Σ_f ⊣ Δ_f ⊣ Π_f，其中 Σ_f 是像映射，Π_f 是对偶像。这一三相伴随使得任意 Grothendieck topos 成为范畴逻辑的模型——Lawvere-Tierney（1969-1971）正是以此重新构建了集合论的基础。</p>
+<p><strong>Stone-Čech 紧致化。</strong> 包含函子 CompHaus→Top 有左伴随 β——即 Stone-Čech 紧致化。单位 η_X: X→βX 是万有映射：任何从 X 到紧 Hausdorff 空间的连续映射都唯一地通过 βX 分解。Gelfand 对偶：交换 C*-代数范畴相反于紧 Hausdorff 空间范畴——此对偶本身就是一个伴随等价。</p>
+<div class="key-insight">把五行并排看：代数里是"自由/遗忘"，表示论里是"张量/内态"，几何里是"正像/拉回"，逻辑里是"存在/全称"，拓扑里是"紧化/包含"。<strong>同一张脸，五个学科。</strong></div>
+</section>
+
+<section>
+<h3>五、证明——左伴随保余极限，右伴随保极限</h3>
+<p>这是伴随函子"自动化计算"的核心定理。直觉：左伴随是"造"，造的过程理应尊重"拼合"（余极限）；右伴随是"拆"，拆的过程理应尊重"限制"（极限）。</p>
+<p><strong>定理。</strong> 若 F ⊣ G，则 F 保所有存在的余极限，G 保所有存在的极限。</p>
+<p><strong>证明（以 G 保乘积为例；其余极限照抄）。</strong> 设 (Y_i) 在 𝒟 中有乘积。对任意 X ∈ 𝒞 有自然同构链：</p>
+<div class="formula display" data-tex="\mathrm{Hom}_{\mathcal{C}}(X,G(\prod_i Y_i))\cong\mathrm{Hom}_{\mathcal{D}}(FX,\prod_i Y_i)\cong\prod_i\mathrm{Hom}_{\mathcal{D}}(FX,Y_i)\cong\prod_i\mathrm{Hom}_{\mathcal{C}}(X,GY_i)\cong\mathrm{Hom}_{\mathcal{C}}(X,\prod_i GY_i)"></div>
+<p><strong>第 1 步</strong>：第一、三个 ≅ 来自伴随双射；第二个 ≅ 来自 Hom 函子把乘积送到乘积（每个态射由各分量唯一决定）；第四个 ≅ 是 Hom(−, ∏) 的表示性质。</p>
+<p><strong>第 2 步</strong>：整条链对 X 自然，于是 Hom(−, G(∏Y_i)) ≅ Hom(−, ∏GY_i) 是 Hom 函子的自然同构。</p>
+<p><strong>第 3 步（Yoneda 引理）</strong>：表示对象在同构意义下唯一，故 G(∏Y_i) ≅ ∏GY_i。∎</p>
+<p>等化子、拉回、终对象等其它极限：把"乘积 + 等化子"的组合论证逐点平移，或用 Hom 函子把任意极限对应的 Hom 集同样"换位"后由 Yoneda 收尾。左伴随保余极限是范畴对偶版本，取反范畴即得。</p>
+<div class="key-insight" style="border-left-color:#7ee787"><strong>完整例题 3 —— 用定理快速计算。</strong><br>
+<strong>任务</strong>：设 U: Grp→Set 为遗忘函子，验证 U(ℤ/2 × ℤ/3) = U(ℤ/2) × U(ℤ/3) 且用 Hom 集独立复核。<br>
+<strong>第 1 步（用定理）</strong>：U 是右伴随 ⟹ 保乘积，故 U(ℤ/2 × ℤ/3) ≅ U(ℤ/2) × U(ℤ/3)（集合直积），两侧各有 2×3 = 6 个元素。<br>
+<strong>第 2 步（独立复核）</strong>：Hom_Grp(ℤ, ℤ/2×ℤ/3) ≅ ℤ/2×ℤ/3（同态由 1 的像决定，n ↦ gⁿ）；而 Hom_Set(ℤ, U(ℤ/2×ℤ/3)) = U(ℤ/2×ℤ/3)。两侧各 6 个元素，双射 1 ↦ g。∎</div>
+<p>看到"Hom(ℤ, G) ≅ G"这个恒等式多有用了吗？它让群论计算变成集合计数。</p>
+</section>
+
+<section>
+<h3>六、单子与伴随——"把结构外包出去"的代数</h3>
+<p>每次伴随都自带一个"复合味道"：<strong>单子（monad）</strong> T = (GF, η, μ = GεF) 和<strong>余单子（comonad）</strong> S = (FG, ε, δ = FηG)。直觉：GF 是"先造再拆"——把对象变成它的自由版本后再遗忘掉，于是对象带着一层"自由外壳"。</p>
+<p>深刻的事实：<strong>每个伴随给出一个单子；反过来每个单子 T 可通过两种方式实现为伴随：</strong></p>
+<ul>
+  <li><strong>（a）Kleisli 范畴</strong> 𝒞_T：对象同 𝒞，态射 𝒞(X,Y) = 𝒞(X, TY)，复合由 T 的乘法 μ 给出。想法：把"副作用"藏在态射的目标里。</li>
+  <li><strong>（b）Eilenberg-Moore 范畴</strong> 𝒞^T：对象是 T-代数 (X, h: TX→X)，满足结合律与单位律。想法：把"已经吃过结构"的对象一次收编。</li>
+</ul>
+<p>Kleisli 范畴是 𝒞^T 的"自由代数"子范畴的全忠实嵌入——这是泛代数和 Haskell 编程语言（IO monad、State monad 等）中单子理论的数学根基。</p>
+<p><strong>Kan 扩张（extension）。</strong> 左 Kan 扩张（Lan_K F）是预复合函子 (−∘K) 的左伴随，右 Kan 扩张（Ran_K F）是其右伴随。极限和余极限分别是常函子的右、左 Kan 扩张。这统一了"最优构造"的所有变种——伴随、Kan 扩张、极限/余极限构成范畴论中三位一体的核心概念。</p>
+<div class="key-insight" style="border-left-color:#f78166"><strong>试试看 2.</strong> 对自由幺半群 F: Set→Mon ⊣ U: Mon→Set，写出单子 T = UF 的乘法 μ_X: U(F(U(F(X)))) → U(F(X))。<br><em>提示：</em>F(X) 的元素是 X 上的有限词列（含空词）。μ 的作用是"把一列词列铺平成单个词列"——即对词列取拼接。验证 μ 满足结合律：先铺内层还是先铺外层，结果一样。</div>
+</section>
+
+<section>
+<h3>七、伴随函子定理（AFT）——何时存在伴随？</h3>
+<p>伴随函子定理回答范畴论的一个基础问题：给定 G: 𝒟→𝒞，何时存在左伴随 F？</p>
+<p><strong>一般伴随函子定理（GAFT）</strong>（Freyd 1964, "Abelian Categories"）：若 𝒟 完备、G 保持小极限，则 G 有左伴随 ⟺ 对每个 X ∈ 𝒞 满足<strong>解集条件（solution set condition）</strong>——存在一族态射 {f_i: X→GY_i}（Y_i 属于某个集合大小的类）使任何 X→GY 都穿过某个 f_i。这本质上是"自由对象的集合论边界"：完备性提供"极限闭包"，解集条件保证构造出来的空间不过大。</p>
+<p><strong>特殊伴随函子定理（SAFT）</strong>（Freyd 1964）：若 𝒟 完备、"共幂"（每个对象只有集合大小的余幂）、有 cogenerating set（一个能"区分"任何平行对的对象的集合），且 𝒞 完备，则任何保小极限的函子 G: 𝒟→𝒞 都有左伴随。SAFT 在代数中特别顺手：可证明遗忘 U: Grp→Set 满足 SAFT（从而自由群存在），而 U: Top→Set 不满足 SAFT——因为拓扑空间"太能装"。</p>
+<p><strong>应用与边界。</strong> GAFT 直接给出完备范畴的自由构造的存在性（完备性证明）；解集条件可能失效，Mac Lane（1971, V§6）有经典反例。Lawvere（1963）的函子语义学把 AFT 用于逻辑：每个 Lawvere 理论 T 都有自由模型，T-Alg → Set 有左伴随（自由代数函子）。在无穷范畴中，Lurie（2009, HTT §5.2.2）证明了 ∞-范畴版本的 AFT——可表示性 + 可及性保证伴随存在——这是更高维范畴论的当前前沿。</p>
+</section>
+
+<section>
+<h3>八、Beck 单子性定理——何时一个范畴"自带代数结构"？</h3>
+<p>直觉：Mod-R 的每个对象天生是"R-模"，群、环、Lie 代数也一样。有没有一个统一判据，能说出"一个范畴的对象就是某类代数结构"？Beck 定理给了精确答案。</p>
+<p><strong>Beck 定理</strong>（Beck 1967, "Seminar on Triples and Categorical Homology Theory"，即 Barr-Beck 定理）：设 F ⊣ U: 𝒟→𝒞 为伴随，T = UF 是诱导的单子。则比较函子 K: 𝒟→𝒞^T（把 Y ∈ 𝒟 映为 T-代数 (UY, Uε_Y)）是等价函子（即 U 是单子函子）当且仅当：</p>
+<ul>
+  <li><strong>（1）</strong> U 反射同构：U(f) 是同构 ⟹ f 是同构；</li>
+  <li><strong>（2）</strong> 𝒟 有 U-分裂的余等化子，且 U 保持这些余等化子（即对 U 映成"分裂余等化子"的图，𝒟 有极限且 U 保持之）。条件（2）称<strong>精确条件</strong>。</li>
+</ul>
+<p><strong>经典应用——"结构 = Set 上的单子"。</strong>（a）每个代数类（群、环、模、向量空间、Lie 代数……）到 Set 的遗忘都是单子函子；用 Beck 定理，这些 𝒟 等价于相应 T-代数范畴 𝒞^T，统一说明了"代数结构 = Set 上的单子代数"。（b）<strong>Grothendieck 下降</strong>：忠实平坦同态 R→S 给出 S⊗_R−: Mod-R→Mod-S ⊣ U: Mod-S→Mod-R；此伴随是单子性的 ⟺ 忠实平坦下降定理成立——Mod-R 等价于带"下降数据"的 Mod-S 对象范畴。（c）拓扑中，紧 Hausdorff 空间范畴等价于超滤单子在 Set 上的代数（Manes 1969）。</p>
+<p>在无穷范畴中，Lurie（2017, Higher Algebra §4.7）证明了 ∞-范畴版单子性定理，用于识别"同伦代数结构"——空间中的群、环、E_n-代数都能用它刻画。</p>
+</section>
+
+<section>
+<h3>九、反例——伴随不总存在，"最优构造"会失效</h3>
+<p><strong>反例 1：不存在"自由域"。</strong> 遗忘函子 U: Field→Set 没有左伴随。理由：若 F({x}) 存在，它是域，必有某个特征 p（p = 0 或素数）。但 Hom_Set({x}, U(𝔽₂)) ≠ ∅（把 x 送到任一元素），而域同态必保持特征：若 F({x}) 的特征不是 2，则根本没有同态 F({x})→𝔽₂，矛盾。特征被"锁死"在自由对象里，而集合上的映射没有特征概念——这就是解集条件失效的典型形态。</p>
+<p><strong>反例 2：右伴随保极限但不保余积。</strong> 遗忘函子 U: Grp→Set 保乘积（§五），却不保余积。Grp 中 ℤ * ℤ 是自由积，包含所有既约词（如 ab、a²b⁻¹ 等）；而 Set 中 U(ℤ) ⊔ U(ℤ) 的元素只有"左侧一个整数或右侧一个整数"。典范映射 U(ℤ) ⊔ U(ℤ) → U(ℤ*ℤ) 不满：词 ab 不在像里。所以"拆"不尊重"拼"。</p>
+<p><strong>反例 3：Hom 集双射必须自然，否则只是"点状相等"。</strong> 有些 F、G 对每个 X, Y 都有等基数 Hom 集，却没有自然同构（例如 Set 上有限集的两个不同函子可能逐点同势）。双射本身不值钱，"对 X, Y 有统一步调"（自然性）才是伴随。</p>
+</section>
+
+<section>
+<h3>十、工作题——用伴随算到底</h3>
+<p><strong>工作题 1（列全配对）。</strong> 写出 Hom_Set({a,b}, U(ℤ/3ℤ)) 的全部 9 个元素，并逐一配到 Hom_Grp(F({a,b}), ℤ/3ℤ) 的 9 个同态。</p>
+<details><summary>显示解答</summary>
+<p>集合函数 {a,b}→ℤ/3 共 3² = 9 个（a、b 各自由取值 0,1,2）。同态 F({a,b})→ℤ/3 由 a、b 的像 (u, v) ∈ ℤ/3² 唯一决定（自由群无更多关系），也是 9 个。配对：函数 (f(a), f(b)) = (u, v) 对应同态 (a ↦ u, b ↦ v)。这正是 φ 的方向：限制到生成元。∎</p></details>
+<p><strong>工作题 2（离散拓扑伴随）。</strong> 对离散空间函子 D: Set→Top ⊣ U: Top→Set，写出 η_X 与 ε_Y，并验证三角恒等式 Gε∘ηG = id_G。</p>
+<details><summary>显示解答</summary>
+<p>η_X: X → U(D(X)) 是集合层面的恒等（X 的每个点带上离散拓扑不变）；ε_Y: D(U(Y)) → Y 在集合层面是恒等、连续因离散拓扑最细。对空间 Y：U(Y) →^{η} U(D(U(Y))) →^{Uε} U(Y)，元素 y ↦ y ↦ y，合成恒等。∎</p></details>
+<p><strong>工作题 3（Hom 的极限保持）。</strong> 固定对象 M，函子 Hom(M, −): 𝒞→Set 是右伴随吗？用它证明 Hom(M, ∏Y_i) ≅ ∏ Hom(M, Y_i)，并解释这为什么是 §五 定理的推论。</p>
+<details><summary>显示解答</summary>
+<p>是：Hom(M, −) 是"常数函子把 M 送到常值 M"的右伴随（伴随的 Yoneda 形式）。于是由 §五 定理保极限：Hom(M, ∏Y_i) ≅ ∏Hom(M, Y_i)——每个态射由各分量决定。∎</p></details>
+</section>
+
+<section>
+<h3>十一、前沿：无穷范畴中的伴随——Lurie 的伴随函子定理</h3>
+<p>在无穷范畴中，伴随函子定理需要更精细的条件。Lurie（2009）在 Higher Topos Theory 中给出了无穷范畴版本的伴随函子定理——可表示性 + 可及性 ⟹ 伴随存在。仍开放：无穷范畴中"自由构造"的完整分类理论。</p>
+</section>
+
+<section>
+<h3>十二、历史发展——这条主线怎么走出来的</h3>
+<p><strong>Kan（1958, "Adjoint Functors", Trans. AMS 87）</strong>：以标准方式首次系统建立了伴随函子概念，证明了基本性质（函子性、极限/余极限的保持），也是 Kan 扩张概念的提出者。<strong>Freyd（1964, "Abelian Categories", Harper &amp; Row）</strong>：证明了一般/特殊伴随函子定理，把伴随的存在性问题化为可判定的条件——这是范畴论从"定义"到"定理"的关键转折。Freyd 还在同书中建立了 Abel 范畴与 Mitchell 嵌入定理。<strong>Lawvere（1963, "Functorial Semantics of Algebraic Theories", PNAS 50）</strong>：博士论文用伴随对重写泛代数——代数理论 = 小型范畴，模型 = 保有限积函子，自由代数 = 左伴随；这一"Lawvere 理论"范式成为现代代数语义学与 functional programming 中 algebraic effects 的理论源头。<strong>Eilenberg-Moore（1965, "Adjoint Functors and Triples", Illinois J. Math. 9）</strong>：系统建立了单子的 Kleisli 范畴与 Eilenberg-Moore 范畴，证明每个单子都能以这两种方式实现为伴随——单子理论由此成为范式的基石。<strong>Beck（1967, "Seminar on Triples and Categorical Homology Theory"）</strong>：证明了单子性定理（也以 Barr-Beck 定理知名），把"什么范畴承载某种代数结构"直接化为单子的精确条件。<strong>Mac Lane（1971, "Categories for the Working Mathematician", GTM 5, Springer）</strong>：范畴论"圣经"，系统组织了伴随（Kan 形式）、单子（Eilenberg-Moore、Beck）、Kan 扩张（Kan 1960）、极限/余极限（Kan 1958）等核心概念，"伴随中的单位余单位"一节尤其著名。<strong>Borceux（1994, "Handbook of Categorical Algebra" 三卷, Cambridge）</strong>：现代百科全书，第二卷系统处理了伴随函子定理、单子性及其在各数学分支（泛代数、代数几何、逻辑学）中的应用，是伴随与单子理论的权威参考。</p>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Mac Lane, Categories for the Working Mathematician</strong></p>
+<p>&rarr; <strong>E. Riehl, Category Theory in Context</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/abstract-algebra.html">抽象代数</a>、<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/higher-category-theory.html">⬆️ 高阶范畴论</a>：同一学科分类「范畴论」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+</section>

@@ -1,0 +1,154 @@
+<section>
+<h3>〇、直觉入门——公平赌局的数学：为什么"必赢策略"是幻觉</h3>
+<p>想象一个公平游戏：每轮赌 1 元，赢 +1、输 −1，各半概率。你的财富随轮次浮动——它有一个响亮的名字：<strong>鞅（martingale）</strong>。定义只有一条：</p>
+<div class="formula display" data-tex="\mathbb{E}[X_{n+1}\mid \mathcal F_n]=X_n\qquad(\text{条件期望下“不赚不亏” = 公平})"></div>
+<p>"鞅"在法语里是"加倍下注策略"的意思——赌徒幻想用加倍注码必赢，而数学给这幻想盖棺定论。三个问题构成鞅理论的主干：</p>
+<ul>
+<li><strong>停时定理：</strong> 在公平游戏里用"聪明的退出时间"能占便宜吗？答案是——若退出时间受控（有界/可积条件），<strong>期望收益仍是 0</strong>：公平无法被技巧打败。</li>
+<li><strong>赌徒破产：</strong> 带 1 元本金、目标 N 元的赌徒，破产概率 (N−1)/N——目标越大越接近必然破产。一维对称随机游走"常返"：几乎必然回到原点。</li>
+<li><strong>鞅收敛定理：</strong> 非负上鞅几乎必然收敛——大量随机算法与统计方法的分析基石。</li>
+</ul>
+<p>鞅不是数学游戏：期权定价（Black–Scholes 的风险中性测度下，折现股价是鞅）、序贯检验（Wald）、随机算法分析、统计力学的涨落，全站在它上面。而"加倍下注"的著名幻觉，恰恰是理解停时定理"条件为何必要"的最好入口（例题 2）。</p>
+<div class="key-insight">洞察：鞅 = "条件期望公平"的过程；随机游走是它的原型。停时定理说"有界策略不能赢公平游戏"，赌徒破产公式给出具体概率，而加倍下注的伪必胜需要<strong>无限资本</strong>——条件不满足时，公平被"无穷"钻了空子。画布上你会看到：随机游走的末位分布趋于钟形（CLT 再现）、破产频率精确贴住公式、加倍策略在有限资本下必被"清零"追上。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/probability.html">概率论基础</a>（条件期望与独立性）、<a href="/pages/clt.html">大数定律与 CLT</a>（随机游走的极限形状）、<a href="/pages/brownian-motion.html">布朗运动</a>（连续时间的鞅亲戚，可选）。</p></div>
+
+<section>
+<h3>一、一个具体问题——公平游戏里的三个"不可能"</h3>
+<p><strong>问题 1：策略能赢吗？</strong> 赌徒可随时按过去结果决定下注额与退出时间。若策略"保证"正期望，就破坏了公平。Doob 的<strong>停时定理</strong>说：对<strong>有界停时</strong> τ，E[X_τ]=E[X₀]——<strong>任何受控的退出策略期望收益为零</strong>。直觉：公平对每一"步"成立，若退出时间"不偷看未来"且风险可控，公平对"退出点"也成立。</p>
+<p><strong>问题 2：破产概率多大？</strong> 从 i 元玩到 {0,N}（公平 ±1），停时定理给出破产概率</p>
+<div class="formula display" data-tex="P(\text{先到 }0)=\frac{N-i}{N}\qquad(\text{目标 }N\to\infty \Rightarrow\ \text{概率}\to1)"></div>
+<p>i=1、N=10：破产概率 0.9——想靠公平游戏"以小博大"到 10 倍，九成会先破产。目标越远，破产越接近必然（一维常返的另一面）。</p>
+<p><strong>问题 3：会回来吗？</strong> 一维/二维对称随机游走<strong>常返</strong>（几乎必然回到原点，且无限多次）；三维起<strong>暂态</strong>（以正概率一去不回）——Pólya（1921）的著名维度分界：2D 的"随处可归"到 3D 的"逃离"，只差一个维度。</p>
+<p>三个问题分别由停时定理、破产公式、Pólya 定理回答；它们共用同一个工具箱（鞅 + 调和函数），也共用同一个反直觉核心：<strong>公平 + 无限（时间/资本/维度）会制造"非公平"的边界效应</strong>。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——停时：赌徒唯一的"自由"，以及它的极限</h3>
+<p><strong>什么是停时？</strong> τ 是停时若"τ≤n"由前 n 步决定——不能偷看未来（赌徒不能"看结果再决定退出"）。例子：首次达到 +5 的时刻是停时；"我押注后才知道结果的那一轮"不是。</p>
+<p><strong>停时定理的证明灵魂。</strong> 对有界停时 τ≤T：把 E[X_τ] 写成 ΣₙE[X_τ·1_{τ=n}]，用 X 的鞅性逐项"倒推"（tower property）——每步的条件期望都不赚不亏，求和后仍然公平。∎ 条件（有界性）不是装饰：它保证"倒推"能在有限步内合法完成。</p>
+<p><strong>如果去掉条件？</strong> 加倍下注（例题 2）：连输就加倍，赢一次即收手——若资本无限，几乎必然赢 1 元，E[X_τ]=1≠0=X₀。矛盾不在鞅，而在 τ 无界且财富不满足可积性（sup|W_{n∧τ}| 无界）。<strong>停时定理的条件精确地划出了"公平的边界"</strong>——这就是为什么真实赌场有"下注上限"。</p>
+<p><strong>鞅收敛定理。</strong> 非负上鞅（E[X_{n+1}|F_n]≤X_n）几乎必然收敛到有限极限。直观：非负 + 条件期望不升 = "期望的降落伞"，漂不下去只能收敛。应用：随机算法（轮次数作为上鞅）、序贯统计、Doob 收敛的无数变体。</p>
+</section>
+
+<section>
+<h3>三、例题 1——赌徒破产：数字核对（一步步算完）</h3>
+<p><strong>题目。</strong> 公平硬币，本金 i=1、目标 N=10，每次 ±1，玩到 0 或 10。求破产概率并用蒙特卡洛核对（画布）。</p>
+<p><strong>第一步：设停时与鞅。</strong> S_n 是对称随机游走（鞅），τ=min{n：S_n∈{0,10}}（有界停时：τ≤？未必有界？一维游走必达 {0,10} 以概率 1 且 E τ&lt;∞；用有界截断 τ∧T 再取极限——标准的严格化）。停时定理：E[S_τ]=S₀=1。</p>
+<p><strong>第二步：解出概率。</strong> S_τ=0·P(破产)+10·P(到 10)，故 P(到 10)=1/10、</p>
+<div class="formula display" data-tex="P(\text{破产})=1-\frac{i}{N}=\frac{9}{10}=0.9\qquad\blacksquare"></div>
+<p><strong>第三步：一般公式与极限。</strong> 从 i 到目标 N：破产 (N−i)/N。N→∞（如想赢到"巨款"）：破产 →1——<strong>以小博大必死</strong>。∎</p>
+<p><strong>第四步：画布核对。</strong> 蒙特卡洛破产频率（数千次模拟）应在 0.9 附近 ±0.02；把 N 拉到 100、i=1：频率 ≈0.99。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——加倍下注的"伪必胜"与它的破绽（一步步算完）</h3>
+<p><strong>题目。</strong> "连输加倍、赢一次收手"的策略：为什么看起来必胜？破绽在哪？</p>
+<p><strong>第一步：策略。</strong> 第 k 次下注 2^{k−1}；一旦赢（概率 1/2 每轮独立），净赚 1 元收手。前 k 轮全输的概率 2^{−k}，之后一轮必赢（若无限资本）。</p>
+<p><strong>第二步：看起来必胜。</strong> P(第 n 轮前赢)=1−2^{−n}→1——"几乎必然赢 1 元"。∎</p>
+<p><strong>第三步：破绽 1——停时定理条件失效。</strong> 停时 τ（首次赢）无界且 E sup|W| 不收敛；W_τ=1 而 W₀=0——若条件成立会推出 E W_τ=0，矛盾。∎</p>
+<p><strong>第四步：破绽 2——资本有限。</strong> 设本金 M：连输 k 轮需 1+2+…+2^{k−1}=2^k−1≤M，即 k≤log₂(M+1)。资本不足的轮次 = 破产。首轮连输长度超过 ⌊log₂(M+1)⌋ 就清零——这种"大损失"虽少，却以几何概率发生，抵消全部小赢。画布上把 M 设小（如 10），破产会周期性出现。<strong>期望净收益恰为 0</strong>（每轮公平 + 有界停止时间）。∎</p>
+<p><strong>第五步：赌场如何防你。</strong> 下注上限 = 把"无限资本"假设废掉；加倍策略因此只是把"高频小赢 + 罕见清零"打包——鞅理论早就算清了这笔账。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>定义：</strong> 滤流 (F_n)、适应过程、鞅/上鞅/下鞅（条件期望等式/不等式）、停时与 τ 代数。</li>
+<li><strong>停时定理（Doob）：</strong> τ 有界 ⟹ E[X_τ]=E[X₀]；更一般版本用 E τ&lt;∞ + |X_{n+1}−X_n| 有界（Wald）或一致可积性。</li>
+<li><strong>Wald 恒等式：</strong> iid 步长 Xᵢ（期望 μ）：停时 τ（E τ&lt;∞）时 E[S_τ]=μE[τ]。</li>
+<li><strong>赌徒破产：</strong> 公平 ±1 从 i 到 {0,N}：P(破产)=(N−i)/N；带偏（赢概率 p）的版本含 (q/p) 幂次。</li>
+<li><strong>鞅收敛定理：</strong> 非负上鞅 a.s. 收敛；L¹-有界鞅 a.s. 收敛（不一定 L¹——反例见例题 2）。</li>
+<li><strong>Pólya（1921）：</strong> 对称简单随机游走 ℤ 与 ℤ² 常返、ℤ³（d≥3）暂态。证明可用"返回原点概率"的电网络类比或调和函数。</li>
+<li><strong>Doob 分解：</strong> 可积适应过程 = 鞅 + 可料过程（上鞅 = 鞅 − 增过程）——连续时间随机积分的地基。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\mathbb E[X_{n+1}\mid\mathcal F_n]=X_n;\qquad S_n=\sum_{k\le n}\epsilon_k\ (\epsilon_k=\pm1\ \text{公平})"></div>
+<div class="formula display" data-tex="P(\text{破产})=\frac{N-i}{N}\ (\text{公平});\qquad \mathbb E[S_\tau]=\mathbb E[S_0]\ (\text{有界停时})"></div>
+<div class="formula display" data-tex="\text{Pólya: } \mathbb Z,\mathbb Z^{2}\ \text{常返},\ \mathbb Z^{3}\ \text{暂态};\qquad \text{非负上鞅 }a.s.\ \text{收敛}"></div>
+</section>
+
+<section>
+<h3>七、延伸——鞅的现代足迹</h3>
+<ul>
+<li><strong>金融数学。</strong> 无套利 ⟺ 存在风险中性测度 Q，使折现股价在 Q 下是鞅（→ <a href="/pages/kalman-filter.html">滤波</a>、<a href="/pages/optimal-transport.html">传输</a> 课的优化视角）；期权价格 = 折现期望；Black–Scholes 的整个大厦以鞅为梁。停时 = 美式期权的最优行权时间。</li>
+<li><strong>序贯分析。</strong> Wald 的 SPRT（序贯概率比检验）：用鞅的指数版本控制错误概率——"边做实验边决定要不要继续"的统计（临床实验的标准工具）。</li>
+<li><strong>随机算法分析。</strong> 把"轮次/步数"做成上鞅，用停时/收敛定理给出高概率界（随机快速排序、随机化的几何算法）——鞅是算法分析的第二语言。</li>
+<li><strong>布朗运动与随机分析。</strong> 布朗运动是鞅；伊藤积分 = 连续鞅的积分；鞅表示定理、Girsanov 变换是随机分析的骨架（→ <a href="/pages/brownian-motion.html">布朗运动</a> 课）。</li>
+<li><strong>势论与位相。</strong> 停时 + 调和函数（h(X_n) 是鞅 ⟺ h 调和）把随机游走与 PDE（拉普拉斯方程）焊在一起——赌徒破产 = 离散 Dirichlet 问题。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"赌场想当然"</h3>
+<p><strong>陷阱 1："公平游戏没有策略能赢 ⟹ 没有方法占便宜"？</strong> 需要可积性条件。无限资本 + 无界停时的加倍策略（例题 2）"几乎必然赢"——条件被破坏时公平可以"被无穷打败"。真实赌场的下注上限就是来关掉这个洞的。</p>
+<p><strong>陷阱 2："鞅 = 随机游走"？</strong> 随机游走是最简单的鞅；鞅还包括任意"公平条件期望"过程（股价、赌资、势函数、算法轮次）。且随机游走不必是鞅（带漂移就不是）——别把原型当定义。</p>
+<p><strong>陷阱 3："停时 = 任意随机时间"？</strong> 停时由过去决定（τ≤n ∈ F_n），不能"等结果出来再决定退出"。"看结果再停止"的策略不是停时，停时定理不适用——很多"必胜"幻觉正是在这里偷换概念。</p>
+<p><strong>陷阱 4："鞅收敛定理 ⟹ 期望也收敛（L¹）"？</strong> 只保证 a.s. 收敛；L¹ 收敛需一致可积性。加倍策略的财富 W_n a.s. 不发散吗？反例说明 a.s. 收敛与 E 收敛可以差很远——把"几乎必然"当"期望上"是常见混淆。</p>
+<p><strong>陷阱 5："3D 暂态 = 走得远，2D 常返 = 走得近"？</strong> 维度影响的是"返回概率"，不是"走多远"：2D 虽常返但返回时间可以极长（重尾），3D 虽暂态也常"徘徊很久"。维度的效应微妙，别简化为"几维走多远"。</p>
+</section>
+
+<section>
+<h3>九、当前状态——鞅理论的前沿</h3>
+<ol>
+<li><strong>连续鞅与随机分析。</strong> 伊藤/Stratonovich 积分、鞅表示、Girsanov——随机分析的核心语言在金融与物理中持续扩展（→ <a href="/pages/brownian-motion.html">布朗运动</a>）。</li>
+<li><strong>鞅在组合与算法。</strong> Doob 集中的应用、可料过程的浓度界（freedman 不等式等）、随机算法/在线学习（bandits）的 regret 分析——鞅是"分析随机过程"的通用曲柄。</li>
+<li><strong>最优停时与赌博。</strong> Dubins–Savage 传统（"如何赌博才必输得最慢"）在金融与在线决策中复兴：最优停时理论（美式期权、秘书问题）是应用概率的常青树。</li>
+<li><strong>自由鞅与算子。</strong> 非交换概率（→ <a href="/pages/operator-algebras.html">算子代数</a>）中的鞅（自由鞅、鞅收敛的非交换版）——鞅理论随概率论一起"量子化"。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Pólya (1921)</strong>：随机游走的常返/暂态维度分界。</li>
+<li><strong>Lévy (1934–37)</strong>：鞅概念的引入（"公平过程"）。</li>
+<li><strong>Doob (1940, 1953)</strong>：停时定理、鞅收敛与 <em>Stochastic Processes</em>——鞅理论体系化。</li>
+<li><strong>Wald (1945)</strong>：序贯概率比检验（SPRT）——鞅在统计的工程化。</li>
+<li><strong>Snell (1952)</strong>：最优停时（Snell 包络）。</li>
+<li><strong>Dubins–Savage (1965)</strong>：<em>How to Gamble If You Must</em>——赌博与鞅的数学诗篇。</li>
+<li><strong>Black–Scholes (1973) / Harrison–Kreps (1979)</strong>：风险中性鞅测度与期权定价。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——手算破产与加倍</h3>
+<p><strong>题 1（破产公式）。</strong> 本金 i=3、目标 N=10：破产概率？<strong>提示：</strong>(N−i)/N=7/10=0.7。</p>
+<p><strong>题 2（有偏游戏）。</strong> 赢概率 p=0.6 的"不公平"游戏从 i 玩到 {0,N}：破产概率表达式？<strong>提示：</strong>记 ρ=(1−p)/p：P(破产)=(ρ^N−ρ^i)/(ρ^N−1)（ρ≠1 时）。p&gt;1/2 时破产概率随 N 指数变小（正期望可积累）。</p>
+<p><strong>题 3（加倍破绽）。</strong> 本金 M=31：连输多少轮会破产？那轮的概率？<strong>提示：</strong>需 2^k−1&gt;31 ⟹ k≥6；P(前 6 轮全输)=2^{−6}=1/64≈1.56%。</p>
+<p><strong>题 4（期望为零）。</strong> 解释为什么（带本金上限的）加倍策略总期望仍为 0。<strong>提示：</strong>每次下注公平；有界停时（破产或到账 +1 且本金耗尽或赢 1 收手是受控停时）⟹ E 收益=0；高频小赢被 1/64 的清零抵消。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：0.7。∎</p>
+<p><strong>题 2</strong>：见提示公式（ρ=(1−p)/p）。∎</p>
+<p><strong>题 3</strong>：k=6、1.56%。∎</p>
+<p><strong>题 4</strong>：见提示：受控停时下期望为零。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布分布）。</strong> 跑 2000 条对称随机游走，把终点画成直方图：宽度 ~√n、形状趋近钟形（CLT）；对比 n=100 与 n=10000 的宽度比 ~10。再注意"回到 0"频繁——1D 常返的现场。</p>
+<p><strong>试试看 2（破产模拟）。</strong> 本金与目标滑杆：破产频率贴住理论 (N−i)/N。把目标拉大：频率 →1——"以小博大"的数学死缓。</p>
+<p><strong>试试看 3（加倍策略）。</strong> 开加倍模式、小本金 M=10：多跑几次看"清零"如何周期性抹掉累积的小赢。把 M 拉到 1000：清零变罕见但发生时损失更大——期望始终为 0。</p>
+<p><strong>试试看 4（跨课连线）。</strong> 在 <a href="/pages/clt.html">CLT</a> 课对照随机游走末位分布的钟形；在 <a href="/pages/brownian-motion.html">布朗运动</a> 课看连续版鞅；在 <a href="/pages/kalman-filter.html">Kalman 滤波</a> 课想"条件期望 = 最佳预测"——鞅的条件期望语言贯穿全部随机课。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>R. Durrett, Probability: Theory and Examples</strong>（鞅章节是现代标准）</p>
+<p>&rarr; <strong>D. Williams, Probability with Martingales</strong>（短小精悍的鞅圣经）</p>
+<p>&rarr; <strong>G. Grimmett, D. Stirzaker, Probability and Random Processes</strong>（广而稳）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.21（概率论）与 III（鞅条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/clt.html">大数定律与 CLT</a>、<a href="/pages/brownian-motion.html">布朗运动</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/clt.html">🎰 大数定律与 CLT</a>：随机游走末位分布 = 中心极限的现场。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">🏃 布朗运动</a>：连续鞅与随机分析的表亲。</p>
+<p>&rarr; <a href="/pages/probability.html">🎲 概率论基础</a>：条件期望与独立性的地基。</p>
+<p>&rarr; <a href="/pages/kalman-filter.html">📈 Kalman 滤波</a>：条件期望 = 最优预测的工程形态。</p>
+<p>&rarr; <a href="/pages/random-matrix.html">🎱 随机矩阵</a>：谱统计与鞅方法共享的浓度语言。</p>
+<p>&rarr; <a href="/pages/optimal-transport.html">🚚 最优传输</a>：风险中性测度与定价的对偶视角。</p>
+</section>

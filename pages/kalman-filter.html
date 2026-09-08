@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="从噪声中估计状态——阿波罗导航的核心算法" />
+  <meta property="og:title" content="Kalman 滤波 — Vibe Math" />
+  <meta property="og:description" content="从噪声中估计状态——阿波罗导航的核心算法" />
+  <title>Kalman 滤波 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎯 Kalman 滤波 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">从噪声中估计状态——阿波罗导航的核心算法</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='kalman-filter',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/soliton.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🌊 孤子</a>
+  <a href="/pages/probability.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎲 概率论基础 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：GPS 和直觉，谁更可信？</h3>
+<p>你的手机屏幕显示"我在这里，精确到 3 米"。但仔细想想：GPS 卫星信号穿越电离层、被大楼反射，测距误差常常有几十米；手机里的惯性传感器又不停地漂移。真正靠谱的定位，是把<strong>两类都不准的信息</strong>——"卫星说我在这"和"传感器说我上一刻在这、大概往那边动"——<strong>按各自的靠谱程度加权融合</strong>。</p>
+<p>先看一个最小的例子。我猜你此刻在 x = 100 米处，但我的猜测很不确定：方差 P = 4 m²（标准差 2 米）。GPS 读数说你在 x = 110 米处，GPS 的测量方差 R = 9 m²（标准差 3 米）。两股信息，哪个更可信？我自己的猜测更可信（方差 4 &lt; 9），但 GPS 也不该完全忽略。合理的折中：</p>
+<div class="formula display" data-tex="K=\frac{P}{P+R}=\frac{4}{4+9}=\frac{4}{13}\approx0.31,\qquad \hat{x}=100+K(110-100)=100+0.31\times10\approx103.1"></div>
+<p>答案 103.1 米，离我的猜测 100 更近、离 GPS 的 110 稍远——正因为我自己的估计"更准"。这个加权平均，就是 Kalman 滤波的核心动作，只是它<strong>每时每刻都在做</strong>，并且随着信息累积，它的猜测越来越准（方差不断缩小）。火箭、手机导航、自动驾驶都在用这套"猜真相"的功夫。</p>
+<div class="key-insight">一句话：Kalman 滤波 = 把"不太准的测量"和"大致规律"按可信度加权融合，越猜越准。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、状态空间模型：把"它大概怎么动"写下来</h3>
+<p>Kalman 滤波处理的对象不是孤立的数字，而是<strong>状态空间模型</strong>——两条方程：一条说"状态怎么演化"，一条说"观测怎么来"。</p>
+<div class="formula display" data-tex="x_k=Fx_{k-1}+w_{k-1}\qquad(\text{状态方程，}w\sim\mathcal N(0,Q))"></div>
+<div class="formula display" data-tex="y_k=Hx_k+v_k\qquad(\text{观测方程，}v\sim\mathcal N(0,R))"></div>
+<p>记号逐个解释：x_k 是第 k 时刻的真实状态（比如位置，未知）；F 是<strong>状态转移矩阵</strong>（描述"上一刻的状态怎么变成这一刻的"）；w 是过程噪声（模型不准的部分，协方差 Q）；y_k 是我们实际读到的测量；H 是<strong>观测矩阵</strong>（状态怎么映射成测量）；v 是测量噪声（协方差 R）。</p>
+<p><strong>为什么需要两条方程？</strong>因为"真实状态"和"我们能测到的量"常常不是一回事：汽车的真实速度测不到，我们只能测到轮速、GPS 位置、加速度计读数——它们都只是状态的部分反映。H 就是这个"反映方式"。而 F 是系统的动力学，它让我们<strong>在没有新测量时也能推断</strong>（预测），有了新测量再<strong>修正</strong>（更新）。</p>
+<p>GPS 一维例子：位置 x_k 在短时间近似不动（F = 1），位置等于自身加一点随机扰动（Q = 0.01 m²）；GPS 直接量位置（H = 1），测量噪声方差 R = 9 m²。两条方程就完整描述了"位置 + GPS"这个系统。</p>
+</section>
+
+<section>
+<h3>二、贝叶斯融合：两股信息的加权平均</h3>
+<p>Kalman 滤波的每一步本质上是<strong>贝叶斯更新</strong>：</p>
+<div class="formula display" data-tex="p(x_k\,|\,y_{1:k})\ \propto\ p(y_k\,|\,x_k)\cdot p(x_k\,|\,y_{1:k-1})"></div>
+<p>读作：看到所有测量后的"后验"＝观测的"似然"乘以看到之前测量的"先验"。高斯分布的关键性质是：<strong>两个高斯的乘积还是高斯</strong>，且它的精度（方差的倒数）是两者精度之和：</p>
+<div class="formula display" data-tex="\frac{1}{P_{k|k}}=\frac{1}{P_{k|k-1}}+\frac{1}{R}\qquad(\text{精度相加})"></div>
+<p>回到〇节的数字：先验方差 4，测量方差 9，则后验精度 = 1/4 + 1/9 = 13/36，后验方差 = 36/13 ≈ 2.77 m²，后验均值</p>
+<div class="formula display" data-tex="\hat{x}=\frac{36}{13}\left(\frac{100}{4}+\frac{110}{9}\right)\approx2.769\times(25+12.222)\approx103.1"></div>
+<p>和 Kalman 增益算出的 103.1 完全一致——<strong>信息形式与增益形式是同一件事的两种写法</strong>。为什么"精度相加"这么自然？因为信息（方差的倒数）衡量"你知道多少"：两个独立信息来源，你知道的总量当然相加。这就是"为什么 Kalman 更新是一个加权平均"的直觉根源。</p>
+</section>
+
+<section>
+<h3>三、完整例题 1：标量滤波跑三遍</h3>
+<p>用一把标准误差 1 米（R = 1）的尺去量一段长度恒定（F = 1，Q = 0）的物体，真实长度 10 米。你的初始猜测 x̂₀ = 0，但非常没把握（P₀ = 100）。三次测量依次为 y₁ = 12.4，y₂ = 10.8，y₃ = 9.1。把 Kalman 更新公式完整跑三遍。</p>
+<p><strong>第 1 步：预测。</strong>状态恒定，F = 1：x̂_{1|0} = 1·x̂₀ = 0，P_{1|0} = 1²·P₀ + 0 = 100。</p>
+<p><strong>第 2 步：更新（第一次测量 y₁ = 12.4）。</strong></p>
+<div class="formula display" data-tex="K_1=\frac{P_{1|0}}{P_{1|0}+R}=\frac{100}{101}\approx0.990,\qquad \hat{x}_{1|1}=0+0.990(12.4-0)\approx12.28"></div>
+<div class="formula display" data-tex="P_{1|1}=(1-K_1)P_{1|0}=(1-0.990)\times100\approx0.99"></div>
+<p>第一次测量信息量巨大（之前 P₀ = 100 几乎什么都不知道），所以 K ≈ 1，估计几乎完全跟着测量走：12.28。</p>
+<p><strong>第 3 步：更新（第二次测量 y₂ = 10.8）。</strong>现在预测与上一步后验相同（状态恒定）：</p>
+<div class="formula display" data-tex="K_2=\frac{0.99}{0.99+1}\approx0.498,\qquad \hat{x}_{2|2}=12.28+0.498(10.8-12.28)\approx11.54"></div>
+<div class="formula display" data-tex="P_{2|2}=(1-0.498)\times0.99\approx0.50"></div>
+<p>这次 x̂ 从 12.28 被拉向 10.8，得到 11.54——因为现在"已累积的估计"和"新测量"一样可信（方差 0.99 ≈ 1），所以几乎各取一半。</p>
+<p><strong>第 4 步：更新（第三次测量 y₃ = 9.1）。</strong></p>
+<div class="formula display" data-tex="K_3=\frac{0.50}{0.50+1}\approx0.332,\qquad \hat{x}_{3|3}=11.54+0.332(9.1-11.54)\approx10.73"></div>
+<div class="formula display" data-tex="P_{3|3}=(1-0.332)\times0.50\approx0.33"></div>
+<p><strong>第 5 步：观察趋势。</strong>三次更新：x̂ = 12.28 → 11.54 → 10.73，逐渐逼近真实值 10；P = 100 → 0.99 → 0.50 → 0.33，方差越缩越小——<strong>信息累积，置信增强</strong>。注意 K 也在变小：从 0.990 降到 0.332，因为估计越准，就越"信任自己"、越"怀疑测量"。∎</p>
+</section>
+
+<section>
+<h3>四、Kalman 增益：为什么 K 是这样选</h3>
+<p>增益公式</p>
+<div class="formula display" data-tex="K_k=P_{k|k-1}H^T(HP_{k|k-1}H^T+R)^{-1}"></div>
+<p>读起来绕，但它的两个极端很有直觉：</p>
+<p>① 若测量非常可靠（R → 0），则 K → 1（对 H = 1 时），更新结果几乎完全采信测量；② 若先验非常不可靠（P → ∞），则 K → 1，同样几乎采信测量；③ 反过来，若测量噪声极大（R → ∞），则 K → 0，更新几乎不动——测量被完全忽略。</p>
+<p><strong>为什么取这个"中间值"？</strong>因为 Kalman 增益选的是<strong>使更新后方差 P_{k|k} 最小</strong>的那个权重。一维情形：把后验写成加权平均 x̂ = (1−K)x̂_p + Ky，后验方差是 (1−K)²P + K²R，关于 K 求导为 0，解出 K = P/(P+R)——正是那个"按精度加权"的比例。高维情形道理相同，只是求导对象从标量变成矩阵（正交投影定理，见第八节）。</p>
+</section>
+
+<section>
+<h3>五、完整例题 2：二维 GPS 定位</h3>
+<p>一个平面上的机器人，状态是位置 (x, y)。GPS 直接测位置：H = I₂（单位阵），两个方向测量独立：R = diag(25, 16) m²。初始估计 (x̂₀, ŷ₀) = (0, 0)，P₀ = diag(100, 100)。收到一次测量 y = (30, 40)。</p>
+<p><strong>第 1 步：预测。</strong>机器人静止，F = I₂，Q = 0：x̂_{1|0} = (0,0)，P_{1|0} = diag(100, 100)。</p>
+<p><strong>第 2 步：算增益。</strong>由于 P 和 R 都是对角阵，两个维度解耦，K 是逐维的 P/(P+R)：</p>
+<div class="formula display" data-tex="K_x=\frac{100}{100+25}=0.8,\qquad K_y=\frac{100}{100+16}\approx0.8621"></div>
+<p><strong>第 3 步：更新。</strong></p>
+<div class="formula display" data-tex="\begin{pmatrix}\hat{x}\\ \hat{y}\end{pmatrix}=\begin{pmatrix}0\\0\end{pmatrix}+\begin{pmatrix}0.8 & 0\\0 & 0.8621\end{pmatrix}\begin{pmatrix}30-0\\40-0\end{pmatrix}=\begin{pmatrix}24.00\\ 34.48\end{pmatrix}"></div>
+<div class="formula display" data-tex="P_{1|1}=(I_2-K)\begin{pmatrix}100&0\\0&100\end{pmatrix}=\begin{pmatrix}20&0\\0&13.79\end{pmatrix}"></div>
+<p><strong>第 4 步：解释。</strong>x 方向 R = 25（更准），所以被拉得更靠近测量值 30：24.00（K_x = 0.8）；y 方向 R = 16（更不准），被拉得更多：34.48（K_y = 0.862）。方差都从 100 缩到 20 和 13.79——测量把每个方向的不确定性都压缩了。∎</p>
+</section>
+
+<section>
+<h3>六、预测与更新：完整算法</h3>
+<p>把前面的动作串成完整的递推，Kalman 滤波就是反复执行这两步：</p>
+<div class="formula display" data-tex="\text{预测：}\ \hat{x}_{k|k-1}=F\hat{x}_{k-1|k-1},\quad P_{k|k-1}=FP_{k-1|k-1}F^T+Q"></div>
+<div class="formula display" data-tex="\text{更新：}\ K_k=P_{k|k-1}H^T(HP_{k|k-1}H^T+R)^{-1}"></div>
+<div class="formula display" data-tex="\hat{x}_{k|k}=\hat{x}_{k|k-1}+K_k(y_k-H\hat{x}_{k|k-1}),\quad P_{k|k}=(I-K_kH)P_{k|k-1}"></div>
+<p><strong>为什么"预测要加 Q、更新要乘 (I−KH)"？</strong>预测时，模型的不确定性（过程噪声 Q）必须叠加进协方差，否则我们会对"没把握的演化"过分自信；更新后，增益已经把一部分测量信息吸收进来，剩余的不确定性是 (I−KH)P——正是"没被测量消掉的那部分方差"。这两条就是信息流动的账本：不确定性只增（预测）只减（更新），从不清零。</p>
+<div class="key-insight">每一步只需上一次估计 + 新观测——<strong>不需要存储全部历史数据</strong>。阿波罗登月舱的导航计算机只有 64KB 内存——Kalman 滤波使它实时估计位置、速度和姿态。这种"递推、无记忆"正是它成为工程标准的根本原因。</div>
+</section>
+
+<section>
+<h3>七、完整例题 3：带速度的状态向量</h3>
+<p>一辆车沿直线行驶，状态 x = (位置 p，速度 v)ᵀ。取采样间隔 Δt = 1，匀速运动模型：p_k = p_{k−1} + v_{k−1}，v_k = v_{k−1}，即</p>
+<div class="formula display" data-tex="F=\begin{pmatrix}1&1\\0&1\end{pmatrix},\qquad H=\begin{pmatrix}1&0\end{pmatrix},\qquad Q=\begin{pmatrix}1/3&1/2\\1/2&1\end{pmatrix},\qquad R=1"></div>
+<p>（Q 是"加速度是白噪声"假设下导出的离散过程噪声。）初始估计 x̂₀ = (10, 2)ᵀ，P₀ = diag(10, 4)。收到测量 y₁ = 12.5。</p>
+<p><strong>第 1 步：预测。</strong></p>
+<div class="formula display" data-tex="\hat{x}_{1|0}=\begin{pmatrix}1&1\\0&1\end{pmatrix}\begin{pmatrix}10\\2\end{pmatrix}=\begin{pmatrix}12\\2\end{pmatrix}"></div>
+<div class="formula display" data-tex="P_{1|0}=\begin{pmatrix}1&1\\0&1\end{pmatrix}\begin{pmatrix}10&0\\0&4\end{pmatrix}\begin{pmatrix}1&0\\1&1\end{pmatrix}+Q=\begin{pmatrix}14&4\\4&4\end{pmatrix}+\begin{pmatrix}1/3&1/2\\1/2&1\end{pmatrix}=\begin{pmatrix}14.33&4.5\\4.5&5\end{pmatrix}"></div>
+<p>预测说：位置 12，速度仍 2；但方差变大了（位置方差 10 → 14.33），因为 Δt = 1 秒内速度不确定性会"扩散"到位置上。</p>
+<p><strong>第 2 步：算增益。</strong>先算新息方差 S = HP_{1|0}Hᵀ + R = 14.33 + 1 = 15.33，再</p>
+<div class="formula display" data-tex="K_1=P_{1|0}H^T S^{-1}=\frac{1}{15.33}\begin{pmatrix}14.33\\4.5\end{pmatrix}\approx\begin{pmatrix}0.935\\0.294\end{pmatrix}"></div>
+<p><strong>第 3 步：更新。</strong>新息 = 12.5 − 12 = 0.5（测量比预测大了 0.5 米）：</p>
+<div class="formula display" data-tex">\hat{x}_{1|1}=\begin{pmatrix}12\\2\end{pmatrix}+0.5\begin{pmatrix}0.935\\0.294\end{pmatrix}\approx\begin{pmatrix}12.47\\2.15\end{pmatrix}"></div>
+<p>位置被往上修到 12.47，速度也从 2 微调到 2.15——<strong>速度没有直接被测量，却因为与位置的相关（P 里的协方差 4.5）而被更新</strong>。这正是状态向量设计的精髓：不可观测的量借可观测量的相关被间接估计。</p>
+<p><strong>第 4 步：更新协方差。</strong></p>
+<div class="formula display" data-tex="P_{1|1}=(I_2-K_1H)P_{1|0}=\begin{pmatrix}14.33-0.935\times14.33&4.5-0.935\times4.5\\4.5-0.294\times14.33&5-0.294\times4.5\end{pmatrix}\approx\begin{pmatrix}0.93&0.29\\0.29&3.68\end{pmatrix}"></div>
+<p>位置方差从 14.33 被压到 0.93（测量直接给位置喂了信息），速度方差从 5 压到 3.68（通过相关性间接受益）。∎</p>
+</section>
+
+<section>
+<h3>八、为什么 Kalman 是最优线性估计</h3>
+<p>Kalman 的"最优性"有两层，取决于假设：</p>
+<p><strong>第一层（高斯 + 线性 → 无条件最优）。</strong>若系统线性、噪声高斯，则每个后验 p(x_k|y_{1:k}) 仍是高斯，完全由均值 x̂ 与协方差 P 刻画。此时条件期望 E[x_k|y_{1:k}] 是<strong>均方误差意义下所有（非线性也算）估计器里最优的</strong>，而 Kalman 递推恰好精确算出了这个条件期望。任何其他估计（粒子滤波、非线性滤波器）都做不到更好。</p>
+<p><strong>第二层（去掉高斯假设 → 在线性估计类中最优）。</strong>即使噪声不是高斯，只要限定估计器必须是状态观测的<strong>线性函数</strong>，Kalman 增益仍是使均方误差最小的那个权重——这叫<strong>最小均方误差线性估计（LMMSE）</strong>，由<strong>正交投影定理</strong>保证：最优线性估计就是状态在先验估计与新息张成的子空间上的正交投影，而 K 正是这个投影系数。</p>
+<div class="formula display" data-tex="\mathbb E[\|x_k-\hat x_{k|k}\|^2]\ \text{最小} \iff \mathbb E[(x_k-\hat x_{k|k})y^\top]=0\quad(\text{正交性条件})"></div>
+<p>这就是"为什么 Kalman 是最优的"：在高斯世界它是全局最优，在非高斯世界它是"线性军团"里的最优。同时它还是所有贝叶斯滤波中<strong>唯一有闭型递推解的</strong>——不需要数值积分，几十行代码就能跑。</p>
+</section>
+
+<section>
+<h3>九、与最小二乘和贝叶斯估计的关系</h3>
+<p>Kalman 更新的信息形式 P⁻¹ 与 HᵀR⁻¹H 揭示了它的三重身份：</p>
+<p>(1) <strong>加权最小二乘（WLS）</strong>——信息阵逐项累加观测 HᵀR⁻¹H，正是 WLS 正规方程 HᵀW⁻¹Hθ = HᵀW⁻¹y 的结构，权重 W = R；(2) <strong>贝叶斯更新</strong>——先验信息 P_p⁻¹ 与观测信息相加得到后验，即高斯先验 × 高斯似然 = 高斯后验（第二节的"精度相加"）；(3) <strong>LMMSE</strong>——即使去掉高斯假设，K 仍是在线性估计类中最小化均方误差的唯一最优（第八节）。</p>
+<p><strong>为什么一个公式三重身份？</strong>因为三者共享同一套"信息代数"：方差小 = 信息多 = 权重高。最小二乘按噪声方差加权残差、贝叶斯按先验/似然精度相乘、LMMSE 按协方差投影，殊途同归。</p>
+<p>无过程模型（F = I、Q = 0，状态恒定）时 Kalman 退化为经典递归最小二乘 RLS——〇节和三节的"测恒定长度"正是这个退化情形。Kalman 是"递推化的 Gauss–Markov 定理"。</p>
+</section>
+
+<section>
+<h3>十、反例——非高斯噪声下滤波失效</h3>
+<p>Kalman 的最优性依赖高斯假设。反例 1（厚尾）：噪声为 Cauchy 分布或含离群点时，后验不再是高斯，均值与协方差不足以刻画它；Kalman 仍给出最佳<strong>线性</strong>估计，但远非最佳非线性估计，且一个巨大的离群观测 y_k 会把估计拉偏、甚至使滤波器发散——此时需要鲁棒滤波（Huber、中位数型）或粒子滤波。反例 2（多峰）：状态后验呈双峰时，Kalman 的单峰近似完全丢失结构——贝叶斯意义上最优的是完整后验传播，而非均值 ± 方差。反例 3（线性化失效）：对强非线性系统，EKF 的 Jacobian 线性化在转弯或强非高斯时误差放大，需换 UKF 或粒子滤波（见第十一节）。</p>
+</section>
+
+<section>
+<h3>十一、扩展 Kalman 滤波（EKF）——非线性系统的线性化</h3>
+<p>经典 Kalman 要求系统是线性的。真实系统几乎都不是：IMU 的旋转、视觉的透视投影、车辆的航向。EKF 的处方：<strong>每一步对非线性动力学和观测模型做一阶 Taylor 展开，用 Jacobian 替代线性模型</strong>：</p>
+<div class="formula display" data-tex="F_k\approx\left.\frac{\partial f}{\partial x}\right|_{\hat x_{k-1|k-1}},\qquad H_k\approx\left.\frac{\partial h}{\partial x}\right|_{\hat x_{k|k-1}}"></div>
+<p>然后照跑标准的预测/更新。它适用"局部线性"的非线性系统——只要非线性不强、采样率够高，一阶近似的误差可接受。<strong>为什么一阶就够？</strong>因为每一步都在最优估计附近线性化，误差是二阶级别（O(‖δx‖²)），只要每一步 δx 都小（高采样率保证），近似就很准。这是自动驾驶（融合 GPS + IMU + 视觉）、机器人 SLAM 和导弹制导中实际使用的版本。</p>
+</section>
+
+<section>
+<h3>十二、从阿波罗到自主驾驶</h3>
+<p>1960 年 Kalman 发表《A New Approach to Linear Filtering and Prediction Problems》。仅仅九年后的 1969 年，阿波罗 11 号登月舱的导航计算机（64KB 内存）用 Kalman 滤波实时估计位置、速度、姿态——在人类第一次登月任务里承担核心导航职责。今天：GPS + IMU 融合是每部手机的标准动作，特斯拉 Autopilot 融合摄像头 + 雷达 + GPS，无人机用 Kalman/SLAM 同时定位和建图，金融时间序列从噪声价格中提取趋势。Kalman 滤波无处不在。</p>
+</section>
+
+<section>
+<h3>十三、关键公式</h3>
+<div class="formula display" data-tex="\hat{x}_{k|k-1}=F\hat{x}_{k-1|k-1},\qquad P_{k|k-1}=FP_{k-1|k-1}F^T+Q"></div>
+<div class="formula display" data-tex="K_k=P_{k|k-1}H^T(HP_{k|k-1}H^T+R)^{-1}"></div>
+<div class="formula display" data-tex="\hat{x}_{k|k}=\hat{x}_{k|k-1}+K_k(y_k-H\hat{x}_{k|k-1}),\qquad P_{k|k}=(I-K_kH)P_{k|k-1}"></div>
+<div class="formula display" data-tex="P_{k|k}^{-1}=P_{k|k-1}^{-1}+H^TR^{-1}H\quad(\text{信息形式})"></div>
+</section>
+
+<section>
+<h3>十四、推导——Kalman 滤波递推的完整推导</h3>
+<p>线性高斯状态空间模型：x_k = Fx_{k−1} + w_{k−1}，y_k = Hx_k + v_k，其中 w ~ N(0,Q)、v ~ N(0,R)。</p>
+<p><strong>预测</strong>（无条件期望与协方差传播）：</p>
+<div class="formula display" data-tex="\hat{x}_{k|k-1}=F\hat{x}_{k-1|k-1},\qquad P_{k|k-1}=FP_{k-1|k-1}F^T+Q"></div>
+<p><strong>更新</strong>：由 Bayes 定理 p(x_k|y_{1:k}) ∝ p(y_k|x_k)·p(x_k|y_{1:k-1})，三个高斯因子相乘、对指数配方：</p>
+<div class="formula display" data-tex="P_{k|k}^{-1}=P_{k|k-1}^{-1}+H^TR^{-1}H,\qquad \hat{x}_{k|k}=P_{k|k}\big(H^TR^{-1}y_k+P_{k|k-1}^{-1}\hat{x}_{k|k-1}\big)"></div>
+<p>用 Woodbury 恒等式（(A+UBV)⁻¹ = A⁻¹ − A⁻¹U(B⁻¹ + VA⁻¹U)⁻¹VA⁻¹）把上式化为递推形式，引入 <strong>Kalman 增益</strong>：</p>
+<div class="formula display" data-tex="K_k=P_{k|k-1}H^T(HP_{k|k-1}H^T+R)^{-1}"></div>
+<div class="formula display" data-tex="\hat{x}_{k|k}=\hat{x}_{k|k-1}+K_k(y_k-H\hat{x}_{k|k-1}),\qquad P_{k|k}=(I-K_kH)P_{k|k-1}\quad\blacksquare"></div>
+<div class="key-insight">高斯假设下后验仍是高斯，由均值与协方差完全刻画——这就是 Kalman 滤波成为唯一有闭型递推解的贝叶斯滤波器（Bayes 滤波器）的原因。</div>
+</section>
+
+<section>
+<h3>十五、前沿：深度 Kalman——神经网络 + 状态空间模型</h3>
+<p>状态空间模型（SSM）与 Kalman 的血缘在深度学习里重新长出了枝干：S4（2022）、Mamba（2023）用 Kalman 滤波的连续时间版本替代 Transformer 的自注意力——<strong>线性时间在长序列上击败了二次方时间</strong>，成为大语言模型高效序列建模的新范式。<strong>为什么这与 Kalman 有关？</strong>SSM 的核心是"隐藏状态线性演化 + 观测映射"，结构上就是第 1 节的 (F, H) 方程；而 Mamba 的"选择机制"让 F 依赖输入，相当于一个输入依赖的时变线性系统。仍开放的问题：SSM 的理论极限（能否媲美注意力在"关联定位"任务上的能力）和它在强化学习中的应用。</p>
+</section>
+
+<section>
+<h3>十六、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 标量系统：先验 x̂ = 5，P = 2；观测 y = 7，R = 1。求 K、更新后的 x̂ 与 P。</p>
+<p><em>提示：K = P/(P+R) = 2/3；x̂ = 5 + (2/3)(7−5) = 5 + 4/3 ≈ 6.33；P = (1−2/3)·2 = 2/3。</em></p>
+<p><strong>2.</strong> 若把上题的 R 从 1 增大到 100（测量很不可信），K 变成多少？更新后的 x̂ 还接近 5 还是接近 7？</p>
+<p><em>提示：K = 2/(2+100) ≈ 0.0196，几乎为 0，更新几乎不动，x̂ ≈ 5 + 0.0196×2 ≈ 5.04——测量被忽略。</em></p>
+<p><strong>3.</strong> 验证信息形式与增益形式等价：P = 2、R = 1 时，用 1/P₀ + 1/R 算后验方差，并与第 1 题的 P 比较。</p>
+<p><em>提示：后验精度 = 1/2 + 1/1 = 1.5，后验方差 = 1/1.5 = 2/3，与第 1 题的 P = 2/3 完全一致。</em></p>
+<p><strong>4.</strong> 二维：P₀ = diag(1, 1)，R = diag(4, 4)，观测 y = (3, −1)ᵀ，先验 (0, 0)ᵀ。求 K 与 x̂。</p>
+<p><em>提示：每维 K = 1/(1+4) = 0.2，x̂ = (0.6, −0.2)ᵀ。因为先验方差 1 &lt; 测量方差 4，结果偏向先验。</em></p>
+<p><strong>5.</strong> 解释：为什么当 R → 0（测量完全可靠）时，更新后的 x̂ 趋近于测量值 y_k？</p>
+<p><em>提示：K → P/(P+0) = 1（标量情形），x̂ = x̂_p + 1·(y − x̂_p) = y。</em></p>
+<p><strong>6.</strong> EKF：对 f(x) = x²，x̂ = 1，线性化用到的 Jacobian 是多少？</p>
+<p><em>提示：∂f/∂x = 2x，在 x̂ = 1 处取值为 2，故 F ≈ 2。</em></p>
+</section>
+
+<section>
+<h3>十七、附：工作题——标量 Kalman 更新</h3>
+<p>标量系统 x_k = x_{k−1} + w（F = 1，过程噪声方差 Q = 0.5），观测 y_k = x_k + v（H = 1，R = 1）。上一时刻后验 x̂_{k−1|k−1} = 2，P_{k−1|k−1} = 1。现测得 y_k = 5。求预测值、Kalman 增益 K、更新后的 x̂_{k|k} 与 P_{k|k}。</p>
+<details><summary>显示解答</summary><p>预测：x̂_{k|k−1} = F·2 = 2，P_{k|k−1} = 1²·1 + 0.5 = 1.5。增益：K = 1.5/(1.5+1) = 0.6。更新：x̂_{k|k} = 2 + 0.6×(5−2) = 3.8，P_{k|k} = (1−0.6)×1.5 = 0.6。验算：x̂ 比 x̂_p 更接近观测 5，且 P 由 1.5 降至 0.6——信息融合降低了不确定性。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>R. Kalman, A New Approach to Linear Filtering and Prediction Problems (1960)</strong></p>
+<p>&rarr; <strong>B. D. O. Anderson &amp; J. B. Moore, Optimal Filtering</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/linear-transform.html">线性变换</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <strong>线性变换</strong>：Kalman滤波的预测步骤x̂<sub>k|k−1</sub>=Fx̂<sub>k−1</sub>是状态转移矩阵F的线性变换——整个滤波过程就是线性变换和贝叶斯更新的交替迭代。</p>
+<p>&rarr; <strong>SVD</strong>：协方差矩阵P的条件数决定滤波数值稳定性——SVD分解在Kalman滤波的平方根算法和UD分解中用于缓解数值病态问题。</p>
+<p>&rarr; <strong>梯度</strong>：扩展Kalman滤波(EKF)对非线性函数做一阶Taylor展开——用Jacobian矩阵(梯度向量)线性化，本质上是最陡梯度下降在状态空间中的动态版本。</p>
+<p>&rarr; <strong>概率论相关</strong>：Kalman滤波是高斯-马尔可夫假设下的最优贝叶斯递推——先验(预测)和似然(观测)都是高斯分布，后验(更新)仍是高斯，一切由均值和协方差完全刻画。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/kalman-filter.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

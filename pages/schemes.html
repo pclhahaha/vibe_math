@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="把点换成素理想：Spec ℤ 是一条曲线，幂零元是胖点" />
+  <meta property="og:title" content="概形语言导论 — Vibe Math" />
+  <meta property="og:description" content="把点换成素理想：Spec ℤ 是一条曲线，幂零元是胖点" />
+  <title>概形语言导论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌾 概形语言导论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">把点换成素理想：Spec ℤ 是一条曲线，幂零元是胖点</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='schemes',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/algebraic-geometry.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔷 代数几何</a>
+  <a href="/pages/abstract-algebra.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🧮 抽象代数 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——Grothendieck 的重构：空间不是"点集"，是"环的谱"</h3>
+<p>经典代数几何研究多项式方程组的解集（代数簇）。Grothendieck 在 1960 年代（EGA/SGA 系列）把它重写成<strong>概形（scheme）</strong>，三点飞跃重塑了整个领域，也把数论卷了进来：</p>
+<ul>
+<li><strong>点 = 素理想，不是几何点。</strong> 空间 Spec A = 环 A 的素理想全体。Spec ℤ 的"点"是素数 (2)、(3)、(5)…（闭点）外加一个"一般点"(0)——<strong>整数环变成一条曲线</strong>（维数 1）。</li>
+<li><strong>函数 = 环元素。</strong> f∈A 是 Spec A 上的"函数"，在点 p 的"取值"= f 在商环 A/p（剩余域）中的像；幂零元（如 x²=0）给出<strong>胖点</strong>——方程重数的代数化身。</li>
+<li><strong>粘合。</strong> 概形由仿射概形 Spec A 用环同构粘成（像流形由坐标卡粘成），配合结构层 O_X 编码全部代数信息。</li>
+</ul>
+<p>这次重构的回报是历史性的：<strong>算术几何诞生</strong>——把 ℤ 当曲线、"模 p 约化"当纤维，椭圆曲线（→ <a href="/pages/elliptic-curves.html">椭圆曲线</a> 课）与模形式（→ <a href="/pages/modular-forms.html">模形式</a>）在 Spec ℤ 上并肩而立；Wiles 证明费马大定理用的伽罗瓦形变环、Deligne 证明 Weil 猜想的工具，都是概形语言。概形是"现代代数几何的普通话"。</p>
+<div class="key-insight">洞察：概形的核心口号——<strong>研究环 Spec A，胜过研究它的几何点集</strong>。点集丢失重数（x²=0 vs x=0）、丢失非代数闭域的信息（ℝ 上 x²+1 "无点"却大有内容）、丢失数论结构（Spec ℤ 的点是素数）。把"点"换成"素理想"后，代数几何第一次同时覆盖了几何、算术与形变——画布上 Spec ℤ 的"素数点轴"与胖点 x²=0 的"双倍厚度"就是新语言的两次深呼吸。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/commutative-algebra.html">交换代数</a>（素理想/局部化/模）、<a href="/pages/algebraic-geometry.html">代数几何</a>（经典簇与其局限）、<a href="/pages/algebraic-number-theory.html">代数数论</a>（Spec ℤ 的算术视角，可选）。</p></div>
+
+<section>
+<h3>一、一个具体问题——经典"点集"的三个盲区</h3>
+<p><strong>盲区 1：重数。</strong> 方程 x²=0 与 x=0 在 ℂ 上有同一个解集 {0}，但前者是"双重点"（重数 2）。若只记录解集，两种代数对象无法区分——而降维、形变、相交数全依赖重数。</p>
+<p><strong>盲区 2：域依赖性。</strong> x²+1=0 在 ℂ 有两个解、在 ℝ 没有解。经典"代数闭域上研究"丢掉太多信息；数论要同时谈 ℚ、ℝ、ℚ_p、F_p。</p>
+<p><strong>盲区 3：把数论当成几何。</strong> 素理想 (p)⊂ℤ 像"点"；(0) 是稠密的一般点。Spec ℤ 是维数 1 的"算术曲线"——数论问题变成该曲线上的几何问题（Hasse 原理、纤维化 Spec F_p→Spec ℤ、椭圆曲线的约化）。</p>
+<p><strong>Grothendieck 的修复。</strong> 定义<strong>仿射概形</strong> Spec A = (素理想空间，Zariski 拓扑，结构层 O)，再粘合成一般概形。三个盲区同时被治愈：重数=幂零元、域不依赖（任何交换环都行）、数论=Spec ℤ 的几何。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——Zariski 拓扑、层与"函数的奇异取值"</h3>
+<p><strong>Zariski 拓扑。</strong> Spec A 的闭集 = 理想 a 的零点 V(a)={p：a⊆p}。闭集"很大"（多项式零点集）——这与流形拓扑非常不同（豪斯多夫基本失败，但只需"足够多开集"）。</p>
+<p><strong>结构层与茎。</strong> O_Spec A 的开集截面 = "局部化允许的分式"：在素理想 p 处的茎 O_p = 局部化 A_p。f∈A 作为函数：在点 p 的"值"在剩余域 κ(p)=Frac(A/p) 中——f 的零点集 V(f)={p：f∈p}。</p>
+<p><strong>幂零元 = 胖点。</strong> Spec k[x]/(x²) 是单点空间（只有一个素理想 (x)），但结构层里 x≠0 且 x²=0：这是"带一阶无穷小方向的点"——切向量 (→ <a href="/pages/differential-forms.html">微分形式</a> 课的 Kähler 微分) 的宿主。概形之间的态射 Spec k[ε]/(ε²)→X 恰好是 X 的（k-值）切向量：<strong>胖点编码切空间</strong>。</p>
+<p><strong>一般点。</strong> 不可约概形有唯一的稠密一般点（如 Spec ℤ 的 (0)、Spec k[t] 的 (0)）："函数的性质是否成立"常在一般点处判定（f 不可约 ⟺ 素理想……）。一般点让"generic"成为严格的几何概念。</p>
+</section>
+
+<section>
+<h3>三、例题 1——Spec ℤ 是"数轴"：素数是一维曲线上的点（一步步算完）</h3>
+<p><strong>题目。</strong> 解释为什么 Spec ℤ 是维数 1 的算术曲线，并列出它的点。</p>
+<p><strong>第一步：素理想。</strong> ℤ 的素理想 = (0) 与 (p)（p 素数）。</p>
+<p><strong>第二步：点的结构。</strong> (p) 是闭点（V(p)={(p)} 闭）；(0) 的闭包是全体（每个 (p) 都含 (0) 的素理想? 闭合 V(0)? V(0)=all? 闭包 {(0)}⁻=V(ann?）——Zariski: (0) 属于一切闭集? 任何非空闭集 V(a) 若 a≠0 不含 (0)… 所以 (0) 的闭包 = Spec ℤ 全体：稠密一般点。</p>
+<p><strong>第三步：维数与纤维。</strong> dim Spec ℤ=1（素理想链 (0)⊂(p) 长 1）。每个闭点 (p) 的剩余域 ℤ/(p)=F_p：<strong>"模 p 约化" = 在纤维 Spec F_p 上看几何对象</strong>。∎</p>
+<p><strong>第四步：与曲线对照。</strong> Spec ℂ[t] 的点 = 闭点 (t−a)（a∈ℂ）+ 一般点 (0)。Spec ℤ 与之惊人平行：素数 ↔ 复数 a。概形第一次让"整数"与"多项式"在同一张几何桌面上。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——胖点与切向量（一步步算完）</h3>
+<p><strong>题目。</strong> 说明 Spec k[ε]/(ε²) 到 X 的态射就是切向量，并算一个例子。</p>
+<p><strong>第一步：切向量的定义。</strong> 设 X 是 k-概形，x∈X 是 k-点。态射 Spec k[ε]/(ε²)→X 把唯一闭点送到 x（即"无穷小邻域"映到 x 处）——这样的态射与 x 处的切向量一一对应（对光滑情形）。∎</p>
+<p><strong>第二步：例。</strong> X=Spec k[t]（仿射直线）、x=原点 t=0。态射由环同态 φ:k[t]→k[ε]/(ε²) 决定，且需 φ 把 t 送到 ε 的倍数? 约束：态射落在 x：φ⁻¹((ε))=(t)。于是 φ(t)=c·ε（c∈k）——每个 c 一个态射；c 正是切向量（直线上的切向量 = 标量）。∎</p>
+<p><strong>第三步：重数读出。</strong> 相交理论里"切线重数"由这样的 ε-态射数出；幂零阶 n（k[x]/(xⁿ)）对应"n 阶胖点"——重数从拓扑（点集）消失、由结构层保留。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定义清单</h3>
+<ul>
+<li><strong>仿射概形：</strong> Spec A = (素理想集, Zariski 拓扑, 结构层 O)，O(D(f))=A_f（f 处局部化）。</li>
+<li><strong>概形：</strong> 局部环空间 (X,O_X)，每点有开邻域同构于仿射概形——由仿射卡粘成（像流形粘坐标卡）。</li>
+<li><strong>态射：</strong> (f,f^♯) 使茎同态局部；态射 ⟺（对仿射）环同态的反向对应 Spec A→Spec B ⟸ φ:B→A。</li>
+<li><strong>性质：</strong> 不可约/既约（无幂零）/整（既约+不可约）/正规/正则；有限型、分离、紧（proper）等相对性质。</li>
+<li><strong>纤维积：</strong> X×_S Y 在概形中总存在——"族"与基变换（Spec F_p→Spec ℤ 的约化）的骨架。</li>
+<li><strong>函子观：</strong> 概形 = 环范畴上的函子（X(R)=X 的 R-点）——"点的集合"被"所有环上的点"替代。</li>
+<li><strong>影响：</strong> 层上同调（连接 <a href="/pages/spectral-sequences.html">谱序列</a> 课的 Leray）、Weil 猜想证明（Deligne 1974 用概形语言）、Wiles 的形变环（局部 Noether 完备环上的概形）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\operatorname{Spec} A=\{\mathfrak p\lhd A\ \text{素理想}\};\qquad O_p=A_{\mathfrak p};\qquad \kappa(\mathfrak p)=\mathrm{Frac}(A/\mathfrak p)"></div>
+<div class="formula display" data-tex="\operatorname{Spec}\mathbb Z=\{(0)\}\cup\{(p):p\ \text{素数}\};\qquad \dim\operatorname{Spec}\mathbb Z=1"></div>
+<div class="formula display" data-tex="\text{切向量}: \operatorname{Hom}_X(\operatorname{Spec} k[\varepsilon]/(\varepsilon^{2}), X)\ \longleftrightarrow\ T_xX"></div>
+</section>
+
+<section>
+<h3>七、延伸——概形之后的算术几何</h3>
+<ul>
+<li><strong>Spec ℤ 上的椭圆曲线。</strong> 椭圆曲线作为 Spec ℤ（去掉坏约化处）上的光滑概形，"约化类型"（好/分裂乘性/加性）就是纤维几何；模性定理（→ <a href="/pages/elliptic-curves.html">Wiles</a>）本质上是 Spec ℤ 上的"对应"。</li>
+<li><strong>形变环与 R=T。</strong> Wiles 证明的引擎是伽罗瓦表示的形变环 R（局部 Noether 环上的幂零形变，胖点的重数思维）与 Hecke 代数 T 的同构——纯概形/交换代数技术的巅峰应用。</li>
+<li><strong>层上同调与谱序列。</strong> 概形上层的上同调、Leray 谱序列（→ <a href="/pages/spectral-sequences.html">谱序列</a> 课）把代数几何的计算变成同调代数的机器；étale 上同调让 ℓ-adic 系数进入算术。</li>
+<li><strong>完美空间（Scholze）。</strong> perfectoid 空间把特征 p 与 p-adic 世界"桥接"（→ <a href="/pages/p-adic-numbers.html">p-adic</a> 课），概形语言在其中升级为"几何对象族"。</li>
+<li><strong>动机与导出。</strong> 概形的范畴被进一步"导出化"（谱代数几何，Lurie）与"动机化"（Voevodsky）——Grothendieck 的蓝图仍在兑现。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"概形想当然"</h3>
+<p><strong>陷阱 1："概形的点 = 几何上的点"？</strong> 点是素理想：包括非闭的<strong>一般点</strong>与带幂零结构的<strong>胖点</strong>。"数点"在概形里是精密的活——Spec k 一个点，Spec k[x]/(x²) 也一个点（但胖）。</p>
+<p><strong>陷阱 2："Spec A 只是拓扑空间"？</strong> 结构层是灵魂：Spec k 与 Spec k[x]/(x²) 拓扑同为单点却不同构（结构层不同：k vs k[ε]）。"同拓扑 ≠ 同概形"。</p>
+<p><strong>陷阱 3："概形 = 代数簇的（代数闭域）推广"？</strong> 比那广得多：Spec ℤ 没有基域；概形可以"纤维化在 Spec ℤ 上"（算术几何）；概形同时统一几何与算术。把概形窄化为"域上几何"会漏掉它的真正威力。</p>
+<p><strong>陷阱 4："闭点才重要，一般点只是形式"？</strong> 一般点承载 generic 性质：整环性、维数、纤维的一般行为都由一般点读出；"generic fiber" 是相对概形理论的日常对象。忽略一般点 = 扔掉一半结构。</p>
+<p><strong>陷阱 5："概形的函数像连续实值函数一样取值"？</strong> 概形函数 f∈A 在不同点的"值域"不同（剩余域随点变：κ((p))=F_p，κ((0))=ℚ）。"函数"的直觉要换成"环元素在剩余域的像"——这是初学最常绊倒的地方。</p>
+</section>
+
+<section>
+<h3>九、当前状态——概形语言之后</h3>
+<ol>
+<li><strong>基础已完成。</strong> EGA/SGA（Grothendieck 1960s）把概形语言定型；Hartshorne 等让它成为研究生代数几何的普通话。现代代数几何在概形上继续——"语言之争"早已结束。</li>
+<li><strong>算术几何主线。</strong> 模性、étale/ℓ-adic 上同调、p-adic Hodge（→ <a href="/pages/p-adic-numbers.html">p-adic</a> 课）与完美空间——Spec ℤ 上的几何是当代数论最大工程。</li>
+<li><strong>导出与高阶。</strong> 导出代数几何（谱概形）把概形放进 ∞-范畴；模空间（如 Spec ℤ 上椭圆曲线的模空间）被赋予导出结构——概形的"下一层"仍在生长。</li>
+<li><strong>与其他数学的接口。</strong> 概形语言进入数学物理（模空间、镜像对称）、表示论（仿射 Grassmannian）与逻辑（代数几何的模型论、→ <a href="/pages/model-theory.html">模型论</a> 课的 o-minimal 算术连接）。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Serre (1955)</strong>：FAC——凝聚层与代数几何的层论基础。</li>
+<li><strong>Grothendieck–Dieudonné (1960–67)</strong>：EGA（Éléments de Géométrie Algébrique）——概形语言的宣言。</li>
+<li><strong>Grothendieck (SGA)</strong>：Séminaire de Géométrie Algébrique——étale 上同调与拓扑斯。</li>
+<li><strong>Deligne (1974)</strong>：Weil 猜想的证明（概形语言 + ℓ-adic 上同调）。</li>
+<li><strong>Hartshorne (1977)</strong>：<em>Algebraic Geometry</em>——概形的标准教材化。</li>
+<li><strong>Wiles (1995)</strong>：费马大定理——形变环 R 与 Hecke 代数 T（概形/交换代数大显身手）。</li>
+<li><strong>Scholze (2012)</strong>：完美空间——概形观念的 p-adic 延伸。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——Spec 手算</h3>
+<p><strong>题 1（Spec 的点）。</strong> 列出 Spec ℤ 的闭点与一般点，并说明维数。<strong>提示：</strong>闭点 (p)，一般点 (0)，链 (0)⊂(p) ⟹ 维数 1。</p>
+<p><strong>题 2（胖点）。</strong> Spec k[x]/(x²) 与 Spec k 的拓扑与结构层差异。<strong>提示：</strong>同为单点空间；结构层茎分别为 k[ε] 与 k——x≠0 但 x²=0。</p>
+<p><strong>题 3（函数取值）。</strong> 对 f=2∈ℤ，在 Spec ℤ 的点 (2)、(3)、(0) 处的"值"是什么？<strong>提示：</strong>κ((2))=F₂：2↦0；κ((3))=F₃：2↦2；κ((0))=ℚ：2↦2——"f 在点 p 为零 ⟺ f∈p"。</p>
+<p><strong>题 4（切向量）。</strong> 对 X=Spec k[t] 的闭点 (t)：态射 Spec k[ε]→X 有多少？<strong>提示：</strong>环同态 t↦cε：每个 c∈k 一个——即切空间 k¹。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示。∎</p>
+<p><strong>题 2</strong>：见提示（幂零元区分结构）。∎</p>
+<p><strong>题 3</strong>：0（mod 2）、2（mod 3）、2（在 ℚ）。∎</p>
+<p><strong>题 4</strong>：|k| 个。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布 Spec ℤ）。</strong> 在"素数点轴"上滑动：每个 (p) 是一个闭点（F_p 纤维），(0) 是稠密一般点。对比 Spec ℂ[t] 的闭点 (t−a)——"整数 = 多项式"的对应。</p>
+<p><strong>试试看 2（胖点）。</strong> 把重数 n 从 1 调到 4：Spec k[x]/(xⁿ) 的"点集"不变（单个闭点），但"厚度"/切向结构逐级加深——重数不在拓扑里，在结构层里。提示：这就是相交数、形变理论（→ Wiles 的形变环）的基础直觉。</p>
+<p><strong>试试看 3（与交换代数联动）。</strong> 在 <a href="/pages/commutative-algebra.html">交换代数</a> 课把素理想/局部化/Noether 性质与 Spec 的拓扑一一对应：局部化 = 取开集的茎，Noether = 闭集降链条件。</p>
+<p><strong>试试看 4（跨课展望）。</strong> 把 Spec ℤ 上的椭圆曲线（→ <a href="/pages/elliptic-curves.html">椭圆曲线</a> 课）、Spec ℤ 上层的上同调（→ <a href="/pages/spectral-sequences.html">谱序列</a> 课）与 p-adic 纤维（→ <a href="/pages/p-adic-numbers.html">p-adic</a> 课）三课拼起来：你就看到了"算术几何"的骨架。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>R. Hartshorne, Algebraic Geometry</strong>（第二章：概形语言的标准教材）</p>
+<p>&rarr; <strong>D. Eisenbud, J. Harris, The Geometry of Schemes</strong>（友好的几何直觉）</p>
+<p>&rarr; <strong>Q. Liu, Algebraic Geometry and Arithmetic Curves</strong>（算术概形路线）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.4（代数几何）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/commutative-algebra.html">交换代数</a>、<a href="/pages/algebraic-geometry.html">代数几何</a>、<a href="/pages/algebraic-number-theory.html">代数数论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/commutative-algebra.html">💍 交换代数</a>：素理想/局部化 = Spec 的语言。</p>
+<p>&rarr; <a href="/pages/algebraic-geometry.html">🌱 代数几何</a>：经典簇是本课的"前史"。</p>
+<p>&rarr; <a href="/pages/elliptic-curves.html">🗝️ 椭圆曲线与 Wiles</a>：Spec ℤ 上的椭圆曲线与形变环 R=T。</p>
+<p>&rarr; <a href="/pages/algebraic-number-theory.html">🏰 代数数论</a>：Spec ℤ 的算术面孔与 Dedekind 环。</p>
+<p>&rarr; <a href="/pages/spectral-sequences.html">🛰️ 谱序列</a>：层上同调的 Leray 谱序列在概形上运行。</p>
+<p>&rarr; <a href="/pages/p-adic-numbers.html">🥟 p-adic 数</a>：完美空间与 p-adic 几何的现代延伸。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/schemes.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

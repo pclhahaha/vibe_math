@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="线性代数数值算法与 ODE/PDE 求解" />
+  <meta property="og:title" content="数值计算方法 — Vibe Math" />
+  <meta property="og:description" content="线性代数数值算法与 ODE/PDE 求解" />
+  <title>数值计算方法 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>💻 数值计算方法 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">线性代数数值算法与 ODE/PDE 求解</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='numerical-methods',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/svd.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔀 奇异值分解 SVD</a>
+  <a href="/pages/determinant.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">📏 行列式 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、动机：同一个微分方程，两种步长，答案差多少？</h3>
+<p>解初值问题 x' = −x，x(0) = 1。精确解是 x(t) = e^{−t}，在 t = 1 处真值为 e^{−1} ≈ 0.367879。用最朴素的欧拉法 x_{n+1} = x_n + h·f(x_n) 去逼近：</p>
+<table style="width:100%;border-collapse:collapse;font-size:.85em;margin:10px 0">
+<tr style="color:#8b949e"><td style="padding:4px 10px;border:1px solid #30363d">步长 h</td><td style="padding:4px 10px;border:1px solid #30363d">0.1</td><td style="padding:4px 10px;border:1px solid #30363d">0.01</td><td style="padding:4px 10px;border:1px solid #30363d">0.001</td></tr>
+<tr style="color:#c9d1d9"><td style="padding:4px 10px;border:1px solid #30363d">欧拉近似 x(t=1)</td><td style="padding:4px 10px;border:1px solid #30363d">0.348678</td><td style="padding:4px 10px;border:1px solid #30363d">0.366032</td><td style="padding:4px 10px;border:1px solid #30363d">0.367695</td></tr>
+<tr style="color:#c9d1d9"><td style="padding:4px 10px;border:1px solid #30363d">误差 |x−e⁻¹|</td><td style="padding:4px 10px;border:1px solid #30363d">0.019201</td><td style="padding:4px 10px;border:1px solid #30363d">0.001847</td><td style="padding:4px 10px;border:1px solid #30363d">0.000184</td></tr>
+</table>
+<p>注意规律：h 缩小为原来的 1/10，误差也约缩小为原来的 1/10——<strong>误差 ∝ h</strong>。这就是"欧拉法是一阶方法"这句话的精确含义。</p>
+<p>再看求方程 f(x) = x² − 2 = 0（即 √2）的牛顿迭代，从 x₀ = 1 出发：x₁ = 1.5，x₂ = 1.41667，x₃ = 1.41422，x₄ = 1.4142136——<strong>每走一步，正确的位数大约翻一倍</strong>。这就是"二次收敛"。</p>
+<p>这门课研究的就是：计算机的算术会"悄悄出错"，好的算法让错小到看不见；以及为什么有的算法误差 ∝ h（一阶）、有的误差 ∝ h⁴（四阶）、有的每步翻倍（二次收敛）。</p>
+<div class="key-insight">计算机的答案没有"精确"，只有"够准"——数值计算就是研究这个"准"有多大、能否控制、为何如此。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/svd.html">奇异值分解 SVD</a>、<a href="/pages/gradient.html">梯度与方向导数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、浮点算术与误差</h3>
+<p>电脑用有限的"格子"存数字：<strong>IEEE 754</strong> 双精度 = 1 符号位 + 11 阶码 + 52 尾数，表示 x = ±1.m·2^(e−1023)。机器精度</p>
+<div class="formula display" data-tex="\epsilon_{mach}=2^{-52}\approx2.2\times10^{-16}\qquad(\text{任何浮点运算的相对误差上界})"></div>
+<p>直观感受：双精度能精确到约 16 位十进制数字。任何一次浮点运算都带一个相对误差 ≤ ε_mach：</p>
+<div class="formula display" data-tex="\mathrm{fl}(a+b)=(a+b)(1+\delta),\qquad|\delta|\le\epsilon_{mach}"></div>
+<p><strong>为什么浮点加法不满足结合律？</strong>因为中间结果要被"四舍五入"到有限位。例如 a = 10¹⁶，b = 1，c = −10¹⁶：a+(b+c) = 10¹⁶ + (1−10¹⁶) = 10¹⁶ + (−10¹⁶) = 0，而 (a+b)+c = (10¹⁶+1)+(−10¹⁶) = 10¹⁶ + (−10¹⁶) = 0……本例恰好都为 0。换一组数就能看出差别：取 a = 1，b = 2⁻⁵³，c = −1。a+(b+c) = 1 + (2⁻⁵³ − 1) = 1 + (−1) = 0（b+c 精确等于 −1）；而 (a+b)+c = (1 + 2⁻⁵³) + (−1)：1 + 2⁻⁵³ 在双精度里恰好舍入成 1（2⁻⁵³ 比 ε_mach/2 还小），所以结果是 0 + (−1)……等等，是 1 + (−1) = 0。两个都是 0？让我换 a = 1，b = 2⁻⁵²，c = −1：a+(b+c) = 1 + (2⁻⁵² − 1) = 1 + (≈−1) = 2⁻⁵²（精确），而 (a+b)+c = (1 + 2⁻⁵²) + (−1)：1 + 2⁻⁵² 在双精度里恰好能表示（ulp），等于 1 + 2⁻⁵²，再加 −1 得 2⁻⁵²。还是相等？哦，这个例子不够直观。更直观的经典例子是"求和顺序"：0.1 + 0.2 − 0.3 在二进制浮点里不等于 0，因为 0.1 和 0.2 在二进制下都是无限循环小数，舍入后 (0.1+0.2) ≈ 0.30000000000000004。</p>
+<p>所以正确的说法是：<strong>浮点加法不满足结合律</strong>——a+(b+c) ≠ (a+b)+c 一般而言，这是所有数值陷阱的根源。误差会在求和、迭代、解方程的过程中被逐级放大或幸运抵消，于是我们需要两把尺子来度量"难算"和"算得糙"：</p>
+<div class="formula display" data-tex="\kappa(f)\approx\frac{\|f'(x)\|\,\|x\|}{\|f(x)\|}\qquad(\text{条件数：问题本身对扰动的敏感度})"></div>
+<p><strong>条件数 vs 数值稳定性</strong>：病态问题（条件数大，输入扰动被放大）是<strong>问题本身</strong>的性质；不稳定算法（舍入误差被逐级放大）是<strong>算法</strong>的性质。良态问题 + 稳定算法 = 可靠计算。<strong>向后误差分析</strong>（Wilkinson）：一个稳定算法计算出的解是"精确求解了一个略微扰动的原问题"——把舍入误差解释为数据扰动，从而把"算法好坏"与"问题好坏"干净地分开。</p>
+</section>
+
+<section>
+<h3>二、牛顿法：每步有效位数翻倍</h3>
+<p>求 f(x) = 0 的根，是数值计算最常见的任务。牛顿法从一个猜值 x₀ 出发，用切线逼近曲线：</p>
+<div class="formula display" data-tex="x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)}"></div>
+<p><strong>为什么是"减斜率"？</strong>在 (xₙ, f(xₙ)) 处画切线 y = f(xₙ) + f'(xₙ)(x − xₙ)，它与 x 轴的交点就是"切线的根"——用它当下一步的近似。直观上，曲线在根附近越"直"，切线逼近越准。</p>
+<p>收敛速度的核心定理：若 f'(r) ≠ 0（根是单根），则</p>
+<div class="formula display" data-tex="e_{n+1}\approx\frac{f''(r)}{2f'(r)}\,e_n^2\qquad(\text{二次收敛：误差每步平方})"></div>
+<p>误差从 e 变成 ≈ C·e²：一旦 e 小于 1/C，误差就飞速消失。<strong>为什么是二次？</strong>把 f(xₙ) 在根 r 处 Taylor 展开：f(xₙ) = f'(r)eₙ + ½f''(r)eₙ² + …，代入迭代式，线性项被消掉，剩下的主导项是二次的。这就是"每步有效位数翻倍"的数学来源。</p>
+</section>
+
+<section>
+<h3>三、完整例题 1：牛顿法手算 √2</h3>
+<p>解 f(x) = x² − 2 = 0，从 x₀ = 1 出发，手算四步。</p>
+<p><strong>第 1 步：</strong>f(1) = −1，f'(1) = 2：</p>
+<div class="formula display" data-tex="x_1=1-\frac{-1}{2}=1.5\qquad(\text{误差}\ 0.0858)"></div>
+<p><strong>第 2 步：</strong>f(1.5) = 0.25，f'(1.5) = 3：</p>
+<div class="formula display" data-tex="x_2=1.5-\frac{0.25}{3}=1.5-0.08333\approx1.41667\qquad(\text{误差}\ 0.00245)"></div>
+<p><strong>第 3 步：</strong>f(1.41667) ≈ 0.006944，f' ≈ 2.83333：</p>
+<div class="formula display" data-tex="x_3=1.41667-\frac{0.006944}{2.83333}\approx1.41667-0.00245\approx1.41422\qquad(\text{误差}\ 2.1\times10^{-6})"></div>
+<p><strong>第 4 步：</strong></p>
+<div class="formula display" data-tex="x_4\approx1.4142136\qquad(\text{误差}\ \approx10^{-12})"></div>
+<p><strong>第 5 步：读误差表，看二次收敛。</strong></p>
+<table style="width:100%;border-collapse:collapse;font-size:.85em;margin:10px 0">
+<tr style="color:#8b949e"><td style="padding:4px 10px;border:1px solid #30363d">n</td><td style="padding:4px 10px;border:1px solid #30363d">0</td><td style="padding:4px 10px;border:1px solid #30363d">1</td><td style="padding:4px 10px;border:1px solid #30363d">2</td><td style="padding:4px 10px;border:1px solid #30363d">3</td><td style="padding:4px 10px;border:1px solid #30363d">4</td></tr>
+<tr style="color:#c9d1d9"><td style="padding:4px 10px;border:1px solid #30363d">xₙ</td><td style="padding:4px 10px;border:1px solid #30363d">1.000000</td><td style="padding:4px 10px;border:1px solid #30363d">1.500000</td><td style="padding:4px 10px;border:1px solid #30363d">1.416667</td><td style="padding:4px 10px;border:1px solid #30363d">1.414216</td><td style="padding:4px 10px;border:1px solid #30363d">1.414214</td></tr>
+<tr style="color:#c9d1d9"><td style="padding:4px 10px;border:1px solid #30363d">误差</td><td style="padding:4px 10px;border:1px solid #30363d">4.1×10⁻¹</td><td style="padding:4px 10px;border:1px solid #30363d">8.6×10⁻²</td><td style="padding:4px 10px;border:1px solid #30363d">2.5×10⁻³</td><td style="padding:4px 10px;border:1px solid #30363d">2.1×10⁻⁶</td><td style="padding:4px 10px;border:1px solid #30363d">≈10⁻¹²</td></tr>
+</table>
+<p>误差序列 0.41 → 0.086 → 0.0025 → 2.1×10⁻⁶ → 10⁻¹²：<strong>后一项大约等于前一项的平方</strong>（0.086² ≈ 0.0074 ≈ 0.0025，0.0025² ≈ 6×10⁻⁶ ≈ 2.1×10⁻⁶）。这就是二次收敛——所以"有效位数翻倍"。∎</p>
+</section>
+
+<section>
+<h3>四、欧拉法：误差表告诉你"一阶"是什么</h3>
+<p>欧拉法是最简单的 ODE 数值格式：</p>
+<div class="formula display" data-tex="x_{n+1}=x_n+h\,f(x_n)\qquad(\text{沿切线走一步 }h)"></div>
+<p><strong>为什么欧拉法是"一阶"？</strong>关键在 Taylor 展开：</p>
+<div class="formula display" data-tex="x(t+h)=x(t)+h\,x'(t)+\tfrac{h^2}{2}x''(\xi)\qquad(\text{精确})"></div>
+<p>欧拉格式用的是前两项，丢掉了 ½h²x″(ξ) 这一项。所以<strong>单步</strong>的误差（局部截断误差）是 O(h²)。但积分到固定时刻 t = Nh 要走 N = t/h 步，每步的误差都累积：</p>
+<div class="formula display" data-tex="\text{全局误差}\ \approx N\times O(h^2)=\frac{t}{h}\times O(h^2)=O(h)"></div>
+<p><strong>这就是"全局误差 O(h)、一阶"的来源：单步误差 O(h²)，步数 1/h，一乘就降一阶。</strong>〇节的表格正是它的数值体现：h 缩 10 倍，误差也缩约 10 倍。</p>
+<p>对测试方程 x' = λx（λ = −1 即〇节情形），欧拉格式写成放大因子：</p>
+<div class="formula display" data-tex="x_{n+1}=(1+\lambda h)x_n,\qquad |R_{Euler}(\lambda h)|=|1+\lambda h|"></div>
+<p>要求 |1+λh| ≤ 1 才稳定（误差不增长），这给出稳定域——圆心 −1、半径 1 的圆盘。对实 λ &lt; 0，要求 −2 ≤ λh ≤ 0。</p>
+</section>
+
+<section>
+<h3>五、完整例题 2：欧拉法手算前三步</h3>
+<p>解 x' = −x，x(0) = 1，h = 0.1，手算前三步并与真值比较。</p>
+<p><strong>第 1 步：</strong>x₁ = x₀ + h·f(x₀) = 1 + 0.1·(−1) = <strong>0.9</strong>。（精确 e^{−0.1} ≈ 0.9048，误差 ≈ 0.0048。）</p>
+<p><strong>第 2 步：</strong>x₂ = 0.9 + 0.1·(−0.9) = <strong>0.81</strong>。（精确 e^{−0.2} ≈ 0.8187，误差 ≈ 0.0087。）</p>
+<p><strong>第 3 步：</strong>x₃ = 0.81 + 0.1·(−0.81) = <strong>0.729</strong>。（精确 e^{−0.3} ≈ 0.7408，误差 ≈ 0.0118。）</p>
+<p><strong>第 4 步：观察。</strong>误差逐次增大：0.0048 → 0.0087 → 0.0118，每个误差都大约等于"该时刻的真值 × 累计 h 步数 × ½h"的量级——单步误差被"滚雪球"成全局误差 O(h)。若继续算到 t = 1（第 10 步），得到 0.3487，与真值 e⁻¹ 的误差正是〇节表的 0.0192。若改用 h = 0.01，误差降到 0.00185——步长减半，误差减半。∎</p>
+</section>
+
+<section>
+<h3>六、RK4 与更高阶方法：用多次求值换更高阶</h3>
+<p>欧拉"一阶太糙"，人们用"一个步长内多次采样斜率"来换取高阶：<strong>中点法</strong>（改进欧拉）二阶、对称；<strong>经典四阶 Runge–Kutta（RK4）</strong>每次步进做四次函数求值：</p>
+<div class="formula display" data-tex="k_1=f(x_n),\ k_2=f(x_n+\tfrac{h}{2}k_1),\ k_3=f(x_n+\tfrac{h}{2}k_2),\ k_4=f(x_n+h k_3)"></div>
+<div class="formula display" data-tex="x_{n+1}=x_n+\frac{h}{6}(k_1+2k_2+2k_3+k_4)"></div>
+<p><strong>为什么四步求值换到 O(h⁴)？</strong>四条斜率按 1:2:2:1 加权组合，恰好把 Taylor 展开里直到 h⁴ 的所有项都精确匹配，剩下第一个未匹配项是 O(h⁵)。单步误差 O(h⁵)，步数 1/h，全局误差 O(h⁴)——比欧拉高一截：h 缩 10 倍，RK4 误差缩 10⁴ 倍。<strong>这是"计算量换精度"的经典权衡</strong>：RK4 每步做 4 次求值，但允许用大得多的步长。</p>
+<p>对测试方程 x' = λx，RK4 的放大因子是</p>
+<div class="formula display" data-tex="R(z)=1+z+\frac{z^2}{2}+\frac{z^3}{6}+\frac{z^4}{24},\qquad z=\lambda h"></div>
+<p>它其实是 e^z 的前五项 Taylor——在 |z| 小时几乎等于真放大 e^z，稳定域比欧拉的圆盘大得多（见工作题 4）。</p>
+</section>
+
+<section>
+<h3>七、刚性系统与稳定域</h3>
+<p>有些系统让显式方法"寸步难行"：特征值 λ 满足 |λ|h ≫ 1 却仍要求精度——<strong>步长被稳定性（而非精度）限制</strong>。这叫<strong>刚性（stiff）</strong>。例如化学反应里既有慢反应又有极快反应，快特征值要求 h 极小，否则数值解爆炸，哪怕你快特征值对应的分量早该衰减完了。</p>
+<div class="key-insight"><strong>A-稳定</strong>：若数值格式的稳定域包含整个左半复平面 ℂ⁻，则对任何步长都稳定（无稳定性限制）。隐式欧拉、梯形法、BDF 方法都是 A-稳定。判断法：把格式写成 x_{n+1} = R(λh)xₙ，要求 |R(λh)| ≤ 1 对所有 λh ∈ 谱集成立。</div>
+<p>为什么"显式"的稳定域总是有限？因为显式格式的 R(z) 是多项式，|R(z)| 在左半平面深处必然 &gt; 1；而隐式格式的 R(z) 是分式（如隐式欧拉 R(z) = 1/(1−z)，在 ℂ⁻ 上恒有 |R(z)| ≤ 1），所以能吸收整个左半平面。这是"隐式换稳定性"的本质。</p>
+</section>
+
+<section>
+<h3>八、线性代数数值：为什么不用 Cramer 法则</h3>
+<p>求解 Ax = b 的教科书方法（Cramer 法则）计算行列式需要 n! 次运算——n = 30 时远超宇宙年龄。实用算法全部基于<strong>矩阵分解</strong>，一次分解、多次使用：</p>
+<div class="formula display" data-tex="A=LU,\qquad A=LL^T,\qquad A=QR,\qquad \kappa(A)=\|A\|\,\|A^{-1}\|=\frac{\sigma_{max}}{\sigma_{min}}"></div>
+<p><strong>LU 分解</strong>（带部分选主元）：Ax = b 一次分解 O(n³/3)，之后每次求解 O(n²)——同一矩阵多右端问题的首选。对称正定时用 <strong>Cholesky</strong>：A = LLᵀ，O(n³/6)，稳定且省一半存储。<strong>QR 分解</strong>（Householder）用于最小二乘与特征值 QR 算法。<strong>共轭梯度（CG）</strong>：SPD 矩阵的 Krylov 子空间法，n 步内精确，实用中远快于 n 步。</p>
+<p><strong>为什么"病态"决定精度？</strong>解的相对误差被条件数放大：</p>
+<div class="formula display" data-tex="\frac{\|\delta x\|}{\|x\|}\le\kappa(A)\,\frac{\|\delta b\|}{\|b\|}"></div>
+<p>κ(A) = σ_max/σ_min ≈ 1 良态；κ 大则解对噪声病态敏感。直觉：条件数衡量矩阵"拉伸"各方向的程度——某个方向被压扁（σ_min 小），则该方向上的解对 b 的扰动特别敏感。<strong>它刻画的不是算法，而是问题本身</strong>（见第一节的条件数/稳定性区分）。</p>
+</section>
+
+<section>
+<h3>九、迭代法：Jacobi 与共轭梯度</h3>
+<p>直接分解对稀疏大矩阵（每行 O(1) 个非零元）太贵，迭代法是正道。分裂 A = M − N，迭代 x_{k+1} = M⁻¹N x_k + M⁻¹b：</p>
+<p><strong>Jacobi</strong>：M = D（对角）；<strong>Gauss–Seidel</strong>：M = D − L（下三角，立即用新分量）；<strong>逐次超松弛 SOR</strong>：M = (1/ω)D − L 加松弛参数 ω。收敛当且仅当<strong>谱半径</strong> ρ(M⁻¹N) &lt; 1，误差 ∝ ρ^k。对 SPD 矩阵，Gauss–Seidel 谱半径是 Jacobi 谱半径的平方。<strong>为什么谱半径决定速度？</strong>误差传播 e_{k+1} = M⁻¹N e_k，第 k 步误差 ≈ ρ^k e₀——ρ 越小收敛越快，这和小数连乘一个道理。</p>
+<p><strong>共轭梯度</strong>是全局最优 Krylov 方法：</p>
+<div class="formula display" data-tex="\|e_k\|_A\le 2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k\|e_0\|_A"></div>
+<p>收敛率由 √κ 决定，配合预条件（M⁻¹A 条件数剧降）成为大规模稀疏线性系统的标准工具。<strong>为什么是 √κ 而不是 κ？</strong>CG 沿"共轭方向"行走，每步同时优化整个 A-内积空间，等价于在越来越低维的子空间里精确解——这使收敛依赖谱的"形状"而非单纯的最大比值。</p>
+</section>
+
+<section>
+<h3>十、完整例题 3：Jacobi 迭代手算</h3>
+<p>解方程组 4x − y = 1，−x + 4y = 2（A = [[4,−1],[−1,4]]，b = (1,2)ᵀ），从 x₀ = (0,0) 出发。</p>
+<p><strong>第 1 步：写迭代公式。</strong>Jacobi 用<strong>上一轮</strong>的旧值计算新值（对角除过去）：</p>
+<div class="formula display" data-tex="x_{k+1}=\frac{1}{4}(1+y_k),\qquad y_{k+1}=\frac{1}{4}(2+x_k)"></div>
+<p><strong>第 2 步：代初值算 x₁。</strong></p>
+<div class="formula display" data-tex="x_1=\frac{1}{4}(1+0)=0.25,\qquad y_1=\frac{1}{4}(2+0)=0.5\quad\Rightarrow\quad x_1=(0.25,\ 0.5)"></div>
+<p><strong>第 3 步：再迭代一步 x₂。</strong>x₂ = (1+0.5)/4 = 0.375，y₂ = (2+0.25)/4 = 0.5625。<strong>第 4 步：继续 x₃。</strong>x₃ = (1+0.5625)/4 ≈ 0.3906，y₃ = (2+0.375)/4 = 0.59375。</p>
+<p><strong>第 5 步：验证收敛。</strong>精确解：4x − y = 1，−x + 4y = 2 ⟹ x = 0.6，y = 0.6。序列 (0,0) → (0.25,0.5) → (0.375,0.5625) → (0.3906,0.59375) → … 稳定逼近 (0.6,0.6)。收敛性：迭代矩阵 B = D⁻¹(L+U) 的谱半径 ρ = 1/4 &lt; 1，每步误差约缩为 1/4（见序列数值，0.6−0.39 ≈ 0.21，下一轮约 0.05）；且矩阵对角占优（|4| &gt; |−1|）保证 Jacobi 收敛。∎</p>
+</section>
+
+<section>
+<h3>十一、PDE 数值：有限差分与 CFL</h3>
+<p><strong>有限差分</strong>：用网格差分近似导数，配合显式/隐式时间推进。<strong>有限元</strong>：变分形式 + 分片多项式基函数，处理复杂几何与自然边界条件。<strong>谱方法</strong>：全局基函数（Fourier/Chebyshev），指数收敛，适用于光滑解。</p>
+<p>对双曲方程（波动、对流），<strong>CFL 条件</strong>给出显式格式的生死线：数值信息传播速度必须 ≥ 物理传播速度。</p>
+<div class="formula display" data-tex="\text{CFL: }\ \frac{a\,\Delta t}{\Delta x}\le 1\qquad(\text{Courant–Friedrichs–Lewy})"></div>
+<p><strong>为什么信息传播速度是关键？</strong>双曲方程的解沿特征线传播：一个时间步 Δt 内，扰动最多移动 a·Δt。若网格间距 Δx 比这还大（CFL 数 &gt; 1），数值解"够不着"它应该接收的信息，必炸。<strong>von Neumann 稳定性分析</strong>把误差展开为傅里叶模式 e^{ikx}，要求放大因子 |G(θ)| ≤ 1：对流方程的 FTCS 格式不稳定（无阻尼），Lax–Wendroff 有阻尼。</p>
+<p>抛物方程（热传导）显式格式要求 r = αΔt/Δx² ≤ 1/2：<strong>为什么是 Δx²？</strong>因为热扩散是二阶算子的效应，信息在一个时间步内扩散距离 ∝ √(αΔt)，对应网格要求 Δx² 尺度。刚性时间尺度上隐式格式（Crank–Nicolson）无条件稳定。</p>
+</section>
+
+<section>
+<h3>十二、插值与逼近：Runge 现象与最小二乘</h3>
+<p>n 次多项式插值过 n+1 个点唯一，但高次多项式在等距节点上剧烈振荡——<strong>Runge 现象</strong>：对 f(x) = 1/(1+25x²) 在 [−1,1] 等距插值，|误差| 随 n 增大发散。<strong>为什么多项式插值会"越插越糟"？</strong>高次插值多项式必须在每个等距节点精确穿过，而等距节点在端点附近的 Lebesgue 常数指数增长，把端点处的振荡放大到失控。<strong>样条</strong>（分段三次、C² 光滑）用低次多项式避免振荡；<strong>切比雪夫节点</strong>把 Runge 现象指数级抑制——把节点按 cos 分布堆到端点附近，Lebesgue 常数降到对数级。</p>
+<p><strong>最小二乘</strong>：min ‖Ax − b‖₂ 的正规方程 AᵀAx = Aᵀb，但 AᵀA 会把条件数平方（κ(AᵀA) = κ(A)²）。数值稳健做法是 <strong>QR 或 SVD</strong>：解由 x = VΣ⁻¹Uᵀb 给出。SVD 还能做截断奇异值正则化（Tikhonov）：把病态问题"裁掉"小奇异值方向。<strong>为什么 AᵀA 会恶化条件数？</strong>奇异值被平方：σ_min² 比 σ_min 更接近 0，病态被"二次方"放大——所以用 QR/SVD 直接处理 A 而非 AᵀA。过拟合与模型选择：在残差与复杂度间做权衡。</p>
+</section>
+
+<section>
+<h3>十三、反例——数值计算里的陷阱</h3>
+<p><strong>反例 1（灾难性消去）。</strong>计算 f(x) = 1 − cos(x) 在 x = 0.0001 处。精确值 ≈ 5×10⁻⁹。但 1 和 cos(0.0001) ≈ 0.999999995 在双精度里相减：两个接近的数"相减消去"了大量有效数字，结果只剩约 5 位可靠数字——相对误差高达 10⁻⁴，远大于 ε_mach。<strong>对策</strong>：用等价公式 1 − cos x = 2 sin²(x/2)，重新把消去的精度"算"回来。</p>
+<p><strong>反例 2（求和顺序）。</strong>a + (b + c) ≠ (a + b) + c：浮点加法不结合，把大量小量累加到大量上会"被吞掉"。求和小量先加（Kahan 求和），精度可以高几个量级。</p>
+<p><strong>反例 3（欧拉失稳）。</strong>对 x' = −25x 取 h = 0.1（λh = −2.5），欧拉放大因子 1 + λh = −1.5，|−1.5| &gt; 1——误差每步放大 1.5 倍，数值解振荡发散，尽管精确解平缓衰减（完整数值见工作题 4）。</p>
+<p><strong>反例 4（Runge 现象）。</strong>见第十二节——高次等距插值在端点发散，不是"更多节点 = 更准"。</p>
+</section>
+
+<section>
+<h3>十四、关键公式</h3>
+<div class="formula display" data-tex="\kappa(A)=\|A\|\,\|A^{-1}\|=\sigma_{max}/\sigma_{min}\qquad(\text{条件数})"></div>
+<div class="formula display" data-tex="x_{n+1}=x_n-\frac{f(x_n)}{f'(x_n)},\qquad e_{n+1}\approx\frac{f''(r)}{2f'(r)}e_n^2\quad(\text{牛顿，二次收敛})"></div>
+<div class="formula display" data-tex="\text{Euler: } x_{n+1}=x_n+hf(x_n),\quad \text{RK4: } x_{n+1}=x_n+\frac{h}{6}(k_1+2k_2+2k_3+k_4)"></div>
+<div class="formula display" data-tex="\text{局部: }\mathrm{RK4}=O(h^5),\ \text{全局: }O(h^4);\qquad |R_{Euler}(\lambda h)|=|1+\lambda h|\le 1"></div>
+<div class="formula display" data-tex="\text{CFL: }\ \frac{a\,\Delta t}{\Delta x}\le1,\qquad \text{热方程显式: }\ r=\frac{\alpha\,\Delta t}{\Delta x^2}\le\frac12"></div>
+</section>
+
+<section>
+<h3>十五、关键论文</h3>
+<p><strong>Wilkinson (1965, "The Algebraic Eigenvalue Problem")</strong>——对称三对角化与 QR 算法的经典著作，开创向后误差分析与矩阵计算的现代范式。</p>
+<p><strong>Strassen (1969, "Gaussian Elimination is not Optimal")</strong>——首次把矩阵乘法复杂度降到 O(n^2.81)，掀开矩阵乘法复杂性研究的序幕。</p>
+<p><strong>Golub &amp; Van Loan (1983, "Matrix Computations")</strong>——数值线性代数事实上的标准教科书，系统化 SVD、迭代法与误差分析。</p>
+<p><strong>Hairer &amp; Wanner (1991, "Solving Ordinary Differential Equations II")</strong>——刚性问题的经典著作，A-稳定性与 BDF 方法的权威论述。</p>
+</section>
+
+<section>
+<h3>十六、前沿</h3>
+<p><strong>矩阵乘法</strong>：Coppersmith-Winograd (1987) O(n^2.376) → Williams (2012) O(n^2.373) → Alman-Williams (2021) O(n^2.37286) → <strong>Duan-Wu-Zhou (2024) O(n^2.371552)</strong>——指数仍在缓慢逼近下界 2。</p>
+<p><strong>机器学习中的数值</strong>：混合精度训练（FP16/BF16）、随机梯度法的迭代复杂度、Krylov 方法与深度学习优化器的连接；高维数值积分的维数灾难与随机化（Quasi-Monte Carlo、随机梯度估计）。</p>
+<p><strong>高精度计算</strong>：任意精度算术（Arb、mpmath）、IEEE 754 之外的新格式（bfloat16、posit）、正确舍入库——数论与天体物理对位精度极限的需求驱动。</p>
+</section>
+
+<section>
+<h3>十七、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 用牛顿法手算 √3 的前两步（从 x₀ = 2 出发）。</p>
+<p><em>提示：f(x) = x² − 3。x₁ = 2 − (4−3)/(2·2) = 2 − 0.25 = 1.75；x₂ = 1.75 − (3.0625−3)/3.5 ≈ 1.7321。与 √3 ≈ 1.73205 对比。</em></p>
+<p><strong>2.</strong> 用欧拉法（h = 0.5）解 x' = x，x(0) = 1，算到 t = 1，并与 e 比较。</p>
+<p><em>提示：x₁ = 1 + 0.5·1 = 1.5；x₂ = 1.5 + 0.5·1.5 = 2.25，真值 e ≈ 2.718，误差 ≈ 0.47——h 大，一阶误差就大。</em></p>
+<p><strong>3.</strong> 求 A = diag(1, 10⁻⁶) 的 2-范数条件数，并与 diag(1, 10⁻³)（κ = 10³）比较。</p>
+<p><em>提示：对角阵奇异值即对角元，κ = 10⁶——比 10⁻³ 的例子病态 1000 倍，解对 b 的扰动更敏感。</em></p>
+<p><strong>4.</strong> 对 x' = −20x（λ = −20）取 h = 0.1：Euler 稳定吗？RK4 稳定吗？若 h = 0.2 呢？</p>
+<p><em>提示：λh = −2 时 |1−2| = 1，Euler 在稳定域边界；R(−2) = 1−2+2−1.333+0.667 = 0.333，RK4 稳定。h = 0.2 时 λh = −4：Euler 的 |1−4| = 3 &gt; 1 失稳；R(−4) = 1−4+8−10.667+10.667 = 5 &gt; 1，RK4 也失稳——这就是刚性系统要换隐式格式的原因。</em></p>
+<p><strong>5.</strong> 热方程显式格式 r = αΔt/Δx² ≤ 1/2：α = 1，Δx = 0.1 时，Δt 最大可取多少？</p>
+<p><em>提示：r = 1·Δt/0.01 ≤ 1/2 ⟹ Δt ≤ 0.005。注意 Δt 与 Δx² 同量级——抛物线问题时间步长收缩得比空间步长快。</em></p>
+<p><strong>6.</strong> 为什么 f(x) = 1/(1+25x²) 在 [−1,1] 上做等距高次插值会发散，而换样条就没事？</p>
+<p><em>提示：等距节点高次插值的 Lebesgue 常数指数增长（Runge 现象）；样条用低次分段多项式，局部扰动不扩散。要指数收敛用切比雪夫节点。</em></p>
+</section>
+
+<section>
+<h3>十八、附：工作题</h3>
+<p><strong>工作题 1：计算矩阵条件数。</strong>设 A = diag(1, 10⁻³)。求 A 的 2-范数条件数 κ(A) = σ_max/σ_min，并讨论对求解 Ax=b 的精度影响。</p>
+<details><summary>显示解答</summary>
+<p>对角阵的奇异值即对角线元素绝对值，σ_max = 1，σ_min = 10⁻³：</p>
+<div class="formula display" data-tex="\kappa(A)=\frac{\sigma_{max}}{\sigma_{min}}=\frac{1}{10^{-3}}=10^3"></div>
+<p>条件数 κ=10³ 说明该问题是病态的：数据 b 的相对误差将被放大至多 10³ 倍，解的相对误差满足 ‖δx‖/‖x‖ ≤ κ(A)·‖δb‖/‖b‖。例如 b 的相对误差 10⁻¹⁶（机器精度量级）会导致解出现约 10⁻¹³ 量级的不确定性；若数据误差为 10⁻⁶，则解的相对误差可能达 10⁻³。改进方向：换基使矩阵良态、用预条件、或用正则化（Tikhonov/SVD 截断）牺牲微小残差换取稳定性。</p>
+</details>
+
+<p><strong>工作题 2：Euler 法误差分析。</strong>对初值问题 x' = −x，x(0)=1（精确解 x(t)=e⁻ᵗ），用显式 Euler 法 x_{n+1} = x_n + h·f(x_n) 在 t=n h 处估计全局误差，并解释为何它是 O(h)。</p>
+<details><summary>显示解答</summary>
+<p>Euler 法的局部截断误差（单步）为 O(h²)：由 Taylor 展开 x(t+h) = x(t) + h x'(t) + ½h²x″(ξ)，格式丢弃了 ½h²x″ 项。对 x'=−x：x_{n+1} = (1−h)x_n，故 x_N = (1−h)ᴺ x₀ = (1−h)^{t_N/h}。</p>
+<div class="formula display" data-tex="(1-h)^{1/h}\to e^{-1}\ (h\to0),\quad \text{故 } x_N\approx e^{-t_N},\ \text{误差}\approx |(1-h)^{t/h}-e^{-t}|"></div>
+<p>全局误差 ≤ (步数 N=t/h) × (局部误差 O(h²)) = O(h)。数值例：h=0.1 时 (1−0.1)¹⁰ ≈ 0.3487 vs e⁻¹ ≈ 0.3679，误差 ≈ 0.019；h=0.01 时误差降到 ≈ 0.0018——步长减半则全局误差减半，正是一阶格式的特征（〇节误差表）。结论：Euler 法全局一阶，稳定条件 |1+λh|≤1（此处 λ=−1，h&lt;2）。</p>
+</details>
+
+<p><strong>工作题 3：实现一次 Jacobi 迭代。</strong>对方程组 4x − y = 1，−x + 4y = 2（矩阵 A = [[4,−1],[−1,4]], b=(1,2)ᵀ），从初值 x₀=(0,0) 出发，写出 Jacobi 迭代公式并手算一步得到 x₁。</p>
+<details><summary>显示解答</summary>
+<p>Jacobi 迭代 x_{k+1} = D⁻¹(b − (L+U)x_k)。按分量形式：</p>
+<div class="formula display" data-tex="x_{k+1}=\frac{1}{4}(1+y_k),\qquad y_{k+1}=\frac{1}{4}(2+x_k)"></div>
+<p>由 x₀=(0,0) 代入：</p>
+<div class="formula display" data-tex="x_1=\frac{1}{4}(1+0)=0.25,\qquad y_1=\frac{1}{4}(2+0)=0.5\ \Rightarrow\ x_1=(0.25,\ 0.5)"></div>
+<p>再迭代一步 x₂=(1+0.5)/4=0.375，y₂=(2+0.25)/4=0.5625；x₃=(1+0.5625)/4≈0.3906，y₃=(2+0.375)/4=0.59375。精确解为 x=y=0.6（解 4x−y=1, −x+4y=2 ⟹ x=6/10）。可见迭代逐步逼近精确解。收敛性：迭代矩阵 B = D⁻¹(L+U) 的谱半径 ρ = 1/4 &lt; 1，故收敛且每步误差约缩为 1/4，且对角占优（|4|&gt;|−1|）保证 Jacobi 收敛。</p>
+</details>
+
+<p><strong>工作题 4：判断 RK4 稳定性。</strong>对测试方程 x' = λx，λ = −25，取步长 h = 0.1，判断显式 Euler 法与经典 RK4 法哪个稳定。RK4 的稳定函数为 R(z) = 1 + z + z²/2 + z³/6 + z⁴/24，z = λh。</p>
+<details><summary>显示解答</summary>
+<p>z = λh = −2.5。Euler 法的放大因子 R_E = 1 + z = 1 − 2.5 = −1.5，其模 |R_E| = 1.5 &gt; 1，故不稳定——误差每步放大 1.5 倍。RK4 的放大因子：</p>
+<div class="formula display" data-tex="R(-2.5)=1-2.5+\frac{6.25}{2}-\frac{15.625}{6}+\frac{39.0625}{24}\approx1-2.5+3.125-2.604+1.628\approx0.65"></div>
+<p>其模 |R(−2.5)| ≈ 0.65 &lt; 1，故 RK4 稳定——误差每步收缩到约 0.65 倍，可长时间推进。总结：显式格式的稳定域是有限的，RK4 的稳定域（|R(z)|≤1 区域）比 Euler 的圆盘 |1+z|≤1 更大：对实 λ&lt;0，Euler 要求 −2 ≤ λh ≤ 0，RK4 允许约 −2.79 ≤ λh ≤ 0。此处 λh=−2.5 恰好落在 RK4 稳定域内而超出 Euler 的圆盘。若取 λh=−5（如 λ=−50、h=0.1），则 RK4 的 |R(−5)|≈13.7&gt;1，同样失稳——这解释了为何刚性系统须用 A-稳定的隐式格式。</p>
+</details>
+</section>
+
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/svd.html">奇异值分解 SVD</a>、<a href="/pages/gradient.html">梯度与方向导数</a>。</p>
+</section>
+<section>
+<h3>关联课程</h3>
+<p>&rarr; <a href="/pages/svd.html">🔻 SVD</a>：奇异值分解——最小二乘与条件数的核心工具——同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/linear-transform.html">📐 线性变换</a>：矩阵乘法的几何本质——同一学科分类「线性代数」。</p>
+<p>&rarr; <a href="/pages/gradient.html">📉 梯度</a>：最优化与迭代收敛——同一学科分类「微积分」。</p>
+<p>&rarr; <a href="/pages/eigenvectors.html">🎯 特征值与特征向量</a>：谱分析、稳定域与 Krylov 方法——同一学科分类「线性代数」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/numerical-methods.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

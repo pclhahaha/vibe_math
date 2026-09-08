@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KdV 方程——波包不扩散的孤立波" />
+  <meta property="og:title" content="孤子 — Vibe Math" />
+  <meta property="og:description" content="KdV 方程——波包不扩散的孤立波" />
+  <title>孤子 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🌊 孤子 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">KdV 方程——波包不扩散的孤立波</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='soliton',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/convex-optimization.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⚖️ 凸优化与梯度流</a>
+  <a href="/pages/kalman-filter.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎯 Kalman 滤波 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——一道"打不散"的波，像台球一样穿过另一道波</h3>
+<p>往水塘里扔一块石头，水波会慢慢散开、变平、消失——这是普通波浪。但有一种特殊的波不会：它走得很远很远，形状却一直保持原样，甚至撞上另一道波、穿过它之后，还能完完整整地走出来，像两个台球互相弹开。</p>
+<p>1834年有人骑马追着运河里一道跑了很远也不消失的波，从此这种"永不消散的波"有了名字：孤子。今天连海底光纤里的光信号都用它来传信息——因为它能几千公里不变形。</p>
+<p>最难的部分在于：这种波"打不散"不是巧合，而是<strong>两个相反的效应精确抵消</strong>的结果——一个效应想把波铺平，另一个想把波压陡，两者恰好打平。这堂课就把这个"打平"一步步算给你看。</p>
+<div class="key-insight">洞察：有些波像有性格的运动员——撞了别人，自己还保持原样继续前进。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/derivative.html">导数与切线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——1834 年的那道"追不上的波"</h3>
+<p>1834 年 8 月，苏格兰工程师 <strong>Scott Russell</strong> 在爱丁堡—格拉斯哥运河旁骑马。一艘被马牵引的船突然停下，船首挤出一团水波：它翻滚着脱离船头，以大约 <strong>13 公里/小时</strong> 的速度在运河里继续前进，波高约 <strong>30 厘米</strong>、长度约 <strong>10 米</strong>，形状几乎不变地传了 <strong>1～2 英里</strong>。Russell 跳下马背、徒步追了它一路，然后在论文里写道：这团水"不改变形状、不降低速度地前进，它孤独地、以孤立波的形式移动"。</p>
+<p><strong>为什么这件事挑战常识？</strong> 普通水波会"散开"：不同波长的成分各自跑开，长波慢、短波快，几分钟内就把一个鼓包拆成一大片涟漪。Russell 的波没有散——它像一枚孤独的炮弹。这要求我们把两个互相抵消的效应同时精确建模：</p>
+<ul>
+  <li><strong>色散（dispersion）</strong>：想把鼓包"铺平、拆散"的线性效应；</li>
+  <li><strong>非线性（nonlinearity）</strong>：想把陡坡"变尖、前倾"的效应；</li>
+</ul>
+<p>只有这两者<strong>精确平衡</strong>，才可能出现一个既不散开也不裂变的稳定波包。孤子问题的全部数学，就是给这句"精确平衡"一个严格的形式。</p>
+<div class="key-insight">Russell 的观察具体到可以测：高约 0.3 m、长约 10 m、速度约 13 km/h、跑 1～2 英里不散。63 年后 Korteweg–de Vries 写出了描述它的方程——而让"不散"严格的数学，又等了 80 年（GGKM 1967）。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——普通的水波为什么会散开</h3>
+<p>先用直觉，再用代数。</p>
+<p><strong>直觉。</strong> 一个波包 = 许多不同波长的正弦波叠在一起。如果每种波长跑的速度不一样，波包就会越跑越"散"——这就是色散。一个鼓包为什么会"自己拆开"？因为它内含长波和短波，短波跑得快、冲到前面，长波落在后面，鼓包就被扯平了。</p>
+<p><strong>严格第一步：线性方程。</strong> 忽略非线性，浅水波的线性方程之一是</p>
+<div class="formula display" data-tex="u_t+u_{xxx}=0"></div>
+<p><strong>严格第二步：代入平面波解出"色散关系"。</strong> 令 u=e^{i(kx−ωt)}：</p>
+<div class="formula display" data-tex="u_t=-i\omega u,\quad u_{xxx}=(ik)^3u=-ik^3u\qquad\Longrightarrow\qquad -i\omega-ik^3=0,\ \ \omega=-k^3"></div>
+<p>于是相速度 v_ph=ω/k=−k²，群速度 v_g=dω/dk=−3k²。<strong>速度依赖于 k</strong>：k=1 时 v_g=−3，k=2 时 v_g=−12——短波（大 k）跑得快。这就是"波包自散"的代数根源。</p>
+<p><strong>严格第三步：非线性是什么。</strong> 在完全非线性极限 u_t+6uu_x=0（Burgers 无粘形式）下，波峰处的 u 大、速度 6u 大，波峰追上前方波谷，波形变陡直至"断裂"成激波。非线性的作用是<strong>压陡</strong>，与色散的<strong>铺平</strong>针锋相对。</p>
+<p><strong>孤子的定义时刻。</strong> KdV 方程把这两个效应放进同一个方程：</p>
+<div class="formula display" data-tex="u_t+u_{xxx}+6uu_x=0"></div>
+<p>当非线性压陡的速率恰好等于色散铺平的速率，就出现一个形状恒定的行波——这就是孤子。下面第四节把这个"恰好"用一次完整的求导验证掉。</p>
+</section>
+
+<section>
+<h3>三、KdV 方程与孤波解——Korteweg–de Vries 1895</h3>
+<p>Korteweg 和 de Vries（1895）为了解释 Russell 的运河孤波，在"长波、弱非线性"的极限下推导出 KdV 方程：</p>
+<div class="formula display" data-tex="u_t+u_{xxx}+6uu_x=0"></div>
+<p>（系数的 6 来自无量纲化；改成任意常数系数不影响本质。）它有一个著名的精确行波解——<strong>孤波解</strong>：</p>
+<div class="formula display" data-tex="u(x,t)=\frac{c}{2}\operatorname{sech}^2\!\left(\frac{\sqrt{c}}{2}(x-ct)\right)"></div>
+<p><strong>读懂这个解。</strong> 参数 c&gt;0 同时决定三个几何量：</p>
+<ul>
+  <li><strong>振幅</strong> = c/2（波峰多高）；</li>
+  <li><strong>速度</strong> = c（以速度 c 向右平移）；</li>
+  <li><strong>宽度</strong> ≈ 2/√c（波占多宽）。</li>
+</ul>
+<p>所以：<strong>越高越宽越快的波越窄</strong>——高孤子窄而快，矮孤子宽而慢。这个"越高越快"正是非线性效应的指纹：普通线性波的波速与振幅无关，孤子不是普通线性波。</p>
+</section>
+
+<section>
+<h3>四、例题 1——验证 sech² 孤波解满足 KdV（一步步求导代入）</h3>
+<p><strong>题目。</strong> 对任意 c&gt;0，验证 u(x,t) = (c/2)sech²(ξ)、ξ=(√c/2)(x−ct) 满足 KdV 方程 u_t+u_{xxx}+6uu_x=0。</p>
+<p><strong>第一步：准备两个基础导数。</strong> 记 a=√c/2，则 ξ=a(x−ct)，且 dξ/dx=a、dξ/dt=−ac。用到</p>
+<div class="formula display" data-tex="\frac{d}{d\xi}\tanh\xi=\operatorname{sech}^2\xi,\qquad \frac{d}{d\xi}\operatorname{sech}^2\xi=-2\operatorname{sech}^2\xi\tanh\xi"></div>
+<p><strong>第二步：算 u_t。</strong> 链式法则（u 对 ξ、ξ 对 t）：</p>
+<div class="formula display" data-tex="u_t=\frac{c}{2}\cdot(-2\operatorname{sech}^2\xi\tanh\xi)\cdot(-ac)=a\,c^2\,\operatorname{sech}^2\xi\tanh\xi=\frac{c^{5/2}}{2}\operatorname{sech}^2\xi\tanh\xi"></div>
+<p><strong>第三步：算 6uu_x。</strong> 先 u_x = (c/2)·(−2sech²tanh)·a = −(c^{3/2}/2)sech²tanh；于是</p>
+<div class="formula display" data-tex="6uu_x=6\cdot\frac c2\operatorname{sech}^2\xi\cdot\left(-\frac{c^{3/2}}2\operatorname{sech}^2\xi\tanh\xi\right)=-\frac{3c^{5/2}}2\operatorname{sech}^4\xi\tanh\xi"></div>
+<p><strong>第四步：算 u_xxx。</strong> 逐层求导：u_x=−(c^{3/2}/2)sech²tanh；</p>
+<div class="formula display" data-tex="u_{xx}=-\frac{c^{3/2}}2\cdot a\cdot\frac{d}{d\xi}\bigl(\operatorname{sech}^2\xi\tanh\xi\bigr)=\frac{c^2}{4}\bigl(2\operatorname{sech}^2\xi\tanh^2\xi-\operatorname{sech}^4\xi\bigr)"></div>
+<div class="formula display" data-tex="u_{xxx}=\frac{c^2}{4}\cdot a\cdot\frac{d}{d\xi}\bigl(2\operatorname{sech}^2\tanh^2-\operatorname{sech}^4\bigr)=\frac{c^{5/2}}{2}\operatorname{sech}^2\xi\tanh\xi\,(3\operatorname{sech}^2\xi-1)"></div>
+<p>（用恒等式 tanh²=1−sech² 整理；注意 d/dξ(sech²tanh²)=−2sech²tanh³+2sech⁴tanh，d/dξ(sech⁴)=−4sech⁴tanh。）</p>
+<p><strong>第五步：代入方程，看抵消。</strong> 把 u_t 与 6uu_x 合并：</p>
+<div class="formula display" data-tex="u_t+6uu_x=\frac{c^{5/2}}2\operatorname{sech}^2\tanh-\frac{3c^{5/2}}2\operatorname{sech}^4\tanh=\frac{c^{5/2}}2\operatorname{sech}^2\tanh\,(1-3\operatorname{sech}^2)"></div>
+<p>而 u_xxx = (c^{5/2}/2)sech²tanh·(3sech²−1) = −(c^{5/2}/2)sech²tanh·(1−3sech²)。两式相加，<strong>恰好抵消</strong>：</p>
+<div class="formula display" data-tex="u_t+u_{xxx}+6uu_x=\frac{c^{5/2}}2\operatorname{sech}^2\tanh\,(1-3\operatorname{sech}^2)-\frac{c^{5/2}}2\operatorname{sech}^2\tanh\,(1-3\operatorname{sech}^2)=0\quad\blacksquare"></div>
+<p><strong>第六步：这个验证在说什么？</strong> "恰好抵消"不是数值巧合：它要求 c 的幂次在所有项里都匹配（都是 c^{5/2}），要求 sech 与 tanh 的组合在所有项里都匹配。反过来——如果去掉 u_{xxx} 或 6uu_x 任一项，这个解立刻不再成立。这正是"非线性压陡 = 色散铺平"的代数证明。∎</p>
+</section>
+
+<section>
+<h3>五、例题 2——色散关系：为什么不同波长的波跑得不一样快</h3>
+<p><strong>题目。</strong> 对 KdV 方程做线性化 u_t+u_{xxx}=0，求平面波 u=e^{i(kx−ωt)} 的色散关系，并比较两个具体波长 k=1、k=2 的群速度。</p>
+<p><strong>第一步：代入并化简。</strong> u_t=−iωu、u_xxx=(ik)³u=−ik³u：</p>
+<div class="formula display" data-tex="-i\omega-ik^3=0\ \Longrightarrow\ \omega=-k^3,\qquad v_{ph}=\frac{\omega}{k}=-k^2,\qquad v_g=\frac{d\omega}{dk}=-3k^2"></div>
+<p><strong>第二步：代入两个波长。</strong> k=1：ω=−1、v_g=−3；k=2：ω=−8、v_g=−12。</p>
+<p><strong>第三步：读结果。</strong> 短波（k=2）的群速度是长波（k=1）的 4 倍。一个由这些波长混合成的鼓包，会以"短波冲到前面、长波落在后面"的方式散开——这就是线性 KdV 无法维持孤立波的原因。∎</p>
+<p><strong>对比孤子。</strong> 真实孤子不是单色波，而是 sech² 的无限多波长的叠加。非线性项 6uu_x 恰好把这些波长的相位"锁"在一起，使整个包以速度 c 同步前进——抵消了 v_g 随 k 的变化。例题 1 与例题 2 合起来讲清了：<strong>单看线性会散，单看非线性会裂，两者合体才稳定。</strong></p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="u_t+u_{xxx}+6uu_x=0\qquad(\text{KdV 方程})"></div>
+<div class="formula display" data-tex="u(x,t)=\frac{c}{2}\operatorname{sech}^2\!\left(\frac{\sqrt{c}}{2}(x-ct)\right)\qquad(\text{孤波解，振幅 } c/2,\ \text{速度 } c)"></div>
+<div class="formula display" data-tex="L=-\frac{d^2}{dx^2}+u,\qquad \frac{dL}{dt}=[M,L]\ \Rightarrow\ L\text{ 的特征值不变}\qquad(\text{Lax 对})"></div>
+</section>
+
+<section>
+<h3>七、Lax 对——非线性方程 = 等谱变形</h3>
+<p>KdV：</p>
+<div class="formula display" data-tex="L=-\frac{d^2}{dx^2}+u,\qquad \frac{dL}{dt}=[M,L]\ \Rightarrow\ L\text{ 的特征值不变}"></div>
+<p>这是逆散射方法的核心——非线性方程 = 线性算符的等谱变形。KdV、NLS、Sine-Gordon 都有 Lax 对。</p>
+<p><strong>为什么 [M,L] 保谱？</strong> 设 Lψ=λψ，且 dL/dt=[M,L]。形式上定义 ψ 的时间演化 ∂ₜψ=Mψ，则</p>
+<div class="formula display" data-tex="\frac{d}{dt}\bigl(L\psi-\lambda\psi\bigr)=\Bigl(\frac{dL}{dt}-[M,L]\Bigr)\psi+\dots=0"></div>
+<p>于是 λ 是常数——L 的全部谱（特征值）不随时间变化，而 u(x,t) 却随方程演化。这就把"KdV 的动力学"翻译成"Schrödinger 算符的等谱流"：u 变了，但 L 的谱永远不动。孤子的高度和速度，正是由谱中某个离散特征值 λ=−k² 决定的。</p>
+</section>
+
+<section>
+<h3>八、逆散射方法——Fourier 的非线性推广（GGKM 1967）</h3>
+<p>KdV方程 u<sub>t</sub> + u<sub>xxx</sub> + 6uu<sub>x</sub> = 0 由Korteweg和de Vries于1895年发现，用于解释Russell观察到的浅水渠孤波。但真正革命性的突破来自Gardner-Greene-Kruskal-Miura (GGKM, 1967)：他们发现KdV方程的初值问题可以精确求解！方法被称为<strong>逆散射变换(Inverse Scattering Transform, IST)</strong>——本质是非线性版本的Fourier变换。具体步骤：(1) 将初始波形u(x,0)转换为线性Schrödinger算符 L = −∂²<sub>x</sub> + u(x,0) 的散射数据(反射系数、束缚态能量、归一化常数)——这是"正散射问题"；(2) 散射数据的时间演化是平凡的：束缚态能量守恒，反射系数的相位线性旋转；(3) <strong>逆散射</strong>：解Gel'fand-Levitan-Marchenko积分方程，从散射数据恢复完整波形u(x,t)。纯孤子解对应零反射系数——散射数据完全由离散谱决定，给出N-孤子解。IST的核心哲学：非线性PDE在某些变量下变为线性可解系统，这是无穷维完全可积系统的特征。</p>
+<p><strong>为什么是"非线性版 Fourier 变换"？</strong> 线性 Fourier 分析把"卷积难"变成"乘积易"；IST 把"非线性演化难"变成"散射数据按线性律演化易"。两者共享同一个逻辑骨架：<strong>换到合适的"频率域"→ 演化变简单 → 换回来</strong>。只不过 Fourier 的"频率域"是平面波谱，IST 的"频率域"是 Schrödinger 算符的散射数据。</p>
+<p>数学机制：KdV的Lax对在谱参数λ处产生可交换的线性问题流。经典可积理论的根在于：存在一个isospectral流——u(x,t)随时间演化但Schrödinger算符L的谱不变。这也是孤子碰撞后形状恢复的深层原因。</p>
+<p>关键文献：Gardner, Greene, Kruskal, Miura, <em>Phys. Rev. Lett.</em> 19 (1967) 1095–1097. Ablowitz-Clarkson, <em>Solitons, Nonlinear Evolution Equations and Inverse Scattering</em>, CUP (1991).</p>
+</section>
+
+<section>
+<h3>九、完全可积性——无限多守恒量与 Hamiltonian 结构（例题 3）</h3>
+<p>孤子方程作为Hamiltonian系统：KdV方程有无限多个守恒量——每个都是某个Hamiltonian结构的Hamiltonian。"可积=无限多守恒量"。Zakharov-Faddeev(1971)证明KdV是无穷维完全可积Hamiltonian系统——Liouville定理的无穷维推广。</p>
+<p><strong>例题 3——验证 KdV 的前两个守恒量（一步步算完）。</strong></p>
+<p><strong>题目。</strong> 证明 M₁=∫u dx 与 M₂=∫u²dx 在 KdV 流下守恒（对衰减到 0 的解）；并算出单孤子 c=4 时它们的数值。</p>
+<p><strong>第一步：M₁。</strong> 积分对时间求导：</p>
+<div class="formula display" data-tex="\frac{d}{dt}\int u\,dx=\int u_t\,dx=\int(-u_{xxx}-6uu_x)\,dx=\Bigl[-u_{xx}-3u^2\Bigr]_{-\infty}^{+\infty}=0"></div>
+<p>边界项因孤子两侧 u→0 而消失。故 ∫u dx 守恒。对单孤子：∫(c/2)sech²(√c/2 x)dx = (c/2)·(2/a) 其中 a=√c/2，即 <strong>M₁ = 2√c</strong>。</p>
+<p><strong>第二步：M₂。</strong></p>
+<div class="formula display" data-tex="\frac{d}{dt}\int u^2dx=2\int uu_t\,dx=2\int u(-u_{xxx}-6uu_x)\,dx=-2\int uu_{xxx}\,dx-12\int u^2u_x\,dx"></div>
+<p>分项：∫u²u_x dx = [u³/3]=0；分部积分 ∫uu_xxx dx = [uu_xx]−∫u_xu_xx dx = −[u_x²/2]=0。故守恒。对单孤子：∫(c/2)²sech⁴(ax)dx = (c²/4)·(4/(3a))，a=√c/2，即 <strong>M₂ = (2/3)c^{3/2}</strong>。</p>
+<p><strong>第三步：代入 c=4。</strong> 孤波 u=2sech²(x−4t)：M₁ = 2√4 = <strong>4</strong>，M₂ = (2/3)·4^{3/2} = (2/3)·8 = <strong>16/3 ≈ 5.33</strong>。∎</p>
+<p><strong>为什么"无限多"？</strong> Zabusky–Kruskal 与 Miura 等发现第三、第四、……个守恒量（如 M₃=∫(u_x²−2u³)dx，单孤子时 =−(2/5)c^{5/2}），一路推下去无穷无尽。KdV 的守恒量多到"谱"都无法打乱它——这正是"完全可积"的精确含义：<strong>方程的运动被无限多约束锁定，任何扰动都无法把它打散</strong>。</p>
+</section>
+
+<section>
+<h3>十、孤子方程的分类——Sato的万有Grassmannian</h3>
+<p>所有已知的可积方程并非孤立存在——它们构成一个层级结构(hierarchy)。KdV方程是KdV层级的第一非平凡成员(第二、第三...给出更多守恒律)。同样，NLS层级、KP层级(AKNS层级)都构成无穷维可交换的Hamiltonian流。这背后的统一框架由Sato (1981) 和Segal-Wilson (1985) 揭示：<strong>解空间 = 无穷维Grassmannian中的点</strong>。具体来说，Sato发现KP方程族的全体解自然地参数化了一个无穷维Grassmannian（用拟微分算子的分数幂表示），每条可积层级对应Grassmannian中的一个orbifold。核心对象：<strong>τ-函数</strong>——所有可积系统的解(包括N-孤子解、代数几何解、乃至随机矩阵相关解)都由τ函数通过Hirota双线性算子B(D<sub>x</sub>, D<sub>t</sub>)τ·τ = 0生成。τ函数的Plücker关系恰好就是可积方程本身——这给出了可积性的无穷维代几解释。Miura变换（mKdV↔KdV）和Cole-Hopf变换（Burgers↔热方程）在Grassmannian图像中对应于不同Plücker嵌入。</p>
+<p>主要孤子方程族：(1) <strong>KdV族</strong>——浅水波、离子声波、晶格振动；(2) <strong>NLS族</strong>——光纤中的慢变包络、深水波、Bose-Einstein凝聚；(3) <strong>sine-Gordon族</strong>——晶格错位、Josephson结、基本粒子模型（有kink和反kink的解）；(4) <strong>KP族</strong>——二维浅水波；(5) <strong>Toda链</strong>——离散可积系统的原型。</p>
+<p><strong>为什么这件事重要？</strong> 发现一个方程"可积"已是奇迹；把它们塞进一个统一框架（Grassmannian、τ-函数、Plücker 关系）说明：可积性不是一堆孤立奇迹，而是一个结构性的数学对象——这与第九节的"无限守恒量"互为表里。</p>
+<p>关键文献：Sato, <em>RIMS Kokyuroku</em> 439 (1981) 30–46. Date-Jimbo-Kashiwara-Miwa, in <em>Nonlinear Integrable Systems</em>, World Scientific (1983). Segal-Wilson, <em>Pub. Math. IHÉS</em> 61 (1985) 5–79. Miwa-Jimbo-Date, <em>Solitons: Differential Equations, Symmetries and Infinite Dimensional Algebras</em>, CUP (2000).</p>
+</section>
+
+<section>
+<h3>十一、物理现实中的孤子</h3>
+<p>孤子不仅是优美的数学构造——直到今天它们不断在物理实验中精准出现：</p>
+<ul>
+<li><strong>光纤孤子 (Hasegawa-Tappert 1973)</strong>：单模光纤中，非线性Kerr效应引起自相位调制(使脉冲压缩)与群速度色散(使脉宽展宽)达到平衡——产生光学孤子。Mollenauer (1980) 实验证实：1.55μm波长孤子脉冲可在光纤中无中继传输数千公里。这直接用于跨大西洋/太平洋海底光缆（孤子传输系统）。</li>
+<li><strong>Josephson结孤子</strong>：两个超导体之间夹薄绝缘层的量子电子设备——其相位差满足sine-Gordon方程。磁通量子以kink形式穿过结，称为fluxon。这些被用于超导量子计算和超快数字电路。</li>
+<li><strong>浅水孤子 (Russell 1834)</strong>：1834年Scott Russell在运河上首次观察到孤立波——一匹马牵引的船突然停下，船首产生的大水波脱离船继续前进；他后来在水缸实验中复现了这一现象。1995年Duluth海港实际观测到大气强迫的湖水驻波。这正是KdV方程描述的长波极限——tsunami在特定条件下也可表现为孤子。</li>
+<li><strong>磁性skyrmion</strong>：磁性薄膜中拓扑保护的孤子——自旋纹理在二维中具有非零的拓扑电荷(π₂(S²)=ℤ)。在室温下稳定、可用超低电流密度移动，是新型自旋电子存储器的候选。</li>
+<li><strong>Bose-Einstein凝聚(BEC)中的孤子</strong>：稀薄碱金属原子气体的BEC中，亮孤子(attractive interaction)和暗孤子(repulsive interaction)已被实验观测到（Burger et al. 1999, Denschlag et al. 2000）。BEC中的孤子满足Gross-Pitaevskii方程(GP方程)——NLS方程的量子版本。</li>
+<li><strong>DNA中的呼吸孤子</strong>：Peyrard-Bishop模型描述DNA双螺旋的碱基对振动——非线性呼吸孤子(breather soliton)在DNA"开链"(denaturation)中起关键作用。</li>
+</ul>
+<p><strong>共同点是什么？</strong> 所有这些系统的方程都具有"NLS/KdV/sine-Gordon"形态：一个色散项 + 一个非线性项。孤子不是某个方程的专利，而是<strong>一大类"色散+非线性平衡"系统的共同结论</strong>——这正是第十节分类框架的物理回报。</p>
+</section>
+
+<section>
+<h3>十二、反例——"平衡打破，孤子就散"：Burgers 激波为什么不是孤子</h3>
+<p>孤子如此"不散"，初学者容易把"任何稳定的波"都叫孤子。两个反例划清界限。</p>
+<p><strong>反例 1：Burgers 方程的激波会"并掉"，不是孤子。</strong> 去掉色散项 u_{xxx}，得到 Burgers 方程 u_t+6uu_x=0。它的解会变陡成激波——但激波撞上激波时<strong>合并成一个大激波</strong>，而不是像台球那样彼此穿过。孤子的本质特征不是"稳定"，而是<strong>可逆地穿过同类而保持形状</strong>。激波"合并"意味着信息丢失（熵增），孤子"穿过"意味着信息完整保留（等谱）。一句话：<strong>没色散只有激波，没非线性只有色散，两者都到不了孤子。</strong></p>
+<p><strong>反例 2：聚焦 NLS 的"爆破"，不是孤子。</strong> 非线性项取相反符号（自聚焦）时，方程 u_t + u_xx + |u|²u = 0 的高维解会在有限时间内爆破（blow-up）：波峰在一点浓缩到无穷，而不是形成一个稳定的孤子。同样一个方程，非线性符号一换，从"可积孤子"变成"爆破灾难"——这提醒我们：孤子的存在依赖<strong>精确的参数匹配</strong>，任何打破平衡的扰动（换符号、加耗散、加高次非线性）都会毁掉它。</p>
+<p><strong>反例 3：阻尼波会衰亡。</strong> 加上阻尼项 u_t+u_{xxx}+6uu_x+γu=0（γ&gt;0），孤子虽然仍以近似形状传播，但振幅随时间衰减、速度变慢——它不再是严格的孤子。所以"孤子"这个词只在无阻尼可积极限下才精确成立；物理上通常说"近似孤子"。</p>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<p>孤子理论的发展史中，以下论文奠定了学科基础：</p>
+<ul>
+<li><strong>Zabusky-Kruskal (1965)</strong>：<em>"Interaction of Solitons in a Collisionless Plasma"</em>, <em>Phys. Rev. Lett.</em> 15, 240–243——创造了"soliton"一词，用数值模拟展示了KdV孤子的类粒子碰撞行为。</li>
+<li><strong>GGKM (1967)</strong>：Gardner, Greene, Kruskal, Miura, <em>"Method for Solving the Korteweg-deVries Equation"</em>, <em>Phys. Rev. Lett.</em> 19, 1095–1097——发现IST，揭示非线性PDE的精确求解。</li>
+<li><strong>Lax (1968)</strong>：<em>"Integrals of Nonlinear Equations of Evolution and Solitary Waves"</em>, <em>Comm. Pure Appl. Math.</em> 21, 467–490——引入Lax对形式，给出可积性的代数判据；同时证明KdV方程有无限多个守恒积分。</li>
+<li><strong>Zakharov-Shabat (1972)</strong>：<em>"Exact theory of two-dimensional self-focusing..."</em>, <em>Sov. Phys. JETP</em> 34, 62–69——将IST推广到NLS方程，引入了Zakharov-Shabat谱问题——这是AKNS方案的先驱。</li>
+<li><strong>Ablowitz-Kaup-Newell-Segur (1973)</strong>：<em>"Method for Solving the Sine-Gordon Equation"</em> 和 <em>"The Inverse Scattering Transform–Fourier Analysis for Nonlinear Problems"</em>——建立了AKNS统一框架，将sin-Gordon、mKdV、NLS全部纳入2×2矩阵IST方案。</li>
+<li><strong>Date-Jimbo-Kashiwara-Miwa (1981–1983)</strong>：<em>"Transformation Groups for Soliton Equations"</em> 系列——用无穷维Lie代数(Affine Lie代数)的方法系统地构造τ函数与可积方程。</li>
+<li><strong>Drinfeld-Sokolov (1984)</strong>：将KdV型方程分类为简约Lie代数的Gelfand-Dickey理论；证明KdV层级对应sl(2)的Drinfeld-Sokolov约化。</li>
+</ul>
+<p>经典教材：Ablowitz-Segur, <em>Solitons and the Inverse Scattering Transform</em>, SIAM (1981). Novikov-Manakov-Pitaevskii-Zakharov, <em>Theory of Solitons</em>, Consultants Bureau (1984).</p>
+</section>
+
+<section><h3>前沿：可积系统的分类与AGT猜想</h3>
+<p>Alday-Gaiotto-Tachikawa(2010)猜想4D N=2 gauge理论的配分函数=2D Liouville共形场论的关联函数。这连接了可积系统(Calogero-Moser)、gauge理论和CFT。仍开放:AGT猜想的M-理论解释和3D推广。</p>
+<p><strong>为什么孤子课里出现规范理论？</strong> AGT 把"4 维规范理论的配分函数"与"2 维共形场论的关联函数"等同起来，而其中的瞬时子求和本质上是可积系统的 τ-函数求和（第十节！）。换句话说：孤子方程在 1970 年代发展的 τ-函数语言，四十年后成了高能物理精确计算的工具——这是"可积性放之四海"最出人意料的一次胜利。</p></section>
+
+<section>
+<h3>工作题——孤子解的核对与守恒量</h3>
+<p><strong>题 1（孤子参数核对）。</strong> 对孤波 u=(c/2)sech²(√c/2 x)，取 c=1 与 c=4：分别写出振幅、速度、宽度，并比较谁更快更窄。<strong>提示：</strong>振幅 c/2，速度 c，宽度 ~2/√c；c=4 时振幅 2、速度 4、宽度 ~1；c=1 时振幅 1/2、速度 1、宽度 ~2。</p>
+<p><strong>题 2（线性化色散关系）。</strong> 对 u_t+u_{xxx}=0 代入 u=e^{i(kx−ωt)}，求 ω、v_ph、v_g。<strong>提示：</strong>ω=−k³，v_ph=−k²，v_g=−3k²；群速度随 |k| 增大而增大，所以短波跑得快。</p>
+<p><strong>题 3（守恒量 M₃）。</strong> 证明 M₃=∫(u_x²−2u³)dx 在 KdV 流下守恒。<strong>提示：</strong>对时间求导后用分部积分与 u_t=−u_xxx−6uu_x 替换，所有边界项都消失；这是 KdV 的第三个守恒量（Zabusky–Kruskal 发现）。</p>
+<p><strong>题 4（单孤子 M₃ 的数值）。</strong> 对 c=4 的单孤子 u=2sech²x，计算 M₃。<strong>提示：</strong>M₃=−(2/5)c^{5/2}=−(2/5)·32=−12.8；积分 ∫sech⁶x dx=16/15、∫(u_x²) 用分部积分可归并。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：c=1：振幅 1/2、速度 1、宽度≈2；c=4：振幅 2、速度 4、宽度≈1。高孤子又高又快又窄——非线性"越高越快"的指纹。∎</p>
+<p><strong>题 2</strong>：ω=−k³、v_ph=−k²、v_g=−3k²。k=2 时 v_g=−12 是 k=1（v_g=−3）的 4 倍。∎</p>
+<p><strong>题 3</strong>：d/dt∫(u_x²−2u³)dx=2∫u_x u_xt dx−6∫u²u_t dx；用 u_t=−u_xxx−6uu_x 代入，分部积分反复使用 u 及其导数在 ±∞ 趋于 0，最终各项抵消为 0。∎</p>
+<p><strong>题 4</strong>：M₃=−(2/5)c^{5/2}=−12.8。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（换参数验证）。</strong> 把例题 1 中的 c 换成任意常数再验证一遍，确认抵消与 c 无关。<strong>提示：</strong>关键只在所有项都是 c^{5/2}·sech²tanh·(1−3sech²) 的形式；c 只是公因子。</p>
+<p><strong>试试看 2（孤子宽度的量纲）。</strong> 说明为什么"越高越窄"：宽度 ~1/√c，速度 ~c。<strong>提示：</strong>sech² 的变元是 √c/2·(x−ct)，变元变化单位长度对应 x 变化 2/√c。</p>
+<p><strong>试试看 3（双孤子的叠加不是解）。</strong> 验证 u=u₁+u₂（两个孤子之和）一般不满足 KdV。<strong>提示：</strong>KdV 含非线性项 6uu_x，非线性的叠加破坏解性：若 u₁、u₂ 各自是解，6(u₁+u₂)(u₁+u₂)_x ≠ 6u₁u₁ₓ+6u₂u₂ₓ（多了交叉项）。这正是"孤子需整块地撞、整块地穿"的原因。</p>
+<p><strong>试试看 4（用守恒量判读）。</strong> 对 c=4 的单孤子，验证 M₁=4、M₂=16/3 不随时间变化。<strong>提示：</strong>守恒量的定义式不含时间；把 u(x,t) 代进积分，换元 ξ=x−4t 后 t 消失，积分值与 t 无关。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>N. Ablowitz & P. Clarkson, Solitons, Nonlinear Evolution Equations and Inverse Scattering</strong></p>
+<p>&rarr; <strong>M. Dunajski, Solitons, Instantons and Twistors</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>、<a href="/pages/derivative.html">导数与切线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/y combinator.html">λ Y Combinator</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/soliton.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

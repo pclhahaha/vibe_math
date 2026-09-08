@@ -1,0 +1,129 @@
+<section>
+<h3>〇、开场问题——太阳有多重？用一块 1.75″ 的偏折角称出来</h3>
+<p>1919 年 5 月 29 日的日全食，Eddington 测量到：太阳边缘射来的星光，轨迹被弯了大约 <strong>1.75 角秒</strong>。这个数字小得可怜（1 角秒 ≈ 4.85×10⁻⁶ 弧度，约等于在 3.6 公里外看一枚硬币），却第一次证明了"质量会弯曲时空"。它还能反过来用：<strong>量出偏折角 α，就能称出造成偏折的天体质量 M。</strong></p>
+<p>偏折角由一条极简洁的公式给出：</p>
+<div class="formula display" data-tex="\alpha=\frac{4GM}{c^2b}"></div>
+<p>其中 b 是光线到质量中心的最远近距离（碰撞参数）。用太阳的具体数字代入（M☉=1.989×10³⁰ kg，b=R☉=6.963×10⁸ m，G=6.674×10⁻¹¹ m³kg⁻¹s⁻²，c=2.998×10⁸ m/s）：</p>
+<div class="formula display" data-tex="\alpha=\frac{4\times6.674\times10^{-11}\times1.989\times10^{30}}{(2.998\times10^8)^2\times6.963\times10^8}=8.49\times10^{-6}\ \text{rad}\approx1.75''"></div>
+<p>一个公式，两端连着宇宙：左边是天文观测，右边是天体质量。本课要回答三个"为什么"：为什么质量会弯曲时空（从而弯光）？为什么系数是 4 而不是 2（牛顿只给一半）？以及如何把这条公式变成"宇宙的称"（Einstein 环半径）？</p>
+<div class="key-insight">一句话：重量能弯光，弯光的程度直接告诉我们天体有多重。只想懂核心思想，看到这里就够了。</div>
+</section>
+
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/light-cone.html">光锥与时空</a>、<a href="/pages/geodesic.html">测地线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、为什么质量会弯曲时空——从等效原理到 Einstein 场方程</h3>
+<p>先建立一个直觉。想象你在一个密闭电梯里，脚下有一块地板，一束光从侧面水平射入。若电梯<strong>加速上升</strong>，在光穿越电梯的这段时间里，电梯向上走了，于是光落点会比入射点低——在电梯内看，光线是<strong>向下弯的</strong>。等效原理（加速度与引力不可区分）说：这个电梯内的观察者无法分辨"电梯在加速"和"自己在引力场中"，所以在引力场中，光线<strong>同样必须弯</strong>。</p>
+<p>但这还只是"等效原理"的定性结论。广义相对论走得更远：不是引力"拉弯"了光，而是<strong>质量/能量本身改变了时空的几何结构</strong>——光只是沿弯曲时空中的测地线（"最直"的路径）走。质量越大、越密集，时空弯得越狠，光弯得越多。这条因果链由 Einstein 场方程精确写死：</p>
+<div class="formula display" data-tex="G_{\mu\nu}=\frac{8\pi G}{c^4}T_{\mu\nu}\quad\text{(Einstein 场方程)}"></div>
+<p>左边 G_μν 是时空曲率（几何），右边 T_μν 是物质与能量（物质分布）。一句话：<strong>物质告诉时空如何弯曲，弯曲的时空告诉物质如何运动</strong>。光线沿零测地线走，只是这条原理对"无质量粒子"的应用（推导见第八节）。</p>
+</section>
+
+<section>
+<h3>二、偏折角 α=4GM/(c²b)——先直觉后严格，并算清"4 从哪来"</h3>
+<p><strong>直觉版本（牛顿式，错了一半）：</strong>如果只把光当普通有质量粒子，用牛顿引力算，得到的偏折角是</p>
+<div class="formula display" data-tex="\alpha_{\text{Newton}}=\frac{2GM}{c^2b}\quad\text{(只有一半)}"></div>
+<p>这正是在 1919 年之前很多人的预期。但 Einstein 的广义相对论给出的是它的 <strong>两倍</strong>：α = 4GM/(c²b)。差距来自时空<strong>空间部分的弯曲</strong>（不只是时间膨胀）——牛顿只看"时间变慢"那一半，GR 还要算上"空间被压弯"的另一半（推导见第八节的 Binet 方程）。1919 年 Eddington 实测 1.75″ 而非 0.875″，一举支持了 GR。</p>
+<p><strong>例 1（一步步算：把 α=4GM/(c²b) 代到底，与牛顿结果对比）。</strong>仍用太阳边缘的数据（M☉=1.989×10³⁰ kg，b=R☉=6.963×10⁸ m）。</p>
+<p>① <strong>分子：</strong>4GM = 4×6.674×10⁻¹¹×1.989×10³⁰ = 5.31×10²⁰ m³/s²。</p>
+<p>② <strong>分母：</strong>c²b = (2.998×10⁸)²×6.963×10⁸ = 6.26×10²⁵ m³/s²。</p>
+<p>③ <strong>相除：</strong>α = 5.31×10²⁰ / 6.26×10²⁵ = 8.49×10⁻⁶ rad。</p>
+<p>④ <strong>换算角秒：</strong>8.49×10⁻⁶ × 206265 = <strong>1.75″</strong>。</p>
+<p>⑤ <strong>牛顿对比：</strong>α_Newton = 2GM/(c²b) = 0.875″——只有一半。观测值 1.75″ 站队 GR。∎</p>
+<div class="key-insight">Einstein 1919年的日食观测验证了光线偏折——广义相对论的第一个重大实验胜利。偏折角α = 4GM/(c²b)。b是碰撞参数（光线到质量中心的最近距离）。太阳边缘的光线偏折约1.75角秒。</div>
+</section>
+
+<section>
+<h3>三、三种引力透镜——从"多重像"到"统计扭曲"</h3>
+<p>远处光源的光线经过大质量天体（如星系团）附近时，时空的弯曲使光线路径发生偏折——就像光经过了一个巨大的<strong>透镜</strong>。观测者可能看到同一个光源的<strong>多个像</strong>，或者被扭曲成<strong>弧状</strong>，甚至形成完整的<strong>Einstein 环</strong>。按效应强弱分三种：</p>
+<p><strong>强引力透镜</strong>：产生多重像、Einstein 环、巨弧。用于测量前景星系团的总质量——包括暗物质。著名的"爱因斯坦十字"(Q2237+0305)是一个类星体的四个像。</p>
+<p><strong>弱引力透镜</strong>：星系的形状被<strong>微小但统计显著</strong>地扭曲。测量数百万星系的平均椭率（星系形状的椭圆程度）→反推前景物质分布。这是 Dark Energy Survey(DES)、Euclid 卫星的核心技术。</p>
+<p><strong>微引力透镜</strong>：前景恒星经过背景光源前方时短暂增亮。用于探测系外行星、MACHO（大质量致密晕天体，Massive Compact Halo Object）暗物质候选体。</p>
+</section>
+
+<section>
+<h3>四、Einstein 环半径——最优雅的公式之一，以及它的完整计算</h3>
+<p>当光源、透镜、观测者完美共线时，光线偏折对称→光源的像形成一个<strong>环</strong>。环的角半径：</p>
+<div class="formula display" data-tex="\theta_E = \sqrt{\frac{4GM}{c^2}\frac{D_{ls}}{D_l D_s}}"></div>
+<p>其中 D_l 是观测者到透镜的距离，D_s 是观测者到光源的距离，D_ls 是透镜到光源的距离。测量 θ_E 和距离→<strong>直接得到质量 M</strong>——包括暗物质。这是为数不多的不依赖于动力学假设的质量测量方法。</p>
+<p><strong>例 2（一步步算：用数字验证 Einstein 环半径公式）。</strong>设一个星系团透镜的质量 M=1.0×10¹⁴ M☉（M☉=1.989×10³⁰ kg，故 M=1.989×10⁴⁴ kg），观测者到透镜 D_l = 10 亿光年 = 9.46×10²⁴ m，透镜到背景星系 D_ls = 10 亿光年 = 9.46×10²⁴ m，观测者到背景星系 D_s = 20 亿光年 = 1.89×10²⁵ m。</p>
+<p>① <strong>先算 4GM/c²（这是长度量，叫"引力半径的两倍"）：</strong>4GM = 4×6.674×10⁻¹¹×1.989×10⁴⁴ = 5.31×10³⁴ m³/s²；除以 c² = 8.988×10¹⁶ m²/s² 得 <strong>4GM/c² = 5.91×10¹⁷ m</strong>。</p>
+<p>② <strong>再算距离比 D_ls/(D_l D_s)：</strong>D_ls/(D_l D_s) = 9.46×10²⁴ / (9.46×10²⁴ × 1.89×10²⁵) = 1 / 1.89×10²⁵ = <strong>5.29×10⁻²⁶ m⁻¹</strong>。</p>
+<p>③ <strong>相乘开方：</strong>θ_E = √(5.91×10¹⁷ × 5.29×10⁻²⁶) = √(3.13×10⁻⁸) = <strong>1.77×10⁻⁴ rad</strong>。</p>
+<p>④ <strong>换算角秒：</strong>1.77×10⁻⁴ × 206265 ≈ <strong>36.5″</strong>——一个典型星系团的 Einstein 环确实是几十角秒量级，与观测一致。∎</p>
+<p>⑤ <strong>反向使用：</strong>观测到 θ_E ≈ 36″，再测三个距离，就能倒解出 M ≈ 10¹⁴ M☉——这正是"称暗物质"的步骤（第五节）。</p>
+</section>
+
+<section>
+<h3>五、暗物质探测——引力透镜的宇宙学使命</h3>
+<p>星系团的可见物质（恒星+气体）不足以产生观测到的强透镜效应。Bullet Cluster(1E 0657-56)是两个星系团碰撞的系统——可见物质（X射线气体）在碰撞中减速，但引力透镜信号显示<strong>大部分质量直接穿过了碰撞</strong>——这正是暗物质（无碰撞粒子）的行为。这是暗物质存在的<strong>最直接证据</strong>之一。</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\alpha = \frac{4GM}{c^2 b}\quad\text{(偏折角)}"></div>
+<div class="formula display" data-tex="\theta_E = \sqrt{\frac{4GM}{c^2}\frac{D_{ls}}{D_l D_s}}\quad\text{(Einstein环半径)}"></div>
+<div class="formula display" data-tex="G_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}\quad\text{(Einstein场方程)}"></div>
+</section>
+
+<section>
+<h3>七、试试看（每题附提示）</h3>
+<p><strong>1.（极限行为）</strong> 如果透镜质量 M→0，θ_E→0——回到直线传播。如果 M 极大（黑洞）→θ_E 可以非常大→"光子球"（光可绕黑洞作圆周运动的轨道，此时弱场公式失效）。为什么弱场公式在光子球处失效？</p>
+<p><em>提示：α=4GM/(c²b) 由弱场（b≫2GM/c²）下的微扰展开得到（第八节）。当 b 缩小到与 2GM/c² 同量级，微扰 RHS 不再小，轨道方程 d²u/dφ²+u=(3GM/c²)u² 的解不再是"直线+小修正"（见第九节反例）。</em></p>
+<p><strong>2.（Bullet Cluster 论证）</strong> Bullet Cluster 为何是暗物质的"铁证"？如果只有修改引力（MOND，Modified Newtonian Dynamics，修正牛顿引力）而没有暗物质，你预测的透镜信号应该跟着气体走还是跟着星系走？</p>
+<p><em>提示：X 射线显示气体被碰撞拖住、留在中间；若透镜来自可见物质+暗物质，透镜质量应跟着星系（穿过碰撞、没减速）。MOND 把额外引力归因于修改动力学，预测透镜效应应跟随气体（它是主导可见质量）。实测透镜信号跟星系走——支持暗物质、排除简单 MOND。</em></p>
+<p><strong>3.（数字估算）</strong> 用 M=10¹² M☉ 的普通星系做透镜（银河系量级），估计 Einstein 环半径的量级（沿用例 2 的距离）。</p>
+<p><em>提示：M 从 10¹⁴ 降到 10¹² M☉，θ_E 与 √M 成正比，故 θ_E ≈ 36.5″×√(10¹²/10¹⁴) = 36.5″×0.1 ≈ 3.7″。单一星系级透镜的 Einstein 环约几角秒——与观测相符。</em></p>
+</section>
+
+<section><h3>微引力透镜与系外行星</h3><p>前景恒星经过背景光源前方时,引力透镜效应使背景光源短暂增亮——典型的"U形"光变曲线。如果前景恒星有行星->光变曲线会出现额外的尖峰。<strong>微引力透镜是目前探测冷系外行星(远离主序星)的最有效方法之一。</strong>OGLE和MOA项目已经发现了数十颗微透镜行星。</p></section>
+<section><h3>前沿：透镜与Hubble张力</h3><p>强透镜时延(time-delay)提供独立于标准距离梯度的H0测量。H0LiCOW(2019):H0=73.3,和CMB的67.4矛盾——5sigma。这可能是新物理(暗能量的时变)+透镜系统误差。仍开放:Hubble张力是系统误差还是新物理？</p></section>
+
+<section>
+<h3>八、推导——光线偏折角 α=4GM/(c²b) 的由来</h3>
+<p>弱场极限下取 <strong>Schwarzschild 度规</strong>（静止、球对称质量的时空度规），光沿零测地线传播 (ds²=0)：</p>
+<div class="formula display" data-tex="ds^2=-\Big(1-\frac{2GM}{c^2r}\Big)c^2dt^2+\Big(1-\frac{2GM}{c^2r}\Big)^{-1}dr^2+r^2d\Omega^2"></div>
+<p>零测地线有两个守恒量：能量 E=(1−2GM/c²r)c²dt/dλ 与角动量 L=r²dφ/dλ。令 u=1/r，由 ds²=0 消去仿射参数 λ，得到轨道方程：</p>
+<div class="formula display" data-tex="\frac{d^2u}{d\varphi^2}+u=\frac{3GM}{c^2}u^2\quad\text{(广义相对论版 Binet 方程)}"></div>
+<p>牛顿情形 RHS=0，解为直线 u₀=sinφ/b（b 为碰撞参数）。弱场下把 RHS 当微扰，令 u=u₀+u₁，代入得：</p>
+<div class="formula display" data-tex="\frac{d^2u_1}{d\varphi^2}+u_1=\frac{3GM}{c^2b^2}\sin^2\varphi\quad\Rightarrow\quad u_1=\frac{3GM}{2c^2b^2}\Big(1+\frac13\cos 2\varphi\Big)"></div>
+<p>在渐近区 (r→∞, u→0) 比较入射与出射方向，两者夹角不再是 π，而是多出——这正是 1919 年 Eddington 日食观测验证的量：</p>
+<div class="formula display" data-tex="\alpha=\frac{4GM}{c^2b}\quad\blacksquare"></div>
+<div class="key-insight">关键物理：偏折角与质量 M 成正比、与碰撞参数 b 成反比；4 这个系数来自时空曲率（牛顿引力只给出一半 α=2GM/c²b）。</div>
+</section>
+
+<section>
+<h3>九、推导——Einstein 环半径</h3>
+<p>设透镜位于距离 D_l 处，光源位于 D_s 处，透镜到光源的距离为 D_ls。小角度下碰撞参数 b=D_lθ，透镜方程（像角 θ 与源角 β 的关系）为：</p>
+<div class="formula display" data-tex="\beta=\theta-\frac{D_{ls}}{D_s}\alpha,\qquad \alpha=\frac{4GM}{c^2D_l\theta}"></div>
+<p>完美对齐时 β=0，偏折恰好使光源的像形成完整环，代入偏折角并解出 θ：</p>
+<div class="formula display" data-tex="\theta=\frac{D_{ls}}{D_s}\frac{4GM}{c^2D_l\theta}\;\Rightarrow\;\theta_E^2=\frac{4GM}{c^2}\frac{D_{ls}}{D_lD_s}"></div>
+<div class="formula display" data-tex="\theta_E=\sqrt{\frac{4GM}{c^2}\frac{D_{ls}}{D_lD_s}}\quad\blacksquare"></div>
+<p>测出 θ_E 与三个距离，即可<strong>直接称量透镜质量 M（含暗物质）</strong>——这是少数不依赖动力学假设的质量测量方法。</p>
+</section>
+
+<section>
+<h3>十、反例——弱场近似何时失效</h3>
+<p>α=4GM/(c²b) 只在弱场 (b≫2GM/c²) 成立。反例 1：在<strong>光子球</strong> b=3√3 GM/c² 处，弱场公式给出有限值 α=4/(3√3)≈0.77 rad，但真实偏折发散——光子可以绕黑洞转任意多圈。反例 2：当 b≤2GM/c² 时光子被黑洞捕获，根本不会偏折回来。这些强场效应导致多重像、高阶 Einstein 环与黑洞阴影（EHT 2019 的 M87*）。反例 3：若引力理论偏离 GR（如 MOND），弱场标度 α∝M/b 也会被修改——Bullet Cluster 正是用透镜信号区分两种理论的实验。</p>
+</section>
+
+<section>
+<h3>十一、工作题——计算太阳边缘的偏折角</h3>
+<p>已知 M☉=1.989×10³⁰ kg，太阳半径 b=R☉=6.963×10⁸ m，G=6.674×10⁻¹¹ m³kg⁻¹s⁻²，c=2.998×10⁸ m/s。(1) 计算 α（弧度）；(2) 换算成角秒（1 rad=206265″）。</p>
+<details><summary>显示解答</summary><p>α=4GM/(c²b)。4GM=4×6.674×10⁻¹¹×1.989×10³⁰=5.31×10²⁰ m³/s²；c²b=8.988×10¹⁶×6.963×10⁸=6.26×10²⁵ m³/s²；故 α=5.31×10²⁰/6.26×10²⁵=8.49×10⁻⁶ rad；×206265=1.75″。与 1919 年以来的观测值 1.75″ 完全一致。</p></details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Carroll, Spacetime and Geometry</strong></p>
+<p>&rarr; <strong>R. Wald, General Relativity</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/light-cone.html">光锥与时空</a>、<a href="/pages/geodesic.html">测地线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/light-cone.html">💫 光锥与时空</a>：同一学科分类「相对论」。</p>
+<p>&rarr; <a href="/pages/lorentz-transform.html">🚀 Lorentz 变换</a>：同一学科分类「相对论」。</p>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一难度层次。</p>
+</section>

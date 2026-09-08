@@ -1,0 +1,261 @@
+<section>
+<h3>〇、动机：x³−2 的三个根，能怎么"换位"？</h3>
+<p>看一个具体的多项式：</p>
+<div class="formula display" data-tex="x^3-2\in\mathbb Q[x]"></div>
+<p>它在实数域里唯一的实根是 ∛2 ≈ 1.2599。但三次方程在复数里该有三个根。另外两个藏在"旋转"里：设 ω = e^{2πi/3} = −½ + (√3/2)i，它是 1 的三次单位根（ω³ = 1、ω ≠ 1，所以 ω² + ω + 1 = 0）。直接验算：</p>
+<div class="formula display" data-tex="(\sqrt[3]{2})^3=2,\qquad (\omega\sqrt[3]{2})^3=\omega^3\cdot2=2,\qquad (\omega^2\sqrt[3]{2})^3=\omega^6\cdot2=2"></div>
+<p>所以 x³−2 的三个根是 ∛2、ω∛2、ω²∛2。三个根绕着一个等边三角形排布——ω∛2 就是∛2 转 120°。</p>
+<p>现在做"换位游戏"：把三个根<b>对调位置</b>，哪些对调不破坏它们之间的代数关系？比如把 ∛2 和 ω∛2 互换、同时把 ω 换成 ω²，就保持了 "ω³=1"、"ω∛2 是 ∛2 乘 ω" 这些关系。数一数：∛2 可以送到三个根中的任意一个（3 种），而一旦定了 ∛2 的去向，ω 还剩 2 种可能（ω 或 ω²）。所以共 3×2 = <strong>6 种合法的"换位"</strong>——正好等于 3!，即三个根的全部排列 S₃。</p>
+<p>这个"换位游戏"就是伽罗瓦理论的入口：<strong>方程能不能解，不取决于求根公式长什么样，而取决于根的换位（对称性）够不够"简单"。</strong>一次、二次、三次、四次方程都有公式，五次以上没有——根本原因藏在 S₅ 的结构里（第六节）。</p>
+<div class="key-insight">一句话：方程可解与否，取决于根的"对称密码"能否拆解——三次方程 x³−2 的密码是 S₃（可拆解），五次一般方程的密码是 S₅（拆不动），所以没有求根公式。只想理解核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/group-action.html">群作用</a>、<a href="/pages/abstract-algebra.html">抽象代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、热身：先学会"数"域扩张的维数</h3>
+<p>伽罗瓦理论的语言是<strong>域扩张</strong>（域＝能加减乘除的一整套数，如有理数、实数、复数）。把 ∛2 添加进有理数域 Q，得到的 Q(∛2) = {a + b∛2 + c(∛2)² : a,b,c ∈ Q} 就是一个扩张。</p>
+<p><strong>为什么 Q(∛2) 恰好是这些组合？</strong>因为 (∛2)³ = 2 ∈ Q，所以 ∛2 的更高次幂都能约回到 ∛2 的二次以内；又因为 x³−2 无有理根（试试 ±1, ±2：都不对），它在 Q 上不可约，{1, ∛2, (∛2)²} 线性无关。所以</p>
+<div class="formula display" data-tex="[\,\mathbb Q(\sqrt[3]{2}):\mathbb Q\,]=3\qquad(\text{扩张次数＝最小多项式的次数})"></div>
+<p>把最小多项式从"次数"升级为"根数"看：x³−2 有 3 个根，扩张次数也是 3。这提示一条贯穿全课的线索：<strong>多项式的根数、不可约性、扩张次数三者咬合在一起。</strong></p>
+<p><strong>为什么次数这么重要？</strong>因为"扩张次数"是域扩张的"大小度量"，就像群论里的阶、线性代数里的维数。伽罗瓦基本定理（第五节）会精确地说：<strong>扩张次数 = 伽罗瓦群的阶</strong>——"数个数"这个最简单的动作，是连接域与群的桥梁。</p>
+<p>再看一步：x³−2 的全部根要凑齐，光有 ∛2 不够，还要 ω。于是完整的分裂域（包含所有根的最小域）是</p>
+<div class="formula display" data-tex="L=\mathbb Q(\sqrt[3]{2},\omega),\qquad [L:\mathbb Q]=[L:\mathbb Q(\sqrt[3]{2})]\cdot[\mathbb Q(\sqrt[3]{2}):\mathbb Q]=2\cdot3=6"></div>
+<p>（最后一步：Q(∛2) ⊂ ℝ 全在实数里，而 ω 不是实数，所以 ω 的添加又乘了 2。）这就是下一节要数自同构的"棋盘"。</p>
+</section>
+
+<section>
+<h3>二、为什么伽罗瓦群对应域扩张？——自同构必须搬动根</h3>
+<p>设 K 是包含所有根的最小域。一个<strong>K 的自同构</strong>（automorphism）σ: K → K 是"把加减乘除等运算规则原样保留的一一映射"，并且它固定 Q 里的每个数（σ(q) = q 对一切 q ∈ Q）。</p>
+<p><strong>关键观察（根的被迫搬家）：</strong>若 α 是多项式 f(x) ∈ Q[x] 的根，那么 σ(α) 也必然是 f 的根：</p>
+<div class="formula display" data-tex="f(\alpha)=0\ \Longrightarrow\ 0=\sigma(f(\alpha))=\sigma(a_n\alpha^n+\cdots+a_0)=a_n\sigma(\alpha)^n+\cdots+a_0=f(\sigma(\alpha))"></div>
+<p>所以自同构<strong>只能在根之间"搬运"根，不能把根搬成非根</strong>。每一个自同构给出根集合上的一个置换；反过来，不是每个置换都能"扩"成域自同构——只有那些与所有代数关系相容的才行。这正解释了一件事：</p>
+<div class="key-insight"><strong>为什么伽罗瓦群对应域扩张？</strong>因为域的结构＝约束，根上的置换＝自由度。<strong>伽罗瓦群 = "既能搬动根、又不破坏域结构"的那些置换</strong>。域扩张越"大"（次数越高），能做的置换就越多；中间域越多，群里的子群就越多。群是域扩张的一幅"影子地图"。</div>
+<p>对 x³−2 具体数一遍：σ 由它在 ∛2 和 ω 上的取值决定；∛2 有 3 个去处、ω 有 2 个去处（σ(ω) 必须是 x²+x+1 的根，即 ω 或 ω²），共 6 个自同构。这 6 个恰好就是〇节的 6 种合法换位。</p>
+</section>
+
+<section>
+<h3>三、伽罗瓦群——方程的"对称性指纹"</h3>
+<p>取多项式 f(x) ∈ Q[x]，其分裂域 K（包含所有根的最小域——把方程的根连同它们的各种组合都"请进来"的最小场地）。<strong>伽罗瓦群</strong></p>
+<div class="formula display" data-tex="G=\mathrm{Gal}(K/\mathbb Q)=\{\text{固定 }\mathbb Q\text{ 不动的 }K\text{ 的自同构}\}"></div>
+<p>这些自同构的作用是<strong>置换方程的根</strong>——这正是〇节说的"换位游戏"，如今被装进群论的外壳。用同一把尺子量三个方程：</p>
+<ul>
+<li><strong>x³−2</strong>：伽罗瓦群 = S₃（三个根的任意置换都可行）。</li>
+<li><strong>x⁵−1</strong>（分圆方程）：伽罗瓦群 = C₄（4 阶循环群）——可解。</li>
+<li><strong>x⁵−x−1</strong>：伽罗瓦群 = S₅——<strong>不可解</strong>。</li>
+</ul>
+<p>这就是为什么一般五次方程没有根式公式：它的对称性"指纹" S₅ 太复杂（第六节证明它不可解）。伽罗瓦理论的全部目的，就是把这枚"指纹"与方程是否可解精确挂钩。</p>
+</section>
+
+<section>
+<h3>四、完整例题 1：x³−2 的伽罗瓦群 = S₃（一步一步算完）</h3>
+<p>我们把〇、一、二节的所有断言，落成一步步可核对的完整计算。</p>
+<p><strong>第 1 步：证明不可约。</strong>用 Eisenstein 判别法，取素数 p = 2：首项系数 1 不被 2 整除 ✓；中间项系数 0 与常数项 −2 都被 2 整除 ✓；常数项 −2 不被 2² = 4 整除 ✓。故 x³−2 在 Q 上不可约，[Q(∛2) : Q] = 3。</p>
+<p><strong>第 2 步：确定分裂域。</strong>三个根是 ∛2、ω∛2、ω²∛2（ω 为本原三次单位根），分裂域 L = Q(∛2, ω)。因 Q(∛2) ⊂ ℝ、ω ∉ ℝ，且 ω 满足不可约二次式 x²+x+1，故 [L : Q(∛2)] = 2，从而</p>
+<div class="formula display" data-tex="[L:\mathbb Q]=2\cdot3=6,\qquad |\mathrm{Gal}(L/\mathbb Q)|=[L:\mathbb Q]=6"></div>
+<p>（等式 |Gal| = [L:Q] 是伽罗瓦扩张的定义性性质，第十三节给出严格证明；此处先用它锁定群的阶。）</p>
+<p><strong>第 3 步：数自同构。</strong>任一 σ ∈ Gal(L/Q) 由 σ(∛2) 与 σ(ω) 决定。σ(∛2) ∈ {∛2, ω∛2, ω²∛2}（3 种）；σ(ω) ∈ {ω, ω²}（2 种）。共 6 个。因为 Gal(L/Q) 忠实作用在 3 个根上、嵌入 S₃，而 |S₃| = 6 = |Gal|，故</p>
+<div class="formula display" data-tex="\mathrm{Gal}(\mathbb Q(\sqrt[3]{2},\omega)/\mathbb Q)\cong S_3"></div>
+<p><strong>第 4 步：找出生成元并写出关系。</strong>记</p>
+<div class="formula display" data-tex="\rho:\ \sqrt[3]{2}\mapsto\omega\sqrt[3]{2},\ \ \omega\mapsto\omega\qquad(\text{三阶：三个根轮换})\\ \tau:\ \sqrt[3]{2}\mapsto\sqrt[3]{2},\ \ \omega\mapsto\omega^2\qquad(\text{二阶：交换 }\omega\sqrt[3]{2}\text{ 与 }\omega^2\sqrt[3]{2})"></div>
+<p>直接验证 ρ³ = τ² = e 且 τρτ⁻¹ = ρ²（τ 把"乘 ω"变成"乘 ω²"，所以它共轭翻转 ρ 的方向）。这正是 S₃ 的表示 ⟨ρ,τ⟩（＝二面体群 D₃）。</p>
+<p><strong>第 5 步：列出全部子群，并找出对应的中间域（本节核心）。</strong></p>
+<ul>
+<li><strong>⟨ρ⟩ = A₃</strong>（指数 2，正规）⟷ <strong>Q(ω)</strong>：固定 ω 的自同构恰是 {e, ρ, ρ²}；[Q(ω) : Q] = 2 = [S₃ : A₃]。</li>
+<li><strong>⟨τ⟩</strong>（二阶，不正规）⟷ <strong>Q(∛2)</strong>：固定 ∛2 的自同构恰是 {e, τ}；[Q(∛2) : Q] = 3 = [S₃ : ⟨τ⟩]。</li>
+<li><strong>⟨τρ⟩</strong> ⟷ <strong>Q(ω∛2)</strong>：验证 τρ(ω∛2) = ω∛2（τρ 交换另两个根、钉住 ω∛2）。</li>
+<li><strong>⟨τρ²⟩</strong> ⟷ <strong>Q(ω²∛2)</strong>。</li>
+<li><strong>S₃</strong> ⟷ <strong>Q</strong>，<strong>{e}</strong> ⟷ <strong>L</strong>。</li>
+</ul>
+<p><strong>第 6 步：核对正规性。</strong>A₃ ⊲ S₃（指数 2 的子群必正规），对应 Q(ω)/Q 是伽罗瓦扩张，且 Gal(Q(ω)/Q) ≅ S₃/A₃ ≅ Z/2 ✓（x²+x+1 的分裂域，可分）。⟨τ⟩ 不正规，对应 Q(∛2)/Q 不是伽罗瓦扩张 ✓——因为 x³−2 在 Q(∛2) 里只有一个根，不是分裂域（非正规）。这两条对应当普通习题核对，会发现"正规子群 ↔ 正规扩张"严丝合缝。∎</p>
+</section>
+<section>
+<h3>五、伽罗瓦基本定理——域和群的双语字典</h3>
+<p>第四节例题的"子群 ↔ 中间域"不是巧合，而是下面这条基本定理的全部内容：</p>
+<div class="formula display" data-tex="\text{中间域 }E\ (\mathbb Q\subseteq E\subseteq K)\ \longleftrightarrow\ \text{子群 }H\ (H\le G)"></div>
+<p>这是一一对应。<strong>[E : Q] = [G : H]</strong>（域越大，固定的群越小，且两边次数/阶数精确对等）。E/Q 是伽罗瓦扩张 ⟺ H 是 G 的正规子群（正规子群≈在群内"处处对称"、与共轭操作相容的子群）。此时 Gal(E/Q) ≅ G/H。</p>
+<p>这个结构<strong>和拓扑学（拓扑——大白话：研究"能拉伸揉捏、但不能撕裂剪断"的空间形状的学问）中覆叠空间的对应完全一致</strong>：域扩张↔覆叠空间，伽罗瓦群↔覆叠变换群（变换——大白话：把图形移动一下、但保持整体结构不变的操作），中间域↔中间覆叠。Grothendieck 正是从这个类比出发，将伽罗瓦理论推广到 étale 基本群——代数几何中的"基本群"（基本群——大白话：把空间里"能绕几圈、怎么绕"的环路记成一本"计数账本"）。</p>
+<div class="key-insight"><strong>一句话解释为什么字典有效：</strong>取一个中间域 E，它被 G 中"恰好固定 E 的所有数"的子群 Gal(K/E) 管着；反过来取一个子群 H，它管的数构成不动域 K^H = {x ∈ K : σ(x)=x ∀σ∈H}。伽罗瓦基本定理说这两个操作互逆。之所以能互逆，是因为"次数=阶数"两边算出来一致（第十三节完整证明）。</div>
+</section>
+
+<section>
+<h3>六、可解群——为什么 S₅ 不可解？</h3>
+<p>群 G 是<strong>可解的</strong>：存在子群链 G = G₀ ⊇ G₁ ⊇ ... ⊇ Gₙ = {e}，每步 Gᵢ/G_{i+1} 是阿贝尔群。根式扩张的每一步对应一个阿贝尔商（商群——大白话：把一个大群按规则"合并折叠"成的较小的群）——所以<strong>方程可根式解 ⟺ 伽罗瓦群可解</strong>（第九节的完整证明）。</p>
+<p>S₅ 的合成列中包含 A₅（60 阶交错群）。A₅ 是<strong>非交换单群</strong>——不可解。因此 S₅ 不可解。同理所有 n ≥ 5 的 S_n 都不可解。这就是为什么五次以上一般方程没有求根公式的<strong>根本原因</strong>。（合成列≈把群逐层拆小、直到"拆不动"为止的阶梯；单群≈"拆不动"的原子群——除了自身和 {e} 外没有别的正规子群。）</p>
+</section>
+
+<section>
+<h3>七、完整例题 2：(x²−2)(x²−3) 的伽罗瓦群 = V₄（克莱因四元群）</h3>
+<p>这道题展示"两个独立二次层的复合"，与例题 1 的"根式嵌套"形成对照。</p>
+<p><strong>第 1 步：确定分裂域。</strong>f(x) = (x²−2)(x²−3) 的根是 ±√2、±√3，分裂域 L = Q(√2, √3)。[Q(√2) : Q] = 2（x²−2 不可约）。再证 √3 ∉ Q(√2)：反设 √3 = a + b√2（a,b ∈ Q），平方得 3 = a² + 2b² + 2ab√2；若 ab ≠ 0 则 √2 ∈ Q，矛盾；若 ab = 0 则 3 = a² 或 3 = 2b²，均不可能。故 [L : Q] = 4。</p>
+<p><strong>第 2 步：数自同构。</strong>任一 σ ∈ Gal(L/Q) 由 σ(√2) ∈ {√2, −√2} 与 σ(√3) ∈ {√3, −√3} 独立决定，共 4 个：</p>
+<div class="formula display" data-tex="\sigma_{ab}:\ \sqrt2\mapsto(-1)^a\sqrt2,\quad \sqrt3\mapsto(-1)^b\sqrt3,\qquad a,b\in\{0,1\},\qquad |G|=4"></div>
+<p><strong>第 3 步：判断群结构。</strong>每个非恒等元 σ 都满足 σ² = e（对 √2、√3 各作用两次回到原值）。有 4 个元素且每个元素的平方是恒等、又没有 4 阶元素，故</p>
+<div class="formula display" data-tex="\mathrm{Gal}(\mathbb Q(\sqrt2,\sqrt3)/\mathbb Q)\cong \mathbb Z/2\times\mathbb Z/2=V_4\qquad(\text{非循环！})"></div>
+<p><strong>第 4 步：子群 ↔ 中间域。</strong>V₄ 的三个二阶子群对应三个二次中间域：⟨σ_{01}⟩ ⟷ Q(√2)（固定 √2 者恰是 σ_{00}, σ_{01}）；⟨σ_{10}⟩ ⟷ Q(√3)；⟨σ_{11}⟩ ⟷ Q(√6)（√6 = √2·√3，两个都变号则乘积不变）。三个二次扩张全都正规（V₄ 阿贝尔 ⟹ 子群全正规），与"每个二次扩张都是伽罗瓦扩张"一致。</p>
+<p><strong>第 5 步：与例题 1 对照。</strong>同样是 4 阶群，V₄ 是"两把独立开关"（√2 开关、√3 开关），而 D₄（例：x⁴−2，见第十一节反例）是"一把转盘加一面镜子"——结构不同，求根公式的嵌套方式就不同。∎</p>
+</section>
+
+<section>
+<h3>八、完整例题 3：x⁵−1 的伽罗瓦群 = C₄（分圆扩张）</h3>
+<p>这道题展示"循环群"长什么样，并解释为什么分圆方程特别好解。</p>
+<p><strong>第 1 步：分解与不可约。</strong>x⁵−1 = (x−1)(x⁴+x³+x²+x+1)。五次分圆多项式 Φ₅ = x⁴+x³+x²+x+1 在 Q 上不可约：做代换 x ↦ x+1 得 Φ₅(x+1) = x⁴ + 5x³ + 10x² + 10x + 5，用 Eisenstein（p = 5）即证不可约。故 [Q(ζ₅) : Q] = 4，其中 ζ = ζ₅ = e^{2πi/5}。</p>
+<p><strong>第 2 步：数自同构。</strong>任一 σ ∈ Gal 由 σ(ζ) 决定，且 σ(ζ) 必须是 ζ 的幂：σ(ζ) = ζ^a，a ∈ {1,2,3,4}。反过来每个 a 都给出一个合法自同构（因为 ζ^a 的极小多项式仍为 Φ₅）。共 4 个。</p>
+<div class="formula display" data-tex="\mathrm{Gal}(\mathbb Q(\zeta_5)/\mathbb Q)\cong(\mathbb Z/5)^\times=\{1,2,3,4\}\ \text{（乘法）}\cong C_4"></div>
+<p><strong>第 3 步：找出生成元。</strong>2 是模 5 的本原根：2¹=2, 2²=4, 2³=3, 2⁴=1，所以 σ₂: ζ ↦ ζ² 生成整个群，群是 4 阶循环群 C₄ = ⟨σ₂⟩。</p>
+<p><strong>第 4 步：为什么可解（对应根式构造）。</strong>C₄ 是阿贝尔群，其合成列 {e} ⊂ ⟨σ₂²⟩ ⊂ C₄ 的两个商都 ≅ Z/2（阿贝尔），故 C₄ 可解 ⟹ x⁵−1 可根式解。事实上 2cos(2π/5) = ζ + ζ⁻¹ = (√5 − 1)/2 给出了显式的根式表达式——高斯用这一招在 19 岁构造出正 17 边形（x¹⁷−1 对应 16 阶群，仍是 2-幂循环可解，故可作图）。</p>
+<p><strong>第 5 步：子群结构。</strong>C₄ 只有子群 {e} ⊂ ⟨σ₂²⟩ ⊂ C₄，对应唯一的二次中间域 Q(ζ+ζ⁻¹) = Q(√5)。这与 Z/4 情形的"唯一二次中间域"现象一致（见第二十节工作题 4）。∎</p>
+</section>
+
+<section>
+<h3>九、根式可解性——完整证明路径</h3>
+<p><strong>定理（伽罗瓦，1832）：</strong>多项式 f(x) ∈ K[x] 在 K 上可由根式求解（即存在根式扩张塔包含其分裂域）⟺ Gal(f/K) 是<strong>可解群</strong>。</p>
+<p><strong>证明纲要（⇒ 方向）：</strong></p>
+<p>设 f 可根式解。存在扩张塔 K = K₀ ⊂ K₁ ⊂ ... ⊂ K_m，其中每一步 K_{i+1} = K_i(ⁿ√a_i)，且分裂域 E ⊂ K_m。对每一步 K_i(ⁿ√a)/K_i：若 K_i 包含 n 次单位根，则这是 n 次循环扩张。若不含，可先添加单位根，这产生交换扩张。因此 Gal(E/K) 的全体商在合成列中为循环群 ⟹ Gal(f/K) 可解。</p>
+<p><strong>证明纲要（⇐ 方向）：</strong></p>
+<p>设 G = Gal(f/K) 可解。存在正规列 {e} = Gₘ ⊲ G_{m-1} ⊲ ... ⊲ G₀ = G，每个商 G_i/G_{i+1} 为素数阶循环群。对应域列 K = E₀ ⊂ E₁ ⊂ ... ⊂ E_m = E。由伽罗瓦基本定理，每一步 E_{i+1}/E_i 为循环伽罗瓦扩张。由 Kummer 理论：循环扩张等价于添加某元素的 n 次根（在含有足够单位根的前提下）。因此整个扩张由逐次添加根式构成 ⟹ f 可根式解。</p>
+<p><strong>核心洞察：</strong>每个根式扩张 a^{1/n} 的添加 ⇔ 伽罗瓦群的循环商。根式解公式的可能 ⇔ 伽罗瓦群可被一层层剥为循环群。这正是伽罗瓦在决斗前夜手稿中的中心思想。</p>
+</section>
+<section>
+<h3>十、五次方程不可解——完整论证链（S₅ 非可解群）</h3>
+<p>我们逐环搭建从"可解群"到"一般五次不可根式解"的完整证明。只需三条群论事实与一条域论事实。</p>
+<p><strong>第 1 环（群论）：A₅ 是单群。</strong>论证概要：A₅ 由全体 3-循环生成。任取非平凡正规子群 N ⊲ A₅，取非恒等 σ ∈ N。对其作适当的幂次替换，可设 σ 为 3-循环、5-循环或双对换 (ab)(cd) 之一。逐类构造（用共轭元相乘消项）总能把某个非平凡 3-循环送入 N；而 A₅ 中所有 3-循环彼此共轭且生成 A₅，故 N = A₅。故 A₅ 无真非平凡正规子群。</p>
+<p><strong>第 2 环（群论）：A₅ 不可解。</strong>（结构数据：|S₅| = 120 = 2³·3·5，|A₅| = 60 = 2²·3·5，且 S₅ 的唯一非平凡正规子群是 A₅，合成列即 {e} ⊲ A₅ ⊲ S₅。）若 A₅ 可解，则存在次正规列 A₅ = G₀ ⊳ G₁ ⊳ ... ⊳ G_m = {e} 使每个商 Gᵢ/Gᵢ₊₁ 阿贝尔。取 m 使 G_{m-1} ≠ {e} 且最接近底部：G_{m-1} ⊲ A₅ 是 A₅ 的非平凡正规子群，且 G_{m-1} 阿贝尔（因末段商 G_{m-1}/G_m = G_{m-1}/{e} ≅ G_{m-1} 阿贝尔）。但 A₅ 单 ⟹ 非平凡正规子群只能是 A₅ 自身，矛盾于阿贝尔（A₅ 非阿贝尔）。故 A₅ 不可解。</p>
+<p><strong>第 3 环（群论）：S₅ 不可解，且所有 n ≥ 5 的 S_n 不可解。</strong>可解群的子群可解（可解群的子群继承次正规列与阿贝尔商）。若 S₅ 可解，其子群 A₅ 可解，矛盾于第 2 环。故 S₅ 不可解；S_n（n ≥ 5）包含 A_n 单群，同理不可解。</p>
+<p><strong>第 4 环（域论）：一般五次方程的伽罗瓦群 = S₅。</strong>一般方程</p>
+<div class="formula display" data-tex="f(x) = x^5 + a_4x^4 + a_3x^3 + a_2x^2 + a_1x + a_0"></div>
+<p>的分裂域 K = Q(a_0,...,a_4)(α₁,...,α₅)，其中 a_i 是根 αⱼ 的初等对称多项式（Vieta）。系数 a_i 代数独立。对任意置换 σ ∈ S₅，令 αᵢ ↦ α_{σ(i)}：因系数是根的对称函数保持不变，这给出 Q(a, α) 的自同构，故 G ⊇ {全部 5! 个置换}；而 [K : Q(a)] ≤ 5!（每步添加根度 ≤ 5），|G| ≤ 5!。于是 |G| = 5! = [K : Q(a)]，即 Gal(f/Q(a)) = S₅。</p>
+<p><strong>第 5 环（伽罗瓦定理，见上节）：</strong>方程可根式解 ⟺ 伽罗瓦群可解。合成各环：一般五次方程的伽罗瓦群 S₅ 不可解 ⟹ <strong>一般五次方程不可由根式求解</strong>（Abel–Ruffini 定理的伽罗瓦证明）。对具体方程：可根式解 ⟺ 其伽罗瓦群可解。</p>
+<p><strong>超越 Abel–Ruffini 之处：</strong>Ruffini (1799) 与 Abel (1824) 的证明走"每个根式表达式只对有限个置换不变"的分析路线，只能证明一般方程不可解；伽罗瓦给出<strong>任意具体方程</strong>可解性的充要判据（伽罗瓦群可解性）——这是质的提升。</p>
+</section>
+
+<section>
+<h3>十一、反例辨析——伽罗瓦群 ≠ 循环群；特征 p 的不可分扩张</h3>
+<p><strong>反例 1：x⁴ − 2 的伽罗瓦群不是 Z/4。</strong>f(x) = x⁴ − 2 ∈ Q[x] 不可约（Eisenstein，p = 2），根为 ∜2、−∜2、i∜2、−i∜2。分裂域 L = Q(∜2, i)。</p>
+<p><strong>为什么不是 Z/4：</strong>Z/4 交换，而 Gal(L/Q) 非交换。先定次数：[Q(∜2) : Q] = 4；i ∉ Q(∜2) ⊂ R，故 [L : Q] = 8。自同构 σ 由 α = ∜2 ↦ iᵏα、i ↦ ±i 决定，共 4·2 = 8 个，故 |Gal(L/Q)| = 8。记 ρ: α ↦ iα, i ↦ i；τ: α ↦ α, i ↦ −i。则 ρ⁴ = τ² = e 且 τρτ⁻¹ = ρ⁻¹（τ 反号 i 使"乘 i"变"乘 −i"）——这是二面体群 D₄ 的表示：</p>
+<div class="formula display" data-tex="\mathrm{Gal}(\mathbb Q(\sqrt[4]{2},i)/\mathbb Q) \cong D_4 \neq \mathbb Z/4"></div>
+<p>常见误判：把"4 个根"想当然对应 4 阶循环群。事实：根在 Q 上的最小多项式 x⁴ − 2 的伽罗瓦群需要容纳"∜2 与 i 的交互"——正是 i 的添加制造了非交换性。该群 D₄ 可解，故 x⁴ − 2 仍根式可解，但它绝不是循环扩张。</p>
+<p><strong>反例 2：不可分扩张（特征 p）。</strong>在 K = F_p(t) 上取</p>
+<div class="formula display" data-tex="f(x) = x^p - t \in \mathbb F_p(t)[x]"></div>
+<p>它不可约（Eisenstein，p ∈ F_p[t] 为素元），但 f' = p x^{p−1} = 0，故有重根：在代数闭包中 x^p − t = (x − α)^p（α = t^{1/p}），唯一根 α（重数 p）。分裂域 L = F_p(t)(α)，[L : K] = p。但 <strong>|Gal(L/K)| = 1</strong>：唯一的 K-自同构必须把唯一根 α 送向"根集合 {α}"，故必固定 α，是恒等映射。</p>
+<div class="formula display" data-tex="[L:K] = p,\qquad |\mathrm{Gal}(L/K)| = 1"></div>
+<p>这显示：<strong>不可分扩张中"伽罗瓦群太小"，基本定理彻底失效</strong>——L^H 无法覆盖全部中间域，映射 E ↦ Gal(L/E) 不是满射（满射——大白话：输出"打满全靶"、每个可能的输出都被取到；不是满射说明有些中间域对不上号）。这正是伽罗瓦扩张必须"可分 + 正规"的原因。F_p(t) 的 p 次根扩张是<strong>纯不可分扩张</strong>的标准例子。</p>
+<p><strong>反例 3（非正规 ⟹ 伽罗瓦群太小，特征 0 对照）：</strong>Q(∛2)/Q。x³ − 2 的分裂域含 ω∛2、ω²∛2（ω 为本原三次单位根），不在 Q(∛2) 内，故 Q(∛2)/Q 不可分？——不，Q 特征 0 故可分，但<strong>不正规</strong>。Q 上的自同构把 ∛2 送到 ω∛2 或 ω²∛2，在 Q(∛2) 内不存在，故 |Gal(Q(∛2)/Q)| = 1 而 [Q(∛2) : Q] = 3。同理"非正规 ⟹ |Gal| &lt; [L:K]"，对应退化的根源是<strong>缺少自同构延拓</strong>。</p>
+<p><strong>小结：</strong>伽罗瓦基本定理成立的精确前提是 L/K <strong>伽罗瓦</strong>（有限 + 可分 + 正规）。反例 2 破坏可分性（特征 p），反例 3 破坏正规性（特征 0），二者都使 |Gal| 严格小于扩张次数、双射失效。</p>
+</section>
+
+<section>
+<h3>十二、关键公式</h3>
+<div class="formula display" data-tex="\mathrm{Gal}(K/\mathbb Q) \leftrightarrow \{\text{中间域}\} \leftrightarrow \{\text{子群}\},\qquad [E:\mathbb Q]=[G:H]"></div>
+<div class="formula display" data-tex="\text{方程可根式解} \iff \text{伽罗瓦群可解}"></div>
+<div class="formula display" data-tex="\mathrm{Gal}(\mathbb Q(\sqrt[3]{2},\omega)/\mathbb Q)\cong S_3,\qquad \mathrm{Gal}(\mathbb Q(\sqrt2,\sqrt3)/\mathbb Q)\cong\mathbb Z/2\times\mathbb Z/2,\qquad \mathrm{Gal}(\mathbb Q(\zeta_5)/\mathbb Q)\cong C_4"></div>
+<div class="formula display" data-tex="S_n\ (n\ge 5)\text{ 不可解} \implies \text{五次以上一般方程不可根式解}"></div>
+</section>
+
+<section>
+<h3>十三、伽罗瓦基本定理——完整证明</h3>
+<p>设 L/K 为有限伽罗瓦扩张（有限、可分、正规，等价于 |Gal(L/K)| = [L : K]），G = Gal(L/K)。</p>
+<p><strong>预备命题（固定子域定理 / Artin 引理）：</strong>若 H ≤ G 是子群，记 L^H = {x ∈ L : σ(x) = x, ∀σ ∈ H}，则</p>
+<div class="formula display" data-tex="[L:L^H] = |H|,\qquad \mathrm{Gal}(L/L^H) = H"></div>
+<p><strong>证明要点：</strong>设 H = {σ₁, ..., σ_m}。利用 Artin 的线性无关引理——域 F 上 m 个互异自同构 σ₁,...,σ_m 满足：若 Σ cᵢσᵢ(x) = 0 对一切 x 成立则 cᵢ 全为 0（否则取含最少非零系数的组合，对某 y 代入 σ₁(y)·(组合) − (组合) 消项推出矛盾）。特别地 L^H 上的一个"m 个方程、m+1 个未知量"的齐次系统必有非零解——由此推出 [L : L^H] ≤ |H|。反向：L/L^H 可分（可分性沿中间域下降），且被有限群 H 作用、不动域 L^H，故 L/L^H 为伽罗瓦扩张，|Gal(L/L^H)| = [L : L^H]。显然 H ⊆ Gal(L/L^H)；结合 [L : L^H] ≤ |H| 得等式 [L : L^H] = |H| 且 H = Gal(L/L^H)。□</p>
+<p>同理，对中间域 E（K ⊆ E ⊆ L）：L/E 是伽罗瓦扩张（可分性下降 + L/K 正规则 L/E 正规），故 |Gal(L/E)| = [L : E]。</p>
+<p><strong>定理（伽罗瓦基本定理）：</strong>映射 E ↦ Gal(L/E) 与 H ↦ L^H 互为逆，给出中间域与子群之间的一一对应。</p>
+<p><strong>完整证明：</strong></p>
+<ul>
+  <li><strong>H ↦ L^H ↦ Gal(L/L^H) = H（即"取不动域"是"取伽罗瓦群"的右逆）：</strong>直接由预备命题第二等式 Gal(L/L^H) = H 得。</li>
+  <li><strong>E ↦ Gal(L/E) ↦ L^{Gal(L/E)} = E（左逆）：</strong>因 L/E 伽罗瓦，[L : E] = |Gal(L/E)|；由预备命题第一等式 [L : L^{Gal(L/E)}] = |Gal(L/E)|。故 [L : L^{Gal(L/E)}] = [L : E]。又 E ⊆ L^{Gal(L/E)}（Gal(L/E) 的元素恰固定 E），而 [L : E] = [L : L^{Gal(L/E)}]·[L^{Gal(L/E)} : E] ≥ [L : L^{Gal(L/E)}]，故必须 [L^{Gal(L/E)} : E] = 1，即 L^{Gal(L/E)} = E。</li>
+</ul>
+<p>故两映射互逆，双射成立。□</p>
+<p><strong>对应性质（在基本定理之上直接推出）：</strong></p>
+<ul>
+  <li>含序逆序：E₁ ⊆ E₂ ⟺ Gal(L/E₂) ⊆ Gal(L/E₁)（域越大，固定的群越小）；</li>
+  <li>[E : K] = [G : Gal(L/E)]（由 [L : K] = [L : E]·[E : K] 与 |Gal(L/E)| = [L : E]）；</li>
+  <li>E/K 是伽罗瓦扩张 ⟺ Gal(L/E) ⊲ G，此时 Gal(E/K) ≅ G/Gal(L/E)：把 σ ∈ G 限制到 E 得满同态 G → Gal(E/K)（核为 Gal(L/E)；满性用自同构延拓定理——E/K 正规保证每个 E-自同构可延拓到 L）；</li>
+  <li>L^{H₁∩H₂} = L^{H₁}L^{H₂}、L^{⟨H₁,H₂⟩} = L^{H₁} ∩ L^{H₂}（用 Gal(L/AB) = Gal(L/A) ∩ Gal(L/B) 与双射性）。</li>
+</ul>
+<p><strong>注：</strong>证明全程仅用两条核心事实——<strong>Artin 引理</strong>（有限群作用下的不动域使扩张伽罗瓦且群即作用群）与<strong>可分性/正规性的下降</strong>。这正是"为什么必须要求伽罗瓦扩张"：对不可分或非正规扩张，|Gal(L/K)| &lt; [L : K]，对应即失效。</p>
+</section>
+
+<section>
+<h3>十四、Évariste Galois 的生平——天才的闪光与熄灭</h3>
+<p>Évariste Galois（伽罗瓦，1811年10月25日生于巴黎近郊 Bourg-la-Reine，1832年5月31日死于巴黎 Cochin 医院，年仅 20 岁）。</p>
+<p><strong>时间线：</strong></p>
+<ul>
+  <li><strong>1828–1829：</strong>16 岁入 Louis-le-Grand 中学。尝试报考巴黎综合理工学院（École Polytechnique）——两次均落选。在此期间开始系统研究方程理论。</li>
+  <li><strong>1829–1830：</strong>17–18 岁，向法国科学院提交两篇关于方程论的论文。Cauchy 负责审阅——Cauchy 丢失了手稿（未提交报告）。Fourier 带着另一篇手稿病逝——也丢失了。</li>
+  <li><strong>1830：</strong>七月革命。Galois 因抨击校长（公开信）被开除；加入共和国国民警卫队（炮兵）。因参与政治活动两次入狱。</li>
+  <li><strong>1831：</strong>Poisson 要求他整理理论重新提交。Galois 提交了第三次——Poisson 回复"无法理解"。同时 Galois 陷入恋慕 Stéphanie du Motel——引发决斗事件。</li>
+  <li><strong>1832年5月29日夜：</strong>决斗前夜。Galois 连夜赶写 60 页的长信给好友 <strong>Auguste Chevalier</strong>，总结自己的全部数学发现——主要是多项式方程的根式可解性判定，也包括现在称为"伽罗瓦虚数"的有限域理论和椭圆函数与模方程的联系。他在页边写道："Je n'ai pas le temps"（"我没有时间了"），反复批注"C'est à compléter"（"待补充"）。</li>
+  <li><strong>1832年5月30日：</strong>决斗发生。Galois 腹部中弹，被路过的农民发现，送往 Cochin 医院。</li>
+  <li><strong>1832年5月31日：</strong>因腹膜炎去世。最后一句话对弟弟 Alfred 说："Ne pleure pas, j'ai besoin de tout mon courage pour mourir à vingt ans."（"不要哭——我需要全部勇气在二十岁死去。"）</li>
+  <li><strong>1846年：</strong>Liouville 在《纯粹与应用数学杂志》上首次发表 Galois 的遗著——距他去世已 14 年。Liouville 在编者按中写道："我已确认了其证明的完全严格性。"</li>
+</ul>
+<p>伽罗瓦在 20 年间创造的理论至少比时代领先 50 年——不仅有伽罗瓦理论（群论 + 域论），他还定义了有限域（伽罗瓦域 GF(pⁿ)）并研究了群在集合上的可迁作用。不到 21 年的生命，一夜间 60 页手稿，创立了整个抽象代数的基石。</p>
+</section>
+
+<section>
+<h3>十五、逆伽罗瓦问题——给定群，构造域扩张</h3>
+<p><strong>逆伽罗瓦问题：</strong>给定任意有限群 G，是否存在 Q 的伽罗瓦扩张 L/Q 使得 Gal(L/Q) ≅ G？</p>
+<p><strong>已知结果：</strong></p>
+<ul>
+  <li><strong>可解群：✅</strong> Shafarevich (1954) 用代数数论和嵌入问题证明了所有可解群都可实现为 Q 上的伽罗瓦群。这是该领域最深刻的结果之一。</li>
+  <li><strong>散在单群：</strong> 26 个散在单群中，除 <strong>Monster 单群 M</strong>（大小 ≈ 8×10^53）外，其余 25 个均已实现为 Q 上的伽罗瓦群。Thompson (1984) 实现了多个散在群；Malle 和 Matzat 的<strong>刚性方法</strong>（rigidity method）是实现李型单群的主要工具。</li>
+  <li><strong>一般非可解群：完全开放。</strong>散在单群只能逐个专门攻克（见上），不存在适用于所有有限群的系统构造方法。</li>
+</ul>
+<p><strong>主要方法——刚性 (Rigidity)：</strong>给定有限群 G 和 G 中三个共轭类 C₁, C₂, C₃，若三重预形 (g₁, g₂, g₃)∈C₁×C₂×C₃ 满足 g₁g₂g₃=1 的唯一性（刚性），则 Riemann 存在定理（从复 P¹ 的覆叠出发）给出 Q 上伽罗瓦实现。这一技巧由 Belyi、Thompson、Matzat、Malle 发展——将逆伽罗瓦问题从纯代数数论转化为<strong>代数曲线的覆叠构造</strong>。</p>
+<p><strong>为什么重要：</strong>逆伽罗瓦问题是<strong>伽罗瓦对应的反向构造</strong>——不是从给定的域扩张求伽罗瓦群（正向），而是<strong>预先指定对称性（群），构造具有该对称性的域扩张</strong>（反向）。它检验了我们对数域结构的理解深度。Monster 单群的未解决揭示了我们对数体对称性理解的根本限制。</p>
+</section>
+
+<section>
+<h3>十六、伽罗瓦理论的现代遗产</h3>
+<p><strong>逆伽罗瓦问题</strong>（详见上节）：每个有限群都是 Q 的某个伽罗瓦扩张的伽罗瓦群吗？可解群 √（Shafarevich）。大多数单群 √（刚性 + 辫子群方法）。Monster 单群——<strong>未解决</strong>。这是群论和数论交界最大的开放问题之一。</p>
+<p><strong>费马大定理</strong>：Wiles 的证明本质上是伽罗瓦表示的形变理论——将椭圆曲线的模性（模——此处指"模形式"：一种在上半平面具有严格对称规律的函数）转化为伽罗瓦表示（表示——大白话：把抽象的群"翻译"成具体的矩阵运算，让抽象的对称变得能拿来计算）的性质。伽罗瓦理论从"方程可解性"变成了现代数论的通用语言。</p>
+</section>
+
+<section>
+<h3>十七、试试看（每题附提示）</h3>
+<p><strong>1.</strong> 验证 ω² + ω + 1 = 0，并用它证明 (ω∛2)(ω²∛2) = 2。</p>
+<p><em>提示：两式相乘得 ω³·(∛2)²，而 ω³ = 1。再想：这是 x³−2 的根与系数的 Vieta 关系（常数项 = −根积）。</em></p>
+<p><strong>2.</strong> 证明 x⁴ − 2 在 Q 上不可约（用 Eisenstein），并求出 [Q(∜2) : Q]。</p>
+<p><em>提示：取 p = 2，检查三条 Eisenstein 条件；次数 = 最小多项式次数 = 4。</em></p>
+<p><strong>3.</strong> 对 (x²−2)(x²−3)，写出四个自同构 σ_ab 在 √2 和 √3 上的作用表，并标出每个非恒等元的阶。</p>
+<p><em>提示：四行表：(a,b)=(0,0),(1,0),(0,1),(1,1)。每个非恒等元平方都是恒等，故都是二阶。</em></p>
+<p><strong>4.</strong> 求出 Q(√5) 的伽罗瓦群（提示：它是 x²−5 的分裂域），并判断它与 C₄ 的关系。</p>
+<p><em>提示：Gal(Q(√5)/Q) ≅ Z/2。在第八节中它是 Q(ζ₅) 里唯一的二次中间域，对应 C₄ 的唯一二阶子群 ⟨σ₂²⟩。</em></p>
+<p><strong>5.</strong> 用 Eisenstein（先做代换 x ↦ x+1）证明 Φ₅ = x⁴+x³+x²+x+1 不可约。</p>
+<p><em>提示：Φ₅(x+1) = x⁴ + 5x³ + 10x² + 10x + 5，p = 5 时首项系数 1 不被 5 整除、其余系数全被 5 整除、常数 5 不被 25 整除。</em></p>
+<p><strong>6.</strong> 设 f(x) = x³ − 2。说明为什么 Q(∛2) 不是 x³−2 的分裂域，并由此推断 Gal(Q(∛2)/Q) 有几个元素。</p>
+<p><em>提示：Q(∛2) ⊂ ℝ 只含一个根；其余两个根 ω∛2, ω²∛2 不在其中。任何固定 Q 的自同构只能把 ∛2 送到本域内仍是 x³−2 根的元素，即只能是 ∛2 自己——所以 |Gal| = 1（第十一节反例 3 的结论）。</em></p>
+</section>
+
+<section>
+<h3>十八、附：工作题——求伽罗瓦群与可解性判定</h3>
+<p><strong>题 1（求伽罗瓦群）：</strong>求 f(x) = x⁴ − 5 ∈ Q[x] 的伽罗瓦群。提示：x⁴ − 5 不可约（Eisenstein p = 5），仿照 x⁴ − 2 的分析确定分裂域与生成元关系。</p>
+<p><strong>题 2（求伽罗瓦群）：</strong>求 f(x) = (x² − 2)(x² − 3) ∈ Q[x] 的伽罗瓦群。它的伽罗瓦群是循环的吗？</p>
+<p><strong>题 3（可解性判定）：</strong>判断下列多项式在 Q 上是否根式可解：(a) x³ − 2；(b) x⁴ − 2；(c) x⁵ − x − 1；(d) x²⁰²⁶ − 1。</p>
+<p><strong>题 4（结构对比）：</strong>设 L/Q 是伽罗瓦扩张且 Gal(L/Q) ≅ Z/4。证明 L 包含<strong>唯一</strong>二次中间域，并说明这与 x⁴ − 2 的 D₄ 情形（多个二次中间域）如何区分。由此解释：为什么 D₄ 型四次方程的求根公式中"二次层的选择"不唯一。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1：</strong>根为 ∜5·iᵏ（k = 0,1,2,3），分裂域 L = Q(∜5, i)。[Q(∜5) : Q] = 4（∜5 最小多项式 x⁴ − 5），i ∉ Q(∜5) ⊂ R，[L : Q] = 8。生成元 ρ: ∜5 ↦ i∜5, i ↦ i；τ: i ↦ −i, ∜5 ↦ ∜5。ρ⁴ = τ² = e，τρτ⁻¹ = ρ⁻¹ ⟹ <strong>Gal(x⁴ − 5/Q) ≅ D₄</strong>，|G| = 8。（与 x⁴ − 2 完全同构——素数 2 换成 5 不改变结构。）</p>
+<p><strong>题 2：</strong>L = Q(√2, √3)，[L : Q] = 4。四个自同构 σ_ab: √2 ↦ (−1)^a√2、√3 ↦ (−1)^b√3（(a, b) ∈ {0,1}²）。每个非恒等元的平方为恒等，故 G ≅ <strong>Z/2 × Z/2</strong>（Klein 四元群），<strong>非循环</strong>。对比：x² − 2 与 x² − 3 的合成是"两个独立二次层的复合"（Klein 型），而 x⁴ − 2 是"根式嵌套"（D₄ 型）——两者的伽罗瓦群不同。</p>
+<p><strong>题 3：</strong>(a) Gal(x³ − 2) = S₃：合成列 {e} ⊲ A₃ ⊲ S₃ 中 A₃ ≅ Z/3、S₃/A₃ ≅ Z/2 均阿贝尔，S₃ 可解 ⟹ <strong>可根式解</strong>（Cardano 公式给出显式根式）。<br>
+(b) Gal(x⁴ − 2) = D₄：合成商为 Z/2、Z/2、Z/2 全阿贝尔，可解 ⟹ <strong>可根式解</strong>（四次求根公式存在）。<br>
+(c) Gal(x⁵ − x − 1) = S₅（经典：不可约且模 2、模 3 的分解类型给出 S₅），S₅ 不可解 ⟹ <strong>不可根式解</strong>——最简单的具体五次不可解例子。<br>
+(d) 分裂域 Q(ζ₂₀₂₆)（分圆域），Gal ≅ (Z/2026)^× 阿贝尔 ⟹ <strong>可根式解</strong>（分圆域是根式扩张塔，因为阿贝尔群可解）。</p>
+<p><strong>题 4：</strong>G ≅ Z/4 的中间子群恰为 {e} ⊂ ⟨σ²⟩ ⊂ ⟨σ⟩（σ 为生成元），唯一非平凡子群是 2 阶的 ⟨σ²⟩，对应唯一二次中间域 E = L^{⟨σ²⟩}，且 [E : Q] = [G : ⟨σ²⟩] = 2。故二次中间层<strong>唯一</strong>。对比 D₄ = ⟨ρ, τ⟩：其 2 阶子群有 ⟨ρ²⟩、⟨τ⟩、⟨τρ⟩、⟨τρ²⟩、⟨τρ³⟩（其中仅中心 ⟨ρ²⟩ 正规），而 3 个 4 阶（指数 2）正规子群 ⟨ρ⟩、⟨ρ²,τ⟩、⟨ρ²,τρ⟩ 才分别对应 3 个不同的二次中间域 Q(i)、Q(√2)、Q(√−2)——因此 x⁴ − 2 的求根公式中"先开哪个二次根式"有本质不同的选择，结构比 Z/4 情形丰富。检验：唯一二次中间域 ⟹ 求根公式的嵌套形式基本唯一（a + b√c 型）。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>S. Lang, Algebra</strong></p>
+<p>&rarr; <strong>M. Artin, Algebra</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/group-action.html">群作用</a>、<a href="/pages/abstract-algebra.html">抽象代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/group-action.html">群作用</a>：伽罗瓦群在根上的作用——轨道-稳定子（轨道——大白话：一个根被群的各种变换搬来搬去能到达的全部位置；稳定子——大白话：把某个根"钉住不动"的那些变换组成的子集合）定理和可解群的概念都来自群作用的基本框架，方程的不可解性本质上根源于S_n不是可解群。</p>
+<p>&rarr; <a href="/pages/abstract-algebra.html">抽象代数</a>：群、环、域——伽罗瓦理论建立在域的扩张和群的商结构之上，这些概念全部来自抽象代数的语言。</p>
+<p>&rarr; <a href="/pages/commutative-algebra.html">交换代数</a>：整闭包、Dedekind整环、分歧理论——伽罗瓦扩张的代数层面由交换代数精确描述，Grothendieck正是从环的素谱出发重构了代数几何的基础。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">模形式</a>：伽罗瓦表示和模形式的联系是Langlands纲领的核心——Wiles证明费马大定理的关键就是建立了椭圆曲线的伽罗瓦表示与模形式之间的对应。</p>
+</section>

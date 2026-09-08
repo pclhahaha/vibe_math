@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="把无穷往左写：…1111 = −1，数论在超度量里换一副面孔" />
+  <meta property="og:title" content="p-adic 数与局部域 — Vibe Math" />
+  <meta property="og:description" content="把无穷往左写：…1111 = −1，数论在超度量里换一副面孔" />
+  <title>p-adic 数与局部域 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🥟 p-adic 数与局部域 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">把无穷往左写：…1111 = −1，数论在超度量里换一副面孔</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='p-adic-numbers',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/algebraic-number-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🏰 代数数论：数域与理想类</a>
+  <a href="/pages/elliptic-curves.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🗝️ 椭圆曲线与 Wiles 之路 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把数写成"向左无限延伸的数码"，-1 也能有味道</h3>
+<p>我们对"数有多大"只有一种直觉：绝对值 |x−y| 小 = 两个数靠得近。1897 年 Hensel 提出另一个完全合法的"距离"：固定一个素数 p，<strong>数被 p 整除得越深，就越"小"</strong>：</p>
+<div class="formula display" data-tex="|x|_p=p^{-v_p(x)},\qquad v_p(x)=\text{x 中因子 }p\text{ 的个数};\qquad |p^{k}|_p=p^{-k}\xrightarrow{k\to\infty}0"></div>
+<p>在这个度量下，数列 1、p、p²、p³、…<strong>收敛到 0</strong>（在通常意义里它跑到无穷远！）。把 ℚ 按这个距离完备化（像实数那样取柯西列），得到<strong>p-adic 数域 ℚ_p</strong>。它里面的每个数都能唯一写成"向左无限延伸"的数码：</p>
+<div class="formula display" data-tex="x=\sum_{k\ge N}a_k p^{k}= \dots a_3a_2a_1a_0\ \ (\text{往左无限}),\qquad a_k\in\{0,1,\dots,p-1\}"></div>
+<p>于是有了那些著名的"怪等式"：在 ℚ₂ 里 <strong>1+2+4+8+…=−1</strong>（等比级数 Σ2ᵏ=1/(1−2) 在 |2|₂&lt;1 下合法收敛）——写成数码就是 <strong>−1=…1111</strong>。1/3=…10101011。这些"倒着写的数"不是玩具：Ostrowski 定理说，<strong>ℚ 上本质不同的"距离"只有实数与全部 p-adic 族</strong>——p-adic 世界与实数世界是算术的两位对称主角，而"局部-整体原理"（Hasse）让数论问题常常可以"每个 p 解一遍 + 实数解一遍"。</p>
+<div class="key-insight">洞察：p-adic 度量的杀手锏是<strong>超度量（非阿基米德）</strong>不等式 |a+b|≤max(|a|,|b|)——它比三角不等式强得多：p-adic 世界里<strong>所有三角形都等腰</strong>，级数收敛 ⟺ 逐项"数码稳定"。ℚ_p 是一棵 p 叉树的极限（两个数共享的前缀越长越接近），也是 Hensel 引理（从 mod p 解提升到 ℚ_p 解）的家。画布上把 −1、1/3 展开成"向左的数码"，你会亲眼看到收敛的另一种模样。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/algebraic-number-theory.html">代数数论</a>（赋值与完备化的语境）、<a href="/pages/galois-theory.html">伽罗瓦理论</a>（局部域扩张）、<a href="/pages/real-analysis.html">实分析</a>（柯西完备化的类比）。本课的"局部"是 <a href="/pages/modular-forms.html">模形式/Langlands</a> 的舞台。</p></div>
+
+<section>
+<h3>一、一个具体问题——从"哪个 p 除得深"到新的数域</h3>
+<p><strong>v_p 与 |·|_p。</strong> 对整数 n 记 v_p(n)=n 里 p 的最高次幂指数，v_p(0)=∞；对有理数 x=a/b：v_p(x)=v_p(a)−v_p(b)。于是 |x|_p=p^{−v_p(x)}。它满足：|xy|_p=|x|_p|y|_p、|x+y|_p≤max(|x|_p,|y|_p)（<strong>超度量</strong>）——比三角不等式强得多。</p>
+<p><strong>完备化。</strong> 像 ℝ=ℚ 对 |·| 完备化：ℚ_p=柯西列/零列；ℤ_p={x：|x|_p≤1}={x：v_p(x)≥0}=∑a_kp^k 的全体（p-adic 整数），是紧致完备的局部环。数字系统由此诞生：每个 x∈ℤ_p 有唯一表示 …a₂a₁a₀（aₖ∈{0,…,p−1}），收敛在 p-adic 意义下逐项"从右边（低位）生长"。</p>
+<p><strong>Ostrowski（1916）。</strong> ℚ 上的非平凡绝对值（乘性 + 三角不等式）只有两种：通常绝对值与 |·|_p（某个 p）。所以"实 + 全部 p-adic"穷尽了算术里的所有距离——这是阿代尔环与整体-局部方法的第一块地基。</p>
+<p><strong>为什么数论需要它？</strong> 丢番图方程常能 mod p 解、提升到 ℚ_p 解（Hensel），再问能否"拼"成全局解（Hasse 原理：二次型在 ℚ 可解 ⟺ 在每个 ℝ、ℚ_p 可解）。p-adic 数论因此是"整数问题的最细局部显微镜"。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——超度量：所有三角形都等腰的世界</h3>
+<p><strong>数码与树。</strong> ℤ_p = 完整 p 叉树的端点：根是空（0 位），第 k 层节点是长度 k 的前缀，端点对应无穷路径 …a₂a₁a₀。两个数的 p-adic 距离 |x−y|_p = p^{−共享前缀长度}：<strong>共享前缀越长越接近</strong>——与实数"共享小数点后的位数越多越接近"正好镜像（方向相反：p-adic 的高位在左边，实数的高位在右边）。</p>
+<p><strong>超度量的三个怪定理。</strong></p>
+<ul>
+<li><strong>所有三角形等腰：</strong> 对任意 x,y,z，|x−y|_p、|y−z|_p、|z−x|_p 中最大的两个相等。</li>
+<li><strong>球要么不相交要么一个包含另一个：</strong> p-adic 开球是"树上的分支"，没有部分重叠。</li>
+<li><strong>级数收敛 ⟺ 通项趋于 0：</strong> 对实数是必要不充分；对 p-adic 是充要（超度量的礼物）。Σ2ᵏ 收敛到 −1 正是它的产物。</li>
+</ul>
+<p><strong>Hensel 引理。</strong> 若多项式 f∈ℤ_p[X] 在 mod p 有简单根 a₀（f(a₀)≡0 mod p、f′(a₀)≢0），则 f 在 ℤ_p 有唯一根 a 使 a≡a₀（mod p）——用 Newton 迭代一位一位"抬起"。这是 p-adic 版的牛顿法，也是"模 p 解 ⟹ ℚ_p 解"的引擎。</p>
+</section>
+
+<section>
+<h3>三、例题 1——2-adic 展开：−1 与 1/3（一步步算完）</h3>
+<p><strong>题目。</strong> 求 −1 与 1/3 在 ℚ₂ 的数码展开，并验证收敛。</p>
+<p><strong>第一步：−1=…1111。</strong> 等比级数 Σ₂ₖ₌₀∞2ᵏ：因 |2|₂=1/2&lt;1，收敛且和 =1/(1−2)=−1。数码全为 1。∎</p>
+<p><strong>第二步：1/3 逐位提升。</strong> 求 x=…a₂a₁a₀ 使 3x=1。mod 2：3a₀≡1 ⟹ a₀=1。mod 4：3(a₀+2a₁)≡1 ⟹ a₁=1。mod 8：3(a₀+2a₁+4a₂)≡1 ⟹ a₂=0。mod 16：a₃=1；mod 32：a₄=0；mod 64：a₅=1……</p>
+<div class="formula display" data-tex="\tfrac13 = \dots 010101011_2 = 1+2+0\cdot4+8+0\cdot16+32+\dots\qquad(\text{可核验：每步 }3x\equiv1\pmod{2^{k}})"></div>
+<p><strong>第三步：收敛感。</strong> 部分和 Sₖ=前 k 位：S₁=1≡−? 检查 3·(1)=3≢1 mod 2? 3≡1 mod2 ✓；S₂=3：3·3=9≡1 mod4 ✓；S₃=3：9≡1 mod8 ✓；S₄=11：33≡1 mod16 ✓……每多一位，3Sₖ≡1 的模数翻倍——<strong>序列 Sₖ 在 ℚ₂ 收敛到 1/3</strong>（数值上 Sₖ 越来越大，p-adic 上却越来越准）。∎</p>
+<p><strong>第四步：为什么这合法？</strong> 全部依赖超度量：|2ᵏ|₂→0 ⟹ 级数收敛；"越来越大的部分和收敛到小数"只在 p-adic 发生。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——Hensel 提升：x²≡−1 何时在 ℤ₅ 可解（一步步算完）</h3>
+<p><strong>题目。</strong> 用 Hensel 引理说明 x²=−1 在 ℚ₅ 有解（且在 ℚ₃、ℚ₇ 无解）。</p>
+<p><strong>第一步：找 mod 5 根。</strong> x²≡−1≡4 (mod 5)：x≡±2。取 a₀=2：f(2)=4+1=5≡0 (mod 5)，f′(x)=2x，f′(2)=4≢0 (mod 5)——简单根。</p>
+<p><strong>第二步：Hensel 提升。</strong> 由引理存在 x∈ℤ₅ 使 x≡2 (mod 5)、x²=−1：解为 5-adic 数 ±√−1。∎</p>
+<p><strong>第三步：对照无解情形。</strong> ℚ₃：x²≡−1 (mod 3) ⟹ x²≡2 (mod 3)——2 非平方剩余，无 mod p 根 ⟹ Hensel 前提失败 ⟹ ℚ₃ 无 √−1。ℚ₇：−1 mod 7 =6，非平方（平方 mod7={0,1,2,4}）⟹ 无解。∎</p>
+<p><strong>第四步：读结论。</strong> "x²=−1 在哪几个 ℚ_p 可解"由 −1 的二次剩余性逐 p 决定——这正是"局部条件"决定整体数论的样例（这里整体无解：ℚ 里没有 √−1）。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心事实清单</h3>
+<ul>
+<li><strong>赋值与超度量：</strong> v_p、|·|_p、非阿基米德不等式；ℤ_p={|·|_p≤1} 紧致完备；ℚ_p=分式域。</li>
+<li><strong>数码表示：</strong> 唯一 …a₂a₁a₀ 展开；收敛 ⟺ 逐项趋于 0（超度量的级数判据）。</li>
+<li><strong>Ostrowski（1916）：</strong> ℚ 的绝对值分类：实 + p-adic 族——局部域清单的依据。</li>
+<li><strong>Hensel 引理：</strong> mod p 简单根可唯一提升到 ℤ_p；推论：单位群结构 ℤ_p^× ≅ μ_{p−1}×(1+pℤ_p)（p 奇）。</li>
+<li><strong>结构：</strong> ℚ_p 局部紧、完全不连通、完备；代数闭包 ℚ̄_p 不完备，其完备化 ℂ_p 代数闭且完备（Tate）；局部域的伽罗瓦群由"惯性+分歧"分层（→ <a href="/pages/galois-theory.html">伽罗瓦理论</a>）。</li>
+<li><strong>局部-整体：</strong> Hasse–Minkowski：二次型在 ℚ 可解 ⟺ 在 ℝ 与每个 ℚ_p 可解；一般丢番图（三次以上）有反例（Selmer 3x³+4y³+5z³=0：处处局部可解、全局无解）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="|x|_p=p^{-v_p(x)};\qquad |x+y|_p\le\max(|x|_p,|y|_p);\qquad \sum a_k p^{k}\ \text{收敛}\iff a_kp^{k}\to0"></div>
+<div class="formula display" data-tex="-1=1+2+4+\cdots=\dots1111_2;\qquad \tfrac13=\dots010101011_2"></div>
+<div class="formula display" data-tex="\text{Hensel: }f(a_0)\equiv0,\ f'(a_0)\not\equiv0\pmod p\Rightarrow \exists!\,a\in\mathbb Z_p,\ f(a)=0"></div>
+</section>
+
+<section>
+<h3>七、延伸——p-adic 的现代足迹</h3>
+<ul>
+<li><strong>丢番图的可判定性。</strong> ℚ_p 是可判定的（每个一阶句子可真假判定，Ax–Kochen/Eršov 风格），"每个 p 检查一遍 + 拼起来"是计算数论的日常（Hasse 原理 + 例外集）。</li>
+<li><strong>Langlands 的局部端。</strong> 局部 Langlands 对应：GL(n,ℚ_p) 的（光滑）表示 ↔ n 维 Weil 群表示——由 Harris–Taylor、Henniart（2000s）证明，是模形式（→ <a href="/pages/modular-forms.html">模形式</a>）Langlands 纲领的"局部块"。</li>
+<li><strong>Iwasawa 与 p-adic L 函数。</strong> 类数在 ℤ_p-扩张里的增长由 p-adic L 函数控制（→ <a href="/pages/algebraic-number-theory.html">代数数论</a> 的 Iwasawa 延伸）；Mazur–Wiles 证明主猜想——p-adic 成为"解析数论"的平行宇宙。</li>
+<li><strong>p-adic 几何（Scholze）。</strong> 完美空间（perfectoid spaces，2012，Fields 2018）统一 p-adic Hodge 与伽罗瓦表示——p-adic 几何是当代算术几何最热的工具之一。</li>
+<li><strong>物理的 p-adic 弦。</strong> Volovich（1987）注意到弦振幅的乘积公式结构，提出 p-adic 弦论；"p-adic 宇宙"虽未成主流，但说明非阿基米德分析进入了理论物理的想象。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"p-adic 想当然"</h3>
+<p><strong>陷阱 1："p-adic 数 = 往右写小数点的实数"？</strong> 方向反了：实数数码往右无限（0.123…），p-adic 数码<strong>往左无限</strong>（…a₂a₁a₀），且 |pᵏ|_p→0 而实数值 pᵏ→∞。两种收敛在同一串数字上给出了相反的方向感。</p>
+<p><strong>陷阱 2："Σ2ᵏ=−1 是'滥用发散级数'"？</strong> 不是。|2|₂=½&lt;1，等比级数在 p-adic 度量下<strong>真收敛</strong>到 1/(1−2)=−1——和"Σ(1/2)ᵏ=2 在实数下收敛"一样严格，只是换了度量。把"实数发散发散"当"处处发散"是常见误区。</p>
+<p><strong>陷阱 3："p-adic 也有微积分般的三角不等式"？</strong> 超度量远强于三角不等式：三角形等腰、球不部分相交、级数收敛 ⟺ 通项→0。用实数直觉猜 p-adic 结论几乎总是错的——每一步都要回到超度量。</p>
+<p><strong>陷阱 4："ℚ_p 代数闭（像 ℂ 之于 ℝ）"？</strong> 不是。ℚ̄_p（代数闭包）不完备，完备化 ℂ_p 才代数闭且完备。ℝ 的完备性 + 代数闭性合一在 p-adic 需要两步——"完备化 + 代数闭"不是免费捆绑。</p>
+<p><strong>陷阱 5："Hasse 原理对一切方程成立"？</strong> 只对二次型等少数类（Hasse–Minkowski）；三次以上有反例：Selmer 的 3x³+4y³+5z³=0 处处局部可解却无有理点。局部-整体是"要证明的性质"，不是默认。</p>
+</section>
+
+<section>
+<h3>九、当前状态——p-adic 的前沿</h3>
+<ol>
+<li><strong>局部 Langlands。</strong> GL(n) 情形已证（Harris–Taylor/Henniart）；更一般群与 p-adic 表示的 Langlands 纲领仍在推进——p-adic 是数论最大工程的"原子单位"。</li>
+<li><strong>p-adic Hodge 理论。</strong> 完备化与周期环（Faltings、Fontaine）、p-adic 表示论在算术几何中统治"局部刚性"问题；Scholze 的完美空间统一了此前多条路线。</li>
+<li><strong>p-adic 与动力系统/概率。</strong> p-adic 动力系统（Marsh 树上的动力学）、p-adic 概率与随机过程——非阿基米德分析向其它数学渗透。</li>
+<li><strong>计算与编码。</strong> p-adic 数在计算机代数（Hensel 提升是多项式分解/求根的标准工具，→ <a href="/pages/numerical-methods.html">数值方法</a>）与信号处理（p-adic 小波）中的工程生命。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Hensel (1897)</strong>：p-adic 数的发现（Hensel 引理随之而来）。</li>
+<li><strong>Ostrowski (1916)</strong>：ℚ 上绝对值的分类——p-adic 世界的"存在性证明"。</li>
+<li><strong>Hasse (1920s)</strong>：Hasse–Minkowski 局部-整体原理（二次型）。</li>
+<li><strong>Tate (1950)</strong>：博士论文——阿代尔与 ζ 的函数方程（整体视角的 p-adic 同源）。</li>
+<li><strong>Kubota–Leopoldt (1964) / Iwasawa (1969)</strong>：p-adic L 函数与 ℤ_p-扩张。</li>
+<li><strong>Mazur–Wiles (1984)</strong>：Iwasawa 主猜想（p-adic 类数增长）。</li>
+<li><strong>Harris–Taylor / Henniart (2000s)</strong>：局部 Langlands 对应（GL(n)）。</li>
+<li><strong>Scholze (2012)</strong>：完美空间——p-adic 几何的新范式（Fields 2018）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——数码手算</h3>
+<p><strong>题 1（−1 的数码）。</strong> 验证 ℚ₃ 中 −1=…2222（数码全 2）。<strong>提示：</strong>Σ3ᵏ=1/(1−3)=−1，|3|₃=1/3&lt;1。</p>
+<p><strong>题 2（1/3 在 ℚ₅）。</strong> 求 1/3 的 5-adic 前 3 位。<strong>提示：</strong>3⁻¹ mod 5=2（3·2=6≡1）⟹ a₀=2；mod 25 提升得 a₁？（解 3(2+5a₁)≡1 mod 25：6+15a₁≡1→15a₁≡20→a₁≡4·? 15⁻¹? 15·?≡20? 试 a₁=4：60≡10? 不行；a₁=3:45≡20? 45 mod25=20 ✓ a₁=3——完整算见例 3 的模递归。</p>
+<p><strong>题 3（Hensel 前提）。</strong> 为什么 x²=−1 在 ℚ₃ 无解而 ℚ₅ 有？<strong>提示：</strong>−1 mod 3 =2 非平方、mod 5=4 是平方（2²）；Hensel 需要 mod p 根。</p>
+<p><strong>题 4（超度量三角形）。</strong> 证明：对任意 x,y,z∈ℚ_p，|x−y|_p、|y−z|_p、|z−x|_p 中最大两项相等。<strong>提示：</strong>设 d=|x−y| 最大；由 x−z=(x−y)+(y−z)，超度量给 |x−z|≤max≤d；若 |x−z|&lt;d 且 |y−z|&lt;d，则 d=|x−y|=|(x−z)−(y−z)|≤max(&lt;d) 矛盾。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：…2222₃（等比级数）。∎</p>
+<p><strong>题 2</strong>：前三位 a₀=2、a₁=3、a₂=?（模递归：……见提示方法）。∎</p>
+<p><strong>题 3</strong>：见提示。∎</p>
+<p><strong>题 4</strong>：见提示（超度量反证）。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布数码）。</strong> 换 p（2/3/5）与目标（−1、1/3、2/3、1/7 等）：观察数码如何从低位逐位确定——每多一位"3x≡1 的模数翻倍"。把 −1 的数码全 p−1 与"等比级数=−1/(1−?)"对表。</p>
+<p><strong>试试看 2（收敛反转）。</strong> 在 <a href="/pages/real-analysis.html">实分析</a> 课想同一串级数 Σ2ᵏ：实数下发散、2-adic 下收敛到 −1——"收敛"从来不是数字的固有属性，而是<strong>度量的属性</strong>。提示：|2| 的两种取值决定了两种命运。</p>
+<p><strong>试试看 3（局部-整体）。</strong> 想二次型 x²+y²=7：mod 3 可解？mod 7？ℚ₇？<strong>提示：</strong>2 平方和定理（→ <a href="/pages/algebraic-number-theory.html">代数数论</a> 例题）说 7≡3 mod 4 不可表为平方和——Hasse 原理会在某个局部域"否决"它。</p>
+<p><strong>试试看 4（树直觉）。</strong> 把 ℤ_p 想成 p 叉树：两个数 |x−y|_p=p^{−k} 恰在树里分叉于深度 k。把 p=2、x=−1、y=1/3 放树上：它们共享约几位前缀？提示：−1=…1111、1/3=…01011——首位就不同，距离 |−1−1/3|₂=|−4/3|₂=1/4，共享前缀 2 位（00? 检查）——算算验证画布显示。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>N. Koblitz, p-adic Numbers, p-adic Analysis, and Zeta-Functions</strong>（经典入门）</p>
+<p>&rarr; <strong>F. Gouvea, p-adic Numbers: An Introduction</strong>（友好全面）</p>
+<p>&rarr; <strong>J.-P. Serre, A Course in Arithmetic</strong>（局部域与二次型的标准处理）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.1/22（数论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/algebraic-number-theory.html">代数数论</a>、<a href="/pages/galois-theory.html">伽罗瓦理论</a>、<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/algebraic-number-theory.html">🏰 代数数论</a>：赋值与局部化，本课是其"局部深化"。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：局部域的伽罗瓦群与分歧理论。</p>
+<p>&rarr; <a href="/pages/modular-forms.html">🎼 模形式</a>：局部 Langlands = Langlands 纲领的 ℚ_p 端。</p>
+<p>&rarr; <a href="/pages/real-analysis.html">📐 实分析</a>：完备化与收敛的度量视角（对照组）。</p>
+<p>&rarr; <a href="/pages/zeta.html">♾️ 黎曼 ζ 函数</a>：Euler 积 = 所有 p-adic 局部因子的乘积（阿代尔视角）。</p>
+<p>&rarr; <a href="/pages/forcing-ch.html">🌩️ 集合论 II</a>：完备化与模型构造的另一处"相对性"。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/p-adic-numbers.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

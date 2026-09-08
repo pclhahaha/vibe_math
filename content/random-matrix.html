@@ -1,0 +1,156 @@
+<section>
+<h3>〇、直觉入门——把 10⁶ 个随机数排成方阵，特征值会"长成"半圆</h3>
+<p>取一个 N×N 的随机对称矩阵（例如每个上三角元素独立取标准正态），算它的 N 个实特征值，画直方图——N 很大时你会得到一个惊人稳定的形状：<strong>半圆</strong>。</p>
+<div class="formula display" data-tex="\frac1N\#\{\lambda_i\in[a,b]\}\ \xrightarrow{N\to\infty}\ \int_a^b\rho(x)\,dx,\qquad \rho(x)=\frac{1}{2\pi}\sqrt{4-x^{2}}\quad(|x|\le2)"></div>
+<p>Wigner（1955，研究原子核能级）发现并证明了这一点；今天它叫<strong>Wigner 半圆律</strong>。注意它像极了中心极限定理（→ <a href="/pages/clt.html">CLT</a> 课）的结构：CLT 说"独立随机变量之和 → 高斯"，半圆律说"独立随机矩阵的特征值集合 → 半圆"——而"随机矩阵版的 CLT"正是 Voiculescu 自由概率的核心。更妙的是<strong>普适性</strong>：上三角元素取高斯、均匀、±1，谱都奔向同一个半圆——具体分布只影响"噪声"，不影响"形状"。</p>
+<p>随机矩阵理论（RMT）如今横跨：核物理（能级统计）、量子混沌（→ <a href="/pages/laplace-eigenvalue.html">鼓的谱统计</a>）、数论（黎曼 ζ 零点与 GUE 的 Montgomery–Odlyzko 关联！）、高维统计（样本协方差 Marchenko–Pastur、主成分的 Baik–Ben Arous–Péché 相变）、无线通信与机器学习。它可能是"一个定理、整个学科"的最佳示范。</p>
+<div class="key-insight">洞察：随机矩阵给"大量相关变量"以精确的语言。单个特征值完全不可预测（与初值无关的"典型"行为），但<strong>全体特征值的经验分布是确定性的</strong>（半圆/MP），边缘波动服从 Tracy–Widom 分布（N^{−2/3} 尺度），且间距统计满足普适的"能级排斥"——谱的集体行为 = 高维大数定律。画布上把 N 从 10 拉到 200，半圆会从"毛刺"收敛成"光滑"。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/eigenvectors.html">特征值与特征向量</a>（谱的语言）、<a href="/pages/clt.html">大数定律与 CLT</a>（收敛与波动尺度的类比）、<a href="/pages/high-dim-geometry.html">高维几何</a>（维数直觉）。与 <a href="/pages/operator-algebras.html">算子代数</a>（自由概率）、<a href="/pages/laplace-eigenvalue.html">鼓的谱</a>（量子混沌）深度相连。</p></div>
+
+<section>
+<h3>一、一个具体问题——Wigner、Marchenko–Pastur 与三大谱定律</h3>
+<p><strong>设定与标度。</strong> Wigner 矩阵：N×N 对称，上三角（含对角）iid，均值 0、方差 1/N——归一化使谱落在 [−2,2]（若用方差 1，谱 ~√N 发散，标度错了形状照旧）。经验谱测度 μ_N = (1/N)Σδ_{λᵢ}。</p>
+<ul>
+<li><strong>Wigner 半圆律（1955/58）：</strong> μ_N → 半圆（弱收敛 a.s.）。高斯情形 Wigner 用矩方法证明（Catalan 数，→ 例题 1）；一般分布（有界/矩条件）由后续工作完成。</li>
+<li><strong>Marchenko–Pastur（1967）：</strong> 样本协方差：X 是 p×N 的 iid 阵（方差 1），W=XXᵀ/N（p/N→γ）：谱测度收敛到 MP 律，支撑 [a₋,a₊]，a±=(1±√γ)²——高维统计里"样本谱≠总体谱"的全部教训都在这条定律里。</li>
+<li><strong>边缘与 Tracy–Widom（1994）：</strong> 最大特征值 λ_max ≈ 2（或 1+√γ）周围的涨落尺度是 N^{−2/3}（不是 N^{−1/2}！），极限分布是 Tracy–Widom（β=1,2,4 对应实/复/四元数）——"边缘大偏差"与 CLT 的中心波动是完全不同的现象。</li>
+</ul>
+<p><strong>普适性（21 世纪定理）。</strong> Tao–Vu（2009 起）、Erdős–Yau 等证明局部普适：特征值间距、边缘涨落在很广的分布类中与高斯完全一致——"半圆与 TW 不挑分布"从经验升格为定理。RMT 因此成为数论（Katz–Sarnak）、统计（BBP 相变）、量子混沌共用的"标准谱语言"。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——为什么是半圆：矩方法一瞥</h3>
+<p><strong>矩方法。</strong> 证明谱收敛到 ρ，只需证明各阶矩 m_k=∫x^kρ(x)dx 被经验矩逼近。经验矩有漂亮的代数：</p>
+<div class="formula display" data-tex="\int x^{2k}\rho(x)\,dx=C_k=\frac{1}{k+1}\binom{2k}{k}\qquad(\text{Catalan 数：}1,2,5,14,42,\dots)"></div>
+<p><strong>Catalan 从哪来？</strong> E[(1/N)Tr M^{2k}] 展开成对所有"腿的配对"求和：高斯变量的期望只在<strong>两两配对</strong>（Wick 定理）时非零；每个配对对应一张把 2k 个点连成 k 条弦的图。绝大多数配对的贡献是低阶（含"穿越"或"自交"的配对在 1/N 展开里被压掉），保留下来的只有<strong>非交叉配对</strong>——它们的数目正是 Catalan 数 C_k！∎</p>
+<p><strong>非交叉 = 半圆的签名。</strong> 半圆律的矩是 Catalan，而 Catalan 数数"非交叉配对"——这两件事的相遇不是偶然：<strong>自由概率论</strong>（Voiculescu，→ <a href="/pages/operator-algebras.html">算子代数</a> 课）的"自由独立性"正是用非交叉配对的组合定义的，其 CLT 极限就是半圆。矩阵维数 N→∞ 时"几乎自由的"结构让半圆必然出现。</p>
+<p><strong>直觉压缩版：</strong> 特征值的"集体分布"由矩决定，矩由配对组合决定，配对组合由非交叉性筛选——三层翻译后，<strong>半圆 = 非交叉配对的"解析化身"</strong>。</p>
+</section>
+
+<section>
+<h3>三、例题 1——二阶矩的积分核对（一步步算完）</h3>
+<p><strong>题目。</strong> 用换元证明半圆密度 ρ(x)=√(4−x²)/(2π) 的二阶矩 = 1（=Catalan C₁），并与 Wigner 矩阵的经验矩 E[(1/N)Tr M²]→1 核对。</p>
+<p><strong>第一步：写积分。</strong> m₂=∫_{−2}^{2}x²·(1/2π)√(4−x²)dx。</p>
+<p><strong>第二步：换元 x=2sinθ。</strong> dx=2cosθ dθ，√(4−x²)=2cosθ，x²=4sin²θ，θ∈[−π/2,π/2]：</p>
+<div class="formula display" data-tex="m_2=\frac{1}{2\pi}\int_{-\pi/2}^{\pi/2}4\sin^{2}\theta\cdot4\cos^{2}\theta\,d\theta=\frac{16}{2\pi}\int \sin^{2}\theta\cos^{2}\theta\,d\theta"></div>
+<p><strong>第三步：用 sin²cos²=sin²2θ/4。</strong> ∫sin²2θ dθ 在 [−π/2,π/2] 上 = π/2（半周期平均 1/2）⟹ ∫sin²cos²=π/8：</p>
+<div class="formula display" data-tex="m_2=\frac{16}{2\pi}\cdot\frac{\pi}{8}=1\qquad\blacksquare"></div>
+<p><strong>第四步：经验核对。</strong> 对高斯 Wigner 阵（上三角方差 1/N）：E[(1/N)Tr M²]=E[M₁₂²·2?]=E[(1/N)Σ_{ij}M_{ij}M_{ji}]=(1/N)·(N(N+1)/2·对角? 略) → 主项 N·(1/N)=1——二阶矩两边都收敛到 1。∎</p>
+<p><strong>第五步：更高阶。</strong> m₄ 应 =Catalan C₂=2、m₆=C₃=5：画布直方图的形状正是这些矩的"几何叠加"。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——边缘涨落：Tracy–Widom 与 BBP 相变（一步步算完）</h3>
+<p><strong>题目。</strong> 为什么最大特征值的涨落是 N^{−2/3}？"尖峰"信号何时能被看见？</p>
+<p><strong>第一步：涨落尺度。</strong> 半圆边缘 λ=2 处密度像 √(4−x²)∝√(2−x)：谱点"堆积"成平方根奇点。若最大特征值偏离 O(N^{−2/3})，则两个特征值之间的"能隙"与堆积密度平衡——自洽地给出尺度：</p>
+<div class="formula display" data-tex="\lambda_{\max}=2+N^{-2/3}\chi_\beta,\qquad \chi_\beta\sim\text{Tracy–Widom}_\beta\qquad(\beta=1:\text{GOE},\ 2:\text{GUE})"></div>
+<p>N=10⁴ 时 N^{−2/3}=10^{−8/3}≈0.0046——边缘波动的量级远比中心波动（~N^{−1/2}）小，却远大于"单个特征值间距"（~N^{−1}）——三层尺度各司其职。∎</p>
+<p><strong>第二步：BBP 相变（信号何时可见）。</strong> 样本 X 的总体协方差 = I+θ·uuᵀ（一个尖峰 θ）：最大样本特征值</p>
+<div class="formula display" data-tex="\lambda_{\max}\to\begin{cases} (1+\sqrt\gamma)^{2},&\theta\le\sqrt\gamma\ (1+\theta)(1+\gamma/\theta),&\theta>\sqrt\gamma \end{cases}"</div>
+<p>——修正：精确结果是 λ_max → (1+√γ)² 当 θ≤√γ（尖峰"淹没"在噪声里，不可见）；θ&gt;√γ 时跳出噪声，渐近 (1+θ)(1+γ/θ)。<strong>阈值 √γ 是"可检测性相变"</strong>：低于它，统计上无法分辨信号（高维统计的基本极限）。∎</p>
+<p><strong>第三步：读结论。</strong> 谱的"主体"（半圆/MP）给噪声定标，边缘（TW）给波动定标，尖峰（BBP）给信号定阈值——三个定理一起构成高维数据科学的"看谱手册"。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>Wigner 半圆律：</strong> 对称 Wigner 矩阵（上三角 iid、均值 0、方差 1/N，矩条件）的经验谱测度几乎必然弱收敛到 ρ(x)=√(4−x²)/(2π)·1_{|x|≤2}。</li>
+<li><strong>Marchenko–Pastur：</strong> p×N iid 方差 1、p/N→γ∈(0,∞) ⟹ XXᵀ/N 的谱测度收敛到 f_γ，支撑 [(1−√γ)²,(1+√γ)²]（γ≤1），密度含 (1/γ−1)δ₀ 当 γ&gt;1。</li>
+<li><strong>Bai–Yin：</strong> λ_max→2（及 λ_min→−2）几乎必然（宽条件）。</li>
+<li><strong>Tracy–Widom：</strong> N^{2/3}(λ_max−2) ⇝ TW_β；分布由 Painlevé II 刻画（1994）。</li>
+<li><strong>普适性：</strong> 局部谱统计（间距、边缘）对 iid 分布类普适（Tao–Vu 2009；Erdős–Yau 局部律 2010s）——半圆/TW"不挑分布"是定理。</li>
+<li><strong>BBP 相变（Baik–Ben Arous–Péché 1999/2005）：</strong> 尖峰 θ 的样本最大特征值在 θ=√γ 处相变；此阈值是现代高维检验的基石。</li>
+<li><strong>能级排斥：</strong> GOE/GUE 特征值间距分布 ~s（s→0）：相邻能级排斥——与可积系统的泊松统计（无排斥）对照（Berry–Tabor/Bohigas 猜想，量子混沌的谱判据）。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\rho(x)=\frac{1}{2\pi}\sqrt{4-x^2};\qquad m_{2k}=\int x^{2k}\rho=C_k=\frac{1}{k+1}\binom{2k}{k}"></div>
+<div class="formula display" data-tex="\text{MP: } a_\pm=(1\pm\sqrt\gamma)^2;\qquad \lambda_{\max}=2+N^{-2/3}\chi_\beta\ (\text{TW})"></div>
+<div class="formula display" data-tex="\text{BBP: } \theta_c=\sqrt\gamma;\qquad \lambda_{\max}^{\text{sample}}\to\begin{cases}(1+\sqrt\gamma)^2,&\theta\le\sqrt\gamma\\(1+\theta)(1+\gamma/\theta),&\theta>\sqrt\gamma\end{cases}"></div>
+</section>
+
+<section>
+<h3>七、延伸——随机矩阵的现代足迹</h3>
+<ul>
+<li><strong>数论：ζ 零点与 GUE。</strong> Montgomery（1973）发现黎曼 ζ 非平凡零点的对相关函数与 GUE 一致（→ <a href="/pages/zeta.html">ζ 函数</a> 课）；Odlyzko 数值到 10²⁰ 零点完美吻合；Katz–Sarnak 把它推广到函数域与一般 L 函数族——RMT 是"黎曼假设氛围"最浓的旁证（→ <a href="/pages/modular-forms.html">模形式</a> 的 L 函数语境）。</li>
+<li><strong>量子混沌。</strong> 不可积系统（→ <a href="/pages/laplace-eigenvalue.html">鼓的谱</a>、<a href="/pages/ergodic-theory.html">遍历理论</a>）的量子能级统计服从 GOE（能级排斥）；可积系统服从泊松——"谱统计分辨混沌"是量子混沌的经验核心（BGS 猜想，部分证明进展）。</li>
+<li><strong>高维统计与数据科学。</strong> MP 律说明"样本协方差谱 ≠ 总体谱"（bulk 展宽 + 边缘尖峰）；BBP 相变给出主成分/信号检测的极限；随机矩阵特征值进入深度学习（Hessian 谱、随机特征核）与优化（→ <a href="/pages/convex-optimization.html">凸优化</a>）。</li>
+<li><strong>自由概率。</strong> Voiculescu 的非交换概率论：半圆 = 自由 CLT，自由卷积刻画无限维算子谱（→ <a href="/pages/operator-algebras.html">算子代数</a>）；RMT 与算子代数的交叉是 21 世纪分析的前沿之一。</li>
+<li><strong>随机图。</strong> Erdős–Rényi 图邻接矩阵的谱收敛到半圆（当平均度→∞）——"随机图的谱 = 半圆"把图论与 RMT 焊在一起（→ <a href="/pages/graph-theory.html">图论</a>）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"谱想当然"</h3>
+<p><strong>陷阱 1："特征值彼此独立（像 iid 样本）"？</strong> 完全相反：特征值之间强相关且有<strong>排斥</strong>（间距分布 ~s 当 s→0）。半圆/MP 是"总体"定律，个别特征值的行为受整体约束（Weyl 交织、迹恒等）。把特征值当 iid 是入门第一错。</p>
+<p><strong>陷阱 2："任意随机矩阵谱都半圆"？</strong> 半圆属于 Wigner 型（iid 上三角 + 对称结构）。一般矩阵（如正常随机阵、乘积阵、重尾阵）有别的极限律（椭圆律、MP、稳定律）；半圆"普适"于它的类，不是一切矩阵。</p>
+<p><strong>陷阱 3："半圆 ≈ 高斯分布"？</strong> 不是：半圆紧支撑 [−2,2]、密度在端点平方根型消失；高斯处处非零且尾部轻指数。二者同为零均值 σ²=1 的"标准形"，但形状与尾部完全不同——混用会错读边缘行为。</p>
+<p><strong>陷阱 4："N 不大也半圆"？</strong> 有限 N 修正显著：小 N 谱有"毛刺"、边缘偏 TW（不是半圆尾部）、尖峰与 bulk 边界纠缠。半圆是 N→∞ 的极限；数值上把 N=30 的直方图当半圆讨论边缘是不合适的。</p>
+<p><strong>陷阱 5："普适 ⟹ 分布细节永远无关"？</strong> 普适性需要矩/尾条件：重尾分布（无三阶矩）会改变谱律（走向稳定律型）；稀疏/带状结构同样破坏普适类。普适是对"宽 iid 类"的定理，不是免责声明。</p>
+</section>
+
+<section>
+<h3>九、当前状态——RMT 的前沿</h3>
+<ol>
+<li><strong>局部普适与刚性。</strong> 特征值间距的逐点普适（Erdős–Yau 局部律、弹道刚性）在近十年基本完成——"谱的微观结构=高斯"成为定理。</li>
+<li><strong>高维统计极限。</strong> BBP 及其精化（尖峰向量相关性、似然比相变）、高维协方差检验、随机矩阵在假设检验中的精确极限——统计与 RMT 的合流是当代最活跃分支。</li>
+<li><strong>数论接口。</strong> Katz–Sarnak 的 L 函数族统计、随机矩阵对黎曼零点的更进一步预言（乃至"混合"模型）——RMT 仍是黎曼假设研究最活跃的联想来源。</li>
+<li><strong>非 Hermite、自由与算子。</strong> 非 Hermitian 阵的环形律（circular law）、自由概率的推广、以及无穷维算子谱（→ <a href="/pages/operator-algebras.html">算子代数</a>）——RMT 的数学前沿仍在扩张。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Wigner (1955/58)</strong>：半圆律——核能级统计的随机矩阵模型。</li>
+<li><strong>Marchenko–Pastur (1967)</strong>：样本协方差谱律。</li>
+<li><strong>Montgomery (1973)</strong>：ζ 零点对相关与 GUE 的关联。</li>
+<li><strong>Tracy–Widom (1994)</strong>：<em>"Level-spacing distributions and the Airy kernel"</em>——边缘极限分布（TW）。</li>
+<li><strong>Voiculescu (1991)</strong>：自由概率——半圆作为"自由 CLT"。</li>
+<li><strong>Baik–Deift–Johansson (1999) / Baik–Ben Arous–Péché (2005)</strong>：尖峰模型与相变。</li>
+<li><strong>Tao–Vu (2009/2010)</strong>：随机矩阵普适性（伴随 Erdős–Yau 的局部律系列）。</li>
+<li><strong>Katz–Sarnak (1999)</strong>：<em>Random Matrices, Frobenius Eigenvalues, and Monodromy</em>——L 函数族统计。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——矩与尺度</h3>
+<p><strong>题 1（Catalan 表）。</strong> 写出 C₁…C₄ 并核对半圆矩 m₂、m₄、m₆ = 1、2、5。<strong>提示：</strong>C_k=1/(k+1)·C(2k,k)：1,2,5,14。</p>
+<p><strong>题 2（方差标度）。</strong> 若 Wigner 阵用方差 1（而非 1/N），谱支撑为何发散？<strong>提示：</strong>谱 ~√N·[−2,2]：Σᵢλᵢ²=Tr M² ~ N²（方差 1）⟹ 均方 ~N；标度 1/N 把谱压回 O(1)。</p>
+<p><strong>题 3（波动尺度对比）。</strong> N=10⁶：N^{−1/2}、N^{−1}、N^{−2/3} 分别是多少？<strong>提示：</strong>10⁻³、10⁻⁶、10⁻⁴——中心波动、间距、边缘波动三个量级清晰分离。</p>
+<p><strong>题 4（MP 支撑）。</strong> γ=0.25 时 MP 支撑端点 (1±√γ)² 是多少？<strong>提示：</strong>(1±0.5)² = 0.25 与 2.25。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：1,2,5,14。∎</p>
+<p><strong>题 2</strong>：谱按 √N 发散，需 1/N 标度。∎</p>
+<p><strong>题 3</strong>：10⁻³、10⁻⁶、10⁻⁴。∎</p>
+<p><strong>题 4</strong>：0.25 与 2.25。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布采样）。</strong> 从 N=20 拖到 200：直方图从毛刺收敛到光滑半圆（叠加理论曲线）。换分布（高斯/±1/均匀）确认谱不变——普适性的现场。看 λ_max 读数逼近 2。</p>
+<p><strong>试试看 2（边缘波动）。</strong> 固定 N 多次采样，记录 λ_max 的波动范围：N=200 时 ~N^{−2/3}≈0.03 量级。对比中心区域"哪个特征值最稳"——体会三层尺度的分离。</p>
+<p><strong>试试看 3（与 ζ 零点联动）。</strong> 在 <a href="/pages/zeta.html">ζ 函数</a> 课想 Montgomery 对相关：把 GUE 特征值当"零点替身"，其间距统计与真实零点 10²⁰ 个样本吻合——RMT 是"黎曼假设氛围"最强的实证来源。</p>
+<p><strong>试试看 4（量子混沌）。</strong> 在 <a href="/pages/laplace-eigenvalue.html">鼓的谱</a> 课对照：可积域（矩形）能级"聚团"（泊松）、混沌域（不规则三角形）能级"排斥"（GOE）——本课的 GOE 间距分布就是那把判据尺。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>G. Anderson, A. Guionnet, O. Zeitouni, An Introduction to Random Matrices</strong>（标准教材）</p>
+<p>&rarr; <strong>T. Tao, Topics in Random Matrix Theory</strong>（研究生讲义，网上免费）</p>
+<p>&rarr; <strong>M. Mehta, Random Matrices</strong>（经典巨著）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.23/24（算子代数/泛函分析相关条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/eigenvectors.html">特征值与特征向量</a>、<a href="/pages/clt.html">大数定律与 CLT</a>、<a href="/pages/high-dim-geometry.html">高维几何与测度集中</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/clt.html">🎰 大数定律与 CLT</a>：半圆 = 随机矩阵版 CLT 的类比。</p>
+<p>&rarr; <a href="/pages/laplace-eigenvalue.html">🥁 拉普拉斯与鼓的形状</a>：量子混沌谱统计 = GOE vs 泊松。</p>
+<p>&rarr; <a href="/pages/zeta.html">♾️ 黎曼 ζ 函数</a>：Montgomery/Odlyzko：零点相关与 GUE。</p>
+<p>&rarr; <a href="/pages/operator-algebras.html">🧮 算子代数</a>：自由概率（Voiculescu）：半圆=自由 CLT。</p>
+<p>&rarr; <a href="/pages/high-dim-geometry.html">📦 高维几何与测度集中</a>：MP 律与 BBP 相变 = 高维统计的谱极限。</p>
+<p>&rarr; <a href="/pages/graph-theory.html">🕸️ 图论与网络</a>：随机图邻接矩阵谱 → 半圆。</p>
+</section>

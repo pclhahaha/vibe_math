@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="方波 = 正弦波的叠加——拖拽谐波数" />
+  <meta property="og:title" content="傅里叶级数 — Vibe Math" />
+  <meta property="og:description" content="方波 = 正弦波的叠加——拖拽谐波数" />
+  <title>傅里叶级数 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎵 傅里叶级数 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">方波 = 正弦波的叠加——拖拽谐波数</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='fourier-series',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/p-vs-np.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⏳ P vs NP 与 NP 完备性</a>
+  <a href="/pages/fourier-transform.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎚️ 傅里叶变换与卷积 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——先问一个带数字的问题</h3>
+<p>先抛出一个你可以亲手验算的具体问题，本课后面的所有章节都围着它转。<strong>取最简单的非线性函数 f(x) = x，定义在 (−π, π) 上，再周期延拓（形状像锯齿）。问：它等于哪些正弦波的叠加？</strong>答案是</p>
+<div class="formula display" data-tex="x\;\sim\;2\left(\sin x-\frac{\sin 2x}{2}+\frac{\sin 3x}{3}-\frac{\sin 4x}{4}+\cdots\right),\qquad \text{系数 }2\tfrac{(-1)^{n+1}}{n}."></div>
+<p>为什么敢这么写？验算给你看：把 x = π/2 代入，sin(nπ/2) 只在 n 奇数时非零、交替取 ±1，得到 π/2 = 2(1 − ⅓ + ⅕ − ⅐ + …)。括号里正是 17 世纪就为人知的 <strong>Leibniz 级数</strong> 1 − ⅓ + ⅕ − … = π/4——两边吻合！这不是巧合：它预告了"任何周期函数都能用正弦余弦拼出来"。</p>
+<p>第二个具体数字预告：一个在 +1 和 −1 之间硬邦邦跳的<strong>方波</strong>，能由 sin x + ⅓sin 3x + ⅕sin 5x + … 拼出（系数 4/π）。本课第二节会教你算 f(x)=x 的系数，第三节算方波的系数——每一步都算到底，你跟着手算一遍就全会了。</p>
+<p>这门课为什么存在？因为把复杂信号拆成简单正弦波后，音乐、图像压缩（JPEG）、音频（MP3）、手机信号、量子物理全都能用同一套方法处理——它是现代技术的地基。</p>
+<div class="key-insight">核心思想：任何周期波形都是正弦波的叠加。具体函数 f(x)=x 告诉我们系数怎么算（2(−1)^{n+1}/n），方波告诉我们谐波越多拼得越像。只想懂核心思想，看到〇到第四节就够。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/riemann-integral.html">黎曼积分</a>、<a href="/pages/derivative.html">导数与切线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、正弦波是什么？——频率/振幅/相位的直觉（声波、音叉）</h3>
+<p>先来认识本课唯一的主角：正弦波（sine wave）。它是一个像"连绵的波浪"那样的曲线，可以用三个数字完全描述——这三个数字就是本课最常用的三个术语，我们先用大白话把它们讲清楚。</p>
+<p><strong>频率（frequency）：波浪"有多快"，或者声音"有多高"。</strong>频率决定这个波每秒钟上下起伏多少次。频率高，就代表起伏得快，听起来是<strong>高音</strong>；频率低，起伏得慢，听起来是<strong>低音</strong>。比如音叉上写着 440，意思是它每秒振动 440 次，发出的就是我们常说的中央 A 音（钢琴上"标准音"）。中央 C 上面的 A 是 440 Hz，它的高八度是 880 Hz——频率加倍，音高刚好高一个八度。</p>
+<p><strong>振幅（amplitude）：波浪"有多高"，也就是声音"有多响"。</strong>振幅决定了波峰到波谷的"个头"。振幅大，声音响亮；振幅小，声音轻柔。你说话小声还是大声，改变的就是振幅。</p>
+<p><strong>相位（phase）：波浪"从哪里开始"。</strong>两个频率、振幅都一样的波，可以一个正好在波峰起步，另一个正好在波谷起步——这就是它们相位不同。相位不改变波"听起来"的频率和响度，但决定了它们在时间轴上的错位。就像两个步调一致的人，一个晚半拍出发。</p>
+<p>为什么用音叉举例子？因为音叉发出的就是自然界里最"单纯"的声音——一个单一频率、单一振幅的正弦波，没有杂质。它是声音世界的"纯色"，其他复杂的声音都是靠它拼出来的。</p>
+<div class="key-insight">正弦波 = 最简单的"纯音"。频率决定音高，振幅决定音量，相位决定起步位置。记住这三个词，本课就不难了。</div>
+</section>
+
+<section>
+<h3>〇·二、"拼波"的具体数字——用 sin x + ⅓sin 3x + ⅕sin 5x 拼出方波</h3>
+<p>现在请你做一个小实验：同时按下一个钢琴键和一个高一截的钢琴键，你会听到一个比单独按任何一个都"丰满"的声音。为什么？因为两个纯音（两个正弦波）在空中<strong>叠加</strong>（superposition）到了一起——同一时刻的"高度"相加，波浪的轮廓就变复杂了。</p>
+<p>这个想法再往前推一步，就是本课最重要的思想：<strong>我们能不能反过来，用一堆简单的正弦波，拼出一个复杂的波形？</strong></p>
+<p>打个比方。一道菜的味道千变万化，但基本调料就那么几种；一种音色（timbre）听起来很有"质感"，其实也只是把几个纯音按不同比例混在一起。小提琴和长笛吹同一个音高，你为什么能分辨出来？就是因为它们混进去的"泛音"（比基频高的那些成分）比例不同。声音的"个性"（音色），本质上就是"每个频率加了多少"。</p>
+<p>数学上，把若干正弦波相加，就是把这些波的"高度"在同一时刻逐点加起来：</p>
+<div class="formula display" data-tex="f(x)=\underbrace{a_1\sin x}_{\text{低频}}+\underbrace{a_3\sin 3x}_{\text{更高频}}+\underbrace{a_5\sin 5x}_{\text{再高一点}}+\cdots"></div>
+<p>第一项是大而缓的"主力"，后面跟着越来越密、越来越细的"修饰"。项数越多、安排越巧，拼出来的形状越复杂。</p>
+<p>来看一个可以亲手验算的具体拼法——用奇次谐波拼方波。取系数 a₁=1、a₃=⅓、a₅=⅕、a₇=⅐……（即第 k 个系数为 1/k），在 x=π/2 处代入：</p>
+<div class="formula display" data-tex="\frac{4}{\pi}\left(\sin\frac{\pi}{2}+\frac13\sin\frac{3\pi}{2}+\frac15\sin\frac{5\pi}{2}+\cdots\right)=\frac{4}{\pi}\left(1-\frac13+\frac15-\frac17+\cdots\right)=\frac{4}{\pi}\cdot\frac{\pi}{4}=1."></div>
+<p>你看，括号里恰是著名的 Leibniz 级数 1 − ⅓ + ⅕ − ⅐ + … = π/4。而方波在 x=π/2 处的取值正是 1——<strong>这个和式拼出来的，就是一个 +1/−1 的方波</strong>。这是 17 世纪就有人算过（Gregory–Leibniz），但直到傅里叶才把它解释为"波形分解"的冰山一角。</p>
+<div class="key-insight">"拼波" = 把几个不同频率的正弦波逐点相加。系数取 1, ⅓, ⅕, … 时，sin x + ⅓sin 3x + ⅕sin 5x + … 乘以 4/π 就是方波。加一点点高频，波形就"皱"起来一点。</div>
+</section>
+
+<section>
+<h3>〇·三、傅里叶说的事——任何周期波形都能拼出来，谐波越多拼得越像</h3>
+<p>有了"拼波"的想法，傅里叶（Fourier，法国数学家）在 1807 年提出了一个大胆到让同行都怀疑的猜想，结果证明是对的：</p>
+<p><strong>任何一个周期的波形（就是每隔一段时间重复一遍的形状，不管多奇怪、多棱角），都可以用一堆不同频率的正弦波拼出来。</strong></p>
+<p>这里的"不同频率"不是随便挑的：它们必须是基频的整数倍。举个例子，如果基础频率是 1 次/秒，那能用的就是 1、2、3、4、5… 倍频率的正弦波。这些"整倍数频率"的成分，就叫<strong>谐波</strong>（harmonics）。</p>
+<p>那拼得像不像呢？<strong>谐波越多，拼得越像。</strong>只取第一项（1 倍频），拼出来的是一个圆圆的光滑波，和目标的方形波差得很远；再加上第三、第五、第九、第十七……谐波，每加一个，拼出来的形状就在目标的尖角处"咬"得更紧一点。加得足够多（几百上千项），几乎就和原波形重合了——这就是"越多越像"。方波这种带尖角、带棱角的波形都能拼出来，那些圆润的波形就更不在话下了。</p>
+<p>为什么这个发现如此重要？因为它把"一个复杂波形"这个看起来无从下手的东西，转化成了"一堆系数"（每个谐波各加多少）——存这些系数，就等于存下了整个波形。图像、音乐、信号的压缩与传输，全都建立在这个转换上。</p>
+<div class="key-insight">傅里叶说的事：任何周期波形都能用基频整数倍的正弦波（谐波）拼出来；谐波加得越多，拼得越像。把波形换成"一串系数"，这就是傅里叶级数。</div>
+<p><strong>如果你想理解核心思想，看到这里就够了。</strong>后面的章节会把这些直觉变成严格的数学：正交基、傅里叶系数怎么算、为什么衰减速率对应光滑程度、以及从级数推广到傅里叶变换。</p>
+</section>
+
+<section>
+<h3>一、为什么三角函数是基底？——内积、正交性，把"拼波"变回几何</h3>
+<p>上一节"拼波"用直觉说明了"系数"，但我们还欠一个关键问题：<strong>为什么偏偏是 sin x、cos x、sin 2x、cos 2x、…… 这一族？凭什么它们能拼出一切？</strong>答案在于：这族函数互相"垂直"，构成函数空间的"坐标轴"。</p>
+<p><strong>给函数定义"内积"（类比向量的点积）。</strong>两个函数 f、g 在区间 [−π, π] 上的内积是</p>
+<div class="formula display" data-tex="\langle f,g\rangle=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)g(x)\,dx."></div>
+<p>直觉：这是"两个函数有多像"的度量。像向量 (1,0,0)·(0,1,0)=0 那样，内积为 0 的两个函数叫<strong>正交</strong>——它们"互不相关、各管各的维度"。</p>
+<p><strong>手算验证：三角函数两两正交。</strong>先算两个不同的余弦的积（用积化和差 cos A cos B = ½[cos(A+B)+cos(A−B)]）：</p>
+<div class="formula display" data-tex="\int_{-\pi}^{\pi}\cos(mx)\cos(nx)\,dx=\frac12\int_{-\pi}^{\pi}\big[\cos((m+n)x)+\cos((m-n)x)\big]dx=0\quad(m\neq n),"></div>
+<p>因为 cos(kx) 在整周期 [−π,π] 上积分为 0。同样地，sin(mx)sin(nx)（m≠n）与一切 cos·sin 交叉项也为 0。唯一"幸存"的是自己乘自己：</p>
+<div class="formula display" data-tex="\langle\cos nx,\cos nx\rangle=\frac{1}{\pi}\int_{-\pi}^{\pi}\cos^2(nx)\,dx=1,\qquad \langle\sin nx,\sin nx\rangle=1."></div>
+<p>（用 cos² = ½(1+cos 2nx) 立刻得到 ∫cos² = π。）也就是说，{1, cos x, sin x, cos 2x, sin 2x, …} 是一族<strong>互相正交、且每支"长度"归一</strong>的函数系——除了常数函数 1：⟨1,1⟩ = 2。</p>
+<p><strong>为什么正交 = 基底？</strong>在 ℝ³ 里，三个标准基向量 (1,0,0)、(0,1,0)、(0,0,1) 两两垂直，所以任意向量 v 都能唯一写成它们的线性组合，且坐标就是 v 在每根轴上的投影。函数空间完全一样：因为正弦余弦两两正交（"两两垂直"），所以任何"行为良好"的函数 f 都能唯一写成它们的叠加，且<strong>系数 = 投影 = 内积</strong>：</p>
+<div class="formula display" data-tex="a_n=\langle f,\cos nx\rangle=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos(nx)\,dx,\qquad b_n=\langle f,\sin nx\rangle=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin(nx)\,dx."></div>
+<p><strong>为什么正交性直接决定了系数？这值得停下来证明给你看。</strong>假设 f 已经能写成级数 f = a₀/2 + Σ(aₖcos kx + bₖsin kx)。对两边取与 cos nx 的内积——内积是线性运算，可以逐项拆开：</p>
+<div class="formula display" data-tex="\langle f,\cos nx\rangle=\frac{a_0}{2}\langle 1,\cos nx\rangle+\sum_k\Big[a_k\underbrace{\langle\cos kx,\cos nx\rangle}_{\delta_{kn}}+b_k\underbrace{\langle\sin kx,\cos nx\rangle}_{0}\Big]=a_n."></div>
+<p>正交性让"所有的交叉项都归零"，唯独 k=n 那一项 ⟨cos nx, cos nx⟩ = 1 幸存。所以 <strong>系数 = 内积：这就是"为什么正交性决定系数"的完整答案</strong>——正交基把"解方程求系数"变成了"做内积取投影"，省掉了所有矩阵求逆。因为 ⟨1,1⟩=2 而非 1，常数项的"坐标"是 a₀ = ⟨f,1⟩，所以级数里常数项写成 a₀/2 才符合投影公式。</p>
+<p>1807 年，傅里叶向法国科学院提交了一篇论文，声称<strong>任何</strong>周期函数都可以展开为正弦和余弦的级数。Lagrange 当场反对——"你怎么能用光滑的正弦叠加出有尖角的方波？"但傅里叶是对的（§十三 会解释：收敛到平均值、有 Gibbs 过冲，但确实收敛）。</p>
+<div class="key-insight">傅里叶级数 = 在函数空间的"正交基"上展开。正弦和余弦是 L²[−π,π] 上的正交基——就像 (1,0,0)、(0,1,0)、(0,0,1) 是 ℝ³ 的标准正交基。傅里叶系数 = 函数在"基向量"上的投影；正交性把"解方程组"变成"做内积"。</div>
+</section>
+
+<section>
+<h3>二、完整例题 1：算 f(x) = x 的傅里叶系数——把公式真正用起来</h3>
+<p>公式有了，现在亲手算一个完整例子，把积分一步步做到底。<strong>设 f(x) = x，定义在 (−π, π) 上，再周期延拓（锯齿形状）。求它的傅里叶级数。</strong></p>
+<p><strong>第一步（判断奇偶，消掉一半系数）。</strong>f(x) = x 是奇函数，cos nx 是偶函数，乘积 x·cos(nx) 是奇函数，在对称区间 [−π,π] 上积分为 0，故</p>
+<div class="formula display" data-tex="a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}x\,dx=0,\qquad a_n=\frac{1}{\pi}\int_{-\pi}^{\pi}x\cos(nx)\,dx=0\quad(\forall n\ge 1)."></div>
+<p><strong>第二步（算余弦系数 bₙ——分部积分）。</strong>用奇偶性把积分折半，再分部积分：</p>
+<div class="formula display" data-tex="b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}x\sin(nx)\,dx=\frac{2}{\pi}\int_0^{\pi}x\sin(nx)\,dx=\frac{2}{\pi}\left[\frac{-x\cos(nx)}{n}+\frac{\sin(nx)}{n^2}\right]_{0}^{\pi}."></div>
+<p><strong>第三步（代入端点，化简）。</strong>在 x=π 处 sin(nπ)=0、cos(nπ)=(−1)ⁿ；在 x=0 处两项都是 0：</p>
+<div class="formula display" data-tex="b_n=\frac{2}{\pi}\cdot\frac{-\pi\cos(n\pi)}{n}=\frac{-2(-1)^n}{n}=\frac{2(-1)^{n+1}}{n}."></div>
+<p><strong>第四步（写级数，并验证）。</strong></p>
+<div class="formula display" data-tex="f(x)=x\ \sim\ 2\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\sin(nx)=2\left(\sin x-\frac{\sin 2x}{2}+\frac{\sin 3x}{3}-\cdots\right)."></div>
+<p><strong>第五步（用已知值校验——这就是〇节的预告）。</strong>在 x=π/2（连续点）代入：π/2 = 2(1 − ⅓ + ⅕ − ⅐ + …)，这正是 Leibniz 级数 π/4 = 1 − ⅓ + ⅕ − …——级数与函数值吻合，我们算对了。注意在端点 x=π 处函数从 +π 跳回 −π，级数收敛到 (π+(−π))/2 = 0（见 §十五 Dirichlet 定理），所以用"~"表示级数在某些点不等于函数值。</p>
+<div class="key-insight">算傅里叶系数的套路：① 先看奇偶省一半功夫；② 对 1、cos nx、sin nx 分别做内积；③ 三角积分用积化和差，x·sin(nx) 这类用分部积分；④ 用特殊点的函数值（如 Leibniz 级数）反向校验。</div>
+</section>
+
+<section>
+<h3>三、完整例题 2：方波的傅里叶展开——Gibbs 现象的经典展示</h3>
+<p>方波 f(x) = 1 (0&lt;x&lt;π), −1 (−π&lt;x&lt;0)，周期 2π。它是本课最重要的例子，我们就用 §一 的投影公式完整算一遍它的系数（这是 §〇·二 那个具体数字的来源）：</p>
+<p><strong>第一步（奇偶）。</strong>f 是奇函数 ⇒ aₙ = 0（含 a₀）。</p>
+<p><strong>第二步（积分）。</strong></p>
+<div class="formula display" data-tex="b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin(nx)\,dx=\frac{2}{\pi}\int_0^{\pi}\sin(nx)\,dx=\frac{2}{\pi}\cdot\frac{1-\cos(n\pi)}{n}=\frac{2}{n\pi}\big(1-(-1)^n\big)."></div>
+<p><strong>第三步（分类）。</strong>n 奇时 1−(−1)ⁿ=2，n 偶时 =0：</p>
+<div class="formula display" data-tex="b_n=\frac{4}{n\pi}\ \ (n\ \text{奇}),\qquad b_n=0\ \ (n\ \text{偶})."></div>
+<p><strong>第四步（写级数）。</strong>于是</p>
+<div class="formula display" data-tex="f(x)=\frac{4}{\pi}\left(\sin x+\frac13\sin 3x+\frac15\sin 5x+\cdots\right)."></div>
+<p>这正是 〇·二 用到的"具体数字"——奇次谐波的系数按 1/n 衰减。</p>
+<p><strong>Gibbs 现象</strong>：在跳变点 x=0 附近，不管取多少项，<strong>过冲始终存在</strong>——约为跳变幅度的 9%。这不是级数不收敛——是<strong>非一致收敛</strong>的经典表现。傅里叶级数在间断点以"平均"的方式收敛，但逐点极限在间断处有 Gibbs 过冲。同样的"逐点收敛但非一致收敛"现象，你在右侧的动手实验 fₙ(x) = xⁿ（§十三 配的 mini-viz）里也能看到：那根"刺"永远进不了 ε 管道。</p>
+</section>
+
+<section>
+<h3>四、完整例题 3：三角波 |x|——偶函数的一次完整计算</h3>
+<p>再看一个完整例题，这次练"偶函数 + 为什么更光滑的波形衰减更快"。<strong>设 g(x) = |x|，定义在 [−π, π]，周期延拓（形状像三角波/屋顶）。求它的傅里叶级数。</strong></p>
+<p><strong>第一步（奇偶）。</strong>g(x) = |x| 是偶函数，sin nx 是奇函数，|x|·sin(nx) 是奇函数 ⇒ 一切 bₙ = 0。</p>
+<p><strong>第二步（算 a₀）。</strong>偶函数折半积分：</p>
+<div class="formula display" data-tex="a_0=\frac{1}{\pi}\int_{-\pi}^{\pi}|x|\,dx=\frac{2}{\pi}\int_0^{\pi}x\,dx=\frac{2}{\pi}\cdot\frac{\pi^2}{2}=\pi."></div>
+<p><strong>第三步（算 aₙ——分部积分）。</strong></p>
+<div class="formula display" data-tex="a_n=\frac{2}{\pi}\int_0^{\pi}x\cos(nx)\,dx=\frac{2}{\pi}\left[\frac{x\sin(nx)}{n}+\frac{\cos(nx)}{n^2}\right]_{0}^{\pi}."></div>
+<p>代入端点：x=π 处 x sin(nπ)/n = 0、cos(nπ)/n² = (−1)ⁿ/n²；x=0 处第一项 0、第二项 cos(0)/n² = 1/n²。相减得 ((−1)ⁿ − 1)/n²：</p>
+<div class="formula display" data-tex="a_n=\frac{2}{\pi}\cdot\frac{(-1)^n-1}{n^2}\quad\Longrightarrow\quad a_n=-\frac{4}{\pi n^2}\ (n\ \text{奇}),\qquad a_n=0\ (n\ \text{偶})."></div>
+<p><strong>第四步（写级数）。</strong>常数项 a₀/2 = π/2：</p>
+<div class="formula display" data-tex="|x|=\frac{\pi}{2}-\frac{4}{\pi}\left(\cos x+\frac{\cos 3x}{3^2}+\frac{\cos 5x}{5^2}+\cdots\right)."></div>
+<p><strong>第五步（校验——在尖点 x=0 代入）。</strong>|0| = 0，所以</p>
+<div class="formula display" data-tex="0=\frac{\pi}{2}-\frac{4}{\pi}\sum_{n\ \text{odd}}\frac{1}{n^2}\quad\Longrightarrow\quad \sum_{n\ \text{odd}}\frac{1}{n^2}=1+\frac19+\frac1{25}+\cdots=\frac{\pi^2}{8}."></div>
+<p>一个干净的数：奇频倒平方和 = π²/8（与 <a href="/pages/zeta.html">ζ 函数</a> 的 π²/6 对应，甚至可用 Parseval 等式再独立证一遍，见 §十四 与工作题 3）。</p>
+<p><strong>为什么三角波没有 Gibbs 现象？</strong>因为它<strong>连续</strong>——没有真正的跳变（只是导数在 x=0 处从 −1 跳到 +1）。过冲只发生在真正的间断点。而且你注意到系数是 1/n² 而不是 1/n——"更光滑 ⇒ 衰减更快"，这正是下一节的主题。</p>
+<div class="key-insight">三角波例题补全了套路：偶函数 ⇒ 只有余弦；a₀ = π 对应平均值 π/2；系数 1/n² 比方波的 1/n 快一档。在 x=0 代入还白捡一个公式 Σ_{odd}1/n² = π²/8。</div>
+</section>
+
+<section>
+<h3>五、为什么谐波系数按 1/n 衰减？——光滑性和衰减</h3>
+<p>函数越光滑→傅里叶系数衰减越快。方波（有跳变）:a_n~1/n。三角波（连续但导数有跳变）:a_n~1/n²。C^∞函数:a_n衰减快于任何多项式。解析函数:a_n指数衰减。傅里叶系数的衰减速率直接反映了原函数的<strong>光滑程度</strong>。</p>
+<p>直觉：高阶谐波（频率高、振动密）只有靠近"尖角"才能产生明显影响。函数越光滑，"尖角"越少越钝，所以高频分量越不需要、系数越小。数学上，每做一次分部积分就会"吃掉"一个 n（因为 sin/cos 的积分或导数给出因子 1/n 或 n），系数衰减幂次 = 分部积分能安全进行的次数 = 光滑的阶数。</p>
+<p>这也是为什么 JPEG 和 MP3 压缩有效——丢弃高频分量（小的系数）对感知质量影响最小。人眼和耳朵对高频不敏感→傅里叶变换→保留低频→丢弃高频→压缩。</p>
+</section>
+
+<section>
+<h3>六、傅里叶变换——从级数到积分</h3>
+<p>非周期函数→傅里叶积分：f̂(ξ) = ∫ f(x) e<sup>−2πi x·ξ</sup> dx。这是傅里叶级数的连续极限——将"离散求和"替换为"连续积分"。周期函数把频率"离散"成整数倍谐波；非周期函数把"周期推到无穷"，频率变成连续变量 ξ，求和就变成积分。Plancherel 定理：‖f̂‖₂ = ‖f‖₂——傅里叶变换是 L² 上的酉算子，能量在时域和频域守恒。</p>
+<p><strong>不确定性原理的傅里叶版本</strong>：函数越"集中"在时域→傅里叶变换越"分散"在频域，反之亦然。这和量子力学的 Δx·Δp≥ħ/2 是同一个数学现象——位置和动量互为傅里叶变换。</p>
+</section>
+
+<section>
+<h3>七、关键公式</h3>
+<div class="formula display" data-tex="f(x)=\frac{a_0}{2}+\sum_{n=1}^{\infty}\left(a_n\cos nx+b_n\sin nx\right),\qquad a_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\cos(nx)dx,\ b_n=\frac{1}{\pi}\int_{-\pi}^{\pi}f(x)\sin(nx)dx"></div>
+<div class="formula display" data-tex="\text{锯齿 }f(x)=x:\ 2\sum_{n\ge1}\frac{(-1)^{n+1}}{n}\sin nx;\qquad \text{方波}=\frac{4}{\pi}\sum_{n\text{ odd}}\frac{\sin nx}{n}"></div>
+<div class="formula display" data-tex="\text{三角波 }|x|:\ \frac{\pi}{2}-\frac{4}{\pi}\sum_{n\text{ odd}}\frac{\cos nx}{n^2};\qquad \hat{f}(\xi)=\int_{-\infty}^{\infty}f(x)e^{-2\pi i x\xi}\,dx"></div>
+</section>
+
+<section>
+<h3>八、试试看（带提示）</h3>
+<p><strong>1. 20 个谐波时方波的 Gibbs 过冲还在——增加到 100 个会消失吗？</strong><strong>提示：</strong>不会。过冲约 9% 且与项数 N 无关（见「反例」节的精确公式 lim s_N(x_N) − 1 ≈ 0.179）。增加谐波只会让过冲的位置更贴近跳变点，幅度不变。</p>
+<p><strong>2. 三角形波的傅里叶系数按 1/n² 衰减——为什么比方波"更光滑"？</strong><strong>提示：</strong>方波本身有跳变（第 0 阶不连续）⇒ 系数 ~1/n；三角波连续、但导数在 x=0 处从 −1 跳到 +1（第 1 阶不连续）⇒ 系数 ~1/n²。规律：若第 k 阶导数首次出现跳变，系数按 1/n^{k+1} 衰减。连续 = 衰减至少快 1/n²。</p>
+<p><strong>3. 用傅里叶变换解释"时间-频率不确定性"：为什么短脉冲有宽频谱？</strong><strong>提示：</strong>宽度为 Δt 的矩形脉冲的傅里叶变换是 sinc，主瓣宽度 ~1/Δt——脉冲越短，主瓣越宽。频谱越宽，说明需要越多的频率成分叠加才能"拼"出那个尖锐的脉冲，这就是 Δt·Δξ ≥ 常数。</p>
+<p><strong>4. 用 §二 的结果求 Leibniz 级数。</strong>在 f(x)=x 的级数中令 x=π/2，得到 1 − ⅓ + ⅕ − ⅐ + … = π/4。<strong>提示：</strong>sin(nπ/2) 只在 n 奇时非零，交替取 ±1。</p>
+<p><strong>5. 为什么级数里常数项写 a₀/2 而不是 a₀？</strong><strong>提示：</strong>因为 ⟨1,1⟩ = (1/π)∫1² dx = 2，常数 1 这支"基向量"的长度平方是 2 而不是 1；投影公式给出 a₀ = ⟨f,1⟩，要还原 f 的常数分量需要除以 2。</p>
+<p><strong>6. 三角波 |x| 在 x=0 的级数值给出什么数？</strong><strong>提示：</strong>0 = π/2 − (4/π)Σ_{odd}1/n² ⇒ Σ_{odd}1/n² = π²/8（见 §四 第五步）。这是 ζ(2) = π²/6 的"奇频版本"。</p>
+</section>
+
+<section><h3>历史：从热传导到信号处理</h3><p>Fourier（1807）在研究热传导时提出三角级数展开。Lagrange 当场反对——这个争议催生了分析学的严格化。Nyquist（1928）和 Shannon（1948）将傅里叶分析变成了信息论的基础——采样定理、带宽、压缩全部依赖傅里叶变换。</p></section>
+<section><h3>现代应用</h3><p>JPEG 压缩 = 图像的离散余弦变换→保留低频→丢弃高频。MP3 = 音频的傅里叶变换→心理声学模型→丢弃听不到的频率。MRI = 梯度磁场 + 傅里叶变换重建体内图像。地震勘探 = 反射波的傅里叶分析确定地下结构。</p></section>
+<section><h3>前沿：压缩感知与稀疏傅里叶变换</h3><p>Candes–Tao（2006）的压缩感知证明：如果信号是 k-稀疏的，可以用远少于 Nyquist 率的采样完美重建。稀疏傅里叶变换（SFT，Hassanieh 等 2012）对频谱稀疏的信号做 O(k log n) 而非 O(n log n)。仍开放：噪声鲁棒的稀疏变换和量子压缩感知。</p></section>
+<section>
+<h3>九、工作题（带解答）</h3>
+<p><strong>题 1（方波系数）。</strong>设 f(x)=1 (0&lt;x&lt;π)，−1 (−π&lt;x&lt;0)，周期 2π。求 aₙ、bₙ。</p>
+<details><summary>显示解答</summary><p>f 是奇函数 ⇒ aₙ = 0（含 a₀）。bₙ = (1/π)∫_{−π}^π f(x)sin(nx)dx = (2/π)∫₀^π sin(nx)dx = (2/nπ)(1−(−1)ⁿ)。故 bₙ = 4/(nπ) 当 n 奇，bₙ = 0 当 n 偶。于是 f(x) = (4/π)Σ_{n odd}(sin nx)/n。</p></details>
+<p><strong>题 2（三角波系数）。</strong>设 g(x)=|x|，−π≤x≤π，周期延拓。求 a₀、aₙ、bₙ。</p>
+<details><summary>显示解答</summary><p>g 是偶函数 ⇒ bₙ = 0。a₀ = (1/π)∫_{−π}^π|x|dx = (2/π)∫₀^π x dx = π。aₙ = (2/π)∫₀^π x cos(nx)dx = (2/π)[x sin(nx)/n + cos(nx)/n²]₀^π = (2/πn²)(cos(nπ)−1) = 2((−1)ⁿ−1)/(πn²)。故 aₙ = −4/(πn²) 当 n 奇，0 当 n 偶。即 |x| = π/2 − (4/π)Σ_{n odd} cos(nx)/n²。这与正文第四节完全一致。</p></details>
+<p><strong>题 3（Parseval 求和）。</strong>用 Parseval 等式求 (a) Σ_{n=1}^∞ 1/n²；(b) Σ_{n=1}^∞ 1/n⁴。</p>
+<details><summary>显示解答</summary><p>(a) 对方波 f（题 1）：‖f‖²₂ = (1/2π)∫_{−π}^π|f|²dx = (1/2π)·2π = 1。Parseval：1 = a₀²/4 + ½Σ(aₙ²+bₙ²) = ½·Σ_{n odd}(4/nπ)² = ½·(16/π²)·Σ_{n odd}1/n²。故 Σ_{n odd}1/n² = π²/8。又 Σ_{n even}1/n² = ¼Σ1/n²，两式相加得 Σ1/n² = π²/6。</p><p>(b) 对三角波 g=|x|（题 2）：‖g‖²₂ = (1/2π)∫x²dx = π²/3。Parseval：π²/3 = a₀²/4 + ½Σaₙ² = π²/4 + (8/π²)·Σ_{n odd}1/n⁴。故 Σ_{n odd}1/n⁴ = (π²/3−π²/4)·(π²/8) = π⁴/96。又 Σ_{n even}1/n⁴ = (1/16)Σ1/n⁴，得 Σ1/n⁴ = π⁴/90。</p></details>
+<p><strong>题 4（收敛定理）。</strong>对题 2 的三角波，用 Dirichlet 定理说明傅里叶级数每点的取值，并解释为何无 Gibbs 现象。</p>
+<details><summary>显示解答</summary><p>三角波 g(x)=|x| 在 [−π,π] 上连续，周期延拓后仍连续（|π|=|−π|=π 处衔接），但在 x=0 与 x=±π 处导数有跳变（g′ 于 0 处从 −1 跳到 +1）。Dirichlet 定理保证级数处处收敛到 g(x)（连续点收敛到 g(x)）；导数间断使系数按 1/n² 衰减（比跳变函数的 1/n 快），且函数本身无跳变，故无 Gibbs 过冲。代入 x=0 得 0 = π/2 − (4/π)Σ_{odd}1/n²，即 Σ_{odd}1/n² = π²/8，与题 3 互相印证。</p></details>
+<p><strong>题 5（锯齿波系数——左右端点不等的周期函数）。</strong>设 h(x)=x，0&lt;x&lt;2π，周期 2π（在 x=0 从 0 跳到 2π）。求 a₀、aₙ、bₙ。</p>
+<details><summary>显示解答</summary><p>这不是奇函数也不是偶函数，所有系数都要算。a₀ = (1/π)∫₀^{2π}x dx = (1/π)·(4π²/2) = 2π。aₙ = (1/π)∫₀^{2π}x cos(nx)dx = (1/π)[x sin(nx)/n + cos(nx)/n²]₀^{2π} = (1/π)(1/n² − 1/n²) = 0。bₙ = (1/π)∫₀^{2π}x sin(nx)dx = (1/π)[−x cos(nx)/n + sin(nx)/n²]₀^{2π} = (1/π)(−2π cos(2πn)/n) = −2/n。故 h(x) = π − 2Σ(sin nx)/n。注意常数项是 π（端点跳变平均值 (0+2π)/2 = π 的体现）。</p></details>
+</section>
+<section>
+<h3>十、反例：Gibbs 现象与处处发散傅里叶级数</h3>
+<div class="mini-viz" data-demo="uniform-vs-pointwise"></div>
+<p><strong>Gibbs 现象的数学解释。</strong>对方波 f（从 −1 跳到 +1，跳变 Δ=2），部分和在紧邻跳变点 x=0 处过冲。设 x_N = π/(2N) 为部分和 s_N 在跳变点右侧最近的极值点，则</p>
+<div class="formula display" data-tex="\lim_{N\to\infty}s_N(x_N)-1=\frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt-1\approx 0.179."></div>
+<p>过冲量 ≈ 0.179 ≈ 9% 的跳变幅度，<strong>与 N 无关</strong>——取再多谐波也不消失。原因：s_N 在跳变点附近的行为由 Dirichlet 核的振荡尾巴决定，s_N 在 [0,x_N] 上逼近固定的卷积极限函数；Riemann-Lebesgue 保证逐点收敛，但收敛<strong>在跳变点邻域非一致</strong>（sup 范数不收敛，因为过冲恒定）。几何本质：间断处级数收敛到左右极限的平均值，但"平均"在两侧各留约 9% 的永久凸包。对照：三角波（连续、导数间断）无 Gibbs 现象——过冲只出现在真正的跳变处。</p>
+<p><strong>处处发散的傅里叶级数（Kolmogorov）。</strong>du Bois-Reymond (1876) 构造了连续函数在某一点傅里叶级数发散。Kolmogorov (1923, 1926) 更强：存在 L¹[−π,π] 函数，其傅里叶级数<strong>几乎处处（甚至处处）发散</strong>。其构造依赖极强的振荡与频率叠加：用调和分析中"发散率"的精细估计逐级拼装，每一级都使新区间上的部分和无界（稠密性论证）。Carleson (1966) 证明 L² 函数的傅里叶级数几乎处处收敛——Kolmogorov 的例子因此必须<strong>恰在 L² 之外</strong>（L¹∖L²）：这精确刻画了 L² 与 L¹ 的差别。仍开放：是否存在连续函数，其傅里叶级数处处发散（目前只有 a.e. 发散与点态发散的例子）。</p>
+<p><em>（右侧的"本节可动手探索"面板演示的是同一个核心现象：fₙ(x) = xⁿ 逐点收敛到极限、但非一致收敛——红刺永远在绿色 ε 管道之外。Gibbs 过冲正是"非一致收敛"在傅里叶级数里的翻版。）</em></p>
+</section>
+<section>
+<h3>十一、定理证明：Parseval 等式</h3>
+<p><strong>陈述。</strong>对 f ∈ L²[−π,π]，设复系数 cₙ（或实系数 aₙ、bₙ）。则</p>
+<div class="formula display" data-tex="\frac{1}{2\pi}\int_{-\pi}^{\pi}|f(x)|^2 dx=\sum_{n=-\infty}^{\infty}|c_n|^2=\frac{a_0^2}{4}+\frac12\sum_{n=1}^{\infty}(a_n^2+b_n^2)."></div>
+<p><strong>证明。</strong></p>
+<p>① <strong>正交性。</strong>函数系 {e^{inx}} 在 L²[−π,π] 中正交（差常数）：∫_{−π}^π e^{i(n−m)x}dx = 2πδ_{nm}。</p>
+<p>② <strong>投影公式（Bessel）。</strong>部分和 s_N = Σ_{|k|≤N}c_k e^{ikx} 是 f 在 span{e^{−iNx},…,e^{iNx}} 上的正交投影。由正交性，‖f−s_N‖² = ‖f‖² − Σ_{|k|≤N}|c_k|²（勾股定理），故 Σ|cₖ|² ≤ ‖f‖²（Bessel 不等式）。</p>
+<p>③ <strong>完备性。</strong>Weierstrass 第二逼近定理：三角多项式在 C[−π,π]（sup 范数）稠密，进而在 L² 稠密。故对任意 ε 存在三角多项式 p 使 ‖f−p‖₂ &lt; ε；取 N 足够大使正交投影 s_N 不劣：‖f−s_N‖₂ ≤ ‖f−p‖₂ + ‖p−s_N‖₂ → 0。</p>
+<p>④ <strong>取极限。</strong>‖f−s_N‖²₂ = ‖f‖²₂ − Σ_{|k|≤N}|cₖ|² → 0 给出 Σ_{n=−∞}^∞|cₙ|² = ‖f‖²₂。实系数形式由 cₙ 与 aₙ、bₙ 的关系得到。∎</p>
+<div class="key-insight">Parseval 是"勾股定理在函数空间"：傅里叶级数把 L² 中的能量 ‖f‖² 无损分解为各频率分量的能量和。它是 Plancherel 定理的周期版本，也是信号处理中"功率谱 + 能量守恒"的数学依据。用它还能反推 Σ1/n² = π²/6（见工作题 3）。</div>
+</section>
+<section>
+<h3>十二、定理（陈述+思路）：Dirichlet 收敛定理</h3>
+<p><strong>陈述。</strong>设 f:[−π,π]→ℝ 分段光滑（除有限个点外可微，且 f、f′ 在间断点处左右极限都存在；等价地，f 在每点附近有界变差）。则傅里叶级数在每点 x 收敛到</p>
+<div class="formula display" data-tex="\lim_{N\to\infty}s_N(x)=\frac{f(x+)+f(x-)}{2},\qquad f(x\pm)=\lim_{t\to x^\pm}f(t)."></div>
+<p>在连续点收敛到 f(x)；在间断点收敛到左右极限的平均值。</p>
+<p><strong>证明思路（三步）。</strong></p>
+<p>① <strong>Dirichlet 核。</strong>傅里叶部分和是卷积：</p>
+<div class="formula display" data-tex="s_N(x)=\frac{1}{2\pi}\int_{-\pi}^{\pi}f(x-t)\,D_N(t)\,dt,\qquad D_N(t)=\sum_{k=-N}^{N}e^{ikt}=\frac{\sin((N+\tfrac12)t)}{\sin(t/2)}."></div>
+<p>（两个恒等式均来自等比级数求和。）</p>
+<p>② <strong>局部化。</strong>把积分分成 |t|≥δ 与 |t|&lt;δ 两部分。远段 |t|≥δ 中 g(t)=f(x−t) 光滑、1/sin(t/2) 有界，由 <strong>Riemann-Lebesgue 引理</strong>（∫g(t)sin((N+½)t)dt → 0）远段趋于 0——收敛性是<strong>局部</strong>现象。</p>
+<p>③ <strong>近段与 Dini 条件。</strong>利用 D_N 的偶性与 ∫D_N = 2π，将 s_N(x) − (f(x+)+f(x−))/2 写为含 [f(x±t)−f(x±)]·D_N(t) 的积分。分段光滑（或有界变差）保证 (f(x+t)−f(x+))/t 在 0 附近可积，再次用 Riemann-Lebesgue 送走含 sin((N+½)t) 的项，得收敛到平均值。∎（逐点收敛与一致收敛的差别正来自近段控制的非一致性——见 Gibbs 现象。）</p>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>E. Stein &amp; R. Shakarchi, Fourier Analysis</strong></p>
+<p>&rarr; <strong>L. Grafakos, Classical Fourier Analysis</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/riemann-integral.html">黎曼积分</a>、<a href="/pages/derivative.html">导数与切线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <strong>不确定性原理</strong>：时域-频域不确定性是傅里叶分析的内在性质——函数越集中→傅里叶变换越分散。量子力学的 ΔxΔp≥ħ/2 正是同一个数学事实：位置和动量互为傅里叶变换。</p>
+<p>&rarr; <strong>调和分析相关</strong>：傅里叶级数是调和分析的起点——调和分析系统研究函数在正交基（正弦、球谐、小波等）下的展开，傅里叶级数是其中最基本的特例。</p>
+<p>&rarr; <strong>偏微分方程</strong>：傅里叶变换将热方程 ∂u/∂t=α∂²u/∂x² 转化为关于 ξ 的常微分方程——分离变量法 + 傅里叶级数是解线性偏微分方程的通用策略。</p>
+<p>&rarr; <a href="/pages/zeta.html">ζ 函数</a>：Parseval 等式给出 Σ1/n² = π²/6 与 Σ1/n⁴ = π⁴/90——调和分析通向数论的一条捷径。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/fourier-series.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

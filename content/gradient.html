@@ -1,0 +1,204 @@
+<section>
+<h3>〇、直觉入门——雾天里怎么下山最快</h3>
+<p>想象你站在一座雾气弥漫的山上，看不清全景，只能靠脚感受脚下的坡度。你想尽快下山：哪个方向最陡，就往哪走。这个指向"最陡上坡"的箭头叫<strong>梯度</strong>，把它掉个头，就是下山最快的方向。</p>
+<p>它为什么存在？因为很多"找最优解"的问题，本质都是在找最低点——训练 AI 就是在误差的山上一步步下山：每步都顺着反梯度方向走，直到走到谷底为止。</p>
+<div class="key-insight">核心洞察：梯度就是"最陡上坡的箭头"，顺着它的反方向走就是最速下山路——AI 训练就是这么下山的。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>一、一个具体的问题：登山地图上，"最陡的路"怎么找？</h3>
+<p>登山地图用一圈圈<strong>等高线</strong>（contour line，高度相同的点连成的曲线）表示地形：圈越密，坡越陡。不过直觉不够用，我们需要一个带数字的模型。设某座山的海拔（米）与位置 (x,y)（千米）满足</p>
+<div class="formula display" data-tex="f(x,y)=100-x^2-y^2"></div>
+<p>这是一座平滑的圆山：最高点在原点 (0,0)，海拔 100 米；越往四周越低。每条等高线都是圆 x²+y²=100−c（c 为海拔）。</p>
+<p>你站在 <strong>(3,4)</strong> 处——海拔 f(3,4)=100−9−16=<strong>75 米</strong>。问题：<strong>从这个点出发，朝哪个方向走，海拔上升最快？最快时每千米能爬升多少米？</strong></p>
+<p>这不能一眼看出，但可以拆解：先只问"往东走一步，海拔变多少？"（偏导数）；再问"往任意方向走呢？"（方向导数）；最后把答案拼成一个箭头（梯度）。本节先把第一个小问题解决掉。</p>
+</section>
+
+<section>
+<h3>二、偏导数——钉死其他变量，只看一个方向</h3>
+<p>先只往东走：y 钉在 4 不动，只看海拔关于 x 的函数 f(x,4)=100−x²−16=84−x²。它在 x=3 处的变化率，就是"向东的坡度"——把 y 当常数，对 x 求导：</p>
+<div class="formula display" data-tex="\frac{\partial f}{\partial x}(3,4)=\left.\frac{d}{dx}\left(84-x^2\right)\right|_{x=3}=(-2x)\big|_{x=3}=-6"></div>
+<p>往北同理：钉住 x=3，f(3,y)=100−9−y²=91−y²，</p>
+<div class="formula display" data-tex="\frac{\partial f}{\partial y}(3,4)=\left.\frac{d}{dy}\left(91-y^2\right)\right|_{y=4}=(-2y)\big|_{y=4}=-8"></div>
+<p>数值检验一下：差商 [f(3+h,4)−f(3,4)]/h = (−6h−h²)/h = −6−h，让 h 越缩越小：</p>
+<table style="width:100%;border-collapse:collapse;font-size:.85em;margin:10px 0">
+<tr style="color:#8b949e"><td style="padding:4px 10px;border:1px solid #30363d">h</td><td style="padding:4px 10px;border:1px solid #30363d">0.1</td><td style="padding:4px 10px;border:1px solid #30363d">0.01</td><td style="padding:4px 10px;border:1px solid #30363d">0.001</td><td style="padding:4px 10px;border:1px solid #30363d">0.0001</td></tr>
+<tr style="color:#c9d1d9"><td style="padding:4px 10px;border:1px solid #30363d">差商 −6−h</td><td style="padding:4px 10px;border:1px solid #30363d">−6.1</td><td style="padding:4px 10px;border:1px solid #30363d">−6.01</td><td style="padding:4px 10px;border:1px solid #30363d">−6.001</td><td style="padding:4px 10px;border:1px solid #30363d">−6.0001</td></tr>
+</table>
+<p>稳定地逼向 <strong>−6</strong>。这就是<strong>偏导数</strong>（partial derivative，partial 意为"部分的"：只让一个变量变化，其余全部冻结，再照搬单变量的求导算法）。正式定义与一元导数完全同构，只是把"冻结其他变量"写清楚：</p>
+<div class="formula display" data-tex="\frac{\partial f}{\partial x}(x_0,y_0)=\lim_{h\to0}\frac{f(x_0+h,y_0)-f(x_0,y_0)}{h}"></div>
+<p>一句话：<strong>偏导数 = 把其他变量都钉死，只看其中一个变量的变化率。</strong>回到我们的山：在 (3,4)，向东走海拔以 6 米/千米下降，向北走以 8 米/千米下降。但真正的"最陡方向"不是正东也不是正北——往下看。</p>
+</section>
+
+<section>
+<h3>三、方向导数——任意方向的变化率（直觉）</h3>
+<p>山上当然不只东西南北四个方向。从 (3,4) 出发朝任意一个单位方向 u 走，海拔上升的快慢叫这个方向上的<strong>方向导数</strong>（directional derivative，"往某个方向走"的变化率，是偏导数的推广）。偏导数是它的两个特例：u=(1,0) 就是 ∂f/∂x，u=(0,1) 就是 ∂f/∂y。</p>
+<p>登山地图已经给了两条极端线索：</p>
+<p>沿着等高线走（与等高线平行）→ 高度不变 → 方向导数 = 0。<br>垂直穿过等高线 → 高度变化最猛 → 方向导数最大。</p>
+<p>所以"往哪走最陡"可以反过来说：<strong>最陡的方向，永远垂直于等高线。</strong>这个断言暂时靠直觉，第七、八节会用公式和 cosθ 证明。先记住方向导数的角色：它把"朝一个方向上升多快"定量化，梯度则负责指出"哪个方向最快"。</p>
+</section>
+
+<section>
+<h3>四、梯度——把所有偏导数装进一个箭头</h3>
+<p>既然往东是 ∂f/∂x、往北是 ∂f/∂y，为什么不把它们拼成一个箭头？</p>
+<div class="formula display" data-tex="\nabla f=\left(\frac{\partial f}{\partial x},\ \frac{\partial f}{\partial y}\right)"></div>
+<p>这个箭头叫<strong>梯度</strong>（gradient，把各方向的偏导数打包成一个箭头）。∇ 读作 "nabla"（纳布拉）。箭头在数学里叫<strong>向量</strong>（vector，既有大小又有方向的量）。对我们这座山：</p>
+<div class="formula display" data-tex="\nabla f=(-2x,-2y),\qquad \nabla f(3,4)=(-6,-8)"></div>
+<p>梯度有两个性质（后面都会证明）：① 它的方向恰好指向"最陡上坡"；② 它的长度恰好等于"最陡有多陡"。直觉先认领一半：在 (3,4) 处，∇f=(−6,−8) 指向 (−3,−4) 方向——恰好指向圆心，而山顶 (0,0) 就在圆心。越靠圆心海拔越高，"梯度指向山顶"自然合理。</p>
+<div class="key-insight">核心洞察：梯度 = 把所有偏导数装进一个箭头，它的方向指向最陡上坡，长度等于最陡上坡有多陡。梯度下降 w ← w − η·∇L(w) 就是沿这个箭头的反方向一步步下山。如果你只想理解核心思想，看到这里就够了。</div>
+</section>
+
+<section>
+<h3>五、可视化：垂直插在圈圈上的橙色箭头</h3>
+<p>页首画布画的就是刚才那座山的曲面。绿色的圈是<strong>等高线</strong>，橙色的箭头是<strong>∇f</strong>。注意每个橙色箭头都像桩子一样<strong>垂直插在等高线上</strong>——这印证了第三节的直觉，也是后面第八节要证明的定理。</p>
+<p>如果你站在曲面上，沿橙色箭头走 = 最陡上坡；沿反方向走 = 最陡下坡。拖动画面旋转视角，会发现无论从哪个角度看，箭头始终与绿圈垂直。</p>
+<div class="key-insight">这就是<strong>梯度下降算法</strong>（gradient descent，沿着反梯度方向一步步"下山"、反复迭代逼近最低点的优化方法）的全部几何直觉：w←w−η·∇L(w)——沿最陡方向"下山"直到谷底。</div>
+</section>
+
+<section>
+<h3>六、方向导数公式的推导——D<sub>u</sub>f = ∇f·u</h3>
+<p>第三节只有直觉，这一节把它写成公式，教科书式地推一遍。</p>
+<p><strong>第 1 步：定义。</strong>对单位方向 u（‖u‖=1），从 x₀ 出发沿直线 γ(t)=x₀+tu 前进，方向导数是 f 关于路程参数 t 的瞬时变化率：</p>
+<div class="formula display" data-tex="D_{\mathbf{u}}f(x_0)=\lim_{t\to0}\frac{f(x_0+t\mathbf{u})-f(x_0)}{t}"></div>
+<p><strong>第 2 步：可微性 —— 用一张倾斜平板逼近曲面。</strong>如果 f 在 x₀ 可微（differentiable，局部能被线性映射一致逼近），那么</p>
+<div class="formula display" data-tex="f(x_0+\mathbf{h})=f(x_0)+\nabla f(x_0)\cdot\mathbf{h}+R(\mathbf{h}),\qquad \frac{|R(\mathbf{h})|}{\|\mathbf{h}\|}\to0\ \ (\mathbf{h}\to\mathbf{0})"></div>
+<p>直观：把 x₀ 附近的曲面放大，它看起来就是一张斜度由梯度决定的平板，误差 R(h) 比步长 ‖h‖ 更快地消失。</p>
+<p><strong>第 3 步：代入 h = tu。</strong>把 h=tu（t→0，t≠0）代入上式，两边除以 t：</p>
+<div class="formula display" data-tex="\frac{f(x_0+t\mathbf{u})-f(x_0)}{t}=\nabla f(x_0)\cdot\mathbf{u}+\frac{R(t\mathbf{u})}{t}\ \longrightarrow\ \nabla f(x_0)\cdot\mathbf{u}"></div>
+<p>余项消失是因为 |R(tu)|/|t|=(|R(tu)|/‖tu‖)·‖u‖→0。于是得到本课的核心公式：</p>
+<div class="formula display" data-tex="D_{\mathbf{u}}f(x_0)=\nabla f(x_0)\cdot\mathbf{u}"></div>
+<p><strong>链式法则视角（更快的看法）。</strong>γ(t)=x₀+tu 是直线，γ′(0)=u。方向导数不过是对复合函数 f∘γ 求导：</p>
+<div class="formula display" data-tex="D_{\mathbf{u}}f=(f\circ\gamma)'(0)=\nabla f(x_0)\cdot\gamma'(0)=\nabla f(x_0)\cdot\mathbf{u}"></div>
+<p>这是多元链式法则的特例：复合函数的导数 = 梯度与切向量的点积。在二维写成分量形式，令 u=(cosθ,sinθ)，则</p>
+<div class="formula display" data-tex="D_{\mathbf{u}}f=\frac{\partial f}{\partial x}\cos\theta+\frac{\partial f}{\partial y}\sin\theta"></div>
+<p>两点提醒：① 公式要求 u 是单位向量——若方向向量 v 未归一化，沿它的"每步变化率"是 ∇f·v，换算成单位距离要除以 ‖v‖；② 偏导数存在不足以保证可微（见文末反例），但各偏导数连续 ⟹ 可微，此时公式无条件成立。完整的"定义—定理—证明"见文末附注。</p>
+</section>
+
+<section>
+<h3>七、为什么沿梯度方向上升最快——cosθ 讲透</h3>
+<p>有了 D_u f = ∇f·u，就能用代数回答"哪个方向最快"。点积有一个几何身份：两个向量的点积 = 长度之积 × 夹角余弦。因为 u 是单位向量，‖u‖=1：</p>
+<div class="formula display" data-tex="D_{\mathbf{u}}f=\nabla f\cdot\mathbf{u}=\|\nabla f\|\,\|\mathbf{u}\|\cos\theta=\|\nabla f\|\cos\theta"></div>
+<p>其中 θ 是 u 与 ∇f 的夹角。cosθ 只在 −1 与 1 之间取值，于是分三种情形：</p>
+<p>θ=0（u 与 ∇f 同向）→ cosθ=1 → D_u f = ‖∇f‖：<strong>上升最快</strong>，速度正好等于梯度的长度。<br>
+θ=π（u 与 ∇f 反向）→ cosθ=−1 → D_u f = −‖∇f‖：<strong>下降最快</strong>。<br>
+θ=π/2（u 与 ∇f 垂直）→ cosθ=0 → D_u f = 0：海拔不变——这正是沿等高线的情形。</p>
+<p>第三节的直觉现在变成可验证的算术：<strong>上升最快的方向是梯度方向，最快上升率 = ‖∇f‖。</strong>这也是为什么梯度下降每一步都选反梯度方向——那一步保证"下坡最快"。其余任何方向的上升率都按 cosθ 打个折扣，θ 越大折扣越多。</p>
+</section>
+
+<section>
+<h3>八、为什么梯度垂直于等高线</h3>
+<p>第七节说"上升最快的方向（θ=0）与上升为 0 的方向（θ=π/2）互相垂直"，但还得正面证明"等高线方向 = 上升为 0 的方向"。用链式法则推一遍。</p>
+<p>设 γ(t) 是等高线 {f=c} 上过 x₀ 的光滑参数曲线（比如沿等高线散步的脚印），于是 f(γ(t))≡c 恒为常数。两边对 t 求导：</p>
+<div class="formula display" data-tex="0=\left.\frac{d}{dt}f(\gamma(t))\right|_{t=0}=\nabla f(x_0)\cdot\gamma'(0)=\nabla f(x_0)\cdot v"></div>
+<p>γ′(0)=v 是等高线在 x₀ 的任意一个切向量。上式说：梯度与等高线的<strong>每一个</strong>切向量点积都是 0——点积为 0 即两向量垂直。所以</p>
+<div class="formula display" data-tex="\nabla f(x_0)\ \perp\ \{f=c\}\ \text{在 }x_0\text{ 的切空间}"></div>
+<p>几何上，三句话连成一条完整的逻辑链：① 沿等高线走，f 一点不变 ⟹ 方向导数 = 0；② 由 D_u f = ‖∇f‖cosθ，只有 u ⊥ ∇f 时 cosθ=0；③ 所以"上升为 0 的方向"正是等高线方向，而"上升最快的方向"（θ=0，沿 ∇f）与它垂直。<strong>梯度指向最陡方向，且永远垂直于等高线</strong>——这两个结论是同一个公式的两面。严谨的定理与证明见文末附注。</p>
+</section>
+
+<section>
+<h3>九、完整例题——三个例子一步步算</h3>
+<p>定义和公式都不是摆着看的，要动手算。教科书风格：每一步都展开，不跳步。</p>
+
+<p><strong>例 1：求偏导数与梯度。</strong>f(x,y)=x²y，在 (1,2) 处。</p>
+<p>对 x 求偏导：把 y 当常数。f(x,2)=2x²，于是</p>
+<div class="formula display" data-tex="\frac{\partial f}{\partial x}=2xy\ \Longrightarrow\ \frac{\partial f}{\partial x}(1,2)=2\cdot1\cdot2=4"></div>
+<p>对 y 求偏导：把 x 当常数。f(1,y)=y，于是</p>
+<div class="formula display" data-tex="\frac{\partial f}{\partial y}=x^2\ \Longrightarrow\ \frac{\partial f}{\partial y}(1,2)=1^2=1"></div>
+<p>拼成梯度并求长度：</p>
+<div class="formula display" data-tex="\nabla f(1,2)=(4,1),\qquad \|\nabla f(1,2)\|=\sqrt{4^2+1^2}=\sqrt{17}\approx4.12"></div>
+<p>含义：在 (1,2)，朝东走一步 f 增加约 4，朝北走一步增加约 1，而朝"最陡方向"走一步增加约 4.12。</p>
+
+<p><strong>例 2：用定义直接算方向导数，验证 ∇f·u。</strong>取单位方向 u=(3/5, 4/5)，沿直线 γ(t)=(1,2)+t(3/5,4/5)=(1+3t/5, 2+4t/5) 前进。先展开被代入的函数（只保留 t 的一次项，更高次项除以 t 后都会随 t→0 消失）：</p>
+<div class="formula display" data-tex="\begin{aligned}f\left(1+\tfrac35t,\,2+\tfrac45t\right)&=\left(1+\tfrac35t\right)^2\left(2+\tfrac45t\right)\\&=\left(1+\tfrac65t+\tfrac9{25}t^2\right)\left(2+\tfrac45t\right)\\&=2+\tfrac{16}{5}t+\tfrac{42}{25}t^2+\tfrac{36}{125}t^3\end{aligned}"></div>
+<p>因为 f(1,2)=2，代入定义：</p>
+<div class="formula display" data-tex="D_{\mathbf{u}}f(1,2)=\lim_{t\to0}\frac{f\left(1+\tfrac35t,\,2+\tfrac45t\right)-2}{t}=\lim_{t\to0}\left(\tfrac{16}{5}+\tfrac{42}{25}t+\tfrac{36}{125}t^2\right)=\tfrac{16}{5}=3.2"></div>
+<p>再用公式核对：</p>
+<div class="formula display" data-tex="\nabla f(1,2)\cdot\mathbf{u}=4\cdot\tfrac35+1\cdot\tfrac45=\tfrac{12}{5}+\tfrac45=\tfrac{16}{5}=3.2"></div>
+<p>两条路得到同一个数——公式没有骗人。</p>
+
+<p><strong>例 3：找最陡方向，用 cosθ 验证。</strong>继续用 f(x,y)=x²y 在 (1,2)，已知 ∇f=(4,1)、‖∇f‖=√17≈4.12。比较几个单位方向的上升率（D_u f=∇f·u）：</p>
+<p>u=(1,0)（正东）：D_u f=4。<br>
+u=(0,1)（正北）：D_u f=1。<br>
+u=(4,1)/√17（梯度方向）：D_u f=√17≈4.12。<br>
+u=(−4,−1)/√17（反梯度方向）：D_u f=−√17≈−4.12。</p>
+<p>看得清清楚楚：<strong>梯度方向上升最快（4.12），反梯度方向下降最快，而且都比"东西南北"更陡。</strong>事实上对任何不等于梯度方向的单位向量 u，cosθ&lt;1，故 D_u f&lt;‖∇f‖——梯度方向是唯一最优。结论汇总：最快上升方向 = (4,1)/√17，最大上升率 = √17；最快下降方向 = −(4,1)/√17。</p>
+</section>
+
+<section>
+<h3>十、梯度与全微分——Δf ≈ ∇f·Δr</h3>
+<p>把方向导数的公式换个写法。设 Δr=(dx,dy) 是一小段位移，则函数值的近似总变化量是每个方向贡献之和：</p>
+<div class="formula display" data-tex="df=\frac{\partial f}{\partial x}\,dx+\frac{\partial f}{\partial y}\,dy=\nabla f\cdot(dx,dy)"></div>
+<p>梯度是<strong>全微分</strong>（total differential，让每个变量各自动一点点、把它们对函数值的影响全部加起来的总变化量）的"对偶"：它将位移向量映射到函数值的变化，Δf≈∇f·Δr。</p>
+<p>在 n 维：∇f=(∂f/∂x₁,…,∂f/∂xₙ)。这是所有偏导数组成的<strong>向量</strong>，不是标量。向量分析的整个工具箱都从梯度衍生：<strong>散度</strong>（divergence，衡量"向量场往外涌出"的程度）、<strong>旋度</strong>（curl，衡量"向量场打转"的程度）、<strong>Laplacian</strong>（拉普拉斯算子，各方向二阶偏导数之和，描述场"凹凸起伏"的整体曲率）。</p>
+</section>
+
+<section>
+<h3>十一、梯度和优化——从牛顿法到Adam</h3>
+<p><strong>梯度下降</strong>（沿反梯度方向迭代"下山"的优化法，见第四节）：w_{t+1}=w_t−η∇L(w_t)。一阶方法，简单但收敛慢。<strong>牛顿法</strong>（Newton's method，额外利用二阶曲率信息、一步跨向抛物线顶点的更聪明方法）：w_{t+1}=w_t−H<sup>−1</sup>∇L(w_t)，H 是<strong>Hessian 矩阵</strong>（Hessian matrix，所有二阶偏导数排成的方阵，描述"曲面弯成什么样"）。利用曲率信息加速——但计算 H<sup>−1</sup> 代价高。<strong>Adam</strong>（机器学习常用的优化器，给每个参数配上"惯性"与"自适应步长"）：结合动量+自适应学习率——深度学习的事实标准。</p>
+<p>所有这些优化算法的几何基础都是同一个东西：<strong>梯度指向局部最陡的方向</strong>（第七节证明了这一点）。</p>
+</section>
+
+<section>
+<h3>十二、关键公式</h3>
+<div class="formula display" data-tex="\nabla f=\left(\frac{\partial f}{\partial x_1},\ldots,\frac{\partial f}{\partial x_n}\right)"></div>
+<div class="formula display" data-tex="D_{\mathbf{u}}f=\nabla f\cdot\mathbf{u}=\|\nabla f\|\cos\theta"></div>
+<div class="formula display" data-tex="\mathbf{w}_{t+1}=\mathbf{w}_t-\eta\nabla L(\mathbf{w}_t)\quad\text{(梯度下降)}"></div>
+</section>
+
+<section>
+<h3>十三、试试看（带提示）</h3>
+<p>1. 在曲面的最高点处，梯度是多少？理论上应为 0——为什么？<br>提示：若 ∇f(最高点)≠0，则梯度方向是上升方向，与"已经是最高点"矛盾。</p>
+<p>2. 如果等高线是同心圆（如 f=x²+y²），梯度指向哪个方向？<br>提示：∇f=(2x,2y)=2(x,y)，沿半径指向远离圆心——圆心最高。</p>
+<p>3. 机器学习中损失函数 L(w) 通常有百万个参数——梯度的维度是多少？页首这个 3D 可视化如何帮助理解高维梯度？<br>提示：梯度与自变量同维，是百万维向量；3D 画布是"二维类比"，所有性质（垂直等高线、指向最陡方向）在任意维数都成立。</p>
+<p>4. 求 f(x,y)=xy 在 (2,3) 处沿 u=(−1,1)/√2 的方向导数。<br>提示：∇f=(y,x)=(3,2)，D_u f=∇f·u=(3·(−1)+2·1)/√2=−1/√2。</p>
+<p>5. 若已知 f 在 P 点沿两个已知方向 u₁、u₂ 的方向导数分别是 3 和 5，能否定出 ∇f(P)？<br>提示：D_{uᵢ}f = ∇f·uᵢ 是两条线性方程，两个未知分量（方向不平行时可解）。这是"从观测反推梯度"的思想。</p>
+</section>
+<section><h3>前沿：随机梯度下降的动力学</h3><p>SGD在深度学习中的实际行为远超经典凸优化理论。"double descent"、"grokking"、神经切线核(NTK)——SGD隐式地偏好"平坦"极小值(generalize更好)。仍开放:为什么SGD在非凸损失中如此有效？没有完整的理论解释。</p></section>
+<section>
+<h3>附：方向导数 D_u f=∇f·u 的推导（链式法则）</h3>
+<p><strong>定义。</strong>对单位方向 u，方向导数 D_u f(x₀)=lim_{t→0}[f(x₀+tu)−f(x₀)]/t。</p>
+<p><strong>定理。</strong>若 f 在 x₀ 可微，则对任意单位方向 u，D_u f(x₀)=∇f(x₀)·u。</p>
+<p><strong>证明。</strong>可微性断言存在线性逼近使余项为高阶无穷小：f(x₀+h)=f(x₀)+∇f(x₀)·h+R(h)，其中 |R(h)|/‖h‖→0。取 h=tu（t→0）：</p>
+<div class="formula display" data-tex="\frac{f(x_0+tu)-f(x_0)}{t}=\nabla f(x_0)\cdot u+\frac{R(tu)}{t}\longrightarrow\nabla f(x_0)\cdot u"></div>
+<p>因为 |R(tu)|/|t|=(|R(tu)|/|tu|)·‖u‖→0。∎</p>
+<p><strong>链式法则视角。</strong>设 γ(t)=x₀+tu，则 D_u f=(f∘γ)′(0)=∇f(x₀)·γ′(0)=∇f(x₀)·u——这正是多元链式法则 f∘γ 的导数 = 梯度与切向量 γ′ 的点积。若 u=(cosθ,sinθ)，则 D_u f=∂f/∂x cosθ+∂f/∂y sinθ。</p>
+<p>注：定理的逆不成立——所有方向导数都存在并不保证可微（见反例）。</p>
+</section>
+<section>
+<h3>附：梯度垂直于等高线</h3>
+<p><strong>定理。</strong>设 f 在 x₀ 可微且 ∇f(x₀)≠0，则 ∇f(x₀) 垂直于过 x₀ 的等高线 {f=c} 在该点的切空间。</p>
+<p><strong>证明。</strong>设 γ(t) 是等高线上过 x₀ 的光滑参数曲线：f(γ(t))≡c、γ(0)=x₀、γ′(0)=v。链式法则给出</p>
+<div class="formula display" data-tex="0=\left.\frac{d}{dt}f(\gamma(t))\right|_{t=0}=\nabla f(x_0)\cdot\gamma'(0)=\nabla f(x_0)\cdot v"></div>
+<p>对等高线在 x₀ 的一切切向量 v 成立 ⟹ ∇f(x₀)⊥T_{x₀}{f=c}。∎</p>
+<p>几何后果：① 沿等高线函数值不变，故函数变化率最大的方向必与等高线垂直；② 由 D_u f=‖∇f‖cosθ，u∥∇f 时方向导数取最大 ‖∇f‖——"最陡方向"正是法向；③ 隐函数定理保证 ∇f≠0 处等高线确实是光滑曲线（正则点），否则可能出现尖点或自交。</p>
+</section>
+<section>
+<h3>附：标准反例——方向导数存在但不一定可微</h3>
+<p><strong>反例。</strong>f(x,y)=xy²/(x²+y²)（(x,y)≠(0,0)），f(0,0)=0。对任意单位方向 u=(a,b)：</p>
+<div class="formula display" data-tex="f(ta,tb)=\frac{ta\cdot(tb)^2}{(ta)^2+(tb)^2}=\frac{ab^2t^3}{t^2}=ab^2t\ \Longrightarrow\ D_uf(0,0)=\lim_{t\to0}\frac{f(ta,tb)}{t}=ab^2"></div>
+<p>f 在原点沿所有方向的方向导数都存在（=ab²）。但 f 在原点不可微：沿 h=(t,t)，f(t,t)=t·t²/(t²+t²)=t/2，而 ‖h‖=√2|t|，故 |f(h)−∇f(0)·h|/‖h‖=f(t,t)/‖h‖=(t/2)/(√2|t|)=±1/(2√2)≠0，余项不趋于 0。事实上 ∇f(0,0)=(0,0)，但可微性要求 f(h)/‖h‖→0，这里做不到。</p>
+<p>更值得注意的是：这个 f 在原点甚至是连续的（|f|≤|x|），却依然不可微——说明可微远比"连续 + 方向导数全存在"更强。若要"方向导数全存在但连连续性都没有"的例子，可用 g(x,y)=xy²/(x²+y⁴)：沿曲线 (t²,t) 逼近原点时 g→1/2≠0，故不连续，但其所有方向导数都存在。</p>
+<p>教训：方向导数只捕捉"沿每条射线的径向变化率"，可微性要求所有方向的变化率被同一个线性映射一致逼近——远强于方向导数全存在。实用判据：各偏导数连续 ⟹ 可微（充分但非必要）。</p>
+</section>
+<section>
+<h3>附：工作题</h3>
+<p><strong>题 1</strong>：f(x,y)=x²y−y³。(a) 求 ∇f 在 (1,2) 处；(b) 求沿单位方向 u=(3,4)/5 的方向导数；(c) 求 f 在 (1,2) 增长最快的方向与最大增长率。</p>
+<p><strong>题 2</strong>：判断 f(x,y)=|x|+|y| 在 (0,0) 是否可微？各方向导数是否存在？</p>
+<details><summary>显示解答</summary><p>
+<strong>题 1</strong>：(a) ∇f=(2xy, x²−3y²)，在 (1,2) 为 (4, 1−12)=(4,−11)。(b) D_u f=∇f·u=4·(3/5)+(−11)·(4/5)=12/5−44/5=−32/5。(c) 增长最快方向即梯度方向 u_max=(4,−11)/√137，最大增长率 ‖∇f‖=√(16+121)=√137。最小方向为 −u_max，增长率为 −√137。</p>
+<p><strong>题 2</strong>：不可微。沿单位方向 u=(a,b)，f(ta,tb)=|t|(|a|+|b|)，故 D_u f(0,0)=lim_{t→0}|t|(|a|+|b|)/t。右极限（t→0⁺）为 |a|+|b|，左极限（t→0⁻）为 −(|a|+|b|)，两者不等（单位向量满足 a²+b²=1，故 |a|+|b|&gt;0）⟹ 方向导数不存在，自然不可微。对照：f 在 0 连续但不可微，说明连续性远非可微的充分条件。</p>
+</details>
+</section>
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. Spivak, Calculus</strong></p>
+<p>&rarr; <strong>W. Rudin, Principles of Mathematical Analysis</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/derivative.html">导数与切线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/derivative.html">📈 导数与切线</a>：同一学科分类「微积分」。</p>
+<p>&rarr; <a href="/pages/riemann-integral.html">📊 黎曼积分</a>：同一学科分类「微积分」。</p>
+<p>&rarr; <a href="/pages/epsilon-delta.html">🔍 ε-δ 语言</a>：同一学科分类「微积分」。</p>
+</section>

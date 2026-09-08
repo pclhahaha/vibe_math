@@ -1,0 +1,156 @@
+<section>
+<h3>〇、直觉入门——每一点上挂一个小空间：局部像乘积，整体却带扭</h3>
+<p>拿一条长纸条，把两端扭转 180° 再粘起来，就是莫比乌斯带。任意剪下一小段，它和普通纸条没有区别；但把整条走一圈，你会发现它翻了个面。这个画面就是纤维丛的全部直觉：<strong>每个点上"挂着"一个小空间（纤维），局部看和乘积一模一样，整体却可能扭在一起。</strong></p>
+<p>它存在，是因为物理学家发现，宇宙中的各种力都可以看成"每个时空点上挂着不同的小空间"的几何：电磁 = 每点挂一个 U(1) 圆，弱力 = 挂 SU(2)，强力 = 挂 SU(3)。把小空间和它"怎么扭"描述清楚，就能描述力的作用。</p>
+<div class="key-insight">纤维丛 = 每个点上挂一个内部小空间，各种力的秘密都在里面——只想懂核心思想，看到这里就够了</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/parallel-transport.html">平行移动</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——莫比乌斯带为什么"不是乘积"？</h3>
+<p>先算一笔具体的账。取纸条 [0,1]×(−1,1)，把 x=0 与 x=1 两端粘起来：不扭转直接粘，得圆柱面；扭转 180° 再粘，得莫比乌斯带 M。二者都"铺"在圆周 S¹ 上：投影 p: M → S¹ 把每一条"纬线"压成一个点，于是每个点 x ∈ S¹ 上挂的纤维 p⁻¹(x) 都是开区间 (−1,1)。</p>
+<p>局部看，M 的每个小邻域都同胚于 U×(−1,1)——和乘积没有区别。差别只在全局：圆柱面 S¹×(−1,1) 上能画出处处非零的截面（比如每点都取 s=½），而莫比乌斯带上不可能。为什么？沿 S¹ 走一圈，一个连续截面 s(θ) 既要"回到原点值不变" s(θ+2π)=s(θ)，又要"扭了 180° 所以变号" s(θ+2π)=−s(θ)；两条同时成立只能靠 s≡0。这一句"变号"就是<strong>整体扭转</strong>的精确含义。</p>
+<p>电磁学、弱力、强力正是同样的结构：底流形 = 时空，纤维 = U(1) 圆、SU(2)、SU(3)。<strong>联络 A = 规范势，曲率 F = dA + A∧A = 场强。</strong>所有基本力都是纤维丛上的几何。平行移动 = 力的作用——带电粒子在电磁场中运动，就是它的 U(1) 相位沿路径旋转。</p>
+<div class="key-insight">规范场论 = 纤维丛上的微分几何。这是数学和物理最深刻的统一之一。引力是切丛上的 Levi-Civita 联络，电磁是 U(1) 丛上的联络，强力是 SU(3) 丛上的联络。</div>
+</section>
+
+<section>
+<h3>二、纤维丛的定义——为什么"局部平凡"才是对的</h3>
+<p>"每个点上挂一个小空间"这句话本身是模糊的："挂"是什么意思？精确化靠两步——</p>
+<p><strong>局部平凡。</strong>至少在每个点 x 附近，取一个小邻域 U，丛在 U 上"看起来就是乘积"：存在同胚 φ_U: π⁻¹(U) → U×F，使得 π 对应到第一个分量的投影。这个 φ_U 叫<strong>局部平凡化</strong>。</p>
+<p><strong>全局扭结。</strong>整体扭不扭，全看两个平凡化重叠处的"粘合规则"。当 x ∈ U_α∩U_β 时，φ_α∘φ_β⁻¹ 把 x×F 映到 x×F，即给出 F 的一个自同胚 g_αβ(x)；当结构群为 G（F 上的一个变换李群）时，g_αβ: U_αβ → G，且满足<strong>余循环条件</strong> g_αβ·g_βγ = g_αγ。</p>
+<p><strong>为什么局部平凡是正确的概念？</strong> 因为"逐点挂空间"必须先在任意小范围内说清楚，才能谈整体——而实践表明，物理中真正的自由度（联络、曲率、物质场）只在局部平凡化下才有坐标表达式，整体的扭结（示性类）则要从转移函数里读出来。扭与不扭，只可能住在粘合规则里，这正是转移函数与结构群的由来。</p>
+</section>
+
+<section>
+<h3>三、关键公式</h3>
+<div class="formula display" data-tex="F = dA + A\wedge A"></div>
+<div class="formula display" data-tex="\Delta\phi = \frac{e}{\hbar}\oint A\cdot dl\quad\text{(Aharonov-Bohm)}"></div>
+</section>
+
+<section>
+<h3>四、例题 1——圆柱面 vs 莫比乌斯带：平凡与非平凡线丛</h3>
+<p><strong>题目。</strong> 证明圆柱面 E₁ = S¹×ℝ 是平凡线丛，而莫比乌斯带 E₂ 不是。</p>
+<p><strong>解。</strong></p>
+<p><strong>(1) 圆柱面平凡。</strong>整体平凡化取恒等 φ(x,t) = (x,t) 即可——不用任何粘贴，天然就是乘积。</p>
+<p><strong>(2) 莫比乌斯带非平凡。</strong>反设平凡，则存在整体平凡化，即存在处处非零的截面 s(x) = φ⁻¹(x,1)。把 s 沿 S¹ 走一圈，回到出发点时必须连续相接；但莫比乌斯带扭转 180° 使相接处的坐标变号，故 s 必须同时满足 s(θ+2π)=s(θ) 与 s(θ+2π)=−s(θ)，只可能 s≡0，与"处处非零"矛盾。故 E₂ 非平凡。</p>
+<p><strong>(3) 更高观点。</strong>ℝ-线丛在 S¹ 上的同构类由第一 Stiefel-Whitney 类 w₁ ∈ H¹(S¹, ℤ₂) ≅ ℤ₂ 分类：平凡丛 w₁ = 0，莫比乌斯带 w₁ = 1。扭转的"有或无"被精确编码为 w₁ 是否为 0——这是引入示性类的原始动机（见第八、九章）。</p>
+</section>
+
+<section>
+<h3>五、主 G-丛与联络——从"挂空间"到"怎么搬"</h3>
+<p><strong>为什么需要主 G-丛？</strong> 联络、曲率、规范变换这些最重要的对象，天然"生活在"主丛上：规范变换正是主丛上的 G 作用，曲率是主丛上的 Lie G 值 2-形式。先定义它。</p>
+<p><strong>定义（主 G-丛）。</strong> 设 G 为李群。一个光滑主 G-丛是一个纤维丛 π: P → M，带有 G 在 P 上的自由、保持纤维的右作用 P×G → P，使得每个纤维 π⁻¹(x) 上的 G 作用自由且传递，且局部平凡化与 G 作用相容。等价地，M ≅ P/G。</p>
+<p><strong>伴随丛构造（把主丛变成"装着向量"的丛）。</strong> 给定主 G-丛 P → M 和李群表示 ρ: G → GL(V)（即 G 在向量空间 V 上的线性作用），伴随丛定义为商空间 P ×_ρ V := (P × V)/G，其中 G 作用为 (p,v)·g = (pg, ρ(g⁻¹)v)。伴随丛是 M 上的向量丛，其纤维同构于 V。这是从主丛构造向量丛的通用方法。</p>
+<p><strong>标架丛（反过来：向量丛自动给一个主丛）。</strong> 每个秩 n 的向量丛 E → M 决定一个主 GL(n,ℝ) 丛 Fr(E) → M，其纤维为 E_x 的全体有序基（标架）。反之，给定主 GL(n,ℝ) 丛，通过标准表示 ρ = id 作伴随丛，即得向量丛。这给出了<em>向量丛 ⟷ 标架丛的主丛</em>的一一对应。切丛 TM 的标架丛上的 Levi-Civita 联络正是广义相对论中的自旋联络。</p>
+<p><strong>联络的水平分布定义。</strong> G-主丛 P 上的<strong>联络</strong>是一个光滑的水平子丛 H ⊂ TP，满足：(i) <strong>直和分解</strong> T_pP = H_p ⊕ V_p 对所有 p ∈ P，其中 V_p = ker(dπ)_p 是竖子空间；(ii) <strong>G-等变性</strong> H_{pg} = (R_g)_* H_p 对所有 g ∈ G，其中 R_g 是右平移。水平子丛 H 的同构类与 Lie G-值 1-形式 ω ∈ Ω¹(P, Lie G) 一一对应：H_p = ker ω_p，且 ω 满足 R_g^*ω = Ad_{g⁻¹}∘ω 及 ω(X^#) = X（对基本向量场 X^#）。在标架丛上，ω 即仿射联络的联络 1-形式。</p>
+<p><strong>为什么联络是"水平子丛"？</strong> 平行移动 = 沿着底流形的路径，把纤维里的小空间"平滑地搬过去"。每次搬运都要回答"往哪边搬"——竖方向（沿纤维）是"原地打转"，只有横穿纤维的水平方向才是真正的搬运方向。联络就是给每个点选一个合法的"搬运方向"（水平方向），并要求这个选择在 G 作用下不自相矛盾（等变性）。</p>
+<div class="key-insight">伴随丛构造是规范场论中"物质场"的数学本质：给定规范群 G 和物质场的表示 ρ，物质场是伴随丛 P ×_ρ V 的截面。例如，电子的波函数是 U(1) 主丛的伴随线丛的截面（带电荷标度），而夸克是 SU(3) 主丛伴随向量丛的截面。</div>
+</section>
+
+<section>
+<h3>六、曲率——为什么定义成 dω + (1/2)[ω, ω]</h3>
+<p>直觉上，曲率度量"水平搬运一个整圈后，结果差了多少"。严格说，曲率是水平子丛"不可积"的程度：把 H 沿着底流形的一个无穷小方框搬一圈，若回到原点时水平方向偏转了，曲率就不为零。数学上这个偏转由联络 1-形式 ω 的某种外微分给出。</p>
+<p><strong>为什么多出一个 [ω, ω] 项？</strong> 对 U(1)（可交换）规范群，[ω,ω] = 0，曲率回到 F = dA，即经典电磁场强——线性。对 SU(2)、SU(3)（非交换）规范群，[ω,ω] ≠ 0，它正好是"平行移动一圈"与"坐标变换一圈"顺序交换时产生的差异，物理上对应<strong>规范场的自相互作用</strong>。没有这一项，Yang-Mills 方程就不是规范不变的，光子也不会变成 W、Z 玻色子。</p>
+<div class="formula display" data-tex="\Omega = d\omega + \frac{1}{2}[\omega,\omega] = d\omega + \omega\wedge\omega\quad\text{(Cartan结构方程)}"></div>
+<p><strong>Cartan 结构方程。</strong> 设 ω 为 G-主丛 P 上的联络 1-形式，其<strong>曲率 2-形式</strong>定义为 Ω := dω + (1/2)[ω, ω]，其中 [·,·] 是 Lie G 中李括号与微分形式外积的组合。它是 Maurer-Cartan 方程 dθ + (1/2)[θ, θ] = 0 的"有联络"推广——曲率度量联络偏离平坦（偏离局部平凡化）的程度。</p>
+<p><strong>Bianchi 恒等式。</strong> 对曲率做协变外微分得到 d_ωΩ = dΩ + [ω, Ω] = 0。这等价于规范场论中的齐次 Maxwell 方程。</p>
+<p><strong>平坦联络。</strong> 当 Ω ≡ 0 时联络称为<strong>平坦</strong>的。平坦联络 ⟺ 局部常值转移函数（即 M 的万有覆盖上联络可规范变换为零）⟺ 和乐表示 π₁(M) → G（仅依赖于同伦类）。对于平坦向量丛，这是 Riemann-Hilbert 对应的基础。</p>
+</section>
+
+<section>
+<h3>七、例题 2——Aharonov-Bohm 效应：联络的物理实在性</h3>
+<p><strong>题目。</strong> 电子沿螺线管外部一圈路径运动，管外磁场 B = 0 但矢势 A ≠ 0。计算电子波函数获得的相位，并说明这证明了什么。</p>
+<p><strong>解。</strong> 取无限长螺线管沿 z 轴，内部磁通为 Φ。柱坐标下取规范 A_φ = Φ/(2πr)（管外、管内部由 Stokes 定理自动衔接）。沿一条绕管外闭合路径积分：</p>
+<div class="formula display" data-tex="\oint A\cdot dl = \oint \frac{\Phi}{2\pi r}\cdot r\,d\varphi = \Phi"></div>
+<p>即矢势沿整圈的环量恰等于管内的磁通 Φ，尽管管外每一点 B = rot A = 0。电子波函数沿此路径获得相位</p>
+<div class="formula display" data-tex="\Delta\phi = \frac{e}{\hbar}\oint A\cdot dl = \frac{e}{\hbar}\Phi"></div>
+<p><strong>结论与解释。</strong> 管外磁场为零，电子却获得了可观测的相位差（干涉条纹移动）。这说明：<strong>联络 A 本身具有物理意义，而不只是曲率 F 的坐标表达</strong>。在纤维丛语言里，这正是 U(1) 主丛上的平行移动（和乐）：沿闭合路径搬一圈，相位转了 Δφ，搬回来的"钟面"和出发时错开了——错开多少由联络决定，而与管外的曲率无关。Aharonov-Bohm 效应是联络（而非仅曲率）可观测的最直接实验证据。</p>
+</section>
+
+<section>
+<h3>八、示性类——纤维丛的"指纹"（Chern-Weil 理论）</h3>
+<p><strong>为什么需要示性类？</strong> 判断一个丛是否平凡，是个全局问题；但整体拓扑信息可以"藏在"曲率里。Chern-Weil 理论的核心洞见是：<strong>用曲率算整体拓扑</strong>——曲率的多项式给出上同调类，而且不依赖联络的选择，因此是丛本身的拓扑不变量，也就是它的"指纹"。</p>
+<p><strong>证明概要。</strong> 任给 G 在 Lie G 上伴随表示下不变的多项式 P: Lie G → ℝ（即 P(Ad_g X) = P(X)），则 P(Ω) 是 M 上良定义的 2k-形式，满足：(a) d P(Ω) = 0（闭）；(b) [P(Ω)] ∈ H^{2k}(M, ℝ) 与联络选择无关。因此每个不变多项式定义了主丛的一个<strong>示性类</strong>。这构造了不变多项式环到上同调环的同态，即 Chern-Weil 同态。</p>
+<div class="formula display" data-tex="\det\left(I + \frac{i}{2\pi}\Omega\right) = \sum_{k=0}^{n} c_k(E),\qquad c_k(E) = \left[p_k\left(\frac{\Omega}{2\pi}\right)\right]"></div>
+<p><strong>Chern 类。</strong> 对复向量丛 E（或主 U(n) 丛），取不变多项式 det(I + (i/2π)Ω) 展开的各项系数，得 Chern 类 c_k(E) ∈ H^{2k}(M, ℤ)。这是最常见的示性类；Stiefel-Whitney 类（实向量丛）、Pontryagin 类、Euler 类同样都是某个不变多项式的像——每个示性类都标记着丛与"平凡丛"差多远。</p>
+<p><strong>线丛的第一 Chern 类。</strong> 对复线丛 L（U(1) 丛），曲率 Ω 是平凡的 2-形式（U(1) 交换，[ω,ω]=0），Ω = dω。第一 Chern 类为 c₁(L) = (i/2π)[Ω] ∈ H²(M, ℤ)。在二维紧致流形 Σ 上，Chern 数 ∫_Σ c₁(L) = (i/2π)∫_Σ Ω 是整数——这是<strong>Gauss-Bonnet-Chern 定理</strong>的最简单情形，也是 Dirac 量子化条件的数学根源。</p>
+<div class="key-insight">示性类 = 纤维丛的"身份证"，标出它与最普通的"平凡丛"差别有多大；量子 Hall 效应的 Hall 电导 = Chern 数——物理中的示性类。</div>
+</section>
+
+<section>
+<h3>九、例题 3——磁单极子：第一 Chern 数与 Dirac 量子化</h3>
+<p><strong>题目。</strong> 用 Hopf 纤维化 S³ → S² 构造 U(1) 主丛，计算它的第一 Chern 数，并推导 Dirac 量子化条件。</p>
+<p><strong>解。</strong></p>
+<p><strong>(1) Hopf 丛。</strong> 取 S³ = {(z₁,z₂) : |z₁|²+|z₂|²=1} ⊂ ℂ²。U(1) 右作用 (z₁,z₂)·e^{iθ} = (e^{iθ}z₁, e^{iθ}z₂) 自由且每根纤维是圆，商空间 S³/U(1) = S²。得主 U(1) 丛 p: S³ → S²，纤维 U(1)。</p>
+<p><strong>(2) 覆盖 S²。</strong> S² = ℂ∪{∞}。用两个平凡化：U₀ = S²∖{北}, U∞ = S²∖{南}。在 U₀ 上取截面 s₀(ζ) = (ζ/√(1+|ζ|²), 1/√(1+|ζ|²))，在 U∞ 上取截面 s∞。重叠区 ζ ≠ 0, ∞ 上的转移函数 g₀∞(ζ) = s₀⁻¹s∞ 是一个映射 S¹ → U(1)，其绕数为 1（Hopf 纤维"转了一圈"）。</p>
+<p><strong>(3) 第一 Chern 数。</strong> 联络的曲率 Ω 满足 ∫_{S²} (i/2π)Ω = 转移函数的绕数 = 1（这正是第八章的 Gauss-Bonnet-Chern 整性：∫_{S²}c₁ ∈ ℤ）。故 Hopf 丛的 c₁ = 1，第一 Chern 数 = 1。</p>
+<p><strong>(4) Dirac 量子化。</strong> 磁单极子即 S² 上带曲率的 U(1) 主丛，磁荷 g 由第一 Chern 数分类：c₁ = n ∈ H²(S², ℤ) ≅ ℤ。对 n 层覆盖，∫_{S²}c₁ = n，Dirac 量子化条件 eg = nħ/2（n ∈ ℤ）正是"第一 Chern 数为整数"的几何表述——磁荷不能任意取值，只能取整数倍，这是拓扑对物理的硬性约束。</p>
+</section>
+
+<section>
+<h3>十、分类空间 BG——所有 G-主丛的"母空间"</h3>
+<p>G-主丛按同构类分类 ⟺ [X, BG]。BG 的同伦型唯一。G = U(1) ⟹ BG = CP^∞；G = ℤ/2 ⟹ BG = RP^∞。示性类来自 BG 的上同调——Chern 类来自 H*(BU(n)) = ℤ[c₁, …, c_n]。这是纤维丛理论最深刻的结构定理：<strong>想知道 X 上有多少种"挂 G 空间"的方式，只需求 X 到某个固定空间 BG 的映射同伦类个数</strong>。</p>
+</section>
+
+<section>
+<h3>十一、物理中的应用——规范场论与拓扑</h3>
+<p><strong>规范场论 = 主丛上的联络。</strong> 规范势 A_μ 就是（拉回至底流形的）联络 1-形式 ω。场强张量 F_μν = ∂_μ A_ν − ∂_ν A_μ + [A_μ, A_ν] 就是曲率 Ω 的分量形式。规范变换 A_μ → g⁻¹A_μ g + g⁻¹∂_μ g 是联络在主丛上 G 作用的拉回。规范不变的作用量 S = (1/4g²)∫ tr(F ∧ *F) 在数学上就是联络的 L² 范数，由标量积 ⟨s, s'⟩ = ∫ tr(s ∧ *s') 导出。</p>
+<p><strong>电磁学 = U(1) 主丛。</strong> 规范群 G = U(1)，Lie 代数 = iℝ。联络 1-形式 A = A_μ dx^μ（矢势）。曲率 F = dA（因 U(1) 交换，[A,A] = 0）。Maxwell 作用量 S = (1/4)∫ F_μν F^μν d⁴x 恰是 U(1) 联络的 Yang-Mills 泛函。电荷 e 通过协变导数 ∇_μ = ∂_μ − ieA_μ 进入——这是 U(1) 主丛上伴随线丛的协变导数，表示电荷为 U(1) 的不可约表示的权重。</p>
+<p><strong>Yang-Mills 理论 = 非交换规范群的主丛。</strong> 杨振宁和 Mills (1954) 将 U(1) 推广到 SU(2)（弱核力后推广到 SU(3)_C 用于强力）。Yang-Mills 作用量 S_YM = (1/2g²)∫ tr(F ∧ *F) + (1/2)∫ (Dφ ∧ *Dφ) + V(φ)，其中 Dφ = dφ + [A, φ] 是伴随丛上的协变导数。自相互作用项 [A_μ, A_ν] 来自规范群的非交换性——这是 Yang-Mills 理论最深刻的特征：<strong>规范场是自耦合的</strong>，与电磁学（线性）有本质区别。四维情形存在渐近自由（Gross-Wilczek-Politzer, 1973；2004 诺奖）。</p>
+<p><strong>磁单极子与拓扑量子化。</strong> Dirac (1931) 考虑 U(1) 主丛在 S²（空间方向的无穷远球面）上的分类。S² 上的 U(1) 主丛由第一 Chern 类 c₁ ∈ H²(S², ℤ) ≅ ℤ 分类。磁荷 g 必须满足 Dirac 量子化条件 eg = nħ/2（n ∈ ℤ）。等价地，c₁ = n ∈ ℤ 即 Chern 数代表磁单极子数。在数学上，Hopf 纤维化 S³ → S²（纤维 U(1)）的 Chern 数为 1，是磁单极子构型的几何原型。</p>
+<p><strong>瞬子与四维拓扑。</strong> 瞬子是四维欧氏空间 ℝ⁴（紧化为 S⁴）上 Yang-Mills 联络的<strong>自对偶</strong>有限作用经典解。S⁴ 上的 SU(2) 主丛由 π₃(SU(2)) ≅ ℤ 分类（因 SU(2) ≅ S³）。瞬子数（第二 Chern 类）k = (1/8π²)∫_{S⁴} tr(F ∧ F) ∈ ℤ 给出丛的同构类。<strong>Donaldson 定理 (1983):</strong> 光滑 4-流形的微分结构由 Yang-Mills 瞬子模空间的交点形式不变量分类。这是规范场论解决纯拓扑问题的典范——Donaldson 因此获 1986 年 Fields 奖。</p>
+<div class="key-insight">瞬子模空间是 4-流形微分拓扑的核心工具。Freedman (1982) 用拓扑方法分类了所有单连通 4-流形的同伦型，Donaldson 用瞬子证明了存在无穷多个微分结构不同的 ℝ⁴。Witten (1988) 进一步用量子场论推导了 Donaldson 不变量。</div>
+</section>
+
+<section><h3>前沿：导出代数几何(DAG)与导出纤维丛</h3>
+<p>经典纤维丛 → 导出纤维丛：在 Lurie 的 DAG 中，纤维丛的提升（分类空间）变成了导出分类栈。Toen (2006) 证明导出 Hitchin 系统的模空间自然地是导出辛的。仍开放：导出几何在物理（弦紧致化）中的完整应用。</p></section>
+
+<section><h3>重要论文与文献</h3>
+<p>
+S.-S. Chern, "Characteristic classes of Hermitian manifolds", <em>Ann. Math.</em> 47 (1946), 85–121. [Chern 类的原始定义]<br>
+C.-N. Yang & R. Mills, "Conservation of isotopic spin and isotopic gauge invariance", <em>Phys. Rev.</em> 96 (1954), 191–195. [Yang-Mills 理论的诞生]<br>
+M. F. Atiyah & I. M. Singer, "The index of elliptic operators on compact manifolds", <em>Bull. AMS</em> 69 (1963), 422–433. [指标定理的宣告]<br>
+S. K. Donaldson, "An application of gauge theory to four-dimensional topology", <em>J. Diff. Geom.</em> 18 (1983), 279–315. [瞬子在 4-流形中的应用]<br>
+N. Seiberg & E. Witten, "Electric-magnetic duality, monopole condensation, and confinement in N=2 supersymmetric Yang-Mills theory", <em>Nucl. Phys. B</em> 426 (1994), 19–52. [Seiberg-Witten 方程简化了 Donaldson 理论]
+</p>
+</section>
+
+<section><h3>开放问题</h3>
+<p>
+<strong>1. Seiberg-Witten 不变量的配边不变性。</strong> 已知 Seiberg-Witten 不变量是 4-流形的光滑不变量，但它们是否在配边下保持不变？（等价于：是否存在 4-流形 M, N 使得 M≃N（配边）但 SW(M) ≠ SW(N)？）这涉及 4 维光滑配边群的结构，目前尚未解决。<br>
+<strong>2. 光滑 4 维 Poincaré 猜想。</strong> 是否存在同伦等价于 S⁴ 但不微分同胚于 S⁴ 的光滑 4-流形？拓扑的 Poincaré 猜想在 4 维已被 Freedman (1982) 证明，但光滑版本仍完全开放。Seiberg-Witten 不变量和 Heegaard-Floer 同调是主要工具，但迄今无法解决此问题。<br>
+<strong>3. Atiyah-Singer 指标定理对叶状结构的推广。</strong> Connes 的叶状结构指标定理在非交换几何框架下已获证明，但其"经典"表述（用纯微分几何语言）涉及 C*-动力系统和谱三元组的算子代数技巧，是否可能有一个不依赖非交换几何的直接证明？这与叶状结构上的微分算子正则性问题密切相关。
+</p>
+</section>
+
+<section><h3>工作题</h3>
+<p><strong>题 1</strong>：证明 Möbius 带不是平凡线丛（作为 S¹ 上的 ℝ¹-丛）。</p>
+<details><summary>显示解答</summary><p>若平凡，则存在处处非零截面。但 Möbius 带任何截面必过"中心线"的某点取零值（中间线处截面必须为 0）。更严谨：Möbius 带的第一 Stiefel-Whitney 类 w₁ = 1 ≠ 0，而平凡丛 w₁=0。</p></details>
+<p><strong>题 2</strong>：计算 S² 上 U(1) 主丛的第一 Chern 数（磁单极子）。</p>
+<details><summary>显示解答</summary><p>Hopf 丛 S³→S² 的 c₁ = 1，∫_{S²}c₁ = 1。一般 n 层覆盖对应磁荷 n，∫c₁ = n。Dirac 量子化 eg = nħ/2 正是 c₁ ∈ H²(S²,Z)≅Z 为整数的几何表述。</p></details>
+<p><strong>题 3</strong>：验证线丛曲率第一类 ∫_{Σ}(i/2π)Ω 是整数（Gauss-Bonnet-Chern 特例）。</p>
+<details><summary>显示解答</summary><p>对复线丛，Ω=dω（局域），∫_{Σ}Ω = ∮∂Σ ω。转移函数 g 的绕数 = (1/2πi)∮d log g ∈ Z。这正是 (i/2π)∫Ω 为整数（Chern 数）的来源——拓扑量子化的解析表达。</p></details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（毛球定理的纤维丛版本）。</strong> 用 Euler 类证明切丛 TS² 没有处处非零截面。<strong>提示：</strong>若 TS² 平凡，则存在处处非零切向量场；但 Euler 类 e(TS²) = 2[S²] ≠ 0 阻止平凡化——对秩 2 定向实丛，平凡 ⟺ e = 0。</p>
+<p><strong>试试看 2（n 层磁单极子）。</strong> 计算 n 层 Hopf 覆盖 S³/(ℤ/n) → S² 的第一 Chern 数。<strong>提示：</strong>转移函数的绕数由 n 决定；∫_{S²}c₁ = n。</p>
+<p><strong>试试看 3（平坦联络）。</strong> 验证：联络在局部平凡化下的 1-形式形如 g⁻¹dg 时，曲率恒为零。<strong>提示：</strong>代入 Cartan 结构方程，用 Maurer-Cartan 方程 d(g⁻¹dg) + ½[g⁻¹dg, g⁻¹dg] = 0。</p>
+<p><strong>试试看 4（转移函数）。</strong> 写出莫比乌斯带作为 O(1) 主丛的转移函数。<strong>提示：</strong>把 S¹ 分成两段开覆盖，重叠区有两个连通分支，转移函数在那里分别取 +1 与 −1。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. do Carmo, Differential Geometry of Curves and Surfaces</strong></p>
+<p>&rarr; <strong>J. Lee, Introduction to Smooth Manifolds</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/parallel-transport.html">平行移动</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一学科分类「微分几何」。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一学科分类「微分几何」。</p>
+<p>&rarr; <a href="/pages/parallel-transport.html">↗️ 平行移动</a>：同一学科分类「微分几何」。</p>
+<p>&rarr; <a href="/pages/convex-geometry.html">⬡ 凸几何</a>：几何核心链。</p>
+</section>

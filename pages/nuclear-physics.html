@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="液滴模型、壳层模型——原子核的结构与反应" />
+  <meta property="og:title" content="核物理 — Vibe Math" />
+  <meta property="og:description" content="液滴模型、壳层模型——原子核的结构与反应" />
+  <title>核物理 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⚛️ 核物理 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">液滴模型、壳层模型——原子核的结构与反应</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='nuclear-physics',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/optics.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 💡 光学</a>
+  <a href="/pages/electromagnetism.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">⚡ 电磁学与 Maxwell 方程组 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、开场问题——四个数字：2.224、28.3、8.8、200</h3>
+<p>原子核物理的深水区，先记住四个能量数字，它们分别是"结合得有多紧"的四种回答：</p>
+<div class="formula display" data-tex="B_{\mathrm{d}}=2.224\,\mathrm{MeV}\quad(\text{氘核}),\qquad B_\alpha=28.3\,\mathrm{MeV}\quad(\text{氦-4})"></div>
+<div class="formula display" data-tex="\frac{B}{A}\Big|_{\mathrm{Fe\text{-}56}}\approx8.8\,\mathrm{MeV}/\text{核子}\quad(\text{结合能曲线最高点}),\qquad E_{\mathrm{fission}}\approx200\,\mathrm{MeV}\quad(\text{铀-235 裂变})"></div>
+<p>第一对数：氘核（一个质子+一个中子）只放出 2.224 MeV 就牢牢结合；氦-4（两个质子+两个中子）放出 28.3 MeV，是前者的 13 倍——同样是"两个质子和中子"，多装一对就紧得多。第二个数：把所有原子核按"每核子结合能"排队，铁-56 站在约 8.8 MeV/核子的顶点——它是结合得最紧的核，也是恒星熔炉的终点。第三个数：铀-235 被一个慢中子打碎时，一次裂变放出约 200 MeV。</p>
+<p>为什么这些数字值得算？因为它们就是"为什么原子核能放出巨大能量"的全部答案：<strong>太阳靠把轻核熔成铁（聚变）赚钱，核电站靠把重核打碎（裂变）赚钱</strong>——两笔生意的差价都写在结合能曲线上。本课要做的事，就是把这几个数字一步步算出来：质量亏损算 28.3，半经验公式算 8.8，Q 值公式算 200 和 17.6。</p>
+<div class="key-insight">核心思想：原子核结合能 = 把核子拼起来时放出的能量。轻核往铁方向"爬坡"（聚变）放能，重核往铁方向"下山"（裂变）也放能——结合能曲线的驼峰就是宇宙的能量银行。只想懂核心思想，看到〇到七节就够。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/standard-model.html">标准模型</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>〇·一、原子核的尺子与"胶水"——先有数字，再有模型</h3>
+<p>在谈任何模型之前，先用两把尺子给原子核量个身。第一把是半径：实验（电子散射）发现原子核半径近似服从</p>
+<div class="formula display" data-tex="R=r_0A^{1/3},\qquad r_0\approx1.2\,\mathrm{fm}\;(1\,\mathrm{fm}=10^{-15}\,\mathrm{m})"></div>
+<p>氦-4（A=4）：R = 1.2×4^{1/3} ≈ 1.2×1.587 ≈ 1.9 fm；铀-238（A=238）：R = 1.2×6.2 ≈ 7.4 fm。半径只按 A^{1/3} 长，说明体积 ∝ A——<strong>核子像密度均匀的"液体"一样装满原子核</strong>，这是后面液滴模型的第一个信号。</p>
+<p>第二把尺子是密度：把核子质量除以体积，</p>
+<div class="formula display" data-tex="\rho_{\mathrm{nuc}}=\frac{m_p}{(4\pi/3)r_0^3}\approx\frac{1.67\times10^{-27}}{7.2\times10^{-45}}\approx2.3\times10^{17}\,\mathrm{kg/m^3}"></div>
+<p>每立方厘米约 2.3 亿吨。这个密度不随 A 变——所有原子核的密度都一样，再次印证"核液体"图像。记住 2.3×10¹⁷ kg/m³，后面中子星的 5×10¹⁷ 就是它的"续集"。</p>
+<p>那把这些核子黏在一起的"胶水"是什么？不是电磁力（质子都带正电，只会互相推开），而是一种更强、但只在 ~1 fm 尺度内起作用的<strong>核力</strong>。它的存在本身就是"为什么原子核不散架"的答案——而它的短程性，则解释了为什么原子核只能长这么大。下一节把这个胶水追到它的基本起源。</p>
+<div class="key-insight">两把尺子定基调：R ≈ 1.2 A^{1/3} fm（体积正比于核子数），ρ ≈ 2.3×10¹⁷ kg/m³（密度不变）。"核液体"图像由此而来——一切模型的出发点。</div>
+</section>
+
+<section>
+<h3>一、核力——QCD 在低能的残余</h3>
+<p>原子核内部的强力并不是一种"新的基本力"——它是夸克之间的强相互作用（QCD）在低能标下的<strong>残余效应</strong>，正如 van der Waals 力是电磁力在中性原子间的残余。这是个重要的"为什么"：基本力只有四种，核力不在其中，它是强相互作用"漏到"复合粒子层面的一点点余波。</p>
+<p>汤川秀树 1935 年的预言是这条线索的关键一步。他问：力的作用范围 r 与传递粒子质量 m 的关系是什么？答案来自不确定性原理：虚粒子的寿命 τ ≈ ħ/mc²，它最多跑 cτ = ħ/mc 那么远，所以</p>
+<div class="formula display" data-tex="r\approx\frac{\hbar}{mc}\;\Longrightarrow\;m\approx\frac{\hbar}{rc}\approx\frac{197\,\mathrm{MeV\cdot fm}}{1.4\,\mathrm{fm}}\approx140\,\mathrm{MeV/c^2}"></div>
+<p>于是他预言一种质量约 140 MeV 的介子（π 介子）作为核力的"信使"。1947 年，π 介子在宇宙线中被发现（质量 139.6 MeV），1949 年汤川获诺贝尔奖。公式：力程 1.4 fm 对应粒子质量约 140 MeV——<strong>粒子越轻，力的作用范围越大；核力短程，正因为它由较重的介子传递</strong>。这条"质量-力程"关系是核物理与粒子物理第一次握手。</p>
+<div class="key-insight">核力 = QCD 的残余力，由 π 介子传递。质量-力程关系 m ≈ ħ/rc 把"力的范围 ~1 fm"翻译成"介子质量 ~140 MeV"——汤川用这条公式预言了 π 介子。</div>
+</section>
+
+<section>
+<h3>二、教科书例题 1——质量亏损与氦-4 结合能：28.3 MeV 从哪来</h3>
+<p><strong>问题：</strong>氦-4 原子质量 m(⁴He) = 4.002603 u。用质量亏损求它的结合能，并与氘核（B = 2.224 MeV）对比，解释为什么 α 粒子特别稳定。</p>
+<p><strong>第 1 步：质量守恒 vs 质量亏损。</strong>质子、中子的质量（原子单位 u，1 u = 931.494 MeV/c²）为</p>
+<div class="formula display" data-tex="m_H=1.007825\,\mathrm{u}\ (\text{氢原子}),\qquad m_n=1.008665\,\mathrm{u}"></div>
+<p>两个质子加两个中子的质量——用氢原子质量 m_H 而非裸质子质量，这样两边的电子数自动抵消，不用管电子质量：</p>
+<div class="formula display" data-tex="2m_H+2m_n=2\times1.007825+2\times1.008665=4.032980\,\mathrm{u}"></div>
+<p><strong>第 2 步：算质量亏损。</strong>零件总质量（4.032980 u）比组装好的氦-4（4.002603 u）重：</p>
+<div class="formula display" data-tex="\Delta m=4.032980-4.002603=0.030377\,\mathrm{u}"></div>
+<p>少掉的这 0.030 u 去了哪？——按 E = mc²，它变成了结合能放出去了。这就是"质量亏损"的定义动机：<strong>结合得越紧，零件总质量越比成品重，差值就是放出的能量</strong>。</p>
+<p><strong>第 3 步：换算成能量。</strong></p>
+<div class="formula display" data-tex="B_\alpha=\Delta m\,c^2=0.030377\times931.494\,\mathrm{MeV}\approx28.30\,\mathrm{MeV}"></div>
+<div class="formula display" data-tex="\frac{B_\alpha}{A}=\frac{28.30}{4}\approx7.07\,\mathrm{MeV}/\text{核子}"></div>
+<p><strong>第 4 步：与氘核对比——为什么 α 这么结实。</strong>氘核每核子结合能只有 2.224/2 = 1.11 MeV，α 粒子却有 7.07 MeV，高 6 倍。原因有二：α 里<strong>四个核子两两都被强力拉住</strong>（配对项），且质子、中子数相等（N=Z=2）没有不对称惩罚。所以 α 粒子是核世界里的"惰性气体"——它太稳定，几乎不参与进一步结合，这也是 α 衰变能作为独立粒子整体逃逸的原因。∎</p>
+<div class="key-insight">例题 1 的记账本：结合能 = (零件质量 − 成品质量)×c²。E=mc² 不是口号，是一台精确到第五位小数的"能量天平"——28.30 MeV 就是这么称出来的。</div>
+</section>
+
+<section>
+<h3>三、液滴模型——半经验质量公式</h3>
+<p>把原子核当成一颗带电的"核液滴"，结合能就能写成五项之和——每一项都有清晰的物理动机。这就是贝特–魏茨泽克（Bethe–Weizsäcker）半经验质量公式：</p>
+<div class="formula display" data-tex="B(N,Z)=a_vA-a_sA^{2/3}-a_c\frac{Z(Z-1)}{A^{1/3}}-a_a\frac{(N-Z)^2}{A}+\delta"></div>
+<p>逐项解释<strong>为什么</strong>长这样：</p>
+<ul>
+<li><strong>体项 a_vA（吸引）。</strong>核子被短程强力的饱和作用拉住，每个核子贡献大致相同的结合能——"体积越大越稳"，系数 a_v ≈ 15.8 MeV。</li>
+<li><strong>表面项 −a_sA^{2/3}（削弱）。</strong>表面上的核子只被内侧拉住、外侧没邻居，白白损失能量。表面积 ∝ R² ∝ A^{2/3}，a_s ≈ 18.3 MeV。这就是"为什么不能无限大"：体项按 A 长，表面项按 A^{2/3} 长，大核的表面损失占的比例越来越小——直到库仑项反超。</li>
+<li><strong>库仑项 −a_c Z(Z−1)/A^{1/3}（削弱）。</strong>质子互相排斥，把这团"正电液滴"往外撑。能量 ∝ Z(Z−1)/R ∝ Z(Z−1)/A^{1/3}，a_c ≈ 0.714 MeV。它对重核是致命的：这是"重核会裂变"的根源。</li>
+<li><strong>对称项 −a_a(N−Z)²/A（削弱）。</strong>核子挤在泡利不相容原理下：质子/中子各自排能级，N≠Z 时一个费米海被填得比另一个高，系统更"贵"——所以核倾向 N≈Z。a_a ≈ 23.2 MeV。</li>
+<li><strong>配对项 δ（修正）。</strong>同类核子成对时更省能量：偶-偶核（Z、N 都偶）+12/√A，奇-奇核 −12/√A，奇 A 核为 0。</li>
+</ul>
+<p>这五项不是拍脑袋：它们分别捕捉了"体、面、电、泡利、配对"五种物理。合起来它对全周期表几百个核的结合能预测精确到 <strong>&lt;1%</strong>——一个如此简单的"液滴"模型能准到这种程度，本身就是"核近似均匀液体"这一图像的胜利。</p>
+<div class="key-insight">五项公式 = 五笔账：体项（吸引力，∝A）、表面项（∝A^{2/3}）、库仑项（∝Z²/A^{1/3}）、对称项（∝(N−Z)²/A）、配对项（±12/√A）。每一项都有明确的物理动机，合起来精确到 1%。</div>
+</section>
+
+<section>
+<h3>四、教科书例题 2——用半经验公式算铁-56：结合能曲线为什么在 A≈56 封顶</h3>
+<p><strong>问题：</strong>用公式算 ⁵⁶Fe（A=56，Z=26，N=30）的结合能与每核子结合能，和实验值（B ≈ 492.3 MeV，B/A ≈ 8.79 MeV）对比。</p>
+<p><strong>第 1 步：逐项代入。</strong>取 a_v=15.8、a_s=18.3、a_c=0.714、a_a=23.2 MeV，偶-偶核 δ = +12/√A：</p>
+<div class="formula display" data-tex="\text{体项}=15.8\times56=884.8\,\mathrm{MeV},\qquad \text{表面项}=18.3\times56^{2/3};\quad 56^{2/3}=(56^{1/3})^2=3.826^2=14.64"></div>
+<div class="formula display" data-tex="\text{表面项}=18.3\times14.64=267.9\,\mathrm{MeV},\qquad \text{库仑项}=0.714\times\frac{26\times25}{56^{1/3}}=0.714\times\frac{650}{3.826}=121.3\,\mathrm{MeV}"></div>
+<div class="formula display" data-tex="\text{对称项}=23.2\times\frac{(30-26)^2}{56}=23.2\times\frac{16}{56}=6.63\,\mathrm{MeV},\qquad \delta=\frac{12}{\sqrt{56}}=1.60\,\mathrm{MeV}"></div>
+<p><strong>第 2 步：求和。</strong></p>
+<div class="formula display" data-tex="B=884.8-267.9-121.3-6.63+1.60\approx490.6\,\mathrm{MeV}"></div>
+<div class="formula display" data-tex="\frac{B}{A}=\frac{490.6}{56}\approx8.76\,\mathrm{MeV}/\text{核子}\quad(\text{实验 }8.79,\ \text{误差}\lesssim0.4\%)"></div>
+<p>一个 0.4% 的误差——液滴模型在铁处给出了近乎精确的预言。</p>
+<p><strong>第 3 步：为什么 B/A 在这里封顶。</strong>把每核子结合能写成五项除以 A：</p>
+<div class="formula display" data-tex="\frac{B}{A}=a_v-a_sA^{-1/3}-a_c\frac{Z(Z-1)}{A^{4/3}}-a_a\frac{(N-Z)^2}{A^2}+\cdots"></div>
+<p>体项是常数 15.8；表面项 −a_sA^{-1/3} 随 A 增大而变小（大核表面占比小）；库仑项 −a_c Z²/A^{4/3} 随 A 增大而<strong>增大</strong>（更多质子互相推）。两个趋势一升一降，在 A≈56 处取得极大值——这就是"铁峰"。A&lt;56 时聚变放能（往铁爬坡），A&gt;56 时裂变放能（往铁下山）。</p>
+<p><strong>第 4 步：量级检验。</strong>若把 U-238（A=238，Z=92，N=146）代进去，库仑项暴涨到约 965 MeV（试试看 2 让你算），B/A 跌到约 7.6——比铁低 1 MeV/核子，这 1 MeV×236 核子 ≈ 200 MeV 正是裂变能。所以"铀为什么能裂变"和"铁为什么是恒星终点"是同一道算术题的两个答案。∎</p>
+<div class="key-insight">铁峰不是神秘现象，而是公式的必然：表面项随 A 变大而变小，库仑项随 A 变大而变大，两项的交叉点就是 B/A 的顶点（A≈56）。裂变/聚变能都来自"往铁峰爬或下山"的 1–8 MeV/核子差价。</div>
+</section>
+
+<section>
+<h3>五、壳层模型——幻数</h3>
+<p>液滴模型描述"整体"，却解释不了一个铁一样的事实：某些核特别稳定。核子数等于 <strong>2、8、20、28、50、82、126</strong>（幻数）时，丰度异常高、结合能异常紧、稳定同位素异常多。例如 ⁴He（2,2）、¹⁶O（8,8）、⁴⁰Ca（20,20）、⁴⁸Ca（20,28）、⁵⁶Ni（28,28）、²⁰⁸Pb（82,126，双幻数）。</p>
+<p>壳层模型的思路与原子完全平行：每个核子不是在与其他核子"逐个碰撞"，而是在所有核子共同产生的<strong>平均势场</strong>里排布成壳层结构。填满一层壳就像原子填满一个电子壳层——特别稳定。幻数就是"闭合壳层"的核版本。</p>
+<p>但这里有一个关键细节，正是它让核壳层模型"必须存在"：<strong>只靠简单的三维谐振子/方阱势，预言的幻数是 2、8、20、40、58、……——没有 28、50、82、126。</strong>Goeppert-Mayer 和 Jensen 的贡献是加上一个强的<strong>自旋-轨道耦合项</strong> V ∝ L·S（核子的自旋与轨道角动量耦合），它把能级重新劈裂、搬动，恰好把闭合壳层挪到实验看到的幻数 28、50、82、126 上。这是理论物理里"观测强迫修改模型"的标准案例。两人因此获 1963 年诺贝尔奖。</p>
+<p>幻数不是花瓶：它们解释了为什么某些同位素特别长寿（如双幻核 ²⁰⁸Pb 半衰期超过宇宙年龄）、以及为什么 ⁴⁸Ca 有 20 质子 + 28 中子却特别稳定。壳层模型与液滴模型互补——一个讲"整体"，一个讲"个体"。</p>
+<div class="key-insight">幻数 = 闭合核壳层。没有自旋-轨道耦合，理论只能预言 40、58，不能预言 28、50、82、126——正是这项修正让核壳层模型成立。液滴管"整体"，壳层管"个体"，两者都要。</div>
+</section>
+
+<section>
+<h3>六、核天体物理：我们都是星尘</h3>
+<p>结合能曲线讲的是"静态"的能量差；恒星炉子讲的是"动态"的烧法。恒星把轻核一路熔向铁峰，赚取每核子 1–8 MeV 的差价：</p>
+<ul>
+<li><strong>太阳（小质量恒星）：pp 链。</strong>质子-质子链把 4 个氢核熔成 1 个氦-4，总放能 26.7 MeV。第一步 p+p → d + e⁺ + ν 尤其慢（两个质子靠弱相互作用合并），它决定了太阳的燃烧速率——所以太阳温和地烧了 100 亿年，而不是一瞬间炸掉。</li>
+<li><strong>重恒星：CNO 循环。</strong>以碳、氮、氧为催化剂，把 4 个质子熔成氦。需要中心温度更高，只在大质量恒星里启动。</li>
+<li><strong>比铁更重的元素：s-过程与 r-过程。</strong>铁峰之后，聚变不再放能，重元素靠<strong>中子捕获</strong>合成：s-过程（slow，慢中子）发生在红巨星里，走β稳定谷附近；r-过程（rapid，快中子）需要极高的中子通量，发生在<strong>超新星爆发</strong>或<strong>双中子星并合</strong>中。金、铂、铀都是 r-过程的产物。</li>
+</ul>
+<p>一个精确到数字的"星尘"声明：太阳系里碳-12 约 98.9% 来自恒星内部的核合成，你体内的每个重原子（铁、钙、氧里的中子）都来自某颗早已死去的恒星或并合的中子星。这不是诗意——它是核天体物理结合结合能曲线后得到的必然结论：<strong>宇宙最初只有氢和氦，其余全是恒星炉子用核反应炼出来的</strong>。</p>
+<div class="key-insight">恒星 = 核反应的熔炉：轻核烧向铁峰（pp、CNO），重核靠中子捕获（s、r 过程）长出铁峰。你身上的每一个重原子都是某颗恒星/中子星的"骨灰"——星尘不是比喻，是核物理。</div>
+</section>
+
+<section>
+<h3>七、教科书例题 3——Q 值：β 衰变与 D-T 聚变的能量账</h3>
+<p><strong>问题：</strong>算三个 Q 值：(1) 自由中子衰变 n → p + e⁻ + ν̄；(2) 氚 β 衰变 ³H → ³He + e⁻ + ν̄；(3) D-T 聚变 D + T → ⁴He + n。Q &gt; 0 表示过程放能、自发进行。</p>
+<p><strong>第 1 步：公式。</strong>β⁻ 衰变的 Q 值 = 母核原子质量 − 子核原子质量（电子质量在减法中自动抵消，这是用原子质量的动机）：</p>
+<div class="formula display" data-tex="Q=(m_{\mathrm{parent}}-m_{\mathrm{daughter}})c^2\qquad(\beta^-)"></div>
+<p><strong>第 2 步：自由中子。</strong>用粒子质量：m_n = 939.565 MeV/c²，m_p = 938.272 MeV/c²，m_e = 0.511 MeV/c²：</p>
+<div class="formula display" data-tex="Q_n=939.565-938.272-0.511=0.782\,\mathrm{MeV}"></div>
+<p>所以自由中子是不稳定的，平均 880 秒内衰变。但把它放进原子核（比如铁里的中子）它反而稳定——因为结合能曲线给它"垫"了足够多的能量（泡利原理也挡住了衰变终态）。<strong>同一粒子，自由时衰变、束缚时稳定，Q 值会告诉你为什么</strong>。</p>
+<p><strong>第 3 步：氚。</strong>m(³H) = 3.016049 u，m(³He) = 3.016029 u：</p>
+<div class="formula display" data-tex="Q_T=(3.016049-3.016029)\times931.5=2.0\times10^{-5}\times931.5\approx0.0186\,\mathrm{MeV}=18.6\,\mathrm{keV}"></div>
+<p>这就是著名的氚 β 衰变能（β 谱端点的 18.6 keV），也是全世界测量中微子质量（KATRIN 实验）用的那条谱线。<strong>注意量级：</strong>同样是把一个中子变质子，自由中子放 782 keV，氚里只放 18.6 keV——差 42 倍。差别全在母核与子核的结合能差。这说明 Q 值不是"中子的固有属性"，而是"核环境"决定的。</p>
+<p><strong>第 4 步：D-T 聚变。</strong>m(D) = 2.014102 u，m(T) = 3.016049 u，m(⁴He) = 4.002603 u，m_n = 1.008665 u：</p>
+<div class="formula display" data-tex="Q=(2.014102+3.016049)-(4.002603+1.008665)=5.030151-5.011268=0.018883\,\mathrm{u}"></div>
+<div class="formula display" data-tex="Q=0.018883\times931.5\approx17.6\,\mathrm{MeV}\quad(\text{ITER 引用的标准值 }17.59\,\mathrm{MeV})"></div>
+<p>每次 D-T 反应放 17.6 MeV，均分给 α 粒子（3.5 MeV）和中子（14.1 MeV）。<strong>按每核子比</strong>：聚变 17.6/5 ≈ 3.5 MeV/核子；裂变 200/236 ≈ 0.85 MeV/核子——聚变单位质量能量是裂变的约 4 倍，这也是"聚变发电"长远的诱惑所在。∎</p>
+<div class="key-insight">Q 值记账法：β⁻ 用"母核原子质量减子核原子质量"，聚变/裂变用"入 − 出"。同样的中子变质子，自由时放 782 keV、氚里只放 18.6 keV——核环境改写 Q 值，这是理解核稳定性的一把钥匙。</div>
+</section>
+
+<section>
+<h3>八、核聚变——D+T 到 He⁴+n</h3>
+<p>例题 3 算出了 D-T 反应每次放 17.6 MeV，但"会放能"不等于"能点着"。要让两个带正电的核靠拢到强力范围内，必须克服库仑位垒——这正是聚变的难点，也是劳森（Lawson）判据存在的意义。</p>
+<p>聚变"点火"要求三个量同时够大：等离子体密度 n、温度 T（决定碰撞能量）、约束时间 τ。劳森判据给出门槛：</p>
+<div class="formula display" data-tex="nT\tau>3\times10^{21}\,\mathrm{keV\cdot m^{-3}\cdot s}\qquad(\text{氘氚聚变})"></div>
+<p>意思是：燃料必须足够浓、足够热、被约束得足够久，放出的聚变能才能超过加热和约束消耗的能量。直觉：每两个核碰撞一次只有极小的概率发生聚变（要靠量子隧穿穿过库仑位垒），所以必须"关起来"反复碰撞很多次。</p>
+<p>两条实现路线：<strong>磁约束</strong>（托卡马克，如 ITER）用强磁场把等离子体关在环形笼子里，ITER 的目标是 Q = 10（输出能量是输入加热能量的 10 倍）；<strong>惯性约束</strong>（NIF 激光聚变）用强激光瞬间压缩燃料靶。2022 年 NIF 首次实现了"点火"（Q&gt;1），但离商用还差得远。数字上，D-T 燃料单位质量放能约 3.4×10¹⁴ J/kg，是煤（3×10⁷ J/kg）的一千万倍——这正是聚变被寄予厚望的原因。</p>
+<div class="key-insight">会放能 ≠ 点得着。库仑位垒要求燃料又热又浓又久：nTτ &gt; 3×10²¹。磁约束（ITER）与惯性约束（NIF）是两条通向"人工太阳"的路。</div>
+</section>
+
+<section>
+<h3>九、中子星与核物质状态方程</h3>
+<p>把"核液体"的密度再推高 2 倍，就到了中子星：整颗星是一团被引力压到核密度的中子物质。它是什么状态、有多硬，由<strong>核物质状态方程</strong>（EoS，压强与密度的关系）决定——而 EoS 直接决定中子星的质量-半径关系、最大质量（TOV 极限，约 2 倍太阳质量）和潮汐形变。</p>
+<p>数字感受一下：典型中子星 1.4 M☉（2.8×10³⁰ kg）压在半径约 11 km 的球里，密度</p>
+<div class="formula display" data-tex="\rho=\frac{M}{(4\pi/3)R^3}=\frac{2.8\times10^{30}}{4.19\times(1.1\times10^{4})^3}\approx5\times10^{17}\,\mathrm{kg/m^3}"></div>
+<p>——比原子核密度 2.3×10¹⁷ kg/m³ 还高 2 倍。在中子星内部，核力、泡利压强、引力三方角力，其 EoS 超出实验室核物理的极限密度区间，只有天文观测能探测。</p>
+<p>LIGO 对双中子星并合（GW170817）的引力波观测，从波形提取潮汐形变，直接约束了 EoS 的"软硬"——这是<strong>天体物理和核物理最精彩的交汇点</strong>：一颗遥远的中子星，用引力波告诉你地面上核物质方程的斜率。</p>
+<div class="key-insight">中子星 = 密度 5×10¹⁷ kg/m³ 的核物质实验室。EoS 决定它的结构；引力波（GW170817 的潮汐形变）第一次给了地面实验测不到的高密度核物质一个直接约束。</div>
+</section>
+
+<section>
+<h3>十、GW170817——双中子星并合的多信使天文学</h3>
+<p>2017 年 8 月 17 日，LIGO/Virgo 探测到双中子星并合的引力波信号（GW170817）。<strong>1.7 秒后</strong>，Fermi 卫星在同一方向看到短伽马暴——引力波与电磁波几乎同时到达，既证实引力以光速传播，也锁定了事件的位置。随后全球 70 多个望远镜在紫外、光学、红外、射电观测到<strong>千新星</strong>（kilonova）：中子星残骸抛出的放射性重元素衰变发的光。</p>
+<p>为什么这次观测如此重要？因为它回答了核天体物理一个悬了半个世纪的数字问题：<strong>r-过程的原料到底从哪来？</strong>千新星的光谱里出现了锶等 r-过程元素的特征线，且亮度曲线与"约 10⁻² M☉ 的 r-过程元素被抛射"的预言吻合。所以：<strong>你首饰里的金，很可能不是超新星，而是几十亿年前两颗中子星并合时炼出来的</strong>。GW170817 让"重元素起源"从假说变成了可检验的观测。</p>
+<div class="key-insight">GW170817 一石三鸟：引力波+伽马暴同源（光速检验）、定位+千新星（r-过程验证）、潮汐形变（EoS 约束）。多信使天文学由此成为重元素起源的裁定者。</div>
+</section>
+
+<section>
+<h3>十一、关键公式</h3>
+<div class="formula display" data-tex="R=r_0A^{1/3},\ r_0\approx1.2\,\mathrm{fm};\qquad \rho_{\mathrm{nuc}}\approx2.3\times10^{17}\,\mathrm{kg/m^3};\qquad m\approx\frac{\hbar}{rc}\;\Rightarrow\;m_\pi\approx140\,\mathrm{MeV/c^2}"></div>
+<div class="formula display" data-tex="B=(Zm_H+Nm_n-m_{\mathrm{atom}})c^2;\qquad B= a_vA-a_sA^{2/3}-a_c\frac{Z(Z-1)}{A^{1/3}}-a_a\frac{(N-Z)^2}{A}+\delta"></div>
+<div class="formula display" data-tex="a_v\approx15.8,\ a_s\approx18.3,\ a_c\approx0.714,\ a_a\approx23.2\ \mathrm{MeV};\qquad B/A|_{\mathrm{Fe\text{-}56}}\approx8.8\ \mathrm{MeV}"></div>
+<div class="formula display" data-tex="Q_{\beta^-}=(m_{\mathrm{parent}}-m_{\mathrm{daughter}})c^2;\qquad Q_{\mathrm{D\text{-}T}}=17.6\,\mathrm{MeV};\qquad nT\tau>3\times10^{21}\,\mathrm{keV\cdot m^{-3}\cdot s}"></div>
+</section>
+
+<section>
+<h3>十二、试试看（每题附提示）</h3>
+<p><strong>1. 用半经验公式估算 α 粒子的结合能并和例题 1 比较。</strong>A=4，Z=2，N=2。</p>
+<p><em>提示：体项 15.8×4=63.2；表面项 18.3×4^{2/3}=18.3×2.52=46.1；库仑项 0.714×2×1/4^{1/3}=1.428/1.587=0.90；对称项 0；配对项 +12/2=6.0。B ≈ 63.2−46.1−0.9+6.0 = 22.2 MeV（B/A≈5.6）。与精确值 28.3 差约 20%——半经验公式在轻核处最不准（液滴图像对 4 个核子太粗糙），这正是壳层模型要接手的地方。</em></p>
+<p><strong>2. 用公式算 ²³⁸U 的结合能，看库仑项如何压垮重核。</strong>A=238，Z=92，N=146。</p>
+<p><em>提示：体项 15.8×238=3760；表面项 18.3×238^{2/3}=18.3×38.4=703；库仑项 0.714×92×91/6.20=965；对称项 23.2×54²/238=284；配对 +12/√238=0.78。B ≈ 1808 MeV，B/A ≈ 7.60 MeV/核子（实验 7.57）。注意库仑项从铁的 121 飙到 965——比表面项还大，这就是重核"撑不住要裂"的原因。</em></p>
+<p><strong>3. 用汤川公式估算 ρ 介子的力程（m_ρ ≈ 770 MeV/c²）。</strong></p>
+<p><em>提示：r ≈ ħc/mc² = 197/770 ≈ 0.26 fm。ρ 介子比 π 重得多，力程短得多——核力在 0.5 fm 内有很强的短程排斥（正是它阻止核被压爆），这一项就由 ω/ρ 介子传递。</em></p>
+<p><strong>4. 为什么"自由中子衰变 880 秒"在恒星内部算不了数？</strong></p>
+<p><em>提示：核内中子被泡利原理"挡住了"衰变终态——衰变产生的质子要占一个能级，若那个能级已被占满，衰变被禁止（或大幅延迟）。这就是为什么束缚中子稳定、自由中子不稳定。核物理里"禁戒"常常比"能量不够"更致命。</em></p>
+<p><strong>5. 1 kg 氘氚燃料 vs 1 kg 铀-235，谁放能多？</strong></p>
+<p><em>提示：聚变约 3.4×10¹⁴ J/kg（每反应 17.6 MeV、约 5 个核子），裂变约 8×10¹³ J/kg（每反应约 200 MeV、约 236 个核子）——聚变约为裂变的 4 倍；煤只有 3×10⁷ J/kg。三种能源按单位质量排：煤 : 铀 : 氘氚 ≈ 1 : 10⁶ : 10⁷。</em></p>
+<p><strong>6. 为什么元素丰度曲线在 A≈56 有"铁峰"、在幻数处又有"锯齿"？</strong></p>
+<p><em>提示：铁峰来自结合能曲线的整体极大（液滴模型的表面/库仑竞争，见例题 2）；锯齿来自壳层效应（幻数核特别稳定、丰度偏高）——两条曲线叠加：一条平滑的抛物线 + 一套壳层修正。</em></p>
+</section>
+
+<section>
+<h3>十三、反例与边界——两个模型的失效处</h3>
+<p>教科书总爱给模型划边界，核物理的两个主角各有"死穴"。</p>
+<p><strong>液滴模型的反例：轻核与形变。</strong>对 A &lt; 16 的核，液滴图像误差可达百分之几十（试试看 1 的 α 粒子差了 20%）。更糟的是，它解释不了<strong>为什么 ⁴He 特别稳定</strong>、为什么 ¹⁶O 是丰度最高的氧同位素——这些是壳层效应，液滴的平滑公式看不到。反过来，壳层模型也有力不从心处：它解释不了结合能曲线整体随 A 的平滑爬升（那是液滴的领地）。<strong>两个模型不是竞争，而是互补</strong>——一个管平均、一个管个体，真实核介于两者之间。</p>
+<p><strong>"核密度不变"的失效：中子皮与晕核。</strong>中子数远超质子的丰中子核（如 ¹¹Li = 3p + 8n）里，多余中子会伸出"主液滴"之外，形成<strong>中子晕</strong>——半径远超 1.2A^{1/3} fm 的预言，密度也不再均匀。这说明液滴的"密度恒定"假设只在稳定线附近成立，越远离 β 稳定谷越失灵。这个边界本身就是今天的核物理前沿：中子在原子核里能"伸"多远？</p>
+<p><strong>汤川核力图像的失效：核子在核内不是自由介子汤。</strong>把核力想象成"π 介子交换"在中等密度处就开始失真——实际核物质里约 20% 的核子处于短程关联（两个核子瞬间靠得很近、几乎重叠），此时必须直接求解 QCD 或唯象高密度势。这正是核物质 EoS 在 2–5 倍核密度处充满不确定性的根源，也是 GW170817 和未来引力波实验要钉住的地方。</p>
+<div class="key-insight">每个模型的边界就是下一个模型的起点：液滴管平滑、壳层管幻数、介子交换管低密度、QCD/高密度势管核内部——核物理是一个"层层修补、层层推翻"的学科。</div>
+</section>
+
+<section>
+<h3>十四、附：工作题</h3>
+<p><strong>题 1（结合能与裂变能）。</strong>已知 ²³⁵U + n → ¹⁴⁴Ba + ⁸⁹Kr + 3n。用质量数估算裂变能：m(²³⁵U)=235.044 u，m(¹⁴⁴Ba)=143.923 u，m(⁸⁹Kr)=88.918 u，m_n=1.0087 u。</p>
+<details><summary>显示解答</summary><p>
+入端质量 = 235.044 + 1.0087 = 236.0527 u。出端质量 = 143.923 + 88.918 + 3×1.0087 = 143.923 + 88.918 + 3.026 = 235.867 u。质量亏损 Δm = 236.0527 − 235.867 = 0.1857 u。Q = 0.1857×931.5 ≈ 173 MeV。加上随后裂变碎片的 β 衰变（约 20–30 MeV），总约 200 MeV——与教科书值吻合。注意这 200 MeV 集中在每次裂变的两个大碎片上，约 85% 是碎片的动能，裂变产物的β/γ 衰变贡献约 5%。
+</p></details>
+<p><strong>题 2（β 衰变的稳定性判据）。</strong>用 Q 值判断 ¹⁴C（m=14.003242 u）是否能 β⁻ 衰变到 ¹⁴N（m=14.003074 u）。</p>
+<details><summary>显示解答</summary><p>
+Q = (14.003242 − 14.003074)×931.5 = 0.000168×931.5 ≈ 0.156 MeV = 156 keV &gt; 0，所以能自发发生。这就是考古测年用的碳-14 衰变：半衰期 5730 年，每次放约 156 keV 的电子与反中微子。判据总结：β⁻ 衰变要求"母核原子质量 &gt; 子核原子质量"；否则该核对该衰变道是稳定的。
+</p></details>
+<p><strong>题 3（r-过程与金）。</strong>GW170817 抛射约 0.05 M☉ 的 r-过程物质。估算这样一次并合能合成多少个金的原子。</p>
+<details><summary>显示解答</summary><p>
+一次并合约 0.05 M☉ ≈ 0.05×2×10³⁰ kg = 10²⁹ kg 的重元素物质。金原子质量约 197 u ≈ 3.3×10⁻²⁵ kg。若取其中约 1/100 是金（r-过程产额估计），则 N ≈ 10²⁷/3.3×10⁻²⁵ ≈ 3×10⁵¹ 个金原子，约 10²⁸ kg 的金。这个数量级说明：即使像 GW170817 这样罕见的并合（银河系约每十万年一次），也能把全地球的金存量攒出来——"金来自中子星并合"由此从理论变成了可核对的算术。
+</p></details>
+</section>
+
+<section><h3>前沿：无中微子双β衰变与 Majorana 质量</h3><p>如果观察到无中微子的双β衰变（0νββ），就证明中微子是 Majorana 粒子（自身 = 反粒子）——这是粒子物理最深的问题之一，而它的实验是核物理的：特定的偶-偶核（如 ⁷⁶Ge、¹³⁶Xe、¹³⁰Te）单个 β 衰变被禁戒，却可能同时放出两个电子、无中微子地变成子核。当前最敏感的实验（GERDA、MAJORANA、nEXO、KamLAND-Zen）已把半衰期下限推到 &gt;10²⁶ 年——比宇宙年龄长 10¹⁶ 倍。仍开放：中微子是否为自己的反粒子？若是，其有效 Majorana 质量如何决定轻子数不守恒与宇宙重子不对称（leptogenesis）——核物理与宇宙学在此合流。</p></section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>K. S. Krane, Introductory Nuclear Physics</strong>——质量公式、壳层模型与衰变的完整数值处理。</p>
+<p>&rarr; <strong>A. Bohr &amp; B. R. Mottelson, Nuclear Structure (Vol. I &amp; II)</strong>——壳层与集体运动的权威著作。</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/standard-model.html">标准模型</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/optics.html">💡 光学</a>：同一学科分类「物理」。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/cmb.html">🌌 宇宙微波背景</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/nuclear-physics.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

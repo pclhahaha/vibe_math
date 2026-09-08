@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="电子云形状——s, p, d, f 轨道" />
+  <meta property="og:title" content="氢原子轨道 — Vibe Math" />
+  <meta property="og:description" content="电子云形状——s, p, d, f 轨道" />
+  <title>氢原子轨道 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>⚛️ 氢原子轨道 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">电子云形状——s, p, d, f 轨道</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='hydrogen-atom',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/harmonic-oscillator.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🪩 谐振子</a>
+  <a href="/pages/uncertainty.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎲 不确定性原理 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——原子里的电子不是随便在哪，而是只能待在几个固定的"台阶"上</h3>
+<p>想象一颗玻璃珠在圆圆的浅碗里滚，它总会滑到底部才停。但电子不一样——它像是站在一排高低不同的台阶上，要么在第一级，要么在第二级，不能悬在两级之间。氢原子就是这么简单又神奇：一个电子绕着一个质子，只能站在某些特定的"能量台阶"上。</p>
+<p>这东西在干什么：解释为什么氢原子发光只有固定的几种颜色——因为电子在台阶之间跳来跳去，跳得越高，发的光越"急"（波长越短）。</p>
+<div class="key-insight">电子的"能量台阶"由数学上的量子数决定，它解释了氢原子光谱的全部颜色。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/harmonic-oscillator.html">谐振子</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、具体动机：为什么氢光谱只有几条固定的颜色</h3>
+<p>让氢原子发光，用棱镜把光展开，你看到的不是一道连续的彩虹，而是几条清清楚楚的亮线：656 nm 的红色、486 nm 的蓝绿色、434 nm 的紫色……这些波长不是随便测出来的，1885 年 Balmer 发现它们精确服从一条经验公式：</p>
+<div class="formula display" data-tex="\frac{1}{\lambda}=R\left(\frac{1}{n_1^2}-\frac{1}{n_2^2}\right),\qquad R=1.097\times10^7\ \mathrm{m}^{-1}\ \text{(里德伯常数)}"></div>
+<p>其中 n₁=2（Balmer 系）而 n₂=3,4,5,…。为什么是"几个特定波长"而不是连续的一片？<strong>因为电子只能站在分立的能量台阶上，台阶之间跳来跳去，放出的光子能量 E=hν=hc/λ 只能是相邻台阶的能量差。</strong>这就是"量子化"最直接、最古老的实验证据——在本课里，我们要从薛定谔方程把这套台阶完整算出来。</p>
+<p>先记住能级的最终答案，稍后我们一步步推导它：</p>
+<div class="formula display" data-tex="E_n=-\frac{13.6\ \mathrm{eV}}{n^2},\qquad n=1,2,3,\ldots"></div>
+<p>代入数字：E₁=−13.6 eV，E₂=−3.4 eV，E₃=−1.51 eV，E₄=−0.85 eV。基态能量 −13.6 eV 正是电离一个氢原子所需的最小能量——这个数值和实验完全吻合。</p>
+</section>
+
+<section>
+<h3>二、从玻尔轨道到波动方程：为什么量子化必须发生</h3>
+<p><strong>玻尔模型（1913）的成就与缺陷。</strong>玻尔人为假设"电子角动量必须等于 nħ"，从而推出 E_n=−13.6 eV/n²，正确预言了 Balmer 系。但它的根基是脆弱的：为什么要限制角动量？"电子沿轨道绕核"的图像又和电磁学矛盾（加速的电荷会辐射能量，轨道必然塌缩）。</p>
+<p><strong>直觉先行：</strong>和吉他弦一样，电子是波。波被"关"在原子尺度里，只有某些波长才能形成驻波、才能在无穷远衰减到零——这个可归一化条件（边界条件）自动强迫能量离散化。量子化不是额外假设，而是"波被囚禁"的数学必然结果。</p>
+<p><strong>薛定谔方程（1926）。</strong>电子由波函数 ψ(r,θ,φ) 描述，定态方程是</p>
+<div class="formula display" data-tex="-\frac{\hbar^2}{2m}\nabla^2\psi+V(r)\psi=E\psi,\qquad V(r)=-\frac{e^2}{4\pi\epsilon_0 r}\ \text{(库仑势)}"></div>
+<p>能级 E_n=−13.6 eV/n² 从这个方程自然涌现，不需要任何人为假设——这正是"量子力学最辉煌的胜利"。玻尔图像的"轨道"从此被"概率云"取代。</p>
+</section>
+
+<section>
+<h3>三、能级公式与具体数值</h3>
+<p>主量子数 n 决定能量；角量子数 ℓ=0,1,…,n−1 与磁量子数 m=−ℓ,…,+ℓ 决定角向形状。能级与跃迁的对应关系（用 hc=1240 eV·nm 换算波长 λ=1240/ΔE）：</p>
+<ul>
+<li>Lyman 系（n₁=1，紫外）：n₂=2→1 放 10.2 eV，λ≈121.6 nm；</li>
+<li>Balmer 系（n₁=2，可见光）：n₂=3→2 放 1.89 eV，λ≈656 nm（Hα 红）；n₂=4→2 放 2.55 eV，λ≈486 nm（Hβ 蓝绿）；n₂=5→2 放 2.86 eV，λ≈434 nm（Hγ 紫）；</li>
+<li>Paschen 系（n₁=3，红外）：n₂=4→3 放 0.66 eV，λ≈1875 nm。</li>
+</ul>
+<p>能谱只依赖 n——不依赖 ℓ 和 m。这意味着同一能级有 n² 个不同的态（简并），它来自库仑势特有的 SO(4) 隐藏对称性（详见第十章）。</p>
+</section>
+
+<section>
+<h3>四、完整例题1：算氢原子能级与巴耳末系波长</h3>
+<p>我们把上一节的两个数字完整走一遍。</p>
+<p><strong>第1步：写出涉及的能级。</strong>对 Balmer 系，电子从 n₂ 落到 n₁=2：</p>
+<div class="formula display" data-tex="E_2=-3.4\ \mathrm{eV},\qquad E_3=-1.51\ \mathrm{eV},\qquad E_4=-0.85\ \mathrm{eV}"></div>
+<p><strong>第2步：算跃迁能量差。</strong>n=3→2：ΔE=E₃−E₂=(−1.51)−(−3.4)=1.89 eV；n=4→2：ΔE=E₄−E₂=(−0.85)−(−3.4)=2.55 eV。</p>
+<p><strong>第3步：换算波长。</strong>由 E=hc/λ 即 λ=hc/ΔE=1240 eV·nm/ΔE：</p>
+<div class="formula display" data-tex="\lambda_{3\to2}=\frac{1240}{1.89}\approx656\ \mathrm{nm},\qquad \lambda_{4\to2}=\frac{1240}{2.55}\approx486\ \mathrm{nm}"></div>
+<p><strong>第4步：交叉验证。</strong>用里德伯公式 1/λ=R(1/n₁²−1/n₂²)：对 n₂=3，1/λ=1.097×10⁷·(1/4−1/9)=1.524×10⁶ m⁻¹，得 λ=656 nm。两条独立路线给出同一答案——这就是量子力学与 Balmer 经验公式的完美相遇。</p>
+<p><strong>第5步：电离能。</strong>把电子从基态（n=1）完全拿走需要 E_∞−E₁=0−(−13.6)=13.6 eV，这正是实验测到的氢原子电离能。</p>
+</section>
+
+<section>
+<h3>五、概率云：电子不是"绕核"运动</h3>
+<p>Bohr 模型（1913）的"电子沿轨道绕核"图像在 1926 年后被彻底抛弃。正确的图像：|ψ(r,θ,φ)|² 是电子在空间某处被找到的概率密度。这里的"模"|ψ|——大白话：模就是波函数数值的大小（像向量的长度），平方后给出概率。"轨道"指量子轨道——大白话：不是电子绕核走的路线，而是概率云的形状模板。s 轨道：球形对称（ℓ=0）。p 轨道：哑铃形（ℓ=1）。d 轨道：四叶草形（ℓ=2）。</p>
+<p>注意 s 轨道在原点处概率密度最大——电子<strong>可以在核内</strong>（虽然概率极低）。概率云的形状只由 ℓ,m 决定，与势能具体形式无关。</p>
+</section>
+
+<section>
+<h3>六、分离变量：球坐标中的定态方程</h3>
+<p>球坐标中定态薛定谔方程——大白话："态"是电子一种确定的存在状态（像能量台阶上固定的一级），"定态"指能量固定、形状不随时间变的那种——−（ħ²/2m）∇²ψ+V(r)ψ=Eψ，其中拉普拉斯算子为</p>
+<div class="formula display" data-tex="\nabla^2=\frac{1}{r^2}\frac{\partial}{\partial r}\left(r^2\frac{\partial}{\partial r}\right)+\frac{1}{r^2\sin\theta}\frac{\partial}{\partial\theta}\left(\sin\theta\frac{\partial}{\partial\theta}\right)+\frac{1}{r^2\sin^2\theta}\frac{\partial^2}{\partial\phi^2}"></div>
+<p>因 V(r) 只依赖 r（球对称），可分离变量 ψ(r,θ,φ)=R(r)Y_ℓm(θ,φ)：</p>
+<div class="formula display" data-tex="\psi_{n\ell m}=R_{n\ell}(r)Y_{\ell m}(\theta,\phi)"></div>
+<p>角向部分满足</p>
+<div class="formula display" data-tex="\hat{L}^2Y_{\ell m}=\hbar^2\ell(\ell+1)Y_{\ell m},\qquad \hat{L}_zY_{\ell m}=\hbar mY_{\ell m},\quad \ell=0,1,2,\ldots,\;|m|\le\ell"></div>
+<p>代入径向-角向分离，并令 u(r)=rR(r) 化为有效一维方程（库仑势 V(r)=−e²/4πε₀r）：</p>
+<div class="formula display" data-tex="-\frac{\hbar^2}{2m}\frac{d^2u}{dr^2}+\left[-\frac{e^2}{4\pi\epsilon_0 r}+\frac{\hbar^2\ell(\ell+1)}{2mr^2}\right]u=E\,u,\qquad u(0)=0,\;u(\infty)=0"></div>
+<p>离心势垒 ħ²ℓ(ℓ+1)/2mr² 在 r→0 处与库仑吸引 −e²/4πε₀r 竞争，决定轨道形状；边界条件 u(0)=0 排除奇点在原点的解，u(∞)=0 对应束缚态。</p>
+<div class="key-insight">分离变量的本质：球对称势下角动量守恒，角向方程完全由 ℓ,m 决定而与势无关；径向方程才体现 V(r) 的具体形式。</div>
+</section>
+
+<section>
+<h3>七、完整例题2：解出基态氢原子的波函数与最概然半径</h3>
+<p>我们把基态（n=1，ℓ=0）的径向方程完整解一遍。</p>
+<p><strong>第1步：写出径向方程。</strong>ℓ=0 时没有离心势垒，取 u(r)=rR(r)：</p>
+<div class="formula display" data-tex="-\frac{\hbar^2}{2m}\frac{d^2u}{dr^2}-\frac{e^2}{4\pi\epsilon_0 r}u=E\,u,\qquad u(0)=0,\;u(\infty)=0"></div>
+<p><strong>第2步：试探解。</strong>束缚态要求 u 在无穷远衰减，在原点为 0（u(0)=0 排除奇点）。取</p>
+<div class="formula display" data-tex="u(r)=r\,e^{-r/a}\qquad(a\ \text{待定})"></div>
+<p><strong>第3步：代入并匹配。</strong>求导 u′=e^{−r/a}(1−r/a)、u″=e^{−r/a}(r/a²−2/a)，代入后按 e^{−r/a} 与 r·e^{−r/a} 分组：</p>
+<div class="formula display" data-tex="\underbrace{\left(\frac{\hbar^2}{ma}-\frac{e^2}{4\pi\epsilon_0}\right)}_{=0}\,e^{-r/a}+\underbrace{\left(-\frac{\hbar^2}{2ma^2}-E\right)}_{=0}\,r\,e^{-r/a}=0"></div>
+<p>第一组定出尺度 a：</p>
+<div class="formula display" data-tex="\frac{\hbar^2}{ma}=\frac{e^2}{4\pi\epsilon_0}\quad\Longrightarrow\quad a=\frac{4\pi\epsilon_0\hbar^2}{me^2}\equiv a_0=0.529\times10^{-10}\ \mathrm{m}=52.9\ \mathrm{pm}\ \text{(玻尔半径)}"></div>
+<p>第二组定出能量：</p>
+<div class="formula display" data-tex="E_1=-\frac{\hbar^2}{2ma_0^2}=-13.6\ \mathrm{eV}"></div>
+<p><strong>第4步：归一化与概率。</strong>R₁₀(r)=u/r=e^{−r/a₀}，归一化后 R₁₀(r)=(2/a₀^{3/2})e^{−r/a₀}。电子出现在半径 r 处球壳内的概率密度</p>
+<div class="formula display" data-tex="P(r)=4\pi r^2|\psi_{100}|^2=\frac{4}{a_0^3}r^2e^{-2r/a_0}"></div>
+<p>（这里已计入角向球谐 Y₀₀=1/√(4π) 的因子。）令 dP/dr=0：P′(r)∝e^{−2r/a₀}(2r−2r²/a₀)=0，非零解 r=a₀。</p>
+<p><strong>结论：最概然半径恰好等于玻尔半径 a₀=52.9 pm。</strong>但平均值 ⟨r⟩=3a₀/2≈79 pm≠a₀——概率分布不对称，最概然点与平均值不同。</p>
+</section>
+
+<section>
+<h3>八、完整例题3：用不确定性原理估算原子半径与基态能量（原子为什么不塌缩）</h3>
+<p>一个经典难题：为什么电子不"坠入"原子核？若电子被压到半径 r 内，Δx~r，则由不确定性关系 Δp≥ħ/(2r)，动能 (Δp)²/2m≥ħ²/(8mr²) 随 r→0 发散——把电子关得越紧，动能涨得越凶。总能量是动能与势能之和：</p>
+<div class="formula display" data-tex="E(r)\approx\frac{\hbar^2}{2mr^2}-\frac{e^2}{4\pi\epsilon_0 r}"></div>
+<p><strong>第1步：对 r 求最小。</strong>dE/dr=−ħ²/(mr³)+e²/(4πε₀r²)=0：</p>
+<div class="formula display" data-tex="r=\frac{4\pi\epsilon_0\hbar^2}{me^2}=a_0\approx0.53\times10^{-10}\ \mathrm{m}"></div>
+<p><strong>第2步：代回求能量。</strong>在 r=a₀ 处，动能 ħ²/(2ma₀²)=13.6 eV，势能 −e²/(4πε₀a₀)=−27.2 eV：</p>
+<div class="formula display" data-tex="E_{\min}=13.6-27.2=-13.6\ \mathrm{eV}"></div>
+<p><strong>结论：</strong>不确定性原理决定了原子存在一个"最小尺寸" a₀，而不是塌缩成点——这正是原子的量子力学稳定性。若 Δx~10⁻¹⁵ m（核尺度），动能将涨到 ~3.8×10¹⁰ eV，比 13.6 eV 大 30 亿倍，电子根本不可能被关进核内。</p>
+<div class="key-insight">"原子为什么稳定"的答案不在库仑力，而在量子波动的代价：把电子压小要付出动能爆炸的代价，最优折中半径就是玻尔半径。</div>
+</section>
+
+<section>
+<h3>九、精细结构与 Lamb 位移</h3>
+<p>相对论修正+自旋-轨道耦合——大白话：自旋是电子自带的一种"原地转圈"式内禀属性（跟绕核运动无关），它与轨道运动耦合会让能级产生细微再分裂→精细结构 ΔE_FS∝α²E_n/n（α≈1/137）。能级按总角动量 j=ℓ±1/2 分裂。1947 年 Lamb 和 Retherford 发现 2s_{1/2} 和 2p_{1/2} 之间有微小能量差（Lamb 位移）——直接推动了 QED 的发展。</p>
+</section>
+
+<section>
+<h3>十、SO(4) 隐藏对称性——为什么能级只依赖 n</h3>
+<p>经典 Kepler 问题中，除了角动量 L 还有额外守恒量 Runge-Lenz 矢量 A。量子力学中 A 变成了 SO(4) 的生成元——和 L 一起构成 so(4) 李代数。这解释了为什么氢原子能级 E_n 只依赖于 n——不依赖 ℓ 和 m。<strong>n² 重简并来自 SO(4) 的 n² 维不可约表示</strong>——大白话：表示就是把抽象对称翻译成具体作用在电子态上的矩阵，n² 维表示意味着这 n² 个态在对称变换下互相转换、拆不开，只能挤在同一能量上。这是"对称性导致简并"最优美的例子。</p>
+</section>
+
+<section>
+<h3>十一、Lamb 位移与 QED 的诞生</h3>
+<p>1947 年 Lamb 和 Retherford 发现 2s_{1/2} 和 2p_{1/2} 之间有微小能量差（~1058 MHz）。Dirac 方程预测这两个能级简并——Lamb 位移来自量子电动力学（QED）的真空涨落修正。这直接推动了 Feynman、Schwinger、朝永振一郎发展 QED。</p>
+</section>
+
+<section>
+<h3>十二、前沿：质子半径之谜</h3>
+<p>2010 年用 μ 子氢（muonic hydrogen）测量的质子半径=0.84184(67) fm——和用普通氢测量的 0.8768(69) fm 差了 5 个标准偏差。这可能是新物理的信号——电子和 μ 子与质子的耦合不同？还是实验系统误差？至今未解决。</p>
+</section>
+
+<section>
+<h3>十三、完整推导：能级 E_n=−13.6 eV/n²</h3>
+<p><strong>无量纲化。</strong>引入玻尔半径 a₀=ħ²·4πε₀/me² 与 ρ=r/a₀，并设 E=−ħ²κ²/2m（束缚态 κ&gt;0）。径向方程变为</p>
+<div class="formula display" data-tex="\frac{d^2u}{d\rho^2}+\left[\frac{2}{\rho}-\frac{\ell(\ell+1)}{\rho^2}-\kappa^2a_0^2\right]u=0"></div>
+<p><strong>渐近与幂级数。</strong>ρ→∞ 时 u~e^{−κa₀ρ}；ρ→0 时 u~ρ^{ℓ+1}。设 u(ρ)=ρ^{ℓ+1}e^{−κa₀ρ}v(ρ)，代入得关联 Laguerre 型方程（变量 y=2κa₀ρ）：</p>
+<div class="formula display" data-tex="y\,v''+(2\ell+2-y)v'+(\nu-\ell-1)v=0,\qquad \nu=\frac{1}{\kappa a_0}"></div>
+<p><strong>级数截断条件。</strong>v 为多项式（不发散）要求 ν−ℓ−1=n_r∈{0,1,2,…}，即 ν=n_r+ℓ+1≡n（主量子数）。由 ν=1/κa₀ 得 κ=1/na₀，于是</p>
+<div class="formula display" data-tex="E_n=-\frac{\hbar^2}{2m}\kappa^2=-\frac{\hbar^2}{2ma_0^2n^2}=-\frac{me^4}{2(4\pi\epsilon_0)^2\hbar^2n^2}=-\frac{13.6\,\mathrm{eV}}{n^2}"></div>
+<p>径向波函数为关联 Laguerre 多项式形式：</p>
+<div class="formula display" data-tex="R_{n\ell}(r)=-\left[\left(\frac{2}{na_0}\right)^3\frac{(n-\ell-1)!}{2n[(n+\ell)!]^3}\right]^{1/2}e^{-r/na_0}\left(\frac{2r}{na_0}\right)^\ell L_{n-\ell-1}^{2\ell+1}\left(\frac{2r}{na_0}\right)"></div>
+<p>能谱反比于 n²——这正是 Balmer 公式 1/λ∝(1/n₁²−1/n₂²) 的量子力学来源。</p>
+</section>
+
+<section>
+<h3>十四、简并度 n² 的计算</h3>
+<p>能级 E_n 只依赖 n，故所有同一 n 而 (ℓ,m) 不同的态简并。对给定 n，ℓ 可取 0,1,…,n−1 共 n 个值；对每个 ℓ，m 可取 −ℓ,…,+ℓ 共 2ℓ+1 个值。总简并度</p>
+<div class="formula display" data-tex="g_n=\sum_{\ell=0}^{n-1}(2\ell+1)=2\sum_{\ell=0}^{n-1}\ell+\sum_{\ell=0}^{n-1}1=2\cdot\frac{n(n-1)}{2}+n=n^2"></div>
+<p>计入电子自旋（s=1/2，两种取向）后 g_n=2n²。检查：n=1→1 态（1s）；n=2→4 态（2s、2p 三态）；n=3→9 态（3s、3p 三态、3d 五态）：</p>
+<div class="formula display" data-tex="n=3:\;3s+3p\;(3)+3d\;(5)=1+3+5=9=3^2"></div>
+<p>该简并源于库仑势的 SO(4) 隐藏对称性：Runge–Lenz 矢量与角动量共同生成 so(4) 代数，其 n² 维不可约表示恰好编码同一能级的全部态——"对称性导致简并"的典范。</p>
+</section>
+
+<section>
+<h3>十五、工作题与试试看</h3>
+<p><strong>题目1.</strong> 计算 n=4 能级的简并度（不计自旋），并列出全部 (ℓ,m) 取值。</p>
+<details><summary>提示</summary>
+<p>公式 g_n=n² 直接给出个数；列取值时先固定 ℓ 再列 m=−ℓ,…,+ℓ。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>g_4=4²=16。ℓ=0,1,2,3；各 ℓ 对应 m=−ℓ,…,+ℓ，共 1+3+5+7=16 个组合：(0,0)；(1,−1),(1,0),(1,1)；(2,−2),…,(2,2)；(3,−3),…,(3,3)。</p>
+</details>
+<p><strong>题目2.</strong> 一个氢原子态量子数为 n=3、ℓ=2。判断它是什么轨道、列出允许的 m 值，并给出所在能级的总简并度。</p>
+<details><summary>提示</summary>
+<p>ℓ=0,1,2 分别对应 s,p,d 轨道；能级简并度只依赖 n。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>ℓ=2 → d 轨道，即 3d。m=−2,−1,0,1,2 共 5 个磁态。所在能级 n=3 的总简并度为 g_3=3²=9（不计自旋）。</p>
+</details>
+<p><strong>题目3.</strong> 计算基态（1s, n=1,ℓ=0）的径向概率密度 P(r)=4πr²|R₁₀(r)|²，并求最概然半径。</p>
+<details><summary>提示</summary>
+<p>R₁₀=(2/a₀^{3/2})e^{−r/a₀}；求极值令 dP/dr=0，注意 r=0 也是驻点但要判断极大值。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>R₁₀(r)=(2/a₀^{3/2})e^{−r/a₀}，结合角向因子后 P(r)=(4/a₀³)r²e^{−2r/a₀}。令 dP/dr=0：(2r−2r²/a₀)e^{−2r/a₀}=0，非零解 r=a₀——最概然半径即玻尔半径。注意 ⟨r⟩=3a₀/2≠a₀，分布不对称。</p>
+</details>
+<p><strong>题目4.</strong> 证明对给定 n，径向波函数节点数为 n−ℓ−1，并由此解释 2p（n=2,ℓ=1）的径向函数无节点。</p>
+<details><summary>提示</summary>
+<p>节点数由关联 Laguerre 多项式 L_{n−ℓ−1}^{2ℓ+1} 的次数决定。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>径向函数由关联 Laguerre 多项式 L_{n−ℓ−1}^{2ℓ+1}(y) 决定，其多项式次数为 n−ℓ−1，在 y∈(0,∞) 内的节点数即 n−ℓ−1。对 2p：n−ℓ−1=0，零次多项式无节点——u(r)∝r²e^{−r/2a₀} 单峰无振荡，与此结论一致。</p>
+</details>
+
+<p><strong>试试看 · A.</strong> 计算 Lyman 系第一条谱线（n=2→1）的波长，判断它属于哪个波段。</p>
+<details><summary>提示</summary>
+<p>ΔE=E₂−E₁=10.2 eV，用 λ=1240 eV·nm/ΔE。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>ΔE=(−3.4)−(−13.6)=10.2 eV，λ=1240/10.2≈122 nm——属于紫外线。与里德伯公式交叉验证：1/λ=R(1−1/4)=0.75R=8.23×10⁶ m⁻¹，λ=121.6 nm。</p>
+</details>
+<p><strong>试试看 · B.</strong> 电子从 n=3 回到 n=1 放出多少能量？这份能量能把基态氢原子电离吗？</p>
+<details><summary>提示</summary>
+<p>电离需要 13.6 eV；算出 ΔE 后比较大小。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>ΔE=E₃−E₁=(−1.51)−(−13.6)=12.09 eV。12.09 eV&lt;13.6 eV，不足以把处于基态的氢原子电离（最多把它激发到更高能级或部分电离）。</p>
+</details>
+<p><strong>试试看 · C.</strong> 用第八节的折中公式估算：电子若被关进原子核（Δx~10⁻¹⁵ m），动能有多大？与 13.6 eV 比较。</p>
+<details><summary>提示</summary>
+<p>E_kin≈ħ²/(2m_e(Δx)²)，用 m_e=9.11×10⁻³¹ kg，1 eV=1.602×10⁻¹⁹ J。</p>
+</details>
+<details><summary>显示解答</summary>
+<p>E_kin≈(1.05×10⁻³⁴)²/(2·9.11×10⁻³¹·10⁻³⁰)≈6.1×10⁻⁹ J≈3.8×10¹⁰ eV≈38 GeV——比 13.6 eV 大近 30 亿倍。这就是电子不可能被囚禁在核内的定量理由。</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>J. Sakurai, Modern Quantum Mechanics</strong></p>
+<p>&rarr; <strong>D. Griffiths, Introduction to Quantum Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/harmonic-oscillator.html">谐振子</a>、<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/harmonic-oscillator.html"><strong>谐振子</strong></a>：氢原子径向方程的求解同样使用升降算符方法——Runge-Lenz 矢量和角动量一起构成 SO(4) 代数，和 â/â<sup>†</sup> 的 Heisenberg 代数同为量子力学代数解法的典范。</p>
+<p>&rarr; <a href="/pages/uncertainty.html"><strong>不确定性原理</strong></a>：电子不能"坠落"到原子核上——若电子局域在核附近，Δx 极小→Δp 极大→动能发散，不确定性原理保证了原子的量子力学稳定性。</p>
+<p>&rarr; <a href="/pages/bloch-sphere.html"><strong>Bloch球</strong></a>：氢原子的超精细分裂（21cm 线）构成天然的二能级系统——这是天体物理学中最重要的量子比特，在 Bloch 球上直观描述其 Rabi 振荡和量子态演化。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/hydrogen-atom.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

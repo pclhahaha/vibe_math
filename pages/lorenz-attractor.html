@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="蝴蝶效应——确定性的混沌" />
+  <meta property="og:title" content="Lorenz 吸引子 — Vibe Math" />
+  <meta property="og:description" content="蝴蝶效应——确定性的混沌" />
+  <title>Lorenz 吸引子 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🦋 Lorenz 吸引子 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">蝴蝶效应——确定性的混沌</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='lorenz-attractor',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/fractal.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ❄️ 分形</a>
+  <a href="/pages/bifurcation.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🌋 分岔与 Logistic 映射 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——蝴蝶扇动翅膀，可能改变千里之外的天气</h3>
+<p>想象一列多米诺骨牌：只要第一张的位置差一点点，最后倒下的牌可能就完全不同。这就是"蝴蝶效应"——微小的差别会被一步步放大，最后结果天差地别。Lorenz就是一位在电脑上"算天气"时偶然撞见这件事的科学家。</p>
+<p>他发现一个简单的天气模型会出现一种奇怪的现象：结果永远在绕圈，但从不重复，就像一只蜜蜂在一个看不见的花瓶周围飞，永远飞不出去、也不重走老路。这个"花瓶"的形状就叫Lorenz吸引子。</p>
+<p>更让人吃惊的是：这个"蜜蜂"完全是靠三条诚实的方程飞出来的——没有任何随机数。规则完全确定，结局却无法预测。</p>
+<div class="key-insight">洞察：规则完全确定，结局却无法预测——这就是"混沌"：不是随机，而是太敏感。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——天气预报为什么大约两周就失灵？</h3>
+<p>Lorenz（1963）想模拟大气对流。他用的模型只有三个未知量，三个方程：</p>
+<div class="formula display" data-tex="\dot{x}=\sigma(y-x),\qquad \dot{y}=x(\rho-z)-y,\qquad \dot{z}=xy-\beta z"></div>
+<p>这里 <em>x</em> 正比于对流的速度，<em>y</em>、<em>z</em> 正比于温度在竖直和水平方向的分布差。三个常数取典型大气值 <strong>σ=10、ρ=28、β=8/3</strong>。这个模型小得能放进论文的一页纸，却给出了天气研究最著名的教训。</p>
+<p><strong>具体数字。</strong> 一次打印时 Lorenz 想偷懒：他把初始值 <em>x</em> = 0.506127 四舍五入成 <em>x</em> = 0.506，以为这么小的一点改动无关紧要。结果几分钟的"气象预报"演变成完全不同的天气。他第一反应是"计算机坏了"——其实他发现了<strong>混沌</strong>：初始条件的微小差别被指数级放大。</p>
+<p><strong>为什么两周？</strong> 差距按 <em>e</em><sup>λt</sup> 增长（λ 是下面要定义的 Lyapunov 指数，标准参数下 λ≈0.9）。一个 10⁻³ 的初始差别涨到量级 1（与信号本身同大）只需要 t ≈ ln(10³)/0.9 ≈ 7.7 个无量纲时间单位——换算成真实天气，正好是"大约两周"量级。这就是天气预报的"可预报性地平线"。</p>
+<div class="key-insight">Lorenz 的意外发现：把初始值从 0.506127 四舍五入到 0.506，结果完全不同。他以为计算机坏了——实际上发现了混沌。这就是"蝴蝶效应"名字的来源：巴西一只蝴蝶扇动翅膀，可能改变得克萨斯的天气。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——"永不重复的绕圈"如何可能</h3>
+<p>直觉上，"绕着转圈"应该意味着周期运动：一圈之后回到原处。Lorenz 的轨道却违反了这条直觉——它在绕圈，却从不闭合。这是怎么做到的？</p>
+<p><strong>严格第一步：轨道是有界的。</strong> 定义 <em>V</em> = x² + y² + (z−ρ)²（到"平衡点"的平方距离）。沿轨道求导并代入方程：</p>
+<div class="formula display" data-tex="\dot V=2x\dot x+2y\dot y+2(z-\rho)\dot z=-2\sigma x^2-2y^2-2\beta z(z-\rho)"></div>
+<p>当 (x,y,z) 离原点足够远时右边恒为负，所以所有轨道都被困在一个有限的大球里——这就是"蜜蜂飞不出去"。注意这一项<strong>不需要任何数值</strong>，是纯代数事实。</p>
+<p><strong>严格第二步：体积在收缩。</strong> 计算速度场 F=(σ(y−x), x(ρ−z)−y, xy−βz) 的散度：</p>
+<div class="formula display" data-tex="\mathrm{div}\,F=\frac{\partial\dot x}{\partial x}+\frac{\partial\dot y}{\partial y}+\frac{\partial\dot z}{\partial z}=-\sigma-1-\beta=-\tfrac{41}{3}\approx-13.67\lt 0"></div>
+<p>体积按 <em>e</em><sup>−(σ+1+β)t</sup> 收缩。所以轨道的极限集（吸引子）不可能占任何体积——它"厚度为零"。可是下面会看到，它的维数又比一张曲面(2)大一点点。这个矛盾正是"奇怪吸引子"的名字由来。</p>
+<p><strong>严格第三步：为什么永不重复。</strong> 体积收缩保证了"绕圈"的存在（有界 + 收缩 ⟹ 极限集非空）。至于"不重复"，那正是混沌的敏感依赖性——后面用 Lyapunov 指数把它量化。</p>
+<div class="key-insight">三句话：有界（蜜蜂飞不出去）、体积收缩（吸引子没有体积）、敏感依赖（轨道永不重复）——三个性质拼起来，就得到"奇怪吸引子"。</div>
+</section>
+
+<section>
+<h3>三、关键公式</h3>
+<div class="formula display" data-tex="\dot{x}=\sigma(y-x),\qquad \dot{y}=x(\rho-z)-y,\qquad \dot{z}=xy-\beta z,\qquad \sigma=10,\ \rho=28,\ \beta=\tfrac83"></div>
+<div class="formula display" data-tex="\lambda=\lim_{t\to\infty}\frac{1}{t}\log\frac{\|\delta(t)\|}{\|\delta(0)\|}\quad(\text{Lyapunov 指数})"></div>
+<div class="formula display" data-tex="D_{\mathrm{KY}}=k+\frac{\lambda_1+\lambda_2+\cdots+\lambda_k}{|\lambda_{k+1}|}\quad(\text{Kaplan--Yorke 维数})"></div>
+</section>
+
+<section>
+<h3>四、例题 1——用欧拉法手算 Lorenz 方程，看两条"几乎相同"的轨迹如何分道扬镳</h3>
+<p><strong>题目。</strong> 用显式欧拉法（步长 Δt=0.01）从两个初始条件 <em>a</em>₀=(10,10,10) 与 <em>b</em>₀=(10,10.001,10) 出发，各迭代 6 步，观察两轨道的差 <em>δ</em>=|a−b| 的变化。参数取 σ=10、ρ=28、β=8/3。</p>
+<p><strong>第一步：写出迭代格式。</strong> 欧拉法把微分方程换成递推：</p>
+<div class="formula display" data-tex="\begin{pmatrix}x_{n+1}\\y_{n+1}\\z_{n+1}\end{pmatrix}=\begin{pmatrix}x_n\\y_n\\z_n\end{pmatrix}+\Delta t\,\begin{pmatrix}\sigma(y_n-x_n)\\x_n(\rho-z_n)-y_n\\x_ny_n-\beta z_n\end{pmatrix},\quad \Delta t=0.01"></div>
+<p><strong>第二步：从初始点 (10,10,10) 出发算一步。</strong> 代入：ẋ=10(10−10)=0，ẏ=10(28−10)−10=180−10=170，ż=100−(8/3)·10=100−26.667=73.333。故</p>
+<div class="formula display" data-tex="(x_1,y_1,z_1)=(10,\,10+0.01\cdot170,\,10+0.01\cdot73.333)=(10,\,11.7,\,10.733)"></div>
+<p><strong>第三步：继续往下算，得到下表。</strong>（第二列与第三列分别来自 a、b 两条轨道。）</p>
+<table style="border-collapse:collapse;margin:8px 0;font-size:.92em">
+<tr style="border-bottom:1px solid #30363d"><th style="padding:4px 10px;color:#8b949e">n</th><th style="padding:4px 10px;color:#8b949e">aₙ=(x,y,z)</th><th style="padding:4px 10px;color:#8b949e">bₙ=(x,y,z)</th><th style="padding:4px 10px;color:#8b949e">δₙ=|aₙ−bₙ|</th></tr>
+<tr><td style="padding:4px 10px">0</td><td style="padding:4px 10px">(10, 10, 10)</td><td style="padding:4px 10px">(10, 10.001, 10)</td><td style="padding:4px 10px">1.000×10⁻³</td></tr>
+<tr><td style="padding:4px 10px">1</td><td style="padding:4px 10px">(10, 11.700, 10.733)</td><td style="padding:4px 10px">(10.0001, 11.7010, 10.7334)</td><td style="padding:4px 10px">1.000×10⁻³</td></tr>
+<tr><td style="padding:4px 10px">2</td><td style="padding:4px 10px">(10.170, 13.310, 11.617)</td><td style="padding:4px 10px">(10.1702, 13.3107, 11.6173)</td><td style="padding:4px 10px">1.027×10⁻³</td></tr>
+<tr><td style="padding:4px 10px">3</td><td style="padding:4px 10px">(10.484, 14.843, 12.661)</td><td style="padding:4px 10px">(10.4842, 14.8437, 12.6612)</td><td style="padding:4px 10px">1.075×10⁻³</td></tr>
+<tr><td style="padding:4px 10px">4</td><td style="padding:4px 10px">(10.920, 16.302, 13.879)</td><td style="padding:4px 10px">(10.9202, 16.3034, 13.8799)</td><td style="padding:4px 10px">1.140×10⁻³</td></tr>
+<tr><td style="padding:4px 10px">5</td><td style="padding:4px 10px">(11.458, 17.681, 15.290)</td><td style="padding:4px 10px">(11.4585, 17.6823, 15.2901)</td><td style="padding:4px 10px">1.219×10⁻³</td></tr>
+<tr><td style="padding:4px 10px">6</td><td style="padding:4px 10px">(12.080, 18.961, 16.908)</td><td style="padding:4px 10px">(12.0809, 18.9619, 16.9085)</td><td style="padding:4px 10px">1.308×10⁻³</td></tr>
+</table>
+<p><strong>第四步：读表。</strong> 前 6 步里 δ 只从 1.000×10⁻³ 涨到 1.308×10⁻³——几乎没变化！这不是矛盾：两条轨道此刻还贴着同一个"不稳定流形"一起爬升，放大还没有开始。真正的放大发生在轨道抵达那对不稳定螺旋附近之后。</p>
+<p><strong>第五步：把话说完。</strong> 一旦放大开始，δ(t) ≈ δ₀·e^{λ₁t}，λ₁≈0.9（第七节）。把 δ₀=10⁻³ 放大到量级 1 需要 t ≈ ln 10³/0.9 ≈ 7.7 个时间单位——换算成现实天气就是"两周失灵"。<strong>结论</strong>：敏感依赖不是"随机"，而是把 10⁻³ 的差别交给 e^{0.9t} 去放大；数字完全确定，只是凡人算不赢指数。∎</p>
+<p><strong>为什么这个例子可靠？</strong> 欧拉法虽然粗糙，但捕捉到了本质：短期两条轨道几乎一致，长期天差地别。真实 Lorenz 方程（用更精的算法）给出同样的图像，只是放大率更精确地接近 λ₁≈0.9。</p>
+</section>
+
+<section>
+<h3>五、例题 2——求固定点并线性化：为什么 ρ=28 时系统"不肯安分"</h3>
+<p><strong>题目。</strong> 求 Lorenz 系统在 σ=10、ρ=28、β=8/3 下的固定点，并在线性化后判断它们的稳定性。</p>
+<p><strong>第一步：解固定点方程。</strong> 令 ẋ=ẏ=ż=0：</p>
+<div class="formula display" data-tex="\sigma(y-x)=0,\quad x(\rho-z)-y=0,\quad xy-\beta z=0"></div>
+<p>由第一式 y=x；代入第二式 x(28−z)−x = x(27−z) = 0，故 x=0 或 z=27。若 x=0 则 y=0 且 z=0，得原点。若 z=27，第三式 x²=(8/3)·27=72，故 x=y=±√72=±6√2≈±8.485。共三个固定点：</p>
+<div class="formula display" data-tex="O=(0,0,0),\qquad C_\pm=(\pm6\sqrt2,\,\pm6\sqrt2,\,27)\approx(\pm8.485,\pm8.485,27)"></div>
+<p><strong>第二步：写出 Jacobian 矩阵。</strong> 对 F 求导：</p>
+<div class="formula display" data-tex="J=\begin{pmatrix}-\sigma&amp;\sigma&amp;0\\ \rho-z&amp;-1&amp;-x\\ y&amp;x&amp;-\beta\end{pmatrix}"></div>
+<p><strong>第三步：在原点线性化。</strong> J(O) 是分块对角：</p>
+<div class="formula display" data-tex="J(O)=\begin{pmatrix}-10&amp;10&amp;0\\28&amp;-1&amp;0\\0&amp;0&amp;-\tfrac83\end{pmatrix},\quad \det(\lambda I-J)=(\lambda+\tfrac83)\bigl(\lambda^2+11\lambda-270\bigr)=0"></div>
+<div class="formula display" data-tex="\lambda=-\tfrac83,\qquad \lambda=\frac{-11\pm\sqrt{121+1080}}{2}=\frac{-11\pm\sqrt{1201}}{2}\approx11.83,\,-22.83"></div>
+<p>原点有一个正特征值 11.83——它是不稳定鞍点：几乎一切轨道都要沿这条不稳定的方向被弹出去。</p>
+<p><strong>第四步：在 C₊ 处线性化。</strong> 代入 x=y=6√2、z=27：</p>
+<div class="formula display" data-tex="J(C_+)=\begin{pmatrix}-10&amp;10&amp;0\\1&amp;-1&amp;-6\sqrt2\\6\sqrt2&amp;6\sqrt2&amp;-\tfrac83\end{pmatrix},\qquad \text{eig}\approx-13.85,\ +0.094\pm10.19i"></div>
+<p>实部 0.094 &gt; 0 的那对共轭复特征值说明 C₊ 是<strong>不稳定螺旋</strong>：轨道螺旋式地离开它，又被大球边界弹回——"绕圈而不重复"就发生在离开 C₊、绕到 C₋ 附近、再被弹回 C₊ 的反复中。∎</p>
+<p><strong>为什么这套计算重要？</strong> 光看固定点，你会以为系统会"落"到某个平衡态。线性化给出了否定的答案：三个固定点全是鞍点/不稳定螺旋。轨道无处可去，只能永远绕圈——这是"吸引子不是点、而是奇怪形状"的代数根源。</p>
+</section>
+
+<section>
+<h3>六、Lyapunov 指数——把"敏感依赖"变成数字</h3>
+<p>光说"微小差别会放大"不够：放大<em>多快</em>才是数学。设 δ(t) 是两条相邻轨道之差。在多数轨道点上，线性化告诉我们</p>
+<div class="formula display" data-tex="\frac{d}{dt}\delta\approx J(x(t))\,\delta\qquad\Rightarrow\qquad \delta(t)\approx \delta(0)\,e^{\lambda t}" /></div>
+<p>取长时间平均就得到 <strong>Lyapunov 指数</strong>：</p>
+<div class="formula display" data-tex="\lambda=\lim_{t\to\infty}\frac{1}{t}\log\frac{\|\delta(t)\|}{\|\delta(0)\|}"></div>
+<p><strong>为什么定义成对数平均？</strong> 因为 δ 的增长是指数，直接取 |δ(t)/δ(0)| 会爆炸到无穷、取到 0 又什么都看不出；取对数后增长率变成一条直线 e^{λt} 的斜率，λ 才是"每单位时间放大几倍"这个干净的常数。λ&gt;0 意味着混沌（相邻轨道分离），λ&lt;0 意味着稳定（相邻轨道靠拢），λ=0 是中性方向（沿轨道前进的方向）。</p>
+<p>n 维系统有 n 个 Lyapunov 指数，排成 λ₁≥λ₂≥⋯≥λₙ。对标准参数的 Lorenz 系统，数值结果是</p>
+<div class="formula display" data-tex="\lambda_1\approx+0.906,\qquad \lambda_2=0,\qquad \lambda_3\approx-14.572"></div>
+<p>三个指数加起来等于散度 −13.67≈0.906−14.572——这不是巧合，而是"体积按 Σλᵢ 收缩"的一般定理。</p>
+<div class="key-insight">λ₁&gt;0 是混沌的判据：它告诉你"相邻轨道每秒被放大 e^{0.906}≈2.5 倍"。Lorenz 系统三个指数一正一零一负——正是"拉伸（+）、中性（0）、折叠（−）"的典型配方。</div>
+</section>
+
+<section>
+<h3>七、例题 3——用 Kaplan–Yorke 公式算出吸引子维数 ≈2.06</h3>
+<p><strong>题目。</strong> 已知 Lorenz 系统（σ=10、ρ=28、β=8/3）的 Lyapunov 指数为 λ₁≈0.906、λ₂=0、λ₃≈−14.572。求它的 Kaplan–Yorke（Lyapunov）维数。</p>
+<p><strong>第一步：回忆公式。</strong> 把指数从大到小排列 λ₁≥λ₂≥⋯；令 k 为使 λ₁+⋯+λₖ ≥ 0 的最大整数，则</p>
+<div class="formula display" data-tex="D_{\mathrm{KY}}=k+\frac{\lambda_1+\cdots+\lambda_k}{|\lambda_{k+1}|}"></div>
+<p><strong>第二步：确定 k。</strong> 前缀和：λ₁≈0.906&gt;0；λ₁+λ₂=0.906+0=0.906≥0；λ₁+λ₂+λ₃=0.906−14.572=−13.666&lt;0。所以 k=2（前两个指数之和非负，第三个一加就负）。</p>
+<p><strong>第三步：代入公式。</strong></p>
+<div class="formula display" data-tex="D_{\mathrm{KY}}=2+\frac{\lambda_1+\lambda_2}{|\lambda_3|}=2+\frac{0.906}{14.572}\approx2+0.062=2.062\approx2.06"></div>
+<p><strong>第四步：解释结果。</strong> D≈2.06 严格落在 2（曲面）与 3（体积）之间。吸引子"比曲面多一点、比体积少一点"——它几乎是一张被无限次折叠的纸。Kaplan–Yorke 猜想（1979）断言此值等于吸引子的信息维数/Hausdorff 维数，对 Lorenz 吸引子数值上一直成立。∎</p>
+<p><strong>为什么是"分形"？</strong> 吸引子的体积是 0（第三节散度），但维数不是 2——它既不能铺成一张光滑曲面，也不是三维体。非整数维数正是分形的签名：Lorenz 吸引子是动力系统里最有名的分形之一。</p>
+</section>
+
+<section>
+<h3>八、奇怪吸引子的分形维数</h3>
+<p>Lorenz 吸引子的 Lyapunov 维数约 <strong>2.06</strong>——分形。Kaplan–Yorke 猜想：分形维数 = 最大非负 Lyapunov 指数之和 ÷ 下一个指数绝对值，即 D = k + (λ₁+⋯+λₖ)/|λ_{k+1}|。吸引子既不是曲面（D=2）也不是体积（D=3）——介于两者之间，是"拉伸 + 折叠"的几何产物。</p>
+<p><strong>为什么维数能不是整数？</strong> 光滑曲面在每一点都局部像平面，所以维数是整数 2。奇怪吸引子却由"无限次折叠"构成：每一层都是曲面，但层与层之间是 Cantor 集式的空隙。折叠把"层数"变成分数——这就是分形维数出现的机制。</p>
+</section>
+
+<section>
+<h3>九、反例——为什么"混沌"不是随机：线性系统与二维系统为什么做不到</h3>
+<p>混沌如此"不守规矩"，初学者常误以为"任何会放大的系统都是混沌"。下面是两个必须排除的反例，它们同时解释了混沌到底缺了什么。</p>
+<p><strong>反例 1：线性系统有正 Lyapunov 指数，却不是混沌。</strong> 考虑线性系统 <em>v̇</em> = A<em>v</em>，其中 A 有正实部特征值（例如 λ=1）。相邻轨道之差按 e^t 放大，λ₁=1&gt;0——有"敏感依赖"。但它绝不混沌：解是 v(t)=e^{tA}v(0)，永远单调指数地飞向无穷。<strong>缺少的是"折叠"</strong>——线性系统只有拉伸，没有把拉伸出来的"纸带"折回有界区域的非线性项，所以做不出有界的奇怪吸引子。混沌 = 拉伸（λ₁&gt;0）+ 折叠（有界性）+ 永不重复。</p>
+<p><strong>反例 2：二维自治系统不混沌（Poincaré–Bendixson 定理）。</strong> 在 ℝ² 上，任何有界轨道要么趋于固定点、要么趋于周期轨道——不可能有奇怪吸引子。直觉：二维曲线不能"无限次不相交地"绕圈；一旦轨道自交，它就封闭成周期解。要做出混沌，至少需要三维（或二维离散映射）：Lorenz 正是"三阶连续系统"的最简混沌例子。这解释了一个反直觉的事实：<strong>看似更简单的二维系统反而证明不了混沌</strong>，因为混沌需要那个"折叠"的额外维度。</p>
+<p><strong>反例 3：混沌 ≠ 随机。</strong> Lorenz 方程给定初始条件后，轨道被完全确定——没有掷骰子，没有概率。随机需要"不可预测"本身是定律的一部分；混沌只是"可预测太敏感"。证据：方程每一步都是确定的（第四节例题 1 里，两条轨道各有完全确定的下一站）；而两条轨道之差才是指数放大的。</p>
+</section>
+
+<section>
+<h3>工作题——固定点、线性化与维数计算</h3>
+<p><strong>题 1（一般参数下的原点特征值）。</strong> 设 σ、ρ、β 一般。证明原点处 Jacobian 的特征多项式可分解为 (λ+β)(λ²+(σ+1)λ+σ(1−ρ))，并由此证明：ρ&gt;1 时原点是不稳定鞍点，ρ&lt;1 时它是稳定结点（两个负实根）。<strong>提示：</strong>对 J(O) 直接算 det(λI−J)；2×2 分块的特征方程恰是 λ²+(σ+1)λ+σ(1−ρ)；当 ρ&lt;1 时常数项 σ(1−ρ)&gt;0 且两系数都正，根同号且为负。</p>
+<p><strong>题 2（ρ≤1 时无混沌）。</strong> 用李雅普诺夫函数 V = x²/σ + y² + z² 证明：当 ρ≤1 时原点全局吸引，系统不可能混沌。<strong>提示：</strong>V̇ = 2[−x²−y²−βz²+(1+ρ)xy]；配方 −x²−y²+(1+ρ)xy = −(x−(1+ρ)y/2)² − y²(1−(1+ρ)²/4)，当 ρ≤1 时 ≤0，等号只在原点。</p>
+<p><strong>题 3（Kaplan–Yorke 变体）。</strong> 某混沌系统有 Lyapunov 指数 (1.0, 0, −2.5)。求 D_KY。<strong>提示：</strong>k=2，D_KY = 2 + 1.0/2.5 = 2.4。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：J(O) 是分块的，行列式为 (λ+β)λ²+(σ+1)λ+σ(1−ρ) 的乘积；后者判别式 Δ=(σ+1)²−4σ(1−ρ)。ρ&gt;1 时常数项负，两根一正一负（鞍点）；ρ&lt;1 时两根同为负。∎</p>
+<p><strong>题 2</strong>：由提示，V̇ = 2[−(x−(1+ρ)y/2)² − y²(1−(1+ρ)²/4) − βz²] ≤ 0；ρ≤1 时 1−(1+ρ)²/4 ≥ 0，等号仅原点。由 LaSalle 不变原理，一切轨道进入原点——没有奇怪吸引子的空间。∎</p>
+<p><strong>题 3</strong>：前缀和 1.0≥0、1.0+0=1.0≥0、1.0+0−2.5=−1.5&lt;0，故 k=2，D_KY = 2 + 1.0/2.5 = 2.4。∎</p>
+</details>
+</section>
+
+<section><h3>前沿：Lorenz吸引子的严格存在性证明</h3>
+<p>Tucker(2002)用区间算术和计算机辅助证明给出了Lorenz系统的严格混沌证明。这是"数值证明"的里程碑——计算机不仅提供数值证据,而是<strong>严格的数学证明</strong>。仍开放:一般混沌系统的严格计算性证明方法。</p>
+<p><strong>为什么这值得专门讲？</strong> 第二节的计算全是"数值实验"：我们看到 λ₁≈0.9、看到维数 2.06，但凭什么相信这些数字不是舍入误差的产物？Tucker 用区间算术把每一步误差包在可以核对的区间里，最终严格证明了 Lorenz 方程真的存在奇怪吸引子、真的混沌。它回答的是方法论问题：<strong>"算出来是这样"何时升级为"证明是这样"</strong>。</p></section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（步长减半再试）。</strong> 把例题 1 的欧拉步长改为 Δt=0.005，重新手算前三步，核对轨道仍贴近 aₙ。<strong>提示：</strong>一步递推改为加 Δt·F；例如第一步 z₁=10+0.005·73.333=10.367。数值会略有漂移，但两条轨道之差仍 ~10⁻³ 量级——敏感依赖是方程的性质，不是步长的。</p>
+<p><strong>试试看 2（散度核对）。</strong> 验证 div F = −(σ+1+β) 并代入 σ=10、β=8/3 得到 −41/3≈−13.67。<strong>提示：</strong>逐项求偏导：∂ẋ/∂x=−σ、∂ẏ/∂y=−1、∂ż/∂z=−β，三项相加。</p>
+<p><strong>试试看 3（KY 维数自检）。</strong> 若某系统 Lyapunov 指数为 (1.2, 0, −12)，求 D_KY。<strong>提示：</strong>k=2，D_KY = 2 + 1.2/12 = 2.1。</p>
+<p><strong>试试看 4（为什么必须三维）。</strong> 用散度论证说明：若二阶系统存在吸引子，它不可能有正 Lyapunov 指数（因而无混沌）。<strong>提示：</strong>二维系统散度是 λ₁+λ₂；若有界吸引子存在则 λ₁+λ₂≤0（体积收缩），而两个 Lyapunov 指数一个非负一个非正；λ₁&gt;0 与 λ₂≤0 且 λ₁+λ₂≤0 并不矛盾——关键在二维的 Poincaré–Bendixson 排除非周期极限集（见第九节反例 2）。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>R. Devaney, An Introduction to Chaotic Dynamical Systems</strong></p>
+<p>&rarr; <strong>V. Arnold, Mathematical Methods of Classical Mechanics</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/classical-mechanics.html">经典力学与最小作用量</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/fractal.html">❄️ 分形</a>：同一学科分类「动力系统」。</p>
+<p>&rarr; <a href="/pages/soliton.html">🌊 孤子</a>：动力系统核心链。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/lorenz-attractor.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

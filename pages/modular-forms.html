@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Eisenstein级数与Hecke理论——费马大定理的钥匙" />
+  <meta property="og:title" content="模形式 — Vibe Math" />
+  <meta property="og:description" content="Eisenstein级数与Hecke理论——费马大定理的钥匙" />
+  <title>模形式 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎵 模形式 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">Eisenstein级数与Hecke理论——费马大定理的钥匙</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='modular-forms',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/model-theory.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🧬 模型论</a>
+  <a href="/pages/algebraic-number-theory.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🏰 代数数论：数域与理想类 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、具体动机——一串整数系数，和一尊"怎么转都转不坏"的对称</h3>
+<p>先看一个带数字的具体例子。把下面的幂级数展开写出来：</p>
+<div class="formula display" data-tex="E_4(\tau)=1+240q+2160q^2+6720q^3+17520q^4+\cdots,\qquad q=e^{2\pi i\tau},\ \tau\in\mathbb{H}"></div>
+<p>系数 240, 2160, 6720, 17520 不是随机的：240 = 240·1（而 1 = σ₃(1)，即 1 的除数立方和），2160 = 240·9（9 = σ₃(2) = 1³+2³），6720 = 240·28（28 = σ₃(3) = 1³+3³）。每一个系数都来自"除数幂和"——<strong>一个纯算术的函数，却长在一个复变函数里</strong>。</p>
+<p>这个函数有一个奇妙的对称：把 τ 换成 τ+1，q 纹丝不动（因为 e^{2πi(τ+1)}=e^{2πiτ}），所以 E₄(τ+1) = E₄(τ)——周期性。把 τ 换成 −1/τ，它的值也只差一个幂因子 (cτ+d)<sup>k</sup>。这种"转不坏"的对称性，就是<strong>模形式</strong>。</p>
+<p>更惊人的例子来自 j-不变量：</p>
+<div class="formula display" data-tex="j(\tau)=\frac{1}{q}+744+196884\,q+21493760\,q^2+\cdots"></div>
+<p>数学家 McKay 注意到：<strong>196884 = 196883 + 1</strong>，而 196883 恰好是最大散在单群 Monster（魔群）的最小表示维数——"1 + 一个巨大的数 = 另一个巨大系数"。这个偶然的观察引爆了"月光猜想"（Moonshine），20 年后被 Borcherds 证明，换来 1998 年的菲尔兹奖。</p>
+<div class="key-insight">模形式是"怎么转都保持形状"的神奇函数：对一种固定变换（SL(2,ℤ) 的作用）只换姿态、本质不变。它把纯算术（除数函数、素数）与复分析（全纯、Fourier）焊在一起。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/complex-plane.html">复平面与全纯函数</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、旋转对称的函数——模形式的定义（直觉 → 严格）</h3>
+<p><strong>直觉先来。</strong>万花筒转一下，图案还是那些图案，只是换了排列。模形式就是数学版的万花筒：我们在上半平面 ℍ = {τ ∈ ℂ : Im τ &gt; 0} 上找"转不坏"的全纯函数。那把"旋转"用什么转？用分式线性变换：</p>
+<div class="formula display" data-tex="\tau\ \longmapsto\ \frac{a\tau+b}{c\tau+d},\qquad \begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\in SL(2,\mathbb{Z})"></div>
+<p>（SL(2,ℤ) 是行列式为 1 的整系数 2×2 矩阵群——矩阵＝排成方表的一堆数。）两个生成元最重要：平移 T: τ↦τ+1 和倒置 S: τ↦−1/τ，它们合起来就能生成整个群。</p>
+<p><strong>为什么规定变换带幂因子？</strong>直接要求 f((aτ+b)/(cτ+d)) = f(τ) 太苛刻（只有常数函数满足）。物理上更自然的对称是"函数乘以一个明确的缩放因子"：</p>
+<div class="formula display" data-tex="f\!\left(\frac{a\tau+b}{c\tau+d}\right)=(c\tau+d)^{k}f(\tau),\qquad \forall\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\in SL(2,\mathbb{Z})"></div>
+<p>这个 (cτ+d)<sup>k</sup> 叫做<strong>权</strong>（weight）。<strong>为什么是 (cτ+d)⁴ 这种形状？</strong>因为它是分式线性变换的"伸缩因子"：变换的微分 dτ↦(cτ+d)<sup>−2</sup>dτ 带着同一族幂因子，所以"微分形式的 k 次方"自然按权 2k 变换——(cτ+d)<sup>k</sup> 是刻在分式线性几何里的天然缩放。</p>
+<p>再加上两条技术条件，就得到完整定义：</p>
+<ul>
+<li><strong>全纯</strong>：f 在 ℍ 上处处全纯；</li>
+<li><strong>尖点全纯</strong>：因 f(τ+1)=f(τ)，f 可写成 q 的幂级数 f = Σ a<sub>n</sub>q<sup>n</sup>（q=e<sup>2πiτ</sup>），要求它无负幂项（即 a<sub>n</sub>=0 对 n&lt;0），这叫"在 ∞ 处全纯"。</li>
+</ul>
+<p>若再要求常数项 a₀ = 0（在尖点处"消失"），则称<strong>尖点形式</strong>（cusp form）。</p>
+<div class="key-insight">权 k 的模形式 = 上半平面上的全纯函数，在 SL(2,ℤ) 作用下按 (cτ+d)<sup>k</sup> 变换，且在无穷处全纯。Fourier 展开 f = Σa<sub>n</sub>q<sup>n</sup> 把复对称翻译成系数数列——算术登场的地方。</div>
+</section>
+
+<section>
+<h3>二、Eisenstein 级数——第一个模形式</h3>
+<p>光说定义不叫数学，得<strong>造出一个真的模形式</strong>。最朴素的办法：把所有 (m,n)≠(0,0) 的格子点加进来：</p>
+<div class="formula display" data-tex="G_k(\tau)=\sum_{(m,n)\neq(0,0)}\frac{1}{(m\tau+n)^k}\qquad(k\ \text{为偶数},\ k\ge4)"></div>
+<p>（k 取偶数，否则 (m,n)→(−m,−n) 会把每一项抵消成 0。）k≥4 时级数绝对收敛（二维格点上的 1/r^k 收敛当且仅当 k&gt;2）。</p>
+<p><strong>为什么它是模形式？</strong>只看变换：</p>
+<div class="formula display" data-tex="G_k\!\left(\frac{a\tau+b}{c\tau+d}\right)=\sum_{m,n}\frac{1}{(m\frac{a\tau+b}{c\tau+d}+n)^k}=\sum_{m,n}\frac{(c\tau+d)^k}{((am+cn)\tau+(bm+dn))^k}"></div>
+<p>因为矩阵 (a b; c d) 在 (m,n) 上作用为 (m,n)↦(am+cn, bm+dn)，这是 ℤ²∖{0} 上的双射，所以求和不变：</p>
+<div class="formula display" data-tex="G_k\!\left(\frac{a\tau+b}{c\tau+d}\right)=(c\tau+d)^k\,G_k(\tau)"></div>
+<p>——权 k 的模形式。这就是<strong>Eisenstein 级数</strong>，模形式世界的第一个公民。</p>
+<p>它的 Fourier 展开（见「证明：Eisenstein 级数的 q-展开」一节）落在漂亮的算术系数上：</p>
+<div class="formula display" data-tex="G_k(\tau)=\frac{-\!B_k}{2k}+\sum_{n\ge 1}\sigma_{k-1}(n)\,q^n,\qquad \sigma_{k-1}(n)=\sum_{d\mid n}d^{k-1},\ \ B_k=\text{Bernoulli 数}"></div>
+<p>规范化后更清爽（取 k=4）：</p>
+<div class="formula display" data-tex="E_4(\tau)=\frac{240}{(2\pi i)^4}\,\frac{(4-1)!}{2}\,G_4(\tau)=1+240\sum_{n\ge1}\sigma_3(n)q^n=1+240q+2160q^2+6720q^3+\cdots"></div>
+<p><strong>为什么系数是除数函数？</strong>因为展开里每个格子 (m,n) 的倒数经过 Fourier 分析，最终把"数格子"翻译成"数 d|n 的幂和"——算术就是这样自己走进来的。</p>
+<div class="key-insight">G<sub>k</sub>(τ)=Σ′(mτ+n)<sup>−k</sup> 是第一个模形式：变换下自动带权 (cτ+d)<sup>k</sup>。它的 q-展开系数是除数幂和 σ<sub>k−1</sub>(n)——"算术系数"一词的起源。</div>
+</section>
+
+<section>
+<h3>三、完整例题——验证一个函数是模形式（一步步做完）</h3>
+<p>教科书风格：把"E₄ 是权 4 的模形式"从头验到尾，不跳步。</p>
+
+<p><strong>例 1：验证 E₄ 是权 4 的模形式。</strong></p>
+<p>第一步，<strong>全纯性。</strong>E₄(τ) = 1 + 240Σσ₃(n)qⁿ。当 τ∈ℍ 时 |q|=e<sup>−2π·Im τ</sup>&lt;1，而 σ₃(n) ≤ n·n³ = n⁴ 多项式增长，故级数在 ℍ 上内闭一致收敛、全纯。✓</p>
+<p>第二步，<strong>平移不变（权律在 T 下成立）。</strong>对 T: τ↦τ+1，对应 (a,b;c,d)=(1,1;0,1)，(cτ+d)⁴ = 1⁴ = 1，需证 E₄(τ+1)=E₄(τ)。由于 q=e^{2πi(τ+1)}=e^{2πiτ}·e^{2πi}=q，Fourier 级数原样不变。✓ 数值核对：</p>
+<div class="formula display" data-tex="E_4(1+i)=E_4(i)\approx 1+240(0.0018674+9\cdot 3.487\times10^{-6}+\cdots)\approx 1.4557"></div>
+<p>（q 在 τ=i 与 τ=1+i 处完全相同，都是 e<sup>−2π</sup>。）✓</p>
+<p>第三步，<strong>倒置律（权律在 S 下成立）。</strong>对 S: τ↦−1/τ，对应 (0,−1;1,0)，需证 E₄(−1/τ)=τ⁴E₄(τ)。用级数定义：</p>
+<div class="formula display" data-tex="G_4\!\left(-\frac1\tau\right)=\sum_{m,n}\frac{1}{\left(m(-\frac1\tau)+n\right)^4}=\sum_{m,n}\frac{\tau^4}{(n\tau-m)^4}=\tau^4 G_4(\tau)"></div>
+<p>（最后一步：代换 (m,n)↦(−n,m) 是 ℤ²∖{0} 的双射。）归一化 E₄ = 240·(3!/(2(2πi)⁴))·G₄ 不改变权律，故 E₄(−1/τ)=τ⁴E₄(τ)。✓</p>
+<p>第四步，<strong>无穷处全纯。</strong>τ→i∞ 时 q→0，E₄→1 有限。✓</p>
+<p>四步都过——<strong>E₄ 是权 4 的模形式。</strong>∎</p>
+
+<p><strong>例 2：验证 Δ 是权 12 的尖点形式。</strong></p>
+<p>Δ 有两个定义，可互相验证：</p>
+<div class="formula display" data-tex="\Delta(\tau)=\frac{E_4(\tau)^3-E_6(\tau)^2}{1728}=q\prod_{n\ge1}(1-q^n)^{24}=\sum_{n\ge1}\tau(n)q^n"></div>
+<p>第一步，<strong>权。</strong>E₄ 有权 4，所以 E₄³ 有权 4·3=12；E₆ 有权 6，所以 E₆² 有权 6·2=12。差仍是权 12。✓</p>
+<p>第二步，<strong>尖点。</strong>乘积 q∏(1−qⁿ)²⁴ 的最低次项是 q（没有常数项），故 Δ 在 ∞ 处"消失"——尖点形式。✓</p>
+<p>第三步，<strong>数值展开。</strong>用手展开前几项：(1−q)²⁴ = 1−24q+276q²−2024q³+…，乘 (1−q²)²⁴ = 1−24q²+…，乘 (1−q³)²⁴ = 1−24q³+…：</p>
+<div class="formula display" data-tex="\frac{\Delta}{q}=1-24q+252q^2-1472q^3+\cdots\ \Longrightarrow\ \Delta=q-24q^2+252q^3-1472q^4+\cdots"></div>
+<p>（q² 系数 276−24=252；q³ 系数 −2024+576−24=−1472。）Ramanujan τ 函数的前几个值：τ(2)=−24，τ(3)=252，τ(4)=−1472。✓</p>
+<p>第四步，<strong>积性检验。</strong>(2,3)=1，验证 τ(2)τ(3) = (−24)(252) = −6048 是否等于 τ(6)？这是下一节 Hecke 理论的伏笔——确实相等。∎</p>
+
+<p><strong>例 3：数值验证 j(i) = 1728。</strong></p>
+<p>j 不变量定义为 j = E₄³/Δ（权 12 除以权 12 = 权 0 的模函数，见第六节）。在 τ=i 处，q=e^{2πi·i}=e<sup>−2π</sup>≈0.0018674：</p>
+<div class="formula display" data-tex="j(i)=\frac{1}{q}+744+196884\,q+21493760\,q^2+864299970\,q^3+\cdots"></div>
+<div class="formula display" data-tex">\approx 535.49+744+367.66+74.95+5.63+0.25+\cdots\approx 1727.98\ \longrightarrow\ 1728</div>
+<p>已知定理 j(i)=1728（几何上：i 是 S: τ↦−1/τ 的不动点，权律配合 Δ 的零点结构锁定这个值）。部分和逐步逼近 1728 ✓。∎</p>
+</section>
+
+<section>
+<h3>四、Eisenstein 级数与尖点形式——M_k = E_k ⊕ S_k</h3>
+<p>权 k 模形式空间 M<sub>k</sub>(SL(2,ℤ)) 有自然的直和分解：</p>
+<div class="formula display" data-tex="M_k = E_k \oplus S_k"></div>
+<p>其中 E<sub>k</sub> 是<strong>Eisenstein 级数</strong>子空间——由生成级数 G<sub>k</sub> 张成，S<sub>k</sub> 是<strong>尖点形式</strong>子空间——由在 i∞ 处为零的模形式组成。维数规则：</p>
+<div class="formula display" data-tex="\dim M_k-\dim S_k=1\qquad(k&gt;2\ \text{偶数})"></div>
+<p>——Eisenstein 级数恰好是"一个函数"（差乘以常数）。Δ∈S₁₂ 是第一个非平凡尖点形式。</p>
+<p>B<sub>k</sub>（Bernoulli 数）的算术性质（von Staudt–Clausen 定理、Kummer 判据）通过 Eisenstein 级数与模形式 L-函数的特殊值建立了深刻联系。最著名的实例：</p>
+<div class="formula display" data-tex="\tau(n)\equiv\sigma_{11}(n)\pmod{691}\qquad(\text{Ramanujan 同余})"></div>
+<p>"691"这个素数在代数拓扑（Bernoulli 数）和数论中反复出现。</p>
+<div class="key-insight">Eisenstein 级数是"算术的"模形式（系数为除数函数），而尖点形式更"神秘"（系数反映 Galois 表示信息）。Ramanujan τ 函数的深刻性质正来自它是 Hecke 特征形式。</div>
+</section>
+
+<section>
+<h3>五、Ramanujan tau 函数——模形式的"神秘系数"</h3>
+<p>Δ = q∏<sub>n≥1</sub>(1−qⁿ)²⁴ = Σ<sub>n≥1</sub>τ(n)qⁿ。τ 是积性函数：</p>
+<div class="formula display" data-tex="\tau(mn)=\tau(m)\tau(n)\qquad(\text{当 }(m,n)=1)"></div>
+<div class="formula display" data-tex="|\tau(p)|\le 2p^{11/2}\qquad(\text{Ramanujan 猜想，Deligne 1974 证明——Weil 猜想的推论})"></div>
+<p>τ(n) 与 σ₁₁(n) 模 691 同余——"691"这个素数在代数拓扑（Bernoulli 数）和数论中反复出现。τ 的乘性是 Hecke 算子（第七节）作用在 Δ 上的结果：Δ 是第一个 Hecke 特征形式。</p>
+<div class="key-insight">τ(n) 像素数的侦探：乘性由 Hecke 理论给出，增长率 |τ(p)|≤2p^{11/2} 由 Deligne（Weil 猜想）给出，模 691 同余由 Bernoulli 数给出——一个系数，三个深水区的链接。</div>
+</section>
+
+<section>
+<h3>六、j-不变量与月光猜想</h3>
+<p>j(τ) = 1/q + 744 + 196884q + 21493760q² + …。它有权 0（即完全不变：j((aτ+b)/(cτ+d)) = j(τ)），是刻画 SL(2,ℤ) 对称性的最精细模函数——任何有理不变函数都是 j 的有理函数。</p>
+<p>McKay 的观察：<strong>196884 = 196883 + 1</strong>——Monster 单群（群——满足"可结合、有单位元、每个元素有逆"的运算体系，如整数加法）的最小表示维数（表示——把抽象的群元素翻译成具体的矩阵或变换，维数就是这些矩阵所在空间的尺寸）正好是 196883，而它的平凡表示维数是 1。这个连接 → 月光猜想（j 的系数编码 Monster 的不可约表示维数）→ Borcherds（1992）用顶点算子代数证明 → 1998 年菲尔兹奖。</p>
+<div class="key-insight">j 的系数 1, 196884, 21493760, … 精确地重现 Monster 群表示维数的线性组合。数论函数与有限单群如此精确地对接，至今仍令人震撼。</div>
+</section>
+
+<section>
+<h3>七、非例——什么样的函数不是模形式（反例）</h3>
+<p><strong>反例 1（f(τ)=τ 不是模形式）。</strong>取 S: τ↦−1/τ，若权 k 成立则需 −1/τ = τ<sup>k</sup>·τ = τ<sup>k+1</sup>。τ=i 时左边 −1/i = i，右边 i<sup>k+1</sup>。k 为偶数时右边 = ±i，i = ±i 不可能；k 为奇数时右边 = ±1，i = ±1 也不可能。任何权都不行。✓</p>
+<p><strong>反例 2（f(τ)=|τ|² 不是模形式）。</strong>它不是全纯的（含 τ̄），甚至不在模形式讨论范围内——全纯性是硬门槛。</p>
+<p><strong>反例 3（f(τ)=q 不是模形式）。</strong>q = e^{2πiτ} 满足 f(τ+1)=f(τ)，但在 S 下：f(−1/τ) = e^{−2πi/τ}，它没有 "=(cτ+d)<sup>k</sup>f(τ)" 的形状，也不是幂级数 f(τ) 的倍数。事实上权 0 的模形式只有常数函数（有界整函数 = 常数）。</p>
+<p><strong>反例 4（f(τ)=1/Δ 是模函数但不是模形式）。</strong>1/Δ 有权 0、在 SL(2,ℤ) 下不变，但在 ∞ 处有极点（1/q 的 Laurent 展开），只算"模函数"（meromorphic），不算"模形式"（holomorphic）。</p>
+<div class="key-insight">这些非例钉死了边界：权律要处处成立、全纯是底线、尖点处要"可展开成无负幂的 q-级数"。模形式与模函数的分界正是"全纯 vs 亚纯"。</div>
+</section>
+
+<section>
+<h3>八、Hecke 理论与 L-函数</h3>
+<p>Hecke 在上世纪 30 年代引入了<strong>Hecke 算子 T<sub>n</sub></strong> 作用于 M<sub>k</sub>：</p>
+<div class="formula display" data-tex="(T_n f)(\tau)=n^{k-1}\sum_{ad=n,\ b\bmod d}d^{-k}f\!\left(\frac{a\tau+b}{d}\right)"></div>
+<p>（算子——把函数变成函数的"加工机器"；Hecke 算子对函数做平移取平均，能把空间对角化。）关键性质：T<sub>n</sub> 关于<strong>Petersson 内积</strong>是自伴算子：</p>
+<div class="formula display" data-tex="\langle f,g\rangle=\iint_{\Gamma\setminus\mathbb{H}}f(\tau)\overline{g(\tau)}\,y^k\,\frac{dx\,dy}{y^2},\qquad \langle T_n f,g\rangle=\langle f,T_n g\rangle"></div>
+<p>自伴性 ⟹ <strong>谱定理</strong>：S<sub>k</sub> 存在一组正交基 f<sub>i</sub> 满足 T<sub>n</sub> f<sub>i</sub> = λ<sub>i,n</sub> f<sub>i</sub>——这些 f<sub>i</sub> 称为<strong>Hecke 特征形式</strong>。归一化使得 a₁=1 后，Fourier 系数 a<sub>n</sub> 恰好是 Hecke 特征值：T<sub>n</sub> f = a<sub>n</sub> f。</p>
+<p>对 Hecke 特征形式 f = Σ a<sub>n</sub>q<sup>n</sup>，其<strong>L-函数</strong>定义为 Mellin 变换：</p>
+<div class="formula display" data-tex="L(s,f)=\sum_{n\ge 1}\frac{a_n}{n^s}=\prod_p \frac{1}{1-a_p p^{-s}+p^{k-1-2s}}"></div>
+<p>Euler 乘积来自 T<sub>n</sub> 的代数和乘性性质：a<sub>mn</sub>=a<sub>m</sub>a<sub>n</sub>（当 (m,n)=1）。Hecke 证明 L(s,f) 满足<strong>函数方程</strong>——将 s 和 k−s 关联：完全 L 函数 Λ(s,f) = N<sup>s/2</sup>(2π)<sup>−s</sup>Γ(s)L(s,f) 满足 Λ(s,f) = εΛ(k−s,f)。其中 ε=±1（符号）。</p>
+<div class="key-insight">Hecke 理论将<strong>模形式的 Fourier 分析</strong>与<strong>L-函数的解析理论</strong>统一起来。|a<sub>p</sub>|≤2p<sup>(k−1)/2</sup>——Ramanujan 猜想（Deligne 证明）等价于声称将 L(s,f) 视为 ℓ-adic Galois 表示的 L-函数时，其 Sato–Tate 分布具有半圆律。</div>
+</section>
+
+<section>
+<h3>九、模性和椭圆曲线——Wiles 证明费马大定理的桥梁</h3>
+<p><strong>谷山–志村–韦伊猜想（TSW）：</strong>有理数域 ℚ（域——加减乘除都畅通的数系，有理数、实数、复数都是域）上的每条椭圆曲线 E，其 Hasse–Weil L-函数 L(E,s) 等于某个权 2 尖点形式 f 的 L-函数 L(s,f)。即：存在模形式 f 满足 a<sub>p</sub>(E) = a<sub>p</sub>(f) 对所有素数 p 成立。</p>
+<p>推理链（1986–1995）（链——一环扣一环、缺一不可的推理步骤）：</p>
+<ul>
+<li><strong>Frey (1986)：</strong>如果 a<sup>ℓ</sup>+b<sup>ℓ</sup>=c<sup>ℓ</sup> 是 Fermat 反例，椭圆曲线 y²=x(x−a<sup>ℓ</sup>)(x+b<sup>ℓ</sup>) 有离谱的性质——它的 Galois 表示 ρ<sub>E,ℓ</sub> 在 ℓ 处分歧特别"小"。</li>
+<li><strong>Ribet (1990)（ε-猜想）：</strong>如果 TSW 为真，Frey 曲线不可能<strong>模</strong>——因为模性的下降定理会将 ρ<sub>E,ℓ</sub> 约化为权 2 水平 2 的模形式，但该空间为零。⟹ Fermat 无解。</li>
+<li><strong>Wiles (1995) + Taylor–Wiles：</strong>证明 TSW 对<strong>半稳定</strong>椭圆曲线成立（Frey 曲线是半稳定的）。⟹ Fermat 大定理得证。</li>
+</ul>
+<p>Wiles 证明的核心——<strong>R=T 定理</strong>：</p>
+<div class="formula display" data-tex="R_{\Sigma}=\mathbb{T}_{\Sigma}"></div>
+<p>左：<strong>万有 Galois 形变环</strong> R——参数化所有"合理"的 ρ<sub>E,p</sub> 的形变。右：<strong>Hecke 代数</strong> T——由 Hecke 算子生成的环，其极大理想对应模形式。策略：(1) 构造 R↠T 的满射；(2) 证明 |R|≤|T|（通过数值不等式——Gorenstein 条件 + Skolem–Noether 定理）；(3) 满射 + 基数相等 ⟹ 同构（同构——两个结构本质相同，只是换了名字，此处表示 R 和 T 其实是同一个对象）。Taylor–Wiles 的<strong>修补（patching）方法</strong>通过辅助素数构造极限论证，将局部环的 R=T 问题约化为有限生成模的自由性与秩的计算。</p>
+<div class="key-insight">R=T 定理是 20 世纪数论最深刻的定理之一，证明了"几何对象（Galois 表示）的模空间"与"自守（模）形式的环"<strong>完全相同</strong>。这是 Langlands 纲领中"Galois 表示 ⟷ 自守表示"对应的第一条完整定理。</div>
+<p><strong>Breuil–Conrad–Diamond–Taylor (2001)</strong>将模性定理推广到所有（非半稳定）椭圆曲线，完全证明了 TSW 猜想。</p>
+</section>
+
+<section>
+<h3>十、前沿：Serre 猜想与模性提升；Langlands 纲领</h3>
+<p><strong>Serre 猜想（1987）：</strong>任意奇不可约 2 维 Gal(ℚ̄/ℚ) 的模 p 表示均来自模形式，并预言其权、水平和特征。Khare–Wintenberger（2009）用 Wiles 的模性提升定理完全证明。这完成了 GL(2) 的 Langlands 纲领。</p>
+<p>仍开放：<strong>GL(n) 的 Serre 猜想</strong>——高维 Galois 表示的模性。</p>
+<p><strong>Langlands 纲领——模形式在 GL(n) 上的推广。</strong>模形式是 <strong>GL(2)</strong> 上的自守形式。Langlands（1967）提出了宏伟的函子性猜想（functoriality）——将古典模形式理论推广到任意约化群 G。</p>
+<p>GL(n) 上的自守形式：上半空间 h<sub>n</sub> := GL(n,ℝ)/O(n)ℝ<sup>×</sup> 上的 L² 函数，满足关于 GL(n,ℤ) 的某种不变性。其 Fourier 展开的系数构造 <strong>L-函数 L(s,π)</strong>：</p>
+<div class="formula display" data-tex="L(s,\pi)=\prod_p\prod_{j=1}^n\frac{1}{1-\alpha_{j,\pi}(p)\,p^{-s}}"></div>
+<p>Langlands 函子性猜想：对代数群的每个 L-同态 <sup>L</sup>G→<sup>L</sup>H，自守表示可以从 G"转移"到 H。例如：GL(2)×GL(2)→GL(4) 对应乘积 L-函数的 Rankin–Selberg 积分。</p>
+<p><strong>已证明的特殊情形：</strong></p>
+<ul>
+<li><strong>GL(2) (≤2010)：</strong>完整。所有有理椭圆曲线模性（Breuil–Conrad–Diamond–Taylor 2001）。Serre 猜想（Khare–Wintenberger 2009）。</li>
+<li><strong>GL(n) 局部 Langlands (1998)：</strong>Harris–Taylor、Henniart 独立证明非 Archimedes 局部域上 GL(n) 的局部 Langlands 对应——将 Galois 表示与 GL(n) 的不可约光滑表示对应。</li>
+<li><strong>对称幂提升 (2008+)：</strong>Kim–Shahidi 等利用 Langlands–Shahidi 方法证明了对称幂的提升。例如：Sym²(GL(2)→GL(3)) 由 Gelbart–Jacquet（1978）证明；Sym³ 和 Sym⁴ 在 2000 年代完成。</li>
+</ul>
+<p><strong>深度开放问题：</strong></p>
+<ul>
+<li>GL(n) 的 Serre 猜想：n&gt;2 时 GL(n) 的模 p Galois 表示何时来自 GL(n) 的自守形式？</li>
+<li>Langlands 超越函子性：将 GL(2) 的自守形式"提升"到更高群——例如为什么存在 GL(2) cusp form 到 GL(n) 自守表示的非平凡提升？</li>
+<li>函子性的几何化：利用几何 Langlands（Drinfeld + Lafforgue + Beilinson）将数域上的函子性转化为代数曲线的 ℓ-adic 模空间上的同调对应。</li>
+</ul>
+<div class="key-insight">Langlands 纲领是当代数学的"大一统理论"——它预测<strong>数论（Galois 表示）、调和分析（自守形式）和代数几何（模空间的几何）</strong>三个领域有着深层的同一性。Wiles 的 R=T 定理是这一哲学在 GL(2) 上的第一个完整证明，也是目前人类唯一完全理解的例子。</div>
+</section>
+
+<section>
+<h3>证明：Eisenstein 级数的 q-展开（算术系数的来历）</h3>
+<p>正文第二节断言 G<sub>k</sub>(τ) = −B<sub>k</sub>/(2k) + Σσ<sub>k−1</sub>(n)qⁿ。这里把它推出来，分两步。</p>
+<p><strong>第一步：单个和式的 Fourier 级数。</strong>对 k≥2 偶数、Im z&gt;0，用 cot 的展开可证（见下文引理）：</p>
+<div class="formula display" data-tex="\sum_{n\in\mathbb{Z}}\frac{1}{(z+n)^k}=\frac{(-1)^k(2\pi i)^k}{(k-1)!}\sum_{r\ge1}r^{k-1}e^{2\pi i r z}\qquad(k\ \text{偶数})"></div>
+<p><strong>引理（k=2 情形）：</strong>π cot(πz) = −i(1+2Σ<sub>n≥1</sub>wⁿ)，w=e<sup>2πiz</sup>（对 |w|&lt;1 成立），求导两次再除以 π² 得 Σ<sub>n∈ℤ</sub>1/(z+n)² = −4π²Σ<sub>r≥1</sub>r w<sup>r</sup>，即上式 k=2 的情形（(−1)²(2πi)²/1! = −4π² ✓）。一般 k 由对 z 求 (k−2) 次导得到。∎</p>
+<p><strong>第二步：回到 G<sub>k</sub>。</strong>把 G<sub>k</sub>(τ) = Σ′<sub>m,n</sub>(mτ+n)<sup>−k</sup> 按 m=0 与 m≠0 拆开。m=0 的项给出常数项 2ζ(k) = −(2πi)<sup>k</sup>B<sub>k</sub>/(k!)·2·…——用 Bernoulli 数表示 ζ 在正偶数的值 ζ(k) = (−1)<sup>k/2+1</sup>(2π)<sup>k</sup>B<sub>k</sub>/(2k!)。m≠0 的项把引理代入 z=mτ，并对 m、r 合并 mr=n：</p>
+<div class="formula display" data-tex="G_k(\tau)=2\zeta(k)+\frac{(2\pi i)^k}{(k-1)!}\sum_{m\ge1}\Big(\sum_{r\ge1}r^{k-1}(e^{2\pi i m r\tau}+e^{-2\pi i m r\tau})\Big)"></div>
+<div class="formula display" data-tex="=2\zeta(k)+\frac{2(2\pi i)^k}{(k-1)!}\sum_{n\ge1}\Big(\sum_{d\mid n}d^{k-1}\Big)q^n=2\zeta(k)+\frac{2(2\pi i)^k}{(k-1)!}\sum_{n\ge1}\sigma_{k-1}(n)\,q^n"></div>
+<p>（k 偶数时 e 的符号项配平，合并 (m,r) 与 (−m,r)，mr=n 恰好按除数求和。）常数项 2ζ(k) 与引理的归一化消去 (2πi)<sup>k</sup> 因子后即为 −B<sub>k</sub>/(2k)。于是：</p>
+<div class="formula display" data-tex="G_k(\tau)=\frac{-\!B_k}{2k}+\sum_{n\ge1}\sigma_{k-1}(n)\,q^n\qquad\blacksquare"></div>
+<p><strong>为什么算术系数必然出现？</strong>因为二维格子 (m,n) 的 Fourier 分析把"和"拆成按 n=mr 的分层，每一层恰好由 d|n 的除数贡献 d<sup>k−1</sup>——除数函数是格子计数在圆环上的回声。∎</p>
+</section>
+
+<section>
+<h3>十一、试试看（带提示）</h3>
+<p>1. 数值验证 E₄(1+i) = E₄(i)（提示：q=e^{2πi(1+i)}=e^{2πi}·e^{−2π}=e^{−2π} 与 τ=i 相同；代入前几项得 ≈1.4557）。</p>
+<p>2. 用手展开 (1−q)²⁴ 到 q²，验证 Δ 的 q² 系数 = 252（提示：(1−q)²⁴ = 1−24q+276q²−…，乘 (1−q²)²⁴ 的常数与 −24q² 项，276−24=252）。</p>
+<p>3. 计算 E₄ 的前四个系数，确认它们等于 240·σ₃(n)（提示：σ₃(1)=1，σ₃(2)=1+8=9，σ₃(3)=1+27=28，σ₃(4)=1+8+64=73 → 240,2160,6720,17520）。</p>
+<p>4. 用级数定义验证 G₄(−1/τ)=τ⁴G₄(τ) 的代数步骤（提示：代换 (m,n)↦(−n,m)，验证它是 ℤ²∖{0} 上的双射）。</p>
+<p>5. 验证 τ=i 是 S: τ↦−1/τ 的不动点，并说明权律此时给出平凡条件 i⁴=1（提示：−1/i=i，而 (cτ+d)⁴ 在 S 下等于 i⁴=1——所以 j(i)=1728 与权律不冲突）。</p>
+<p>6. 说明为什么"权 0 的模形式只能是常数"（提示：f 全纯 + 有界 ⟹ Liouville 定理，或者 f 的 q-展开在 |q|&lt;1 上有界）。</p>
+<p>7. 检验 Δ 的 Hecke 特征性质：验证 a₁=1 且计算 T₂Δ 的 q¹ 系数（提示：T₂ 的定义式代入 Δ=q−24q²+…，取 q¹ 系数看是否等于 a₂=−24——这正是"系数=特征值"机制的最小实例）。</p>
+</section>
+
+<section>
+<h3>十二、关键公式</h3>
+<div class="formula display" data-tex="f\!\left(\frac{a\tau+b}{c\tau+d}\right)=(c\tau+d)^k f(\tau),\qquad \forall\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\in SL(2,\mathbb{Z})"></div>
+<div class="formula display" data-tex="G_k(\tau)=\sum_{(m,n)\neq(0,0)}\frac{1}{(m\tau+n)^k}=\frac{-\!B_k}{2k}+\sum_{n\ge1}\sigma_{k-1}(n)q^n,\qquad q=e^{2\pi i\tau}"></div>
+<div class="formula display" data-tex="E_4=1+240\sum_{n\ge1}\sigma_3(n)q^n,\qquad \Delta=\frac{E_4^3-E_6^2}{1728}=q\prod_{n\ge1}(1-q^n)^{24}=\sum_{n\ge1}\tau(n)q^n"></div>
+<div class="formula display" data-tex="j(\tau)=\frac{E_4^3}{\Delta}=\frac1q+744+196884q+21493760q^2+\cdots,\qquad j(i)=1728"></div>
+<div class="formula display" data-tex="196884=196883+1\qquad(\text{Monster 表示维数})"></div>
+<div class="formula display" data-tex="|\tau(p)|\le 2p^{11/2},\qquad \tau(n)\equiv\sigma_{11}(n)\pmod{691}"></div>
+<div class="formula display" data-tex="M_k=E_k\oplus S_k,\qquad \dim M_k-\dim S_k=1\ (k&gt;2\ \text{偶数})"></div>
+<div class="formula display" data-tex="L(s,f)=\sum_{n\ge1}\frac{a_n}{n^s}=\prod_p\frac{1}{1-a_p p^{-s}+p^{k-1-2s}},\qquad \Lambda(s,f)=\varepsilon\Lambda(k-s,f)"></div>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<div class="paper-ref"><strong>Hecke (1937)</strong> · <em>Über Modulfunktionen und die Dirichletschen Reihen mit Eulerscher Produktentwicklung</em> — 奠定 Hecke 理论：定义 Hecke 算子，建立 Hecke 特征形式的 L-函数与 Euler 乘积的联系。引入 Hecke 环。</div>
+<div class="paper-ref"><strong>Weil (1967)</strong> · <em>Über die Bestimmung Dirichletscher Reihen durch Funktionalgleichungen</em> — Weil 逆定理：满足"足够多"函数方程的 Dirichlet 级数必定来自模形式。这是模性定理证明的关键工具——将 L-函数的解析性质反向推出模对称性。</div>
+<div class="paper-ref"><strong>Serre (1987)</strong> · <em>Sur les représentations modulaires de degré 2 de Gal(ℚ̅/ℚ)</em> — 提出 Serre 猜想：任意奇不可约 2 维 Gal(ℚ̅/ℚ) 的模 p 表示均来自模形式。预言权、水平和特征。(Khare–Wintenberger 2009 完全证明)</div>
+<div class="paper-ref"><strong>Ribet (1990)</strong> · <em>On modular representations of Gal(ℚ̅/ℚ) arising from modular forms</em> — 证明 ε-猜想（模性下降定理）：如果一条曲线是"模"的，其 Galois 表示的所有提升和下降也在模性范畴（范畴——此处指"范围/领域"：所有"模的"对象构成的整体）内。这是连接 TSW 和 Fermat 的关键桥梁。</div>
+<div class="paper-ref"><strong>Wiles (1995)</strong> · <em>Modular elliptic curves and Fermat's Last Theorem</em> — 证明半稳定椭圆曲线是模的 ⟹ Fermat 大定理无解。使用 Galois 形变理论和 R=T。</div>
+<div class="paper-ref"><strong>Taylor–Wiles (1995)</strong> · <em>Ring-theoretic properties of certain Hecke algebras</em> — 引入 patching 方法，完成 R=T 定理中关键的水平提升步骤。</div>
+<div class="paper-ref"><strong>Breuil, Conrad, Diamond, Taylor (2001)</strong> · <em>On the modularity of elliptic curves over ℚ: wild 3-adic exercises</em> — 完全证明 TSW 猜想：所有有理椭圆曲线都是模的。完成 GL(2) 的 Langlands 对应。</div>
+</section>
+
+<section>
+<h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>G. Hardy &amp; E. Wright, An Introduction to the Theory of Numbers</strong></p>
+<p>&rarr; <strong>K. Ireland &amp; M. Rosen, A Classical Introduction to Modern Number Theory</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/complex-plane.html">复平面与全纯函数</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/sieve.html">🔢 素数筛</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/zeta.html">〰️ 黎曼 ζ 函数</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/goldbach.html">👬 哥德巴赫猜想</a>：同一学科分类「数论」。</p>
+<p>&rarr; <a href="/pages/twin-prime.html">👯 孪生素数猜想</a>：同一学科分类「数论」。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/modular-forms.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

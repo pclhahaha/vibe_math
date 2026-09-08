@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="点击 S₃ 元素：对称性变成矩阵与特征标" />
+  <meta property="og:title" content="群表示论 — Vibe Math" />
+  <meta property="og:description" content="点击 S₃ 元素：对称性变成矩阵与特征标" />
+  <title>群表示论 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎭 群表示论 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">点击 S₃ 元素：对称性变成矩阵与特征标</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='representation-theory',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/lie-algebra.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🔄 李代数</a>
+  <a href="/pages/lie-group-representations.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🎻 紧李群表示与 Peter–Weyl &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把"对称"变成可以计算的矩阵</h3>
+<p>取一张等边三角形卡片，在桌上旋转 120°、再旋转 120°……或者在三个方向上翻面。这些操作一共 6 个，构成二面体群 D₃（同构于置换群 S₃）。现在问一个微妙的问题：<strong>这 6 个操作"本身"是什么？</strong></p>
+<p>答案取决于你用什么眼光看它。你可以把它们当作抽象符号（r 旋转、s 翻面，满足 r³=s²=1、srs=r⁻¹）；也可以把它们当作<strong>作用于平面上点的 2×2 矩阵</strong>——旋转 120° 就是矩阵</p>
+<div class="formula display" data-tex="\begin{pmatrix}\cos 120^\circ & -\sin 120^\circ\\ \sin 120^\circ & \cos 120^\circ\end{pmatrix}=\begin{pmatrix}-\tfrac12 & -\tfrac{\sqrt3}{2}\\ \tfrac{\sqrt3}{2} & -\tfrac12\end{pmatrix}"></div>
+<p>一旦变成矩阵，一切都可以算了：矩阵相乘对应操作合成，矩阵的迹（对角线之和 = 2cos120° = −1）在共轭下不变——它只依赖"操作属于哪个共轭类"，不依赖坐标选取。<strong>把群映到矩阵、且保持乘法结构的映射，就叫群的一个"表示"（representation）。</strong></p>
+<p>为什么要绕这一圈？因为群本身太"符号化"：元素的真实身份要靠关系式暗中约定。而矩阵世界有内积、特征值、迹、行列式这些现成的强大工具。<strong>表示论的基本信念：想理解一个群，就去理解它的所有矩阵化身（表示），特别是那些"不可再分"的最小化身（不可约表示）。</strong> 有限群的表示论（Frobenius 1896 开创）在 20 世纪长成参天大树：Burnside 用它证明纯群论多年攻不下的定理，Weyl 把它变成量子力学的语言，Langlands 纲领至今仍在把伽罗瓦群表示与模形式配对——本项目的 <a href="/pages/modular-forms.html">模形式</a> 与 <a href="/pages/standard-model.html">标准模型</a> 两门课，骨子里都是表示论。</p>
+<div class="key-insight">洞察：表示 = 群到线性变换群的同态。一个抽象群可以有许多"化身"（一维的、二维的、置换的……），但<strong>不可约表示是它的"原子"</strong>：任何表示都能拆成不可约表示的直和（Maschke），拆法唯一；不可约表示的个数 = 共轭类个数，维数平方和 = |G|。有限群表示论的任务：把这张"特征标表"算出来。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/group-action.html">群作用</a>、<a href="/pages/eigenvectors.html">特征值与特征向量</a>、<a href="/pages/linear-transform.html">线性变换</a>。若能先读 <a href="/pages/fourier-series.html">傅里叶级数</a> 会有额外收获（DFT 就是循环群的表示论，见第七节）。</p></div>
+
+<section>
+<h3>一、一个具体问题——同一个群，为什么要"很多个"表示</h3>
+<p><strong>凯莱已经告诉我们群能嵌入对称群。</strong> 每个 n 阶群都同构于某个置换群的子群（凯莱定理，1854），于是每个群都有"置换表示"。但置换表示一般庞大而不透明（S₃ 的凯莱嵌入是 6×6 置换矩阵），而且它只是众多表示之一。表示论要问的是全部：</p>
+<div class="formula display" data-tex="\rho:G\to \mathrm{GL}(V)\ \text{是同态，即}\ \rho(gh)=\rho(g)\rho(h)\quad\Longrightarrow\quad \text{称 }V\text{ 是 }G\text{ 的表示（模）}"></div>
+<p><strong>关键定义：不可约。</strong> 若 V 有一个 G-不变的子空间 W（∀g，ρ(g)W⊆W），且 0&lt;dim W&lt;dim V，则说表示可约。没有这种子空间的表示叫<strong>不可约表示（irrep）</strong>。整个理论的纲领由三个定理锁定：</p>
+<ul>
+<li><strong>Maschke 定理（1898）：</strong> 有限群在特征 0（如复数）上的任何表示都<strong>完全可约</strong>——可约表示必能写成不可约表示的直和 V = V₁⊕…⊕V_k。证明只需一个动作：对任意不变子空间 W，取任意补空间 U，用"群平均" P = (1/|G|)Σρ(g)P₀ρ(g)⁻¹ 造出一个 G-等变的投影，其像恰为 W，核即 G-不变的补空间。（第八节会看到：当域的特征整除 |G| 时这招失效——Maschke 的前提不是装饰。）</li>
+<li><strong>Schur 引理（1905）：</strong> 两个不可约表示之间的 G-等变线性映射要么是零、要么是同构；复数上，不可约表示到自身的等变映射只有数乘 λ·id。这是特征标理论的支点。</li>
+<li><strong>特征标唯一决定表示。</strong> 定义 χ_ρ(g)=tr ρ(g)。它只依赖共轭类（迹在共轭下不变），且两个表示同构 ⟺ 它们的特征标相等。于是"分类不可约表示" ⟺ "算出一张特征标表"。</li>
+</ul>
+<div class="key-insight">表示论的全部优雅在于：把"群的结构"翻译成"矩阵的算术"。翻译官是迹（trace），通行证是 Maschke + Schur——有了它们，有限群复表示论就变成一组干净的正交关系（第五节）。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——"线性化"为什么是万能钥匙</h3>
+<p>群作用（<a href="/pages/group-action.html">群作用</a> 课）研究 G 作用在集合 X 上；表示研究 G 作用在<strong>向量空间</strong>上。集合线性化 = 把每个置换变成置换矩阵；而向量空间比集合多出结构（可加、可缩放），所以"线性化之后的群作用"比"集合上的群作用"严格丰富——同一个置换，在不同基底下的矩阵不同，但<strong>迹不变</strong>。</p>
+<p><strong>为什么复数域这么重要？</strong> 在 ℝ² 上，旋转 90° 的矩阵没有实特征值，找不到一维不变子空间——它"看起来不可约"。但在 ℂ² 上，同一变换有特征值 ±i 与两个特征向量，立刻可约。<strong>复数代数闭、每个线性变换都有特征向量</strong>，这是特征标理论顺畅运行的土壤；Maschke + Schur 两个定理都在复数上最干净。（第八节的陷阱 2 专门讲换域后会发生什么。）</p>
+<p><strong>群平均——整座大厦的第一块砖。</strong> 有限群最大的恩惠是"可以平均"：对任意向量 v 和表示 ρ，算子</p>
+<div class="formula display" data-tex="Pv=\frac{1}{|G|}\sum_{g\in G}\rho(g)v\qquad\text{满足 }P^2=P,\ \ \rho(h)P=P\ \forall h"></div>
+<p>把任何 v 投射到<strong>不动子空间</strong> V^G。这个"平均出不变的东西"的技巧贯穿全课：造不变内积、造等变投影、证明不可约表示的正交性——全是一回事：<strong>把任意对象平均成 G-不变的</strong>。量子力学里"对称化/反对称化"（玻色子/费米子）用的正是同一个平均（对称化子），见 <a href="/pages/entanglement.html">量子纠缠</a> 的对称性讨论。</p>
+</section>
+
+<section>
+<h3>三、例题 1——S₃ 的特征标表（一步步算完）</h3>
+<p><strong>题目。</strong> 求对称群 S₃（= 三角形对称群 D₃）在复数上的全部不可约表示与特征标表。</p>
+<p><strong>第一步：列出共轭类。</strong> S₃ 有三个共轭类：单位元 e（1 个元素）；两个 3-轮换 (123)、(132)（共 2 个）；三个对换 (12)、(13)、(23)（共 3 个）。</p>
+<p><strong>第二步：找不可约表示。</strong></p>
+<ul>
+<li><strong>平凡表示 χ₀：</strong> 一维，所有元素 → 1。显然不可约。</li>
+<li><strong>符号表示 χ₁：</strong> 一维，χ₁(π)=sgn(π)——偶置换 → 1，奇置换 → −1。</li>
+<li><strong>标准表示 χ₂：</strong> 二维，把 S₃ 实现为平面上的旋转/反射矩阵（本课画布演示的就是它）。它忠实、不可约（三角形没有更小的对称子空间）。</li>
+</ul>
+<p><strong>第三步：写出特征标表并核对"维数平方和"。</strong></p>
+<div class="formula display" data-tex="\begin{array}{c|ccc} & e & (123) & (12)\\ \text{类大小} & 1 & 2 & 3\\ \hline \chi_0 & 1 & 1 & 1\\ \chi_1 & 1 & 1 & -1\\ \chi_2 & 2 & -1 & 0 \end{array}\qquad 1^2+1^2+2^2=6=|S_3|</div>
+<p><strong>第四步：正交性抽查（这是特征标理论的"勾股定理"）。</strong> 行正交关系：对两个不可约特征标，按类大小加权求和应为 0：</p>
+<div class="formula display" data-tex="\langle\chi_0,\chi_1\rangle=\frac{1}{6}\bigl(1\cdot1\cdot1+2\cdot1\cdot1+3\cdot1\cdot(-1)\bigr)=\frac{1+2-3}{6}=0\quad\checkmark"></div>
+<p><strong>第五步：为什么没有别的了？</strong> 不可约表示个数 = 共轭类个数 = 3；且维数平方和已达 |G|=6，任何第四个不可约表示都会把平方和撑爆。所以表完整。∎</p>
+<p><strong>第六步：分解一个真实表示试试刀。</strong> S₃ 作用在三个字母上的置换表示是 3 维的：每个置换 π 对应把基向量按 π 重排的 3×3 矩阵。它的特征标是<strong>固定点数</strong>：χ(e)=3、χ(123)=0、χ(12)=1。把它与表中行对比：χ₀+χ₂ = [1+2, 1+(−1), 1+0] = [3, 0, 1]——<strong>完全吻合</strong>。于是 3 维置换表示分解为平凡⊕标准：</p>
+<div class="formula display" data-tex="\mathbb{C}^3\ \cong\ \underbrace{\mathbb{C}}_{\text{平凡}}\ \oplus\ \underbrace{\{(x_1,x_2,x_3):x_1+x_2+x_3=0\}}_{\text{标准（迹零超平面）}}"></div>
+<p>几何意义：三角形三个顶点张成的平面 = 全空间去掉"整体平移"（对角线）方向。表示论把这个直观变成精确的直和分解。</p>
+</section>
+
+<section>
+<h3>四、例题 2——循环群 Cₙ：一维表示与离散傅里叶变换（一步步算完）</h3>
+<p><strong>题目。</strong> 循环群 Cₙ=⟨g : gⁿ=1⟩ 的不可约复表示是什么？它们如何给出离散傅里叶变换？</p>
+<p><strong>第一步：阿贝尔群的不可约复表示都是一维的。</strong> 因为 ρ(g) 与所有 ρ(h) 交换（G 交换），由 Schur 引理 ρ(g) 在不可约表示上必须是数乘 λ_g·id；若维数 &gt;1 就有非平凡不变子空间，矛盾。所以 Cₙ 的每个不可约表示都是 1×1 矩阵（复数）。</p>
+<p><strong>第二步：g 可以映到任何 n 次单位根。</strong> ρ(g)=ω 必须满足 ωⁿ=ρ(g)ⁿ=ρ(gⁿ)=ρ(e)=1。n 次单位根共 n 个：ω_k = e^{2πik/n}，k=0,…,n−1。每个给出一个一维表示 χ_k(g^j)=ω_k^j。</p>
+<p><strong>第三步：n 个不可约表示，与 n 个共轭类（每个元素一类）数目吻合。</strong> 维数平方和 = 1+…+1 = n = |Cₙ| ✓。正则表示（Cₙ 在自身上的左乘，n 维）分解为全部 n 个一维表示的直和——基变换矩阵正是 <strong>离散傅里叶变换矩阵</strong>：</p>
+<div class="formula display" data-tex="F_{jk}=\frac{1}{\sqrt n}\,e^{-2\pi i jk/n}\qquad\Longrightarrow\qquad \text{DFT = C}_n\text{ 表示论的换基矩阵}"></div>
+<p><strong>第四步：这解释了傅里叶分析"为什么处处出现"。</strong> 平移群（循环群是它的离散化）的不可约表示就是频率 χ_k；把信号按频率展开 = 把正则表示分解成不可约直和。<a href="/pages/fourier-series.html">傅里叶级数</a> 课里的每个公式，都是本节定理在 n→∞ 时的化身。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——特征标理论的核心定理</h3>
+<p>以下定理对任意有限群 G（复表示）成立，构成完整骨架：</p>
+<ul>
+<li><strong>完全可约（Maschke）。</strong> 每个表示 = 不可约表示的直和；分解中每个不可约 V_i 出现的重数 m_i 唯一，且 m_i = ⟨χ, χ_i⟩。</li>
+<li><strong>正交关系。</strong> 对不可约特征标：⟨χ_i, χ_j⟩ = (1/|G|)Σ_g χ_i(g)χ_j(g)‾ = δ_ij（行正交）；对共轭类 C、C′：Σ_i χ_i(C)χ_i(C′)‾ = δ_CC′·|G|/|C|（列正交）。</li>
+<li><strong>计数与维数。</strong> 不可约表示个数 = 共轭类个数；Σ_i (dim V_i)² = |G|；dim V_i 整除 |G|（有限群成立）；χ(e)=dim V。</li>
+<li><strong>正则表示。</strong> R = G 在群代数 C[G] 上的左乘，其特征标 χ_R(e)=|G|、其余为 0；分解 R ≅ ⊕ (dim V_i)·V_i——<strong>每个不可约表示都藏在正则表示里，出现次数恰为它的维数</strong>。</li>
+<li><strong>Burnside 定理（1904）。</strong> 若 |G| = p^a q^b（p、q 素数），则 G 可解。这是表示论第一个轰动性胜利：纯群论方法多年未决（p、q 次群定理只是特殊情形），Frobenius 的特征标工具一击即破。</li>
+</ul>
+<p><strong>证明内核（选讲行正交的机理）。</strong> 对两个表示 V、W，Hom_G(V,W)（G-等变线性映射）的维数 = ⟨χ_V, χ_W⟩。Schur 引理说该空间在 V、W 不可约时维数为 1（同构时）或 0（不同构时）；一般情形用 Maschke 拆成直和、逐块用 Schur——正交关系就是"dim Hom_G(V,W)"这个整数被两种方法各数一遍的结果。又一次<strong>双计数</strong>，和图论课的握手引理是同一招。</p>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\rho:G\to GL(V)\ \text{同态};\qquad \chi_\rho(g)=\operatorname{tr}\rho(g)\ \text{（类函数）}"></div>
+<div class="formula display" data-tex="\langle\chi_i,\chi_j\rangle=\tfrac{1}{|G|}\sum_g \chi_i(g)\overline{\chi_j(g)}=\delta_{ij};\qquad \sum_i(\dim V_i)^2=|G|"></div>
+<div class="formula display" data-tex="\#\{\text{不可约}\}=\#\{\text{共轭类}\};\qquad \mathbb{C}[G]\cong\bigoplus_i (\dim V_i)\,V_i\ \text{（正则表示）}"></div>
+<div class="formula display" data-tex="\text{置换表示特征标}=\text{固定点数};\qquad \text{DFT 矩阵}=\tfrac1{\sqrt n}e^{-2\pi ijk/n}\ (\text{C}_n\ \text{表示})"></div>
+</section>
+
+<section>
+<h3>七、延伸——表示论是数学与物理的通用语言</h3>
+<ul>
+<li><strong>量子力学与自旋。</strong> 物理系统的对称群（旋转群 SO(3)）在希尔伯特空间上的表示给出角动量量子化；它的双覆盖 SU(2) 的二维不可约表示就是<strong>自旋 1/2</strong>——Bloch 球（<a href="/pages/bloch-sphere.html">量子比特</a> 课）上的每一个态都是 SU(2) 表示论的主角。泡利矩阵、Clebsch–Gordan 系数，全是表示论词典里的词条。</li>
+<li><strong>粒子物理的标准模型。</strong> 规范群 SU(3)×SU(2)×U(1) 的表示规定每种粒子的"量子数"：夸克在 SU(3) 的 3 维表示里、轻子在其共轭里；希格斯机制靠的是某个表示的非零真空期望。<a href="/pages/standard-model.html">标准模型</a> 课的代数骨架就是表示论。</li>
+<li><strong>数论与 Langlands。</strong> 伽罗瓦群（<a href="/pages/galois-theory.html">伽罗瓦理论</a> 课的群）的表示与自守形式配对——"Langlands 对应"。模形式（<a href="/pages/modular-forms.html">模形式</a> 课）中的每个尖点形式对应一个二维伽罗瓦表示；费马大定理的证明（Wiles）本质上验证了椭圆曲线这一侧与模形式那一侧的表示"对上了号"。</li>
+<li><strong>信号处理。</strong> 例题 2 已展示 DFT = Cₙ 的表示分解；FFT 是这条线的工程实现。图上的卷积神经网络（GCN）也在用邻接矩阵的谱（= 图对称群表示论的碎片）做卷积。</li>
+<li><strong>李群表示论。</strong> 有限群表示论的方法搬到李群（旋转群、洛伦兹群）需要更多分析（Peter–Weyl 定理），但骨架不变；<a href="/pages/lie-algebra.html">李代数</a> 课是这条路的入口。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——域、分解与"看起来"</h3>
+<p><strong>陷阱 1："群作用"就是"表示"？</strong> 群作用在集合 X 上可以线性化成置换表示（自由向量空间 CX），但表示比作用严格更多：表示允许 V 中元素线性组合——作用在集合上没有"1.5 个 x 加 0.5 个 y"这种对象。反过来，集合作用的线性化只是所有表示中很特殊的一类（置换表示）。两个概念相关的正确说法：<strong>表示 = 群在线性空间上的作用</strong>。</p>
+<p><strong>陷阱 2：Maschke 需要特征不整除 |G|。</strong> 取 G=C₂=⟨g⟩ 在二元域 F₂ 上的正则表示（二维）：g 交换两个基向量，矩阵 [[0,1],[1,0]]。不动子空间 ⟨e₁+e₂⟩ 是一维不变子空间，但它<strong>没有不变的补空间</strong>（另一个一维子空间 ⟨e₁⟩ 被 g 映到 ⟨e₂⟩≠⟨e₁⟩）——表示不可完全约！因为 2=|G| 在 F₂ 里是 0，群平均的 1/|G| 无法定义。模表示论（Brauer）专门研究这种"特征整除 |G|"的情形，结构远比复数情形丰富复杂。</p>
+<p><strong>陷阱 3："特征标相同 ⟹ 表示相同"在任何域都成立？</strong> 只在特征 0（尤其 ℂ）对有限群成立。在模表示论里，两个不同构的模表示可以有相同（Brauer）特征标。另一个微妙点：复数上特征标确实完全决定表示，但<strong>构造</strong>出那个表示是另一回事——"知道特征标表"≠"能写出矩阵"。</p>
+<p><strong>陷阱 4："阿贝尔群表示平凡，没什么可研究"？</strong> 阿贝尔群的不可约复表示全是一维（例题 2），但它们的全体（特征标群 Ĝ）本身是研究对象——庞特里亚金对偶把 Ĝ 的对偶还给 G，这是傅里叶分析的群论根。真正复杂的是<strong>非阿贝尔</strong>部分：表示维数 &gt;1 后，不可约表示的分类立刻变得深刻（李群、有限李型群……）。</p>
+<p><strong>陷阱 5："不可约 = 维数小"？</strong> 维数平方和 = |G| 意味着大型群必有高维不可约表示。例如对称群 Sₙ 的不可约表示由 n 的<strong>分拆</strong>标记，维数可以巨大（S₆₀ 有个不可约表示维数超过 10²⁰）。维数"小"只是构造方便的假象。</p>
+</section>
+
+<section>
+<h3>九、当前状态——表示论的地图边界</h3>
+<ol>
+<li><strong>有限单群分类（已完成但仍在"返工"）。</strong> CFSG（1983 宣布，2004 前后最终整理）：有限单群只有几个无穷族加 26 个散在单群。证明依赖深度的模表示论（Brauer、Feit–Thompson 的奇阶定理本身就是表示论定理）；Gorenstein–Lyons–Solomon 的"第二代证明"至今仍在出版中，目标是让整个证明可核查。</li>
+<li><strong>有限李型群的表示（Deligne–Lusztig 理论）。</strong> 1976 年 Deligne–Lusztig 用 etale 上同调构造出有限李型群的不可约表示，完成了一大类群的表示分类；对散在群（如怪兽群 Monster）的表示仍有开放的结构问题。</li>
+<li><strong>模表示论。</strong> Brauer 理论中"亏群"与块结构的研究仍在推进；与代数 K-理论、导出范畴（<a href="/pages/higher-category-theory.html">高阶范畴论</a> 的方向）的交叉是当代热点。</li>
+<li><strong>表示论 ↔ 数论（Langlands）。</strong> 局部/整体 Langlands 对应把伽罗瓦表示与自守表示配对，是当前纯数学最大工程之一；有限群的表示论（尤其是模表示）在其中反复出场。→ <a href="/pages/modular-forms.html">模形式</a>、<a href="/pages/elliptic-curves.html">椭圆曲线</a>。</li>
+<li><strong>量子信息中的表示论。</strong> Schur–Weyl 对偶给出多粒子态按对称性的分解，是量子计算中"不可区分粒子"与纠缠分类的代数工具；表示论正在变成量子信息理论的标准语言。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Frobenius (1896)</strong>：特征标理论的三篇开创论文——不可约表示与特征标的正交关系，有限群表示论由此诞生。</li>
+<li><strong>Maschke (1898)</strong>：有限群表示完全可约定理——"群平均"技巧第一次登台。</li>
+<li><strong>Burnside (1904)</strong>：<em>"On groups of order p^αq^β"</em>, <em>Trans. Cambridge Philos. Soc.</em>——用特征标证明 p^a q^b 群可解，表示论威力的第一次展示。</li>
+<li><strong>Schur (1905)</strong>：Schur 引理与特征标理论的代数化。</li>
+<li><strong>Schur–Weyl (1927)</strong>：Schur–Weyl 对偶——一般线性群与对称群的表示互相决定，连接表示论与对称函数论。</li>
+<li><strong>Brauer (1930s–40s)</strong>：模表示论——把特征标理论延伸到特征整除 |G| 的情形，CFSG 的基石。</li>
+<li><strong>Feit–Thompson (1963)</strong>：<em>"Solvability of groups of odd order"</em>, <em>Pacific J. Math.</em>——奇阶群可解，255 页的纯表示论定理，有限单群分类的第一块巨碑。</li>
+<li><strong>Deligne–Lusztig (1976)</strong>：<em>"Representations of reductive groups over finite fields"</em>, <em>Ann. of Math.</em>——有限李型群表示论，几何表示论的开端。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——正交关系、分解与维数</h3>
+<p><strong>题 1（列正交抽查）。</strong> 用 S₃ 特征标表验证列正交：⟨列 e, 列 (12)⟩_列 = Σ_i χ_i(e)·χ_i(12)‾ 应等于 0。<strong>提示：</strong>1·1 + 1·(−1) + 2·0 = 0 ✓（更一般的公式是 Σ_i χ_i(C)χ_i(C′)‾ = δ·|G|/|C|，含归一化因子）。</p>
+<p><strong>题 2（为什么 4 维表示不存在？）。</strong> 说明 S₃ 不可能有 4 维不可约表示。<strong>提示：</strong>不可约个数已 = 3 = 共轭类个数；再加一个会使维数平方和 &gt; 6 = |G|，违反基本定理。</p>
+<p><strong>题 3（C₃ 的特征标表）。</strong> 写出 C₃ 的三个一维特征标的具体数值，并验证行正交。<strong>提示：</strong>ω=e^{2πi/3}，行 k：χ_k(g^j)=ω^{kj}，k=0,1,2；⟨χ_1,χ_2⟩=(1/3)(1+ω·ω²+ω²·ω^4)=(1/3)(1+1+1)=1? 不对——重新算：χ₁(g^j)=ω^j，χ₂(g^j)=(ω²)^j；⟨χ₁,χ₂⟩=(1/3)(1·1+ω·ω²+ω²·ω)= (1/3)(1+1+1)=1？ω·ω²=ω³=1，ω²·ω=ω³=1——三项全 1，内积 = 1？这里 χ₂=χ₁‾（ω²=ω‾），⟨χ₁,χ₁⟩=1 才对。用共轭后重算：⟨χ₁,χ₂⟩=(1/3)Σχ₁(g^j)·conj(χ₂(g^j))=(1/3)(1+ω·ω+ω²·ω²)=(1/3)(1+ω²+ω^4)=(1/3)(1+ω²+ω)=0 ✓（1+ω+ω²=0）。</p>
+<p><strong>题 4（置换表示分解的维数核对）。</strong> S₄ 作用在四个字母上的置换表示是 4 维的，其不动子空间是 1 维，另一部分呢？用公式 m = ⟨χ, χ_i⟩ 判断它包含平凡表示的重数。<strong>提示：</strong>固定点数特征标 χ(π)=#fix(π)，⟨χ,χ₀⟩=(1/24)Σ_π #fix(π)=(1/24)·4!·? = 按共轭类数：类 e(1个,4 固定)、(12) 类 6 个各 2 固定、(123) 类 8 个各 1 固定、(1234) 类 6 个各 0、(12)(34) 类 3 个各 0：和 = 1·4+6·2+8·1+6·0+3·0 = 24，除以 24 = 1。平凡表示出现 1 次，剩余 3 维部分不含平凡表示。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：Σ_i χ_i(e)χ_i(12) = 1·1 + 1·(−1) + 2·0 = 0。∎</p>
+<p><strong>题 2</strong>：不可约表示个数必须等于共轭类个数 3；若三个已有之外再添 4 维不可约，维数平方和 ≥ 1+1+4+16 = 22 &gt; 6，矛盾。∎</p>
+<p><strong>题 3</strong>：χ_k(g^j)=e^{2πikj/3}。正交计算见提示：⟨χ₁,χ₂⟩=(1/3)(1+ω+ω²)=0，其中用到 1+ω+ω²=0。∎</p>
+<p><strong>题 4</strong>：平凡重数 m₀=⟨χ,χ₀⟩=1（见提示算术）；因此 4 = 1 + 3，剩余 3 维表示不含平凡分量。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布）。</strong> 点击 S₃ 的六个元素：观察 2×2 标准表示的矩阵与三角形顶点的置换；注意同一共轭类的元素（三个反射，或两个旋转）特征标相同。验证：χ(e)=2=维数；χ(旋转)=−1=2cos120°；χ(反射)=0。</p>
+<p><strong>试试看 2（类与迹）。</strong> 自己验证"迹在相似变换下不变"：对任意可逆矩阵 P，tr(PAP⁻¹)=tr A。提示：tr(AB)=tr(BA)。这保证特征标只依赖共轭类——表示论里"换基底"无害的根源。</p>
+<p><strong>试试看 3（S₃ 的凯莱嵌入分解）。</strong> S₃ 的 6 维正则表示按公式分解为 1·(平凡)+1·(符号)+2·(标准)，维数 1+1+4=6。数一数：正则表示里标准表示出现 2 次。提示：把群代数 C[S₃] 按"所有元素求和"（平凡方向）、"带符号求和"（符号方向）与其余 4 维方向分解。</p>
+<p><strong>试试看 4（自旋 = SU(2) 表示）。</strong> 泡利矩阵 σ_x,σ_y,σ_z 生成 SU(2) 的李代数；Bloch 球上的旋转就是 SU(2) 在二维复空间（自旋 1/2）上的（投影）表示。结合 <a href="/pages/bloch-sphere.html">Bloch 球</a> 课思考：为什么"转 720° 才回到自身"？（提示：SU(2)→SO(3) 是 2 对 1 覆盖——这就是旋量与表示论的关系。）</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J.-P. Serre, Linear Representations of Finite Groups</strong>（Springer GTM 42，字字珠玑的经典，从零到特征标表）</p>
+<p>&rarr; <strong>W. Fulton, J. Harris, Representation Theory: A First Course</strong>（几何直观与大量例子）</p>
+<p>&rarr; <strong>M. Isaacs, Character Theory of Finite Groups</strong>（进阶）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.25（有限群表示论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/group-action.html">群作用</a>、<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/eigenvectors.html">特征值与特征向量</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/group-action.html">♟️ 群作用</a>：表示 = 群在线性空间上的作用，先掌握集合上的作用。</p>
+<p>&rarr; <a href="/pages/lie-algebra.html">🧬 李代数</a>：李群表示论的入口，与有限群表示论互为镜像。</p>
+<p>&rarr; <a href="/pages/bloch-sphere.html">🌀 Bloch 球</a>：自旋 1/2 = SU(2) 的二维不可约表示。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🌌 标准模型</a>：规范群 SU(3)×SU(2)×U(1) 的表示规定粒子量子数。</p>
+<p>&rarr; <a href="/pages/fourier-series.html">🎼 傅里叶级数</a>：DFT = 循环群的表示分解。</p>
+<p>&rarr; <a href="/pages/galois-theory.html">🔗 伽罗瓦理论</a>：伽罗瓦群表示是数论 Langlands 纲领的主角。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/representation-theory.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

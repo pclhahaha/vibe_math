@@ -1,0 +1,151 @@
+<section>
+<h3>〇、直觉入门——把"群的平均"从有限群搬到圆周上：调和分析就是表示论</h3>
+<p>有限群表示论（→ <a href="/pages/representation-theory.html">群表示论</a> 课）里，特征标正交性靠"群平均 (1/|G|)Σ"。若群变成<strong>紧李群</strong>——圆周 S¹、旋转群 SO(3)、酉群 U(n)——求和要换成<strong>积分</strong>，而紧性保证存在唯一的"均匀"测度（Haar 测度），一切照旧：</p>
+<div class="formula display" data-tex="\int_G f(g)\,dg\quad(\text{Haar：左/右不变、归一化})\qquad \text{紧性}\Rightarrow\text{与有限群同款“平均技巧”}"></div>
+<p>这个设定的回报是惊人的：把 L²(G) 按 G 的不可约表示分解，得到 <strong>Peter–Weyl 定理</strong>：</p>
+<div class="formula display" data-tex="L^{2}(G)\ \cong\ \bigoplus_{\hat G}\ V_{i}\otimes V_{i}^{*}\qquad(\text{每个不可约出现 dim }V_i\text{ 次})"></div>
+<p>最熟悉的例子：G=S¹（圆群）的不可约表示是一维的 χ_k(e^{iθ})=e^{ikθ}，Peter–Weyl 说 L²(S¹) 由它们张成——<strong>这正是傅里叶级数的存在定理</strong>（→ <a href="/pages/fourier-series.html">傅里叶级数</a> 课）！G=SO(3) 时，不可约表示是球谐函数（维数 2l+1），L²(球面) 的分解给出量子角动量的数学（→ <a href="/pages/bloch-sphere.html">自旋</a>、<a href="/pages/hydrogen-atom.html">氢原子</a> 课）。</p>
+<div class="key-insight">洞察：Peter–Weyl = "连续版的傅里叶理论 + 有限群特征标理论的合体"。它对<strong>任何</strong>紧群成立：交换情形退化为 Pontryagin 对偶（Fourier），非交换情形给出"矩阵系数基"。紧群表示全是有限维酉表示（非紧群如 SL(2,ℝ) 没有这个奢侈），所以"有限群直觉"几乎全部照搬——群平均换成 Haar 积分即可。画布上 U(1) 的谐波叠加就是 Peter–Weyl 最小样本。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/representation-theory.html">群表示论</a>（有限群版先行）、<a href="/pages/fourier-series.html">傅里叶级数</a>（U(1) 例）、<a href="/pages/lie-algebra.html">李代数</a>（最高权语言）、<a href="/pages/bloch-sphere.html">Bloch 球</a>（自旋=SU(2) 表示）。</p></div>
+
+<section>
+<h3>一、一个具体问题——紧群表示论要回答什么</h3>
+<p><strong>对象。</strong> 紧李群 = 紧流形 + 光滑群结构：S¹（圆）、SU(n)、SO(n)、U(n)、Sp(n) 与例外群（G₂、E₆₋₈…）。紧性 ⟹ 有有限总质量的不变测度（Haar），也 ⟹ 每表示可酉化、不可约表示<strong>有限维</strong>。</p>
+<p><strong>三个任务。</strong></p>
+<ul>
+<li><strong>分类不可约表示：</strong> 由<strong>最高权</strong>参数化（Cartan 1913 + Weyl 1925 的现代形式）：每个"支配整数权"给出唯一不可约酉表示；维数由 Weyl 维数公式给出。有限群的"特征标表"换成"Weyl 特征标公式 + 权格"。</li>
+<li><strong>分解 L²(G)：</strong> Peter–Weyl（1927）：矩阵系数 {ρᵢ(g)_{kl}} 构成正交基——L²(G) ≅ ⊕ Vᵢ⊗Vᵢ*。类比有限群：正则表示 ≅ ⊕ (dim Vᵢ)·Vᵢ——<strong>每个不可约出现 dim 次</strong>。</li>
+<li><strong>调和分析 = 表示论：</strong> 卷积、正定函数、Fourier 反演在紧群上全部有表示论版本（Plancherel 公式）；U(1) 情形就是你熟悉的傅里叶级数。</li>
+</ul>
+<p><strong>为什么物理学家在乎？</strong> 旋转对称量子系统的态空间按 SO(3)/SU(2) 表示分解：能量本征空间的<strong>简并度 = 不可约表示维数</strong>，选择定则 = 张量积分解（Clebsch–Gordan）。"为什么角动量量子化、为什么氢原子能级有 2l+1 重简并"——答案都在这一课里。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——从有限群到紧群：平均换成积分</h3>
+<p><strong>有限群版本的每一行都有紧群翻译。</strong> 令 dg 为 Haar（唯一、双不变、∫=1）：</p>
+<div class="formula display" data-tex="\text{酉化：} \langle u,v\rangle'=\int_G\langle \rho(g)u,\rho(g)v\rangle\,dg;\qquad \text{Schur 引理、特征标正交：}\ \langle\chi_i,\chi_j\rangle=\int_G\chi_i\overline{\chi_j}\,dg=\delta_{ij}"></div>
+<p>Peter–Weyl 的证明思路：有限维不可约表示的矩阵系数构成 C(G) 的含幺子代数（封闭于共轭），由 Weyl 的完全可约性它是<strong>全体</strong>（Gelfand–Raïkov/Stone–Weierstrass 稠密）；再对稠密子代数做 L² 正交分解即得。∎</p>
+<p><strong>交换情形 = Pontryagin。</strong> G 交换时不可约都一维（χ），矩阵系数就是特征标本身；Peter–Weyl 退化为"特征标构成 L² 正交基"——即傅里叶分析（S¹）、DFT（ℤ/n，→ <a href="/pages/fourier-transform.html">傅里叶变换</a> 课的群论观）。<strong>傅里叶分析不是表示论的邻居，是它的交换特例。</strong></p>
+</section>
+
+<section>
+<h3>三、例题 1——U(1)：Peter–Weyl 就是傅里叶级数（一步步算完）</h3>
+<p><strong>题目。</strong> G=S¹={e^{iθ}}。求不可约表示并验证 L²(S¹) 分解与 Parseval。</p>
+<p><strong>第一步：不可约表示。</strong> S¹ 交换 ⟹ 一维：ρ_k(e^{iθ})=e^{ikθ}（k∈ℤ）——连续同态 S¹→ℂ* 只能到单位圆且由整数 k 参数化。</p>
+<p><strong>第二步：正交性（Haar = dθ/2π）。</strong></p>
+<div class="formula display" data-tex="\langle\chi_k,\chi_l\rangle=\frac1{2\pi}\int_0^{2\pi}e^{i(k-l)\theta}d\theta=\delta_{kl}\qquad\blacksquare"></div>
+<p><strong>第三步：Peter–Weyl = 傅里叶级数定理。</strong> L²(S¹) 以 {e^{ikθ}} 为正交基：f(θ)=Σ_k c_k e^{ikθ}，c_k=⟨f,χ_k⟩——这正是傅里叶级数的存在性与 Parseval（Σ|c_k|²=‖f‖²）。画布上逐项叠加部分和，你会看到方波在跳跃点出现 9% 过冲（吉布斯）——同一现象在表示论语言里是"部分正交展开的收敛行为"。∎</p>
+<p><strong>第四步：读结论。</strong> "调和分析在圆上的一切"= 紧群 S¹ 的 Peter–Weyl；"非交换"版本则把"频率"换成"矩阵系数/不可约表示"。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——SU(2) 与自旋：张量积分解与 2j+1（一步步算完）</h3>
+<p><strong>题目。</strong> SU(2) 的不可约表示是什么？为什么 1/2⊗1/2=0⊕1 对应"单重态+三重态"？</p>
+<p><strong>第一步：不可约表示清单。</strong> SU(2) 不可约酉表示 V_j 由自旋 j=0,½,1,3/2,… 标记，维数 2j+1，基为 |j,m⟩（m=−j,…,j）——二维 V_{½} 就是泡利矩阵上的标准表示（→ <a href="/pages/bloch-sphere.html">Bloch 球</a>）。</p>
+<p><strong>第二步：Peter–Weyl 维数核对。</strong> L²(SU(2)) ≅ ⊕_j V_j⊗V_j*，维数 = Σ_j (2j+1)²：前几项 1、9、25、49…——"每个不可约出现 (2j+1) 次"的连续版。∎</p>
+<p><strong>第三步：Clebsch–Gordan。</strong> V_{j1}⊗V_{j2} 分解为 V_{|j1−j2|}⊕…⊕V_{j1+j2}（每步 ±1）。½⊗½=0⊕1：维数 2·2=4=1+3 ✓——两个自旋 ½ 组成<strong>自旋 0 单重态</strong>（反对称，纠缠的"反平行"）+ <strong>自旋 1 三重态</strong>（对称：↑↑、↓↑+↑↓、↓↓）。量子纠缠的对称性分类正是这些直和（→ <a href="/pages/entanglement.html">纠缠</a>）。∎</p>
+<p><strong>第四步：SO(3) 与整数自旋。</strong> SO(3) 只含整数 l 的表示（球谐 2l+1=1,3,5,…）；半整数（旋量）活在 SU(2)——SU(2)→SO(3) 是 2 对 1 覆盖，旋转 720° 才回到自身。Peter–Weyl 在此把"物理上哪个群"的问题变得精确。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——核心定理清单</h3>
+<ul>
+<li><strong>Haar 测度（1933）：</strong> 紧群上存在唯一的双不变概率测度；它是所有"平均"的合法化身。</li>
+<li><strong>酉化与完全可约：</strong> 紧群的连续表示可酉化；有限维表示完全可约（与有限群 Maschke 同源——积分平均替代有限平均）。</li>
+<li><strong>不可约分类（Weyl 最高权）：</strong> 连通紧李群的不可约表示 ↔ 支配整数权；Weyl 特征标公式与维数公式（∏ 型乘积）。</li>
+<li><strong>Peter–Weyl（1927）：</strong> 矩阵系数正交基；L²(G) ≅ ⊕_{i∈Ĝ} Vᵢ⊗Vᵢ*；推论：正则表示出现各不可约 dim 次；C(G) 稠密于一致范数。</li>
+<li><strong>Plancherel：</strong> ‖f‖²_{L²(G)} = Σ_i dim(Vᵢ)·‖f̂(i)‖²_HS——特征标理论的积分版。</li>
+<li><strong>Schur–Weyl 对偶（1927）：</strong> GL(n) 与 S_k 在张量幂上的表示互换（→ <a href="/pages/representation-theory.html">群表示论</a> 课的延伸）——量子多体对称性的代数。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="L^2(G)\cong\bigoplus_{i\in\hat G} V_i\otimes V_i^{*};\qquad \langle\chi_i,\chi_j\rangle=\int_G\chi_i\overline{\chi_j}\,dg=\delta_{ij}"></div>
+<div class="formula display" data-tex="\widehat{S^1}:\ \chi_k(e^{i\theta})=e^{ik\theta};\qquad f(\theta)=\sum_{k}c_k e^{ik\theta},\ c_k=\frac1{2\pi}\int f e^{-ik\theta}"></div>
+<div class="formula display" data-tex="\mathrm{SU}(2):\ \dim V_j=2j+1;\qquad V_{j_1}\otimes V_{j_2}=\bigoplus_{j=|j_1-j_2|}^{j_1+j_2}V_j;\qquad \tfrac12\otimes\tfrac12=0\oplus1"></div>
+</section>
+
+<section>
+<h3>七、延伸——Peter–Weyl 之后的世界</h3>
+<ul>
+<li><strong>量子力学。</strong> 角动量算子 = SU(2) 李代数（→ <a href="/pages/lie-algebra.html">李代数</a> 课）；旋转不变哈密顿量的本征空间 = 不可约表示直和：简并度、选择定则、氢原子能级（→ <a href="/pages/hydrogen-atom.html">氢原子</a>）全是本课的物理回声。</li>
+<li><strong>球谐与位势论。</strong> L²(S²)=⊕_l Y_l（2l+1 维）：球谐是 SO(3) 矩阵系数——调和分析、静电、引力与量子力学共享同一组函数。</li>
+<li><strong>非紧与 Langlands。</strong> 离开紧性，表示进入"无限维酉表示"的世界：SL(2,ℝ)、p-adic 群的自守表示是现代数论（→ <a href="/pages/modular-forms.html">模形式</a> 的 Langlands 端）的语法——紧群是这条高速公路的起点。</li>
+<li><strong>量子信息。</strong> Schur–Weyl 对偶给多粒子态的对称性分类：纠缠与不可区分粒子的代数（→ <a href="/pages/entanglement.html">纠缠</a>、<a href="/pages/random-matrix.html">随机矩阵</a> 的自由概率端）。</li>
+<li><strong>紧量子群。</strong> Woronowicz 的紧量子群把 Peter–Weyl 推广到"非交换函数代数"——表示论随量子化继续生长（→ <a href="/pages/operator-algebras.html">算子代数</a> 的现代端）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"连续化想当然"</h3>
+<p><strong>陷阱 1："非紧群也有（有限维）不可约表示的分类"？</strong> 非紧（如 SL(2,ℝ)）的不可约酉表示几乎全是<strong>无限维</strong>（主系列/离散系列），没有 Weyl 的有限维分类。紧性不是技术细节——它决定"表示是否有限维、能否用 Haar 平均"。</p>
+<p><strong>陷阱 2："Haar 测度 = 随便一个不变测度"？</strong> 紧群上唯一（正规化后）。且非紧群（ℝ、SL(2,ℝ)）没有有限总质量的不变测度——"均匀"只在紧群有意义。</p>
+<p><strong>陷阱 3："Peter–Weyl 只对交换群（=Fourier）"？</strong> 反过来：它<strong>对一切紧群</strong>成立；交换只是退化情形（不可约全一维 ⟹ 特征标 ⟹ Fourier）。非交换时的"基"是矩阵系数，比 Fourier 更丰富。</p>
+<p><strong>陷阱 4："SO(3) 与 SU(2) 的表示一样"？</strong> 差一个 2 对 1 覆盖：SO(3) 只有整数自旋（1,3,5…），SU(2) 多出半整数（2,4,6… 维）——旋量/电子自旋是 SU(2) 的专属。把物理旋转群记成 SO(3) 会丢掉一半表示。</p>
+<p><strong>陷阱 5："紧群不可约表示维数公式总是 2j+1 型"？</strong> 那是 SU(2)/SO(3) 的特例；一般紧群（SU(3)、E₈）的维数由 Weyl 维数公式给出（乘积式，可很大如 E₈ 的 248）。别把自旋的公式当成普适维数表。</p>
+</section>
+
+<section>
+<h3>九、当前状态——紧群表示论的前沿</h3>
+<ol>
+<li><strong>经典已完成的领域。</strong> 紧群不可约分类（Weyl）、Peter–Weyl 与 Plancherel 是 20 世纪中叶的定论；现代精力转向量子群（Drinfeld–Jimbo 的 R-矩阵与形变）与非交换几何（→ <a href="/pages/noncommutative-geometry.html">非交换几何</a>）。</li>
+<li><strong>通向 Langlands。</strong> 局部紧与非紧群的表示论（Harish-Chandra、自守表示）是当代数论最大工程的语法层——紧群是"有限维教科书"，非紧是"无限维战场"（→ <a href="/pages/modular-forms.html">模形式</a>）。</li>
+<li><strong>量子信息与表示。</strong> Schur–Weyl、交换代数的表示论在量子计算（纠缠分类、量子态层析的对称性）中复兴——表示论正变成量子工程的语言。</li>
+<li><strong>随机矩阵与对称空间。</strong> 紧群上的随机游走/特征值（如 SU(n) 的随机矩阵、Weyl 积分公式）连接 RMT（→ <a href="/pages/random-matrix.html">随机矩阵</a>）——Haar 测度同时是群论与概率论的对象。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Cartan (1913)</strong>：半单李代数表示的（最高）权分类。</li>
+<li><strong>Weyl (1925–26)</strong>：紧李群不可约表示与特征标公式（量子力学的数学化）。</li>
+<li><strong>Peter–Weyl (1927)</strong>：L²(G) 的不可约分解——紧群调和分析奠基。</li>
+<li><strong>Schur–Weyl (1927)</strong>：张量表示的双对偶。</li>
+<li><strong>Haar (1933)</strong>：不变测度存在性（紧群平均的合法性）。</li>
+<li><strong>Weyl (1939)</strong>：<em>The Classical Groups</em>——经典群表示论的百科。</li>
+<li><strong>Harish-Chandra (1950s)</strong>：非紧群表示论（Plancherel）——通向 Langlands。</li>
+<li><strong>Woronowicz (1987)</strong>：紧量子群——Peter–Weyl 的量子化版本。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——手算与核对</h3>
+<p><strong>题 1（U(1) 正交）。</strong> 直接积分验证 k≠l 时 ⟨χ_k,χ_l⟩=0。<strong>提示：</strong>∫e^{i(k−l)θ}dθ=(e^{i(k−l)2π}−1)/(i(k−l))=0。</p>
+<p><strong>题 2（维数平方和）。</strong> SU(2) 的 L² 维数前四项 1+9+25+49 对应 j 的哪些值？<strong>提示：</strong>(2j+1)²：j=0,½,1,3/2。</p>
+<p><strong>题 3（CG）。</strong> 1⊗1/2 分解成什么？维数核对。<strong>提示：</strong>V₁⊗V_{½}=V_{½}⊕V_{3/2}：3·2=6=2+4 ✓。</p>
+<p><strong>题 4（半整数从哪来）。</strong> 为什么 SO(3) 没有自旋 ½？<strong>提示：</strong>旋转 2π 在 SO(3) 是恒等、在 SU(2) 是 −1：SO(3) 表示须满足 R(2π)=+1，而 j=½ 给 −1——只能来自覆盖 SU(2)。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示（周期积分）。∎</p>
+<p><strong>题 2</strong>：1,9,25,49（j=0,½,1,3/2）。∎</p>
+<p><strong>题 3</strong>：V_{½}⊕V_{3/2}。∎</p>
+<p><strong>题 4</strong>：见提示（双覆盖与 −1）。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布 U(1)）。</strong> 调每个谐波 k 的权重（含负 k），观察部分和逼近方波/锯齿；能量条 Σ|c_k|² 与 ‖f‖² 相等处，就是 Peter–Weyl 的 Parseval。吉布斯过冲是"正交展开的边界行为"。</p>
+<p><strong>试试看 2（CG 计算器）。</strong> 把 j₁、j₂ 滑到 (½,½)、(1,½)、(1,1)：输出分解与维数核对 2·2=4=1+3 等。把 ½⊗½ 对应"两电子自旋"：单重态（总自旋 0）与三重态（总自旋 1）——纠缠的对称性来源。</p>
+<p><strong>试试看 3（与有限群对表）。</strong> 在 <a href="/pages/representation-theory.html">群表示论</a> 课对照：S₃ 的正则表示 1+1+2 vs SU(2) 的 L²(G)=Σ(2j+1)²——"正则表示/群代数"与"L²(G)"是同一对象在有限/紧两套语言里的名字。</p>
+<p><strong>试试看 4（与傅里叶/氢原子联动）。</strong> 在 <a href="/pages/fourier-transform.html">傅里叶变换</a> 课看到 DFT=C_n 表示、本课看到 Fourier=S¹ 表示——同一定理跨有限与连续；在 <a href="/pages/hydrogen-atom.html">氢原子</a> 课里数 l=0,1,2 的简并 1,3,5…：那就是 SO(3) 不可约维数 2l+1 在物理里列队。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>B. Simon, Representations of Finite and Compact Groups</strong>（从有限到紧的无缝教程）</p>
+<p>&rarr; <strong>G. Folland, A Course in Abstract Harmonic Analysis</strong>（紧群调和分析标准本）</p>
+<p>&rarr; <strong>W. Fulton, J. Harris, Representation Theory: A First Course</strong>（李群表示的几何路线）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.25（表示论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/representation-theory.html">群表示论</a>、<a href="/pages/fourier-series.html">傅里叶级数</a>、<a href="/pages/lie-algebra.html">李代数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/representation-theory.html">🎭 群表示论</a>：有限群版先行，本课是它的紧群续篇。</p>
+<p>&rarr; <a href="/pages/fourier-series.html">🎼 傅里叶级数</a>：U(1) 情形 = Peter–Weyl 的交换退化。</p>
+<p>&rarr; <a href="/pages/lie-algebra.html">🧬 李代数</a>：最高权分类与自旋算子的语言。</p>
+<p>&rarr; <a href="/pages/bloch-sphere.html">🌀 Bloch 球</a>：自旋 ½ = SU(2) 二维不可约表示。</p>
+<p>&rarr; <a href="/pages/hydrogen-atom.html">⚛️ 氢原子轨道</a>：2l+1 简并 = SO(3) 不可约维数。</p>
+<p>&rarr; <a href="/pages/entanglement.html">🔗 量子纠缠</a>：½⊗½=0⊕1：单重态/三重态的表示论。</p>
+</section>

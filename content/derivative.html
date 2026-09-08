@@ -1,0 +1,141 @@
+<section>
+<h3>〇、直觉入门——"这一瞬间有多快"：把平均变成瞬时的那一步</h3>
+<p>开车看仪表盘上的速度表：它显示的不是"这段路开了多远/多久"的平均速度，而是<strong>此刻</strong>的速度——瞬时速度。但"此刻"没有持续时间，怎么定义"此刻的速度"？答案是人类数学史上最成功的一个动作：<strong>取极限</strong>。</p>
+<p>设一辆车的位置函数为 s(t)。它在时刻 a 到 a+h 的平均速度是 (s(a+h)−s(a))/h；让时间窗 h 越来越短（h→0），如果平均速度稳定地逼近某个数，那个数就叫<strong>瞬时速度 s′(a)</strong>。几何上看同一件事：曲线 y=f(x) 上两点连线的斜率是割线斜率；当第二点滑向第一点时，割线逼近<strong>切线</strong>，斜率的极限就是<strong>导数 f′(a)</strong>。</p>
+<div class="formula display" data-tex="f'(a)=\lim_{h\to0}\frac{f(a+h)-f(a)}{h}\qquad(\text{导数 = 切线斜率 = 瞬时变化率})"></div>
+<p>导数同时是三样东西：物理里的速度、几何里的切线斜率、以及"变化率"。微积分由此出发：导数研究"局部怎么变"，积分研究"局部变化如何累积"（→ <a href="/pages/riemann-integral.html">黎曼积分</a> 课），两者由微积分基本定理连成一体。没有导数，就没有现代科学——从行星轨道到机器学习里的梯度下降（→ <a href="/pages/convex-optimization.html">凸优化</a> 课），全是"在每一点问一句：这里怎么变？"。</p>
+<div class="key-insight">洞察：导数的全部内容就是一句话——<strong>用"能算的平均"去逼近"算不出的瞬时"</strong>。平均速度总能算（两个时刻、两段距离），瞬时速度"不存在"，但平均的极限存在且稳定，就把它命名为瞬时速度。这个"用有限逼近无限、再用极限锁定"的动作，是分析学的第一课，也是后面一切课程（梯度、积分、微分方程）的原型。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>基础</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/epsilon-delta.html">ε-δ 语言</a>（极限的严格定义，可并行学习）、<a href="/pages/set-theory.html">集合论</a>（函数与区间）。学完后进入 <a href="/pages/gradient.html">梯度与方向导数</a>（多元版）与 <a href="/pages/riemann-integral.html">黎曼积分</a>（微积分基本定理）。</p></div>
+
+<section>
+<h3>一、一个具体问题——"瞬时速度"在 17 世纪为什么是一场危机</h3>
+<p>伽利略发现自由落体距离 s(t)=4.9t²（米）。问：t=2 秒那一刻的速度是多少？直接定义"t=2 的速度"没有意义——速度需要"一段距离 ÷ 一段时间"，而"t=2 那一刻"的时间长度是 0，0÷0 没有意义。</p>
+<p><strong>牛顿与莱布尼茨的处理。</strong> 17 世纪两人独立给出方案：先算 <strong>t=2 到 t=2+h</strong> 的平均速度</p>
+<div class="formula display" data-tex="\frac{s(2+h)-s(2)}{h}=\frac{4.9(2+h)^2-4.9\cdot 4}{h}=\frac{4.9(4h+h^2)}{h}=19.6+4.9h"></div>
+<p>然后问：h 越来越小时这个表达式逼近什么？显然 →19.6。于是定义瞬时速度 = 19.6 米/秒。<strong>"平均速度的极限"绕开了"0÷0"</strong>——不是直接算 0/0，而是看比值在 h→0 时的极限。</p>
+<p>这个思想当时备受争议（"无穷小"是什么？），直到 19 世纪柯西与魏尔斯特拉斯用 ε-δ（→ <a href="/pages/epsilon-delta.html">ε-δ</a> 课）给出严格极限定义，导数才站稳脚跟。今天的你站在历史另一端：先学 ε-δ 再学导数，是先有地基后盖楼。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——切线、割线与"极限"三件套</h3>
+<p><strong>几何：割线滑向切线。</strong> 曲线上 P=(a,f(a)) 与 Q=(a+h,f(a+h)) 的割线斜率为差商 (f(a+h)−f(a))/h。让 Q 沿曲线滑向 P（h→0），割线绕 P 转动、逼近唯一一条直线——切线。若转动有确定极限，切线的斜率 = 差商的极限 = f′(a)；若没有极限（尖点处），曲线在该点<strong>不可导</strong>。</p>
+<p><strong>差商的三副面孔。</strong> 同一个量有三种写法，各有用处：</p>
+<div class="formula display" data-tex="f'(a)=\lim_{h\to0}\frac{f(a+h)-f(a)}{h}=\lim_{x\to a}\frac{f(x)-f(a)}{x-a}=\lim_{\Delta x\to0}\frac{\Delta y}{\Delta x}"></div>
+<p><strong>可导 ⟹ 连续（反之不然）。</strong> 若 f 在 a 可导，则 f 在 a 连续（差商有界 ⟹ |f(x)−f(a)|→0）。反例：|x| 在 0 连续但不可导（左右切线斜率 −1 与 +1 不吻合）；x^{1/3} 在 0 连续但切线竖直、导数无穷。连续 ≠ 可导是初学最重要的分辨。</p>
+</section>
+
+<section>
+<h3>三、例题 1——用定义算 f(x)=x² 在 a 的导数（一步步算完）</h3>
+<p><strong>题目。</strong> 从差商定义出发求 f(x)=x² 在任意点 a 的导数，并写出 x=3 处切线方程。</p>
+<p><strong>第一步：写差商。</strong></p>
+<div class="formula display" data-tex="\frac{f(a+h)-f(a)}{h}=\frac{(a+h)^2-a^2}{h}=\frac{2ah+h^2}{h}=2a+h"></div>
+<p><strong>第二步：取极限。</strong> h→0 时 2a+h→2a，故 <strong>f′(a)=2a</strong>（即 (x²)′=2x）。∎</p>
+<p><strong>第三步：切线方程。</strong> 在 x=3：f(3)=9、斜率 f′(3)=6。切线 y−9=6(x−3)，即 y=6x−9。∎</p>
+<p><strong>第四步：核对瞬时速度。</strong> 若 s(t)=4.9t²，则 s′(t)=9.8t；t=2 时 19.6 米/秒——与第一节手算一致。同一套计算，几何（切线）、物理（速度）双赢。∎</p>
+</section>
+
+<section>
+<h3>四、例题 2——求导法则：多项式与商（一步步算完）</h3>
+<p><strong>题目。</strong> 求 f(x)=(x³+2x)/(x+1) 在 x=1 处的导数。</p>
+<p><strong>第一步：法则清单。</strong> 线性 (cu+v)′=cu′+v′；乘积 (uv)′=u′v+uv′；商的 (u/v)′=(u′v−uv′)/v²；幂 (xⁿ)′=nx^{n−1}。</p>
+<p><strong>第二步：先化简或直接商法则。</strong> 用商法则：u=x³+2x、v=x+1：u′=3x²+2、v′=1。</p>
+<div class="formula display" data-tex="f'(x)=\frac{(3x^2+2)(x+1)-(x^3+2x)\cdot1}{(x+1)^2}"></div>
+<p><strong>第三步：代入 x=1。</strong> 分子 =(5)(2)−(3)=7；分母 4：f′(1)=7/4=1.75。∎</p>
+<p><strong>第四步：数值核对（画布可做）。</strong> 用差商 h=0.01 估算 (f(1.01)−f(1))/0.01 ≈1.75±小量——法则与定义互相印证。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——导数的基础定理</h3>
+<ul>
+<li><strong>定义：</strong> f′(a)=lim_{h→0}(f(a+h)−f(a))/h（极限存在时称 f 在 a 可导）。</li>
+<li><strong>可导 ⟹ 连续</strong>（差商有界 ⟹ 增量→0）；连续 ≠ 可导（|x| 在 0）。</li>
+<li><strong>求导法则：</strong> 线性、乘积、商、链式 (f∘g)′(x)=f′(g(x))g′(x)——导数的"代数运算表"。</li>
+<li><strong>中值定理：</strong> 若 f 在 [a,b] 连续、(a,b) 可导，则 ∃c：(f(b)−f(a))/(b−a)=f′(c)——差商被某点的导数"精确实现"。推论：f′≡0 ⟹ f 常数；f′&gt;0 ⟹ f 增。</li>
+<li><strong>高阶导数与泰勒：</strong> f″ 是曲率信息；泰勒多项式 f(a)+f′(a)(x−a)+… 用导数逐阶逼近函数。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="f'(a)=\lim_{h\to0}\frac{f(a+h)-f(a)}{h};\qquad (x^{n})'=nx^{n-1};\qquad (uv)'=u'v+uv'"></div>
+<div class="formula display" data-tex="\Bigl(\frac{u}{v}\Bigr)'=\frac{u'v-uv'}{v^{2}};\qquad (f\circ g)'=f'(g)\,g';\qquad \frac{f(b)-f(a)}{b-a}=f'(c)\ (\text{中值})"></div>
+</section>
+
+<section>
+<h3>七、延伸——导数之后的图景</h3>
+<ul>
+<li><strong>多元：梯度。</strong> f(x,y) 的"各方向变化率"打包成梯度 ∇f——下山最快的方向、以及所有优化算法的方向（→ <a href="/pages/gradient.html">梯度与方向导数</a>、<a href="/pages/convex-optimization.html">凸优化</a> 课）。</li>
+<li><strong>反问题：积分与基本定理。</strong> "导数已知，函数是谁"是求积分；微积分基本定理说积分 = 反导数（→ <a href="/pages/riemann-integral.html">黎曼积分</a> 课）。</li>
+<li><strong>方程：微分方程。</strong> 描述"变化率与状态的关系"（如牛顿第二定律 F=ma、热传导）——现代科学的主语言（→ <a href="/pages/pde.html">PDE</a>、<a href="/pages/classical-mechanics.html">经典力学</a> 课）。</li>
+<li><strong>数值：牛顿法。</strong> 用切线迭代求方程根 x←x−f(x)/f′(x)——导数在算法里的化身（→ <a href="/pages/numerical-methods.html">数值方法</a>、<a href="/pages/complex-dynamics.html">复动力系统</a> 课）。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"导数想当然"</h3>
+<p><strong>陷阱 1："函数连续就自动可导"？</strong> 反例：|x| 在 0 连续但不可导（折点）；魏尔斯特拉斯函数处处连续处处不可导。连续与可导是两个严格递进的条件。</p>
+<p><strong>陷阱 2："切线竖直 = 导数无穷大 = 可导"？</strong> 竖直切线（x^{1/3} 在 0）的差商极限是 ∞/不存在——不可导。"导数为无穷"不是导数的合法值。</p>
+<p><strong>陷阱 3："差商在 h=0 代入即可"？</strong> 直接代入得到 0/0。必须"先化简（约去 h）再取极限"——跳过极限、只做代数，是初学者最常犯的步骤错误。</p>
+<p><strong>陷阱 4："导数大 = 函数值大"？</strong> 导数是<strong>变化率</strong>不是值：eˣ 在某点导数值可以远大于 x² 在该点的值，但 x² 的值可能更大。"导数大"只说明"此刻变化快"。</p>
+<p><strong>陷阱 5："乘法律则 = (uv)′=u′v′"？</strong> 错。正确的 (uv)′=u′v+uv′——把"分别求导再相乘"当法则会丢掉交叉项。用 h→0 展开 (u+Δu)(v+Δv)−uv=Δu·v+u·Δv+ΔuΔv 可看到为何有交叉项。</p>
+</section>
+
+<section>
+<h3>九、当前状态——从导数出发的现代地图</h3>
+<ol>
+<li><strong>分析的地基。</strong> 导数概念在 19 世纪被 ε-δ 严格化后成为整个分析学的入口：微分方程、微分几何（→ <a href="/pages/geodesic.html">测地线</a>）、变分法（→ <a href="/pages/variational-calculus.html">变分法</a>）都从"局部线性化"出发。</li>
+<li><strong>高维与流形。</strong> 导数的现代形态是切映射/微分（→ <a href="/pages/differential-forms.html">微分形式</a> 课的 df）；梯度、雅可比、散度旋度都是它的后代。</li>
+<li><strong>数值与机器学习。</strong> 自动微分（反向传播）让"百万维函数的导数"可算——梯度下降训练深度网络是导数在工程里的最大规模应用（→ <a href="/pages/convex-optimization.html">凸优化</a>）。</li>
+<li><strong>随机与推广。</strong> 随机梯度、次梯度（对不可导凸函数）、分布导数（→ <a href="/pages/measure-theory.html">测度论</a> 的弱解）——导数的推广仍在继续。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>牛顿 (1687)</strong>：<em>Principia</em>——流数法（导数雏形）与物理应用。</li>
+<li><strong>莱布尼茨 (1684)</strong>：<em>Nova Methodus</em>——微分记号 dy/dx 与现代求导法则。</li>
+<li><strong>柯西 (1823)</strong>：极限定义下的导数（"现代"导数定义的奠基）。</li>
+<li><strong>魏尔斯特拉斯 (1872)</strong>：处处连续不可微函数——极限理论的试金石。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——差商手算</h3>
+<p><strong>题 1（x³ 的导数）。</strong> 用定义求 (x³)′=3x²。<strong>提示：</strong>((a+h)³−a³)/h=3a²+3ah+h²→3a²。</p>
+<p><strong>题 2（1/x）。</strong> 用定义求 (1/x)′=−1/x²。<strong>提示：</strong>差商 = (1/(a+h)−1/a)/h=−1/(a(a+h))→−1/a²。</p>
+<p><strong>题 3（中值定理）。</strong> f(x)=x² 在 [1,3] 的中值点 c？<strong>提示：</strong>f′(c)=2c=(9−1)/2=4 ⟹ c=2。</p>
+<p><strong>题 4（链式）。</strong> 求 (sin(x²))′。<strong>提示：</strong>cos(x²)·2x。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：3a²（→3x²）。∎</p>
+<p><strong>题 2</strong>：−1/a²。∎</p>
+<p><strong>题 3</strong>：c=2。∎</p>
+<p><strong>题 4</strong>：2x cos(x²)。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（割线滑向切线）。</strong> 在画布上把 h 从 1 拖到 0.001：割线斜率 (f(a+h)−f(a))/h 逐步逼近切线斜率 f′(a)（读数显示两者差 ~h 量级收敛）。把点移到尖点（如 |x| 的 0 处）：左右逼近给出不同极限 ⟹ 不可导。</p>
+<p><strong>试试看 2（速度表）。</strong> 把 s(t)=4.9t² 换到 t=3：平均速度 (s(3+h)−s(3))/h→29.4=9.8·3——"瞬时速度=9.8t"的现场验证。</p>
+<p><strong>试试看 3（与 ε-δ 联动）。</strong> 在 <a href="/pages/epsilon-delta.html">ε-δ</a> 课把"极限存在"翻译成"对任意 ε 存在 δ"：本课的 h→0 是 ε-δ 的第一次实战。</p>
+<p><strong>试试看 4（链式直觉）。</strong> 想"复合函数的导数=外导×内导"为何合理：f 的变化率 × g 的变化率（单位换算式的链式法则）。提示：速度(m/s) 与"刻度缩放"相乘即链式。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>T. Apostol, Calculus I</strong>（严密而清晰）</p>
+<p>&rarr; <strong>J. Stewart, Calculus</strong>（几何直觉与大量练习）</p>
+<p>&rarr; <strong>R. Courant, Differential and Integral Calculus</strong>（经典）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part III（导数/极限相关条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/epsilon-delta.html">ε-δ 语言</a>、<a href="/pages/set-theory.html">集合论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/epsilon-delta.html">🔍 ε-δ 语言</a>：极限的严格定义是本课的语法。</p>
+<p>&rarr; <a href="/pages/gradient.html">🧭 梯度与方向导数</a>：导数从一元到多元的升级。</p>
+<p>&rarr; <a href="/pages/riemann-integral.html">📏 黎曼积分</a>：微积分基本定理 = 导数的另一半。</p>
+<p>&rarr; <a href="/pages/pde.html">🌡️ 偏微分方程</a>：导数描述变化率，方程描述世界。</p>
+<p>&rarr; <a href="/pages/convex-optimization.html">⚖️ 凸优化</a>：梯度下降——导数的工程化。</p>
+<p>&rarr; <a href="/pages/numerical-methods.html">💻 数值计算方法</a>：牛顿法 = 用切线求根。</p>
+</section>

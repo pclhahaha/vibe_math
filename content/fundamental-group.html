@@ -1,0 +1,104 @@
+<section>
+<h3>〇、直觉入门——用一根橡皮筋，探测空间里有没有"洞"</h3>
+<p>在桌面上套一根橡皮筋，可以缩成一个小点；但套住一个洞（比如甜甜圈中间的孔）就缩不动了。基本群就是干这件事的数学：把空间里各种"橡皮筋套法"都数出来，看它们能不能缩掉——由此认出空间长什么样。</p>
+<p>这东西在干什么：给"空间形状"做一张"指纹卡"，用来区分球面、甜甜圈面这些不同形状，是拓扑学的看家本领。先记住两个具体的答案：圆 S¹ 的基本群是 ℤ（绕几圈就是哪个整数），环面 T² 的基本群是 ℤ×ℤ（两条独立方向的绕法配成一对整数）。</p>
+<div class="key-insight">空间里套不住的"洞"有几个、怎么绕，就是它独一无二的名片。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/real-analysis.html">实分析</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——圆上的闭合曲线能绕几圈？</h3>
+<p>把一条首尾相接的曲线（闭合曲线）画在单位圆 S¹ 上，曲线可以绕圆好几圈：f₀(θ) = e^{2πi·0·θ} 不绕（缩成一个点），f₁(θ) = e^{2πiθ} 绕 1 圈，fₙ(θ) = e^{2πinθ} 绕 n 圈。这些 fₙ 谁也变不成谁：</p>
+<p><strong>具体理由。</strong> 两条闭合曲线若能连续地互相"滑动"（不许离开圆面、不许剪断），它们的绕数必须相同；而 f₁ 与 f₂ 绕数不同，不可能互相滑动。于是我们得到一个直觉的计数：S¹ 上"本质不同的绕法"恰好是整数 ℤ——正数逆时针、负数顺时针、0 是可缩的。</p>
+<p><strong>为什么要问这个问题？</strong> 因为"空间有没有洞、洞怎么绕"是形状最根本的特征：圆有一个一维洞所以答案是 ℤ，球面没有一维洞所以答案是平凡群，环面有两条洞所以是 ℤ×ℤ。这个"绕法计数"就是基本群，它是拓扑学区分形状的第一把尺子。</p>
+</section>
+
+<section>
+<h3>二、同伦——为什么需要"同伦"这个工具？</h3>
+<p>上一章说的"能互相滑动"，术语叫<strong>同伦</strong>。为什么必须精确化它？因为"能不能缩掉"是个需要定义的直觉——橡皮筋套在桌腿上，你可以把它"举起来绕过桌腿再放下"，这在物理上不算缩掉，在数学上该不该算？</p>
+<p><strong>答案：不该算。</strong> 同伦要求形变过程中的每一时刻都不离开空间、不剪断绳子。桌腿的存在使得"绕过"必须离开桌面，而同伦不允许离开——于是"套住桌腿"与"套不住桌腿"被严格区分开。</p>
+<p>同伦把"同一形状的橡皮筋"聚成一类，基本群数的就是这些类的个数。它还照顾一个细节：橡皮筋绕在哪个"钉子"（基点）上。绕法以基点为起点和终点，形变过程中始终钉住基点——这样"绕几圈"这个整数才有意义（不同起点的绕法可以平移，但计数一样）。</p>
+</section>
+
+<section>
+<h3>三、基本群的精确定义——同伦类与基点</h3>
+<p>设 X 为拓扑空间，x₀ ∈ X。一条<strong>闭路(loop)</strong>是连续映射 f: [0,1] → X 满足 f(0)=f(1)=x₀。两条闭路 f, g 称为<strong>同伦</strong>，若存在连续映射 F: [0,1]×[0,1] → X 使 F(s,0)=f(s)、F(s,1)=g(s) 且 F(0,t)=F(1,t)=x₀ 对一切 s,t 成立——即 f 可在不"剪断"的前提下连续形变为 g，且过程中始终以 x₀ 为基点。</p>
+<p>同伦是闭路上的等价关系（自反、对称、传递），记 f ≃ g。商集 π₁(X,x₀) = {[f] : f 为闭路} 配以串接运算 [f]·[g] = [f*g]，其中 (f*g)(s) = f(2s) (0≤s≤½)、g(2s−1) (½≤s≤1)。可证 [f]·[g] 与代表元选取无关，恒等元为常数闭路 e(s)=x₀，逆元为反向闭路 f⁻¹(s)=f(1−s)。故 π₁(X,x₀) 构成<strong>群</strong>，即基本群。</p>
+<div class="formula display" data-tex="\pi_1(X,x_0)=\{[f]:f(0)=f(1)=x_0\}/\simeq,\quad [f]\cdot[g]=[f*g]"></div>
+<p><strong>为什么串接是群运算？</strong> 基本群要回答"绕法怎么组合"：先绕第一种、再绕第二种，得到第三种——串接。四条公理里，结合律来自重参数化（F(s) 与 F∘φ 同伦），恒等元是"原地不动"，逆元是"原路返回"。有了这套结构，"绕法的集合"才升级成"绕法的群"，可以用群论的所有武器。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="\pi_1(S^1)\cong\mathbb{Z},\qquad\pi_1(S^2)=0"></div>
+<div class="formula display" data-tex="\pi_1(T^2)=\mathbb{Z}\times\mathbb{Z}=\langle a,b\mid ab=ba\rangle"></div>
+<div class="formula display" data-tex="\pi_1(X)\cong \bigl(\pi_1(U)\ast\pi_1(V)\bigr)/N\quad(X=U\cup V,\ \text{Seifert-van Kampen})"></div>
+</section>
+
+<section>
+<h3>五、例题 1——π₁(S¹) ≅ ℤ：万有覆盖与环绕数</h3>
+<p><strong>定理。</strong> π₁(S¹,1) 同构于整数加群 ℤ，同构由<strong>环绕数(winding number)</strong>给出：每条闭路 f: S¹ → S¹ 都有次数 deg(f) ∈ ℤ，表示绕单位圆的圈数（逆时针为正）。</p>
+<p><strong>证明。</strong> 取万有覆盖 p: ℝ → S¹，p(t) = e^{2πit}。它把实数轴"卷"到圆上，纤维 p⁻¹(1) = ℤ。关键工具是路径提升引理：对任何闭路 f: [0,1] → S¹ 及起点 t₀ ∈ p⁻¹(f(0))，存在唯一提升 f̃: [0,1] → ℝ 使 p∘f̃ = f 且 f̃(0) = t₀；且同伦的两条闭路，其自同一起点出发的提升在终点也相同。定义 deg(f) = f̃(1) − f̃(0)，其中 f̃ 是起点取 0 的提升。因 f(1) = f(0)，故 p(f̃(1)) = p(f̃(0))，即 f̃(1) − f̃(0) ∈ ℤ。路径提升的唯一性 + 同伦提升性质给出：同伦类 [f] 与整数 deg(f) 一一对应。</p>
+<p><strong>群结构：</strong>串联 f*g 的提升是从 f̃ 终点继续走 g 的提升，故 deg(f*g) = deg(f) + deg(g)。而环绕数 n 的闭路 fₙ(s) = e^{2πins} 恰有 deg(fₙ) = n，故 deg: π₁(S¹) → ℤ 是满射；核为常数闭路同伦类，即单射。故 π₁(S¹) ≅ ℤ。∎</p>
+<div class="formula display" data-tex="\deg(f)=\tilde f(1)-\tilde f(0)\in\mathbb Z,\qquad \pi_1(S^1)\cong\mathbb Z"></div>
+<p><strong>为什么绕数是"整数"而不是实数？</strong> 因为 f̃(1) 与 f̃(0) 都躺在同一根纤维 p⁻¹(1) = ℤ 里，它们的差只能是整数——"绕了多少整圈"是拓扑事实，与参数化无关。这个"整圈约束"正是覆盖空间方法的灵魂。</p>
+</section>
+
+<section>
+<h3>六、Seifert–van Kampen 定理——为什么自由积要除以"双名关系"</h3>
+<p><strong>定理。</strong> 设 X = U ∪ V，U, V, U∩V 均道路连通且为开集，x₀ ∈ U∩V。记 i_U: U∩V ↪ U、i_V: U∩V ↪ V 为包含映射。则</p>
+<div class="formula display" data-tex="\pi_1(X,x_0)\cong \bigl(\pi_1(U,x_0)\ast\pi_1(V,x_0)\bigr)/N"></div>
+<p>其中 ∗ 是自由积，N 是由一切 i_{U*}(γ)·i_{V*}(γ)⁻¹ (γ ∈ π₁(U∩V,x₀)) 生成的<strong>正规子群</strong>。</p>
+<p><strong>为什么要有"除以 N"这一步？</strong> 直观上，X 的每条闭路可分解为 U 中段与 V 中段的交替串联。把这些段"拼"成自由积，就得到自由积 π₁(U)∗π₁(V)。但拼接会重复计数：U∩V 中的同一条回路，既被 i_{U*} 送进 π₁(U)，又被 i_{V*} 送进 π₁(V)，产生两个名字。自由积会把它们当成两个不同元素；除以"双名关系" i_{U*}(γ) = i_{V*}(γ) 生成的 N，就是强制把同一回路的两个名字合并成一个。这正是"把空间分块，用代数（自由积 + 商）拼回来"的全部含义。</p>
+<p><strong>立即应用：</strong>计算 π₁(S¹∨S¹) ≅ F₂。取 U 为左圆的开邻域、V 为右圆的开邻域，U∩V 可缩，故 N = 1，π₁ = π₁(S¹)∗π₁(S¹) = ℤ∗ℤ = F₂——8 字形空间（两个圆粘一个公共点）的基本群是秩 2 自由群，生成元是两条圆的绕法。</p>
+</section>
+
+<section>
+<h3>七、例题 2（标准反例）——π₁(S²) = 0：高维球面"没有一维洞"</h3>
+<p>与 S¹ 形成鲜明对照，<strong>二维球面 S² 的基本群是平凡群</strong>：S² 上任何闭路都可缩。直观上，圆上"绕一圈"产生的洞在球面上被"填平"了——球面没有一维的洞（它的二维洞由同调群 H₂(S²)≅ℤ 探测）。</p>
+<p><strong>证明（用 van Kampen）。</strong> 设 U = S²∖{N}、V = S²∖{S}，N 与 S 为南北极点。U 与 V 都同胚于开圆盘，故 π₁(U) = π₁(V) = 1。自由积平凡，van Kampen 给出 π₁(S²) = 1∗1/N = 1。∎</p>
+<p><strong>这个反例说明了什么？</strong> 基本群无法区分 S² 与圆盘——π₁ 只看一维闭路，凡是"一维绕不出来"的洞它都看不见。这正是后来引入同调论的原因（见关联课程）：同调论用各个维度的洞一起探测空间，弥补基本群只看一维的盲区。</p>
+<div class="formula display" data-tex="\pi_1(S^2)=0,\qquad \pi_1(S^1\times S^1)=\mathbb Z\times\mathbb Z"></div>
+</section>
+
+<section>
+<h3>八、例题 3——π₁(T²) ≅ ℤ×ℤ：环面的具体生成元</h3>
+<p><strong>题目。</strong> 计算环面 T² = S¹×S¹ 的基本群，写出具体生成元与关系。</p>
+<p><strong>解（法一：乘积）。</strong> 基本群保持乘积：π₁(X×Y, (x₀,y₀)) ≅ π₁(X,x₀)×π₁(Y,y₀)。闭路 f = (f₁,f₂) 的等价类按坐标分量分离（同伦提升 + 投影映射诱导的同构）。取 X = Y = S¹，得 π₁(T²) = π₁(S¹)×π₁(S¹) ≅ ℤ×ℤ。具体生成元：a = 沿赤道绕一圈（保持纬度固定），b = 沿经线绕一圈（保持经度固定）。任意绕法写成 (a^m, b^n)，即"绕赤道 m 圈、绕经线 n 圈"。因为两圈方向互相独立、互不干扰，a 与 b 交换，故 ab = ba。</p>
+<p><strong>解（法二：van Kampen）。</strong> 在 T² 上挖去开圆盘 D，余下部分 X₀ = T²∖D 同伦等价于 S¹∨S¹，故 π₁(X₀) = F₂ = ⟨a,b⟩，a 为 meridian、b 为 longitude。取 U 为 X₀ 的略放大开邻域、V 为 D 的略放大开邻域，则 U∩V 是环带 ≃ S¹。环带中的生成回路在 U 中代表交换子 [a,b]，在 V 中平凡（圆盘可缩），故 N = ⟨[a,b]⟩，π₁(T²) = F₂/⟨[a,b]⟩ ≅ ℤ⊕ℤ。∎</p>
+<p><strong>对比两种方法：</strong>乘积法直接给出"两个独立方向"的直觉，van Kampen 法则把"多出来的交换关系"讲透——a 绕赤道、b 绕经线，绕完 a 再绕 b 与先 b 后 a 差一个可缩回路，所以必须商去 [a,b]。这正好回答了"为什么环面的答案是两个整数配成一对"。</p>
+</section>
+
+<section><h3>前沿：Grothendieck 的远阿贝尔几何(Anabelian Geometry)</h3>
+<p><strong>Grothendieck 猜想</strong>：某些"anabelian"代数簇完全由它们的 étale 基本群（带 Galois 作用）决定。Mochizuki (1996–2004) 证明了双曲曲线的绝对 anabelian 几何。仍开放：高维簇的 anabelian 几何，以及 IUT（宇宙际 Teichmüller 理论）和 ABC 猜想的争议。</p></section>
+
+<section><h3>工作题</h3>
+<p><strong>题 1（环面基本群，独立再证一遍）</strong>：不用乘积公式，仅用 van Kampen 证明 π₁(T²) ≅ ℤ×ℤ。</p>
+<details><summary>显示解答</summary><p>在 T² 上挖去开圆盘 D，余下部分 X₀=T²∖D 同伦等价于 S¹∨S¹，故 π₁(X₀)=F₂=⟨a,b⟩，a 为 meridian、b 为 longitude。取 U 为 X₀ 的略放大开邻域、V 为 D 的略放大开邻域，则 U∩V 是环带 ≃ S¹。环带中的生成回路在 U 中代表交换子 [a,b]，在 V 中平凡(圆盘可缩)，故 N=⟨[a,b]⟩，π₁(T²)=F₂/⟨[a,b]⟩ ≅ ℤ⊕ℤ。∎</p></details>
+<p><strong>题 2（Klein 瓶）</strong>：计算 Klein 瓶 K 的基本群。<strong>提示：</strong>K = 四边形按 abab⁻¹ 粘合；挖去圆盘后形变收缩到 8 字形，van Kampen 给 ⟨a,b | abab⁻¹⟩。</p>
+<details><summary>显示解答</summary><p>同环面但交换子换成"反交换"。挖去圆盘，π₁(K∖D) = F₂ = ⟨a,b⟩；环带的回路在 U 中代表 abab⁻¹（一条方向要反着走），商去它得 π₁(K) = ⟨a,b | abab⁻¹⟩。这是无穷非交换群，且不 ≅ ℤ×ℤ——Klein 瓶与环面的洞不同，基本群立刻区分它们。</p></details>
+<p><strong>题 3（投影平面）</strong>：计算 π₁(RP²)。<strong>提示：</strong>RP² 由 S² 对径点商得到；用覆盖空间理论（或 van Kampen：RP² = 圆盘边界折半粘合）。</p>
+<details><summary>显示解答</summary><p>RP² = D²/（边界对径点粘合）。挖去一个开圆盘后余下部分是 Möbius 带，其基本群 ≅ ℤ；van Kampen 给 π₁(RP²) ≅ ℤ/⟨2⟩ ≅ ℤ/2。也即覆盖 p: S² → RP² 给出正合列 1 → π₁(S²) → π₁(RP²) → ℤ/2，得 π₁(RP²) ≅ ℤ/2。</p></details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（乘积保持性）。</strong> 证明 π₁(S¹×S²) ≅ ℤ。<strong>提示：</strong>乘积公式 π₁(X×Y) ≅ π₁(X)×π₁(Y)，结合 π₁(S¹)=ℤ、π₁(S²)=0。</p>
+<p><strong>试试看 2（8 字形的自由群）。</strong> 用 van Kampen 说明 π₁(S¹∨S¹) = F₂ 的自由积公式中，为什么 U∩V 可缩导致 N = 1。<strong>提示：</strong>U∩V 是公共点的小邻域，其中每条闭路都可缩，故"双名关系"平凡。</p>
+<p><strong>试试看 3（S² 的另一种证明）。</strong> 不用挖南北极点，改用挖去 S² 上一条简单闭曲线，再用 van Kampen 证明 π₁(S²)=0。<strong>提示：</strong>两个半球都同胚于开圆盘，基本群平凡，自由积平凡。</p>
+<p><strong>试试看 4（环绕数的几何意义）。</strong> 画出 f₂ 与 f₃ 在 S¹ 上的像，说明为什么它们不可能同伦。<strong>提示：</strong>同伦保持绕数 deg 不变，deg(f₂)=2 ≠ 3 = deg(f₃)。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>A. Hatcher, Algebraic Topology</strong></p>
+<p>&rarr; <strong>J. Munkres, Topology</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/set-theory.html">集合论</a>、<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/knot-invariant.html">🪢 纽结不变量</a>：同一学科分类「拓扑学」。</p>
+<p>&rarr; <a href="/pages/algebraic-topology-homology.html">🕳️ 同调论</a>：拓扑学核心链。</p>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：同一难度层次。</p>
+</section>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mandelbrot 集——无限复杂的边界" />
+  <meta property="og:title" content="分形 — Vibe Math" />
+  <meta property="og:description" content="Mandelbrot 集——无限复杂的边界" />
+  <title>分形 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>❄️ 分形 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★★</span></h2>
+    <p class="subtitle">Mandelbrot 集——无限复杂的边界</p>
+    <span class="cat-tag">Part 3: 前沿与问题</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='fractal',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/godel.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; ⚡ Gödel 不完备</a>
+  <a href="/pages/lorenz-attractor.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🦋 Lorenz 吸引子 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——把西兰花掰下一小朵，看起来和整棵一模一样</h3>
+<p>自然界有很多形状"越放大越像自己"：西兰花的每一小朵都像整棵西兰花，树枝的分叉像大树，雪花的边缘怎么放大都毛茸茸的。这种"局部=整体"的形状，就叫分形。</p>
+<p>数学家发现，只要用一行极简单的规则反复套用，就能画出比任何人工图形都复杂千百倍的图案——Mandelbrot集就是最著名的例子。它告诉你：粗糙和不规则，背后其实也有一套隐藏的秩序。</p>
+<p>分形的第二课是"维数可以是分数"：一条线是 1 维、一个面是 2 维，但 Koch 雪花的边缘是 log4/log3≈1.26 维——比线粗、比面细。把"维度"从整数放宽到实数，是 20 世纪几何最深刻的观念之一。</p>
+<div class="key-insight">洞察：世界上的"不规则"大多不是乱来的——很多粗糙的形状里藏着"无限放大都一样"的秘密。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>前沿</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、直觉入门」了解核心思想，或回到前置课程补基础。</p></div>
+
+<section>
+<h3>一、一个具体问题——Koch 雪花的周长和面积：无限长的线怎么包住有限的雪</h3>
+<p>从等边三角形出发，每步把每条边中间的三分之一换成两条"往外凸"的边（形成一个角）。这就是 <strong>Koch 雪花</strong>。我们用具体数字盯着它看。</p>
+<p><strong>周长。</strong> 设初始三角形边长为 1：每条边每步变成 4 条长度为原来的 1/3 的边。所以</p>
+<div class="formula display" data-tex="P_0=3,\qquad P_n=3\cdot\left(\tfrac43\right)^n\qquad\Longrightarrow\quad P_1=4,\ P_2=\tfrac{16}{3}\approx5.33,\ P_3=\tfrac{64}{9}\approx7.11,\ \dots\to\infty"></div>
+<p><strong>面积。</strong> 第 1 步加上 3 个边长为 1/3 的小三角形，第 2 步加上 12 个边长为 1/9 的、……每一步新增面积是上一步的 4/9 倍（数量×4，单个面积×(1/9)）。所以</p>
+<div class="formula display" data-tex="A_n=A_0+\frac{A_0}{3}\Bigl(1+\frac49+\left(\frac49\right)^2+\cdots\Bigr)=A_0+\frac{A_0/3}{1-4/9}=\frac85 A_0" /></div>
+<p>其中 A₀=√3/4≈0.433 是初始三角形面积。于是 Koch 雪花的面积收敛到 (8/5)A₀ = 2√3/5 ≈ <strong>0.693</strong>。</p>
+<p><strong>悖论成真。</strong> 周长 → ∞（永不停止地增长），面积却 → 0.693（有限）。一条"无限长的线"围出了一片"有限面积的雪"。这个悖论正是分形研究的起点：<strong>当周长这个量失效时，需要一个新的"维度"来度量这条线</strong>。</p>
+<div class="key-insight">Koch 雪花的全部教训浓缩成一个数字对：周长 3·(4/3)ⁿ→∞，面积 →(8/5)A₀≈0.693。长度量不出来的东西，要用"1.26 维"来量。</div>
+</section>
+
+<section>
+<h3>二、先直觉后严格——"维度该是几"：为什么量长度和量面积都失败</h3>
+<p>想描述 Koch 曲线"有多大"，先试最朴素的两个工具。</p>
+<p><strong>用长度量：失败。</strong> 曲线无限长。理由（严格化）：第 n 步曲线由 4ⁿ 段组成、每段长 3⁻ⁿ，总长 (4/3)ⁿ→∞。无论拿多小的尺子，量出来的总长只会越来越大——长度发散。</p>
+<p><strong>用面积量：也失败。</strong> Koch 曲线可以铺进面积任意小的带子里（它没有"厚度"），所以面积是 0。面积测不出它的"宽度"。</p>
+<p><strong>正确的问法。</strong> 长度测了 =∞，面积测了 =0。中间一定藏着一个临界指数 s，让"s 维测度"既不趋于 0 也不趋于 ∞。直觉：把整条曲线切成 N=4ⁿ 段，每段缩到 3⁻ⁿ 倍。如果"长度"随缩放的规律是"段数×(段长)^s"，那么</p>
+<div class="formula display" data-tex="\text{s 维测度}\sim N_n\,\varepsilon_n^s=(4^n)(3^{-n})^s=\left(\frac{4}{3^s}\right)^n"></div>
+<p>把它理顺：若 s&lt;log4/log3，则 4/3^s&gt;1，(4/3^s)ⁿ→∞——测度爆炸成 ∞；若 s&gt;log4/log3，则 4/3^s&lt;1，(4/3^s)ⁿ→0——测度塌缩成 0。测度有限且非零只可能发生在 4/3^s = 1，即 <strong>s = log4/log3</strong>。这个临界 s 就是 Koch 曲线的"维数"：比它小的 s 都量出 ∞（像长度），比它大的 s 都量出 0（像面积），恰好在它上面才量得出一个有限数。下面第五节和第六节把这个直觉写成严格定义并算完。</p>
+<div class="key-insight">一句话直觉：分形维数就是"从 ∞ 掉到 0 的那个临界点"。长度在临界点之下（∞），面积在临界点之上（0），临界点本身 ≈1.26。</div>
+</section>
+
+<section>
+<h3>三、Hausdorff 维数的定义——为什么这样定义：从"测度"到"临界指数"</h3>
+<p>把上一节的直觉严格化。设 A 为度量空间中的集合。先定义 s 维 Hausdorff 测度：用直径不超过 δ 的可数覆盖 {U_i} 来"测"A，</p>
+<div class="formula display" data-tex="\mathcal{H}^s_\delta(A)=\inf\Bigl\{\sum_i(\mathrm{diam}\,U_i)^s:\ A\subset\bigcup_i U_i,\ \mathrm{diam}\,U_i\le\delta\Bigr\},\qquad \mathcal{H}^s(A)=\lim_{\delta\to0}\mathcal{H}^s_\delta(A)"></div>
+<p>作为 s 的函数，H^s(A) 在某一临界值从 ∞ 跳到 0，这个临界值就是 <strong>Hausdorff 维数</strong>：</p>
+<div class="formula display" data-tex="\dim_H(A)=\inf\{s:\mathcal{H}^s(A)=0\}=\sup\{s:\mathcal{H}^s(A)=\infty\},\qquad 0\le\mathcal{H}^{\dim_H(A)}(A)\le\infty"></div>
+<p><strong>为什么这样定义？（逐个动机讲清）</strong></p>
+<ul>
+  <li><strong>为什么取 inf ？</strong> 覆盖越细，U_i 越碎，"s 维测量"越接近真值；inf 保证我们用到最优覆盖。这是模仿 Lebesgue 测度的外测度构造。</li>
+  <li><strong>为什么用 diam(U_i)^s 求和？</strong> s=1 时它测"长度"（直径之和），s=2 时测"面积"（直径平方之和），s=3 时测"体积"——把整数维的直觉插值成连续维。</li>
+  <li><strong>为什么会有"从 ∞ 跳 0"？</strong> 对光滑曲线：s&lt;1 时 H^s=∞（把 s 维盒子塞进 1 维物体），s&gt;1 时 H^s=0。跳跃点就是维度。</li>
+</ul>
+<p>例子：光滑曲线 D=1、光滑曲面 D=2、Koch 雪花 D=log4/log3≈1.26、Cantor 集 D=log2/log3≈0.63、Mandelbrot 集边界 D=2（Shishikura 1991 证明）。</p>
+</section>
+
+<section>
+<h3>四、关键公式</h3>
+<div class="formula display" data-tex="z_{n+1} = z_n^2 + c,\quad c\in\mathbb{C}\qquad(\text{Mandelbrot 迭代})"></div>
+<div class="formula display" data-tex="\dim_H(\partial M) = 2\qquad(\text{Mandelbrot 边界 Hausdorff 维数})"></div>
+<div class="formula display" data-tex="\dim_H(A)=\inf\{s:\mathcal{H}^s(A)=0\},\qquad \mathcal{H}^s(A)=\lim_{\delta\to0}\inf\Bigl\{\sum_i(\mathrm{diam}\,U_i)^s\Bigr\}"></div>
+<div class="formula display" data-tex="\dim_H=\frac{\log N}{\log(1/r)}\qquad(\text{自相似集：} N\text{ 个 } r\text{ 倍副本})"></div>
+</section>
+
+<section>
+<h3>五、例题 1——Koch 雪花的周长发散、面积收敛（一步步算完）</h3>
+<p><strong>题目。</strong> 从边长为 1 的等边三角形出发构造 Koch 雪花。证明第 n 步周长 Pₙ→∞，并算出面积的极限值。</p>
+<p><strong>第一步：数清楚"段数 × 每段长"。</strong> 每步把 1 条边换成 4 条长度为 1/3 的边：</p>
+<div class="formula display" data-tex="N_n=3\cdot4^n,\qquad \ell_n=\left(\frac13\right)^n,\qquad P_n=N_n\ell_n=3\left(\frac43\right)^n"></div>
+<p>代入 n=0,1,2,3：P₀=3，P₁=4，P₂=16/3≈5.33，P₃=64/9≈7.11。公比 4/3&gt;1，故 Pₙ→∞。∎</p>
+<p><strong>第二步：算第 n 步新增面积。</strong> 第 1 步加 3 个小三角形，每个面积 (1/3)²·A₀ = A₀/9，共加 A₀/3。第 2 步在 12 条边上各加一个面积为 A₀/81 的小三角形，共 12·A₀/81 = (4/27)A₀ = (4/9)(A₀/3)。一般地，新增面积每步乘 4/9。</p>
+<p><strong>第三步：等比求和。</strong></p>
+<div class="formula display" data-tex="A_n=A_0+\frac{A_0}{3}\left(1+\frac49+\left(\frac49\right)^2+\cdots\right)=A_0+\frac{A_0/3}{1-4/9}=\frac85A_0=\frac{2\sqrt3}{5}\approx0.6928"></div>
+<p><strong>第四步：数值验证收敛速度。</strong> 部分和：A₂/A₀≈1.481，A₃/A₀≈1.547，A₅/A₀≈1.590——单调爬向 1.6=(8/5)。∎</p>
+<p><strong>为什么这个算术可靠？</strong> 每一步的"新增面积"都被几何上排除了重叠（新三角形凸出在旧边上、彼此不相交），所以等比求和没有重复计算。Koch 雪花面积有限的结论因此是严格成立的。</p>
+<p><strong>对照教训。</strong> 周长按 (4/3)ⁿ 发散，面积却停在 (8/5)A₀。长度与面积两个整数维工具集体失灵——把第五节的推导（维数 log4/log3）看成对"为什么 1 和 2 都不行"的精确回答。</p>
+</section>
+
+<section>
+<h3>六、推导与例题 2——Koch 雪花的 Hausdorff 维数 log4/log3（一步步算完）</h3>
+<p><strong>题目。</strong> 计算 Koch 曲线（雪花的一边）的 Hausdorff 维数。</p>
+<p><strong>第一步：取第 n 步的"最优覆盖"。</strong> 第 n 步曲线由 Nₙ=4ⁿ 条小段组成，每段长度 εₙ=3⁻ⁿ。用小段本身覆盖曲线：覆盖直径 ≤ 3⁻ⁿ，故</p>
+<div class="formula display" data-tex="\mathcal{H}^s(A)\ \le\ N_n\,\varepsilon_n^s=4^n\,(3^{-n})^s=\left(\frac{4}{3^s}\right)^n"></div>
+<p><strong>第二步：找临界 s。</strong> 若 s&gt;log4/log3，则 4/3^s&lt;1，上式当 n→∞ 时 →0，故 H^s(A)=0。若 s&lt;log4/log3，则 4/3^s&gt;1，用 n 步覆盖会给出无穷——严格的"下界"需要更仔细的论证，但直觉与结果一致：H^s 从 ∞ 跳到 0 的临界点恰是 log4/log3。</p>
+<p><strong>第三步：令测度有限且非零（维数的判据）。</strong></p>
+<div class="formula display" data-tex="\mathcal{H}^D(A)\sim N_n\,\varepsilon_n^D=(4^n)(3^{-n})^D=1\;\Rightarrow\;4^n=3^{nD}\;\Rightarrow\;D=\frac{\log 4}{\log 3}\approx1.2619\quad\blacksquare"></div>
+<p><strong>第四步：交叉验证。</strong> 用自相似公式 D=log N/log(1/r)：Koch 曲线把自身切成 4 个 r=1/3 的副本，D=log4/log3≈1.2619，两者一致。∎</p>
+<div class="key-insight">周长按 (4/3)ⁿ 发散——Koch 曲线无限长，却"填满"不到二维平面；1.26 正是这种介于 1 与 2 之间的粗糙度。</div>
+</section>
+
+<section>
+<h3>七、Mandelbrot 集——一行代码的无限复杂</h3>
+<p><strong>z_{n+1}=z_n²+c</strong>，c∈ℂ。从 z₀=0 开始迭代。如果不发散到无穷→c 属于 Mandelbrot 集（黑色区域）。<strong>点击任意位置放大</strong>——无限的自相似结构。</p>
+<p><strong>为什么从 z₀=0 出发？</strong> 这是唯一既平凡又普适的起点：任何轨道在 0 处的行为完全由 c 决定，所以"Mandelbrot 集"是一个关于复参数 c 的几何对象，而不是关于初始点的。</p>
+<p><strong>怎么判断"不发散"？逃逸半径定理。</strong> 一旦某个 |zₙ|&gt;2，轨道就永远逃逸（因为 |z_{n+1}|=|zₙ²+c|≥|zₙ|²−|c|≥|zₙ|²−2&gt;|zₙ|，一步比一步大）。所以只要观测到 |zₙ|&gt;2 就可以判 c∉M；观测到 |zₙ|≤2 一直保持，则 c∈M。这个简单的判据让"无限复杂"可以严格验证（见例题 3）。</p>
+<div class="key-insight">边界 Hausdorff 维数 =<strong>2</strong>——二维中最粗糙的边界（Shishikura 1991）。不管放大多少倍，边界永远不会变光滑。一个简单到一行代码的迭代规则，产生了人类已知最复杂的数学对象。</div>
+</section>
+
+<section>
+<h3>八、例题 3——手算几次迭代，判断 c 是否在 Mandelbrot 集里</h3>
+<p><strong>题目。</strong> 分别取 c=−1、c=i、c=2，手算 z_{n+1}=zₙ²+c 的前几步，用逃逸半径定理判断 c∈M 与否。</p>
+<p><strong>第一步：c=−1。</strong> 从 z₀=0 出发：</p>
+<div class="formula display" data-tex="z_0=0,\ z_1=-1,\ z_2=0,\ z_3=-1,\ z_4=0,\ \dots"></div>
+<p>轨道在 0 ↔ −1 之间来回，永远满足 |zₙ|=0 或 1 ≤ 2。<strong>c=−1∈M</strong>（周期 2 轨道）。</p>
+<p><strong>第二步：c=i。</strong></p>
+<div class="formula display" data-tex="z_0=0,\quad z_1=i,\quad z_2=i^2+i=-1+i,\quad z_3=(-1+i)^2+i=-i,\quad z_4=(-i)^2+i=-1+i,\ z_5=-i,\dots"></div>
+<p>从 z₂ 起进入周期 2 循环 {−1+i, −i}，模长 |−1+i|=√2≈1.414、|−i|=1，都 ≤2。<strong>c=i∈M</strong>。注意轨道并不停在原点附近——它是"绕着原点附近转"。</p>
+<p><strong>第三步：c=2。</strong></p>
+<div class="formula display" data-tex="z_0=0,\quad z_1=2,\quad z_2=6,\quad z_3=38,\quad z_4=1446,\dots"></div>
+<p>z₁=2 时已经 ≥ 逃逸半径（严格说 2 还不够，要看下一步）：z₂=6&gt;2，立刻判据生效。<strong>c=2∉M</strong>。数值对比：|z₂|=6、|z₃|=38、|z₄|=1446——这正是"逃逸后以平方速率爆炸"的模样。</p>
+<p><strong>第四步：总结。</strong> −1 和 i 留下（周期轨道，有界），2 逃走。Mandelbrot 集就是这样一"点"一"点"判出来的；边界的无限复杂来自周期与逃逸之间无穷细腻的分界线。∎</p>
+<p><strong>为什么是"无限复杂"？</strong> 边界上的每个 c 对应一个"临界有界"的轨道：不逃逸、也不进入稳定周期。这些轨道在复平面上留下的"花状"图形千变万化，且自相似——放大边界任何一处，都会看到新的小 Mandelbrot 集挂在细须上。</p>
+</section>
+
+<section><h3>Julia集——Mandelbrot集的"近亲"</h3><p>固定c,Julia集J_c={z0:迭代z_{n+1}=z_n^2+c不发散}的边界。Mandelbrot集中的c-&gt;Julia集是连通的(一个整体)。Mandelbrot集外的c-&gt;Julia集是Cantor尘埃(完全不连通)。Mandelbrot集本质上是"Julia集的连通性地图"。</p>
+<p><strong>为什么两个对象要一起看？</strong> Mandelbrot 集把"所有 c 的 Julia 集连通性"汇总成一张图：c 落在 M 内 ⟺ J_c 连通。于是 M 的复杂边界同时编码了无穷多个 J_c 的形态突变点——这就是"地图"的含义。</p></section>
+
+<section>
+<h3>分形在自然界</h3>
+<p>海岸线、雪花、血管分支、肺部支气管树、山脉轮廓——都不是光滑的几何。Mandelbrot 1975年创造"fractal"一词，开启了"粗糙度作为可量化的几何量"的新视野。分形维数一般不是整数——这是分形最本质的特征。</p>
+<p><strong>为什么"粗糙度"能当几何量？</strong> 海岸线的长度取决于你用什么尺子量：尺子越短，量出的长度越长（类似 Koch 曲线的 (4/3)ⁿ）。真正的"海岸线长度"因此没有定义，但"长度随尺子变短的速率"（维数）却有定义——分形把"模糊"变成了"精确"。</p>
+</section>
+
+<section>
+<h3>反例——可数集的 Hausdorff 维数为 0</h3>
+<p>设 A={a₁,a₂,…} 为任意可数集。对任意 s>0，用半径 δ2⁻ⁱ 的小球逐个盖住 a_i，则直径和 Σ(2δ2⁻ⁱ)^s=(2δ)^sΣ2⁻ⁱˢ→0（δ→0）。故 H^s(A)=0 对所有 s>0 成立，即 dim_H(A)=0。</p>
+<p>由此得著名反例：<strong>有理数集 Q∩[0,1] 在 [0,1] 中稠密，但 Hausdorff 维数为 0</strong>——拓扑/直觉的"充满区间"在这里完全失效。这也说明 Hausdorff 维数与盒维数不同：Q∩[0,1] 的盒维数是 1。</p>
+<p><strong>为什么这个反例重要？</strong> 它警告我们：<strong>"到处稠密"与"占据体积/维度"是两回事</strong>。Q 在 [0,1] 里密密麻麻，却没有"体量"。任何靠直觉用"密度"代替"维数"的论证，在这里都会翻车——分形维数必须回到"覆盖测度"这个严格工具上来。</p>
+</section>
+
+<section><h3>前沿：Mandelbrot集的局部连通性(MLC猜想)</h3><p>MLC猜想:Mandelbrot集在所有参数处局部连通。这是复动力系统最重要的未解问题——Douady-Hubbard(1982)提出。它等价于"Mandelbrot集没有幽灵分支"。仍开放:仅对某些实参数和有限多个复数参数得证。</p>
+<p><strong>为什么 MLC 这么难？</strong> 局部连通要求边界上"没有割断的细须"——每一处都像一束从一点发出的连续分支。但 Mandelbrot 集的边界上是否存在"断点"（幽灵分支的根），与深海般的复动力系统结构纠缠在一起。它一面连着 Koch 式的自相似，一面连着周期参数空间的分层——是分形几何与动力系统的交汇点。</p></section>
+
+<section>
+<h3>工作题——计算 Cantor 集的维数</h3>
+<p>三分 Cantor 集：从 [0,1] 出发，每一步删去每个区间的中间三分之一。第 n 步剩 2ⁿ 个区间，每个长度 3⁻ⁿ。求其 Hausdorff 维数 D。</p>
+<details><summary>显示解答</summary><p>与 Koch 同理：N_n=2ⁿ、ε_n=3⁻ⁿ，令 H^D~N_n ε_n^D=2ⁿ·3⁻ⁿᴰ=1 ⇒ 2ⁿ=3ⁿᴰ ⇒ D=log2/log3≈0.6309。推广公式：自相似分形把整体分成 N 个缩放因子为 r 的副本时，D=logN/log(1/r)。</p></details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（Sierpiński 垫片）。</strong> 把等边三角形四等分、挖掉中心的小三角形，每步保留 3 个边长为原来 1/2 的副本。用自相似公式求维数。<strong>提示：</strong>N=3、r=1/2，D=log3/log2≈1.585。</p>
+<p><strong>试试看 2（Cantor 集自检）。</strong> 不用公式，重做工作题的推导：写出 Nₙ、εₙ，令 Nₙ·εₙ^D=1。<strong>提示：</strong>Nₙ=2ⁿ、εₙ=3⁻ⁿ，2ⁿ=3ⁿᴰ ⟹ D=log2/log3≈0.6309。</p>
+<p><strong>试试看 3（c=−2 是否在 M？）。</strong> 手算 z_{n+1}=zₙ²−2 的前几步，用逃逸半径判据判断。<strong>提示：</strong>0→−2→2→2→…，|zₙ| 恒 ≤2，不逃逸——c=−2∈M，它正是实区间 [−2, 1/4] 的左端点。</p>
+<p><strong>试试看 4（Q∩[0,1] 的盒维数）。</strong> 用 ε-盒覆盖论证为什么 dim_box(Q∩[0,1])=1 而 Hausdorff 维数是 0。<strong>提示：</strong>盒维数用"固定 ε 的覆盖"取极限；Q 在 [0,1] 稠密，任意 ε 都几乎需要 1/ε 个长度为 ε 的盒，故 log N(ε)/log(1/ε)→1；而 Hausdorff 维数允许"变径覆盖"把可数点逐个盖掉，故为 0。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>R. Devaney, An Introduction to Chaotic Dynamical Systems</strong></p>
+<p>&rarr; <strong>K. Falconer, Fractal Geometry: Mathematical Foundations and Applications</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/complex-plane.html">复平面与全纯函数</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/lorenz-attractor.html">🦋 Lorenz 吸引子</a>：同一学科分类「动力系统」。</p>
+<p>&rarr; <a href="/pages/soliton.html">🌊 孤子</a>：动力系统核心链。</p>
+<p>&rarr; <a href="/pages/riemann-surface.html">🫧 黎曼面</a>：同一难度层次。</p>
+<p>&rarr; <a href="/pages/standard-model.html">🧩 标准模型</a>：同一难度层次。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/fractal.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="平行移动绕一圈，矢量转了多少" />
+  <meta property="og:title" content="曲率 — Vibe Math" />
+  <meta property="og:description" content="平行移动绕一圈，矢量转了多少" />
+  <title>曲率 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>📐 曲率 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">平行移动绕一圈，矢量转了多少</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='curvature',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/geodesic.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🌐 测地线</a>
+  <a href="/pages/parallel-transport.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">↗️ 平行移动 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、具体动机——篮球比乒乓球"弯"多少？先给一个数</h3>
+<p>先不看抽象定义，先看一个带数字的具体问题。拿一只篮球和一只乒乓球：篮球半径约 R = 0.12 米，乒乓球半径约 R = 0.02 米。直觉上篮球的弧面"平缓"，乒乓球"鼓"得多。能不能用一个数量化"鼓的程度"？</p>
+<p>能，这个数就是<b>曲率</b>。对半径为 R 的球面，数学家规定它的高斯曲率</p>
+<div class="formula display" data-tex="K = \frac{1}{R^2}"></div>
+<p>于是：<strong>篮球 K = 1/(0.12)² ≈ 69.4 m⁻²，乒乓球 K = 1/(0.02)² = 2500 m⁻²</strong>。乒乓球比篮球弯了约 36 倍——半径越小，弯得越厉害。把平面放上去，R → ∞，K → 0，所以纸面打 0 分。</p>
+<p>再做一个不用球的小实验：取一张纸，它完全平（K = 0）。把它<b>卷成圆柱</b>——现在它"看起来弯"了，但你仍然可以把它摊平回纸而不撕裂、不拉伸。<strong>圆柱的高斯曲率还是 0</strong>。再把它贴到篮球上——这回再也摊不平了（任何地图投影都会失真），因为球面 K ≠ 0。这就是"可展"与"不可展"的直观：曲率量的是"摊不平的那种弯"。</p>
+<div class="key-insight">核心洞察：曲率 = 局部"弯了多少"的度数。圆有 1/R²，圆柱和圆锥是 0（能摊平），球面是正的、马鞍是负的。只想懂核心思想，看到这里就够了。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，正文较深。<p><strong>建议先掌握</strong>：<a href="/pages/geodesic.html">测地线</a>。</p><p>高级章节（证明、前沿、工作题）需要相应背景，未掌握可先看「〇、具体动机」了解核心思想，或回到前置课程补基础。</p></div>
+
+
+<section>
+<h3>一、先热身：曲线的曲率——圆半径的倒数</h3>
+<p>在冲向曲面前，先在<b>曲线</b>上把"弯"量化，因为曲面的主曲率就是沿不同方向"曲线的法曲率"。</p>
+<p><strong>直觉：</strong>一条曲线在一点有多弯，就看"把它局部替换成多大半径的圆最贴切"。半径 R 的圆最贴切，就记曲率 κ = 1/R。越弯的地方 R 越小、κ 越大。</p>
+<div class="formula display" data-tex="\text{圆半径 } R \;\Longrightarrow\; \kappa = \frac{1}{R}"></div>
+<p><strong>带数字的例子：</strong>半径 1 的圆 κ = 1；半径 2 的圆 κ = 1/2；半径 1/2 的圆 κ = 2。直线可以看作半径无限大的圆，κ = 0。<strong>曲率 = 圆半径的倒数</strong>，这就是"曲率度量弯曲"的最简单模型——曲面的高斯曲率公式 1/R² 正是它在一维上的自然延伸（圆的"主曲率"是 1/R，两个方向相乘得 K = 1/R²）。</p>
+<p><strong>为什么用倒数？</strong> 因为要让它"相加起来才有几何意义"：把两段曲率 κ₁、κ₂ 的曲线平滑拼接，总转角 = ∫κ ds。倒数的选择让"曲率×长度 = 转角"这个朴素公式成立。</p>
+</section>
+
+<section>
+<h3>二、曲面的弯曲：主曲率、高斯曲率 K 与平均曲率 H</h3>
+<p>曲面上一点有<b>无穷多个方向</b>，每个方向都有各自的法曲率。但好消息是：只需要两个数——<strong>主曲率</strong>。</p>
+<p><strong>严格定义。</strong> 设 Σ ⊂ R³ 为正则曲面，局部参数 (u, v)，x(u, v) 为位置向量，n 为单位法向量。曲面由<strong>第一基本形式</strong>（度量）与<strong>第二基本形式</strong>（形状）完全刻画：</p>
+<div class="formula display" data-tex="\mathrm{I} = dx\cdot dx = E\,du^2 + 2F\,dudv + G\,dv^2"></div>
+<div class="formula display" data-tex="\mathrm{II} = -dn\cdot dx = L\,du^2 + 2M\,dudv + N\,dv^2,\qquad L=\langle x_{uu},n\rangle,\ M=\langle x_{uv},n\rangle,\ N=\langle x_{vv},n\rangle"></div>
+<p><strong>Weingarten 映射（形状算子）：</strong>S_p = −dn_p: T_pΣ → T_pΣ。它是自伴算子（第二基本形式的对称性），故正交对角化，特征值 κ₁ ≥ κ₂ 称为<strong>主曲率</strong>，特征方向为主方向。几何意义：主曲率就是"沿主方向的法曲率"，即曲面沿该方向弯成半径 1/κ 的圆的程度。</p>
+<p><strong>定义（高斯曲率与平均曲率）：</strong></p>
+<div class="formula display" data-tex="K = \det S = \kappa_1\kappa_2 = \frac{LN-M^2}{EG-F^2},\qquad H = \tfrac12\,\mathrm{tr}\,S = \tfrac{\kappa_1+\kappa_2}{2} = \frac{EN-2FM+GL}{2(EG-F^2)}"></div>
+<p><strong>为什么高斯曲率取乘积？</strong> 两个理由，一个几何、一个物理：</p>
+<ul>
+  <li><strong>几何上，乘积是"摊不平的弯"。</strong> 沿着某个方向的弯（κ₁）可以通过把曲面在外部空间里弯折来消除——圆柱就是这样，母线方向 κ₁ = 0 的"弯"是假的。两个主曲率的<b>乘积</b>才无法用外部弯折消除：它只依赖第一基本形式（见第四节绝妙定理）。所以 K 才是"面本身的弯曲"。</li>
+  <li><strong>物理上，乘积与平行移动挂钩。</strong> 绕一小圈面积 A 的平行移动转角 ≈ K·A（见《平行移动》课）。</li>
+</ul>
+<p><strong>K 的符号由主曲率是否同号决定：</strong>K &gt; 0 局部凸（同侧弯，像球）、K &lt; 0 局部鞍形（异侧弯，像薯片）、K = 0 可展（摊得平）。H = 0 的曲面称为<strong>极小曲面</strong>（肥皂膜）。</p>
+<div class="key-insight">H 是"外在的弯"（取决于怎么嵌在空间里），K 是"内在的弯"（只看面内部量得出来的）。第五节会把这条分界线钉死。</div>
+</section>
+
+<section>
+<h3>三、完整例题一——平面、球面、圆柱、马鞍面：一步步算 K 与 H</h3>
+<p>把第二节的公式对四个具体曲面逐个跑一遍。</p>
+<p><strong>例 1：平面。</strong> 每个方向的法曲率都是 0，故 κ₁ = κ₂ = 0。</p>
+<div class="formula display" data-tex="K = 0\cdot 0 = 0,\qquad H = 0"></div>
+<p><strong>例 2：球面 S²(R)。</strong> 取经线方向：法截线是半径 R 的大圆，法曲率 1/R。取纬线方向：法截线也是半径 R 的大圆（切平面过球心！），法曲率 1/R。任何方向都一样（球面各向同性）：</p>
+<div class="formula display" data-tex="\kappa_1 = \kappa_2 = \frac{1}{R}\;\Longrightarrow\; K = \frac{1}{R^2},\qquad H = \frac{1}{R}"></div>
+<p>核对〇节的数字：篮球 K = 1/0.0144 ≈ 69.4 m⁻²，乒乓球 K = 2500 m⁻²。✓</p>
+<p><strong>例 3：圆柱半径 R。</strong> 沿母线方向：法截线是直线，法曲率 κ₁ = 0。沿横截面圆方向：法曲率 κ₂ = 1/R。</p>
+<div class="formula display" data-tex="K = 0\cdot\frac{1}{R} = 0,\qquad H = \frac{0 + 1/R}{2} = \frac{1}{2R}"></div>
+<p>圆柱"看起来弯"但 K = 0——它摊得平（〇节的纸卷）。H ≠ 0 说明它的弯只是"外在的"。</p>
+<p><strong>例 4：马鞍面 z = x² − y² 在原点。</strong> 沿 x 轴：法截线 z = x²，向上弯，κ₁ = 2。沿 y 轴：法截线 z = −y²，向下弯，κ₂ = −2。主曲率异号：</p>
+<div class="formula display" data-tex="K = 2\cdot(-2) = -4 < 0,\qquad H = \frac{2 + (-2)}{2} = 0"></div>
+<p>马鞍面 K &lt; 0（薯片形），且 H = 0——它是极小曲面的局部代表。对照：抛物面 z = x² + y² 在原点两个方向都向上弯，K = 4 &gt; 0。</p>
+<div class="key-insight">三种符号一次集齐：球面 K &gt; 0、平面与圆柱 K = 0、马鞍面 K &lt; 0。而 H 单独说了不算——圆柱和平面 K 相同但 H 不同。K 才是"曲面自己"的弯曲。</div>
+</section>
+
+<section>
+<h3>四、为什么高斯曲率是"内蕴"的——高斯绝妙定理（Theorema Egregium）</h3>
+<p><strong>动机：</strong> 第三节算 K 时用了法向量 n、用了第二基本形式——这些都是"外部空间 R³"才有的东西。可是一只只能爬在曲面上的蚂蚁，既看不到 n 也测量不了外部空间。问题来了：<strong>蚂蚁能测出弯曲吗？</strong>高斯 1827 年的回答震惊了整个数学界：能。K 只依赖第一基本形式 E, F, G（即只量距离和角度就能算出来）——这就是 Theorema Egregium（绝妙定理）。</p>
+<p><strong>定理（Gauss, 1827）：</strong>高斯曲率 K 只依赖于第一基本形式 E, F, G 及其导数——K 是<strong>内禀</strong>量，不依赖曲面在 R³ 中的具体嵌入。</p>
+<p><strong>证明（经典计算路线，概要）：</strong>设曲面的 Christoffel 符号（由 E, F, G 定义）</p>
+<div class="formula display" data-tex="\Gamma^k_{ij} = \tfrac12 g^{kl}\big(\partial_i g_{jl} + \partial_j g_{il} - \partial_l g_{ij}\big)"></div>
+<p>黎曼曲率张量（在二维只有独立分量 R_{1212}）由第二形式的系数 b_{ij} = ⟨∂ᵢ∂ⱼx, n⟩ 经 <strong>Gauss 方程</strong>给出：</p>
+<div class="formula display" data-tex="R^m_{\;\; ikl} = b_{il}b^m_{\;\;k} - b_{ik}b^m_{\;\;l},\qquad K = \frac{R_{\;\,1212}}{EG-F^2}"></div>
+<p><strong>关键步骤：</strong></p>
+<ul>
+  <li><strong>1.</strong> R^k_{\; lij} = ∂ᵢΓ^k_{lj} − ∂ⱼΓ^k_{li} + Γ^m_{lj}Γ^k_{mi} − Γ^m_{li}Γ^k_{mj} 只含第一基本形式（这是 Levi-Civita 联络的曲率公式，纯几何层面成立）；</li>
+  <li><strong>2.</strong> 把 Gauss 方程两边同时用两种方式表示 R_{1212}：左边代入曲率公式（只含 E, F, G），右边代入第二形式。利用 Codazzi-Mainardi 相容性条件 ∂ᵢbⱼₖ − ∂ⱼbᵢₖ = b_imΓ^m_{jk} − b_jmΓ^m_{ik}（这是 b 必须满足的可积性条件），消去第二形式；</li>
+  <li><strong>3.</strong> 整理得到 K 的纯第一基本形式表达式：</li>
+</ul>
+<div class="formula display" data-tex="K = \frac{R_{1212}}{EG-F^2},\qquad R_{1212} = -\tfrac12 E_{vv} + F_{uv} - \tfrac12 G_{uu} + \Gamma\text{-平方项}"></div>
+<p>具体地，R_{1212} = −½E_vv + F_uv − ½G_uu + (E,F,G 一阶导的二次组合)。全程未出现 n 或 b 的最终值——K 完全由度量决定。□</p>
+<p><strong>几何意义：</strong>身处曲面内部的观测者（只测距离、角度——即只用第一基本形式）就能探测曲面的弯曲程度。<strong>绝妙定理使"弯曲"成为内禀几何概念</strong>，不必嵌入更高维空间即可谈论——这正是爱因斯坦"引力 = 时空内禀曲率"（四维流形不依赖外部空间）的数学前提。我们生活在四维时空里，没有"第五维"去观察它弯不弯——绝妙定理保证了不需要第五维。</p>
+<p><strong>推论（等距保持 K）：</strong>任何等距映射保持高斯曲率。圆柱与平面等距（沿母线展开），故 K = 0——圆柱"看起来弯"但内禀平坦。反之，球面与平面不等距（地图投影必失真），因为 K = 1/R² ≠ 0。</p>
+</section>
+
+<section>
+<h3>五、完整例题二——只用度规算出球面 K = 1/R²：验证内蕴性</h3>
+<p>绝妙定理说"只用第一基本形式就能算 K"。那我们就在球面上真刀真枪只靠度规算一遍，不碰法向量。这是最能验证"内蕴"的一步——每一步输入都只是 g 的分量。</p>
+<p><strong>第 1 步：读出度规。</strong> 球面度规 ds² = R²(dθ² + sin²θ dφ²)，即 E = g₁₁ = R²，G = g₂₂ = R²sin²θ，F = g₁₂ = 0（下标 1 = θ，2 = φ）。只有 G 依赖坐标：∂₁G = 2R²sinθcosθ。</p>
+<p><strong>第 2 步：求 Christoffel（只用 g 及其一阶导）。</strong></p>
+<div class="formula display" data-tex="\Gamma^1_{22} = -\sin\theta\cos\theta,\qquad \Gamma^2_{12} = \Gamma^2_{21} = \cot\theta,\qquad \text{其余}=0"></div>
+<p><strong>第 3 步：算曲率张量的独立分量 R^1_{212}。</strong> 用纯度规公式 R^k_{\;lij} = ∂ᵢΓ^k_{lj} − ∂ⱼΓ^k_{li} + Γ^m_{lj}Γ^k_{mi} − Γ^m_{li}Γ^k_{mj}，取 k=1, l=2, i=1, j=2：</p>
+<div class="formula display" data-tex="R^1_{\;212} = \partial_1\Gamma^1_{22} - \partial_2\Gamma^1_{21} + \Gamma^m_{22}\Gamma^1_{m1} - \Gamma^m_{21}\Gamma^1_{m2}"></div>
+<ul>
+  <li>∂₁Γ¹₂₂ = ∂_θ(−sinθcosθ) = sin²θ − cos²θ；</li>
+  <li>∂₂Γ¹₂₁ = 0（Γ¹₂₁ = 0）；</li>
+  <li>Γ^m_{22}Γ¹_{m1} = Γ¹₂₂Γ¹₁₁ + Γ²₂₂Γ¹₂₁ = 0（其余 Γ 都为零）；</li>
+  <li>Γ^m_{21}Γ¹_{m2} = Γ¹₂₁Γ¹₁₂ + Γ²₂₁Γ¹₂₂ = cotθ·(−sinθcosθ) = −cos²θ。</li>
+</ul>
+<div class="formula display" data-tex="R^1_{\;212} = (\sin^2\theta-\cos^2\theta) - 0 + 0 - (-\cos^2\theta) = \sin^2\theta"></div>
+<p><strong>第 4 步：降指标。</strong> R_{1212} = g_{11}R¹₂₁₂ = R²·sin²θ。</p>
+<p><strong>第 5 步：代入 K 的公式。</strong></p>
+<div class="formula display" data-tex="K = \frac{R_{1212}}{EG-F^2} = \frac{R^2\sin^2\theta}{R^2\cdot R^2\sin^2\theta - 0} = \frac{1}{R^2}"></div>
+<p>得到 K = 1/R²，与第二节用第二基本形式算的结果完全一致——<strong>整个过程中没有出现一次法向量</strong>。这就是"内蕴"的现场演示：蚂蚁量距离角度，就能算出版图上的"弯度"。</p>
+<div class="key-insight">这个例题就是绝妙定理的缩影：K 的公式里没有 n、没有 b，只有 E, F, G。所以圆柱与平面有相同的 K=0（可展），球面与平面永远不可能等距（地图投影必失真）。</div>
+</section>
+
+<section>
+<h3>六、Gauss-Bonnet 定理——把局部曲率加起来，得到全局拓扑</h3>
+<p><strong>动机：</strong> K 是局部量（每一点一个数），拓扑是全局的（整体形状）。凭什么把局部曲率加起来能探测整体形状？Gauss-Bonnet 说：能，而且精确到 2π 的整数倍。</p>
+<p><strong>定理（局部 Gauss-Bonnet）：</strong>设 R ⊂ M 为紧黎曼曲面中由分段光滑曲线 ∂R 围成的区域，内角 θ₁,...,θₙ，则</p>
+<div class="formula display" data-tex="\int_R K\,dA + \int_{\partial R} k_g\,ds + \sum_{i=1}^n (\pi - \theta_i) = 2\pi"></div>
+<p>其中 k_g 为边界测地曲率。当边界为测地线（k_g = 0）时给出测地三角的<strong>角盈公式</strong>：α + β + γ = π + ∫_R K dA。</p>
+<p><strong>定理（整体 Gauss-Bonnet）：</strong>对紧致无边界可定向黎曼曲面 M：</p>
+<div class="formula display" data-tex="\int_M K\,dA = 2\pi\chi(M),\qquad \chi(M) = 2 - 2g"></div>
+<p>χ 为 Euler 示性数，g 为亏格。</p>
+<p><strong>证明思路：</strong></p>
+<ul>
+  <li><strong>1. 平行移动的角位移公式：</strong>沿区域 R 的边界走一圈，单位切向量方向的净转角 = ∫_∂R k_g ds + Σ(π − θᵢ)。同时，把切向量"平行移动"绕圈一周，其相对旋转角 = ∫_R K dA（Gauss 公式：R 内曲率积分 = 平行移动的净旋转）。两者之差即"几何转角 vs 平行移动转角"的匹配，给出局部公式。这本质上是平行移动 holonomy 的积分表述。</li>
+  <li><strong>2. 内角项：</strong>每个顶点处切方向跳跃外角 π − θᵢ，求和得 Σ(π − θᵢ)。</li>
+  <li><strong>3. 三角剖分相加：</strong>把 M 三角剖分为 T 个三角形、E 条边、V 个顶点（V − E + T = χ(M)，Euler 公式）。对每个三角形用局部 Gauss-Bonnet 求和：∑∫_R K dA = ∫_M K dA（内部公共边上的 k_g 积分两两相消），内角项重新分配为 ∑(π − θᵢ) = π(顶点数) − Σ内角。每个三角形内角和贡献与"2π − ∫K"协调，最后整理得 ∫_M K dA = 2π(V − E + T) = 2πχ(M)。□</li>
+</ul>
+<p><strong>意义与推论：</strong>局部几何量（曲率）的全局积分 = 纯拓扑不变量。<strong>球面</strong> χ = 2 ⟹ ∫K = 4π；<strong>环面</strong> χ = 0 ⟹ ∫K = 0（正曲率与负曲率必须抵消）；<strong>亏格 g 曲面</strong> χ = 2 − 2g。推论：处处 K &gt; 0 的紧曲面必是球面——曲率的符号受拓扑约束。这是连接微分几何与代数拓扑的最优美桥梁。</p>
+</section>
+
+<section>
+<h3>七、完整例题三——球面测地三角的角盈：三个数字互相印证</h3>
+<p>用局部 Gauss-Bonnet 算一个具体的球面三角形，把"角盈 = 面积×K"做成实数。</p>
+<p><strong>第 1 步：取三角形。</strong> 单位球 R = 1 上，取 A = 北极 (θ=0)、B = (θ=π/2, φ=0)、C = (θ=π/2, φ=π/2)。三条边：AB 是经线 φ=0、BC 是赤道段、CA 是经线 φ=π/2——三条都是大圆弧，即<strong>三条测地线</strong>，k_g = 0。</p>
+<p><strong>第 2 步：数内角。</strong> 北极处：两条经线夹角 90° = π/2。B 处：赤道与经线垂直，90°。C 处：同样 90°。内角和 = 270° = 3π/2。</p>
+<div class="formula display" data-tex="\alpha + \beta + \gamma = \frac{3\pi}{2},\qquad \text{角盈} = \frac{3\pi}{2} - \pi = \frac{\pi}{2} = 90^\circ"></div>
+<p><strong>第 3 步：算面积。</strong> 这个三角形正好是整球的八分之一：面积 = 4πR²/8 = 4π/8 = π/2。</p>
+<p><strong>第 4 步：用角盈公式核对。</strong> 球面 K = 1/R² = 1（常数）：</p>
+<div class="formula display" data-tex="\alpha+\beta+\gamma = \pi + \int_T K\,dA = \pi + 1\cdot\frac{\pi}{2} = \frac{3\pi}{2}\;\checkmark"></div>
+<p>三个独立计算的数字——内角和 270°、面积 π/2、K=1——严丝合缝地互相印证。<strong>角盈就是"曲率×面积"</strong>，而且只能通过绕一圈才能探测到：这正是《平行移动》课里 holonomy 的几何来源。</p>
+<p><strong>第 5 步：上界。</strong> 单位球面积 ≤ 4π，所以任何测地三角的角盈 ≤ 4π，内角和 ≤ 5π（三角形几乎铺满整球时取到）。</p>
+</section>
+
+<section>
+<h3>八、黎曼曲率张量——平行移动"不交换"的量化</h3>
+<p>第七节说的"绕一圈才探测得到"可以升级成更本质的语言：<strong>沿两条路先后走，顺序不同结果就不同</strong>。</p>
+<div class="formula display" data-tex="R(X,Y)Z=\nabla_X\nabla_YZ-\nabla_Y\nabla_XZ-\nabla_{[X,Y]}Z"></div>
+<p><strong>为什么这等于曲率？</strong> 沿 X 走再沿 Y 走 ≠ 沿 Y 走再沿 X 走——这个差异就是曲率。想象先向东平移再向北平移、与先向北再向东，在弯曲面上结果差一个旋转；差多少由 R 给出。第四节的"旋转角 = K·A"正是 R 的二维特例：R 越大，同样的"小四边形"转得越多。</p>
+<p><strong>为什么 Riemann 曲率张量最重要：</strong> 如果 R = 0 处处成立→空间是<strong>平坦的</strong>（局部等距于 R^n）。这是"平坦"的精确判据——圆柱满足（K=0），球面不满足。</p>
+<p><strong>Ricci 曲率 = Riemann 曲率的缩并。</strong> 它度量了测地线球的体积偏差——Ricci&gt;0 ⟹ 体积增长慢于欧氏。</p>
+<div class="formula display" data-tex="R_{\mu\nu}=R^{\alpha}_{\mu\alpha\nu}\quad\text{(Ricci = Riemann 的缩并)}"></div>
+</section>
+
+<section>
+<h3>九、物理中的曲率——广义相对论</h3>
+<p>绝妙定理保证了"弯曲可以不依赖外部空间"；Ricci 曲率则把弯曲与物质联系起来。Einstein 方程：</p>
+<div class="formula display" data-tex="G_{\mu\nu}=R_{\mu\nu}-\frac{1}{2}R\,g_{\mu\nu}=\frac{8\pi G}{c^4}T_{\mu\nu}\quad\text{(Einstein 方程)}"></div>
+<p>左边 = Einstein张量(曲率的特定组合)。右边 = 能量-动量张量(物质分布)。物质告诉时空怎么弯（产生曲率），时空告诉物质怎么走（沿测地线）。真空 Einstein 方程即 Ricci 平坦 R<sub>μν</sub>=0。</p>
+<div class="key-insight">一句话：时空的曲率不是额外装饰，它就是引力的全部。物质分布（右边）决定时空弯曲（左边），而弯曲又反过来规定物质怎么运动——这个循环就是广义相对论。</div>
+</section>
+
+<section>
+<h3>十、关键公式</h3>
+<div class="formula display" data-tex="R(X,Y)Z = \nabla_X\nabla_YZ - \nabla_Y\nabla_XZ - \nabla_{[X,Y]}Z"></div>
+<div class="formula display" data-tex="K = \frac{LN-M^2}{EG-F^2} = \kappa_1\kappa_2,\qquad H = \frac{EN-2FM+GL}{2(EG-F^2)}"></div>
+<div class="formula display" data-tex="K = \frac{R_{\;\,1212}}{EG-F^2}\quad\text{(内蕴，Gauss 公式)}"></div>
+<div class="formula display" data-tex="\int_M K\,dA = 2\pi\chi(M)\quad\text{(Gauss-Bonnet)}"></div>
+<div class="formula display" data-tex="G_{\mu\nu} = R_{\mu\nu} - \tfrac12 R\,g_{\mu\nu} = \frac{8\pi G}{c^4}T_{\mu\nu}\quad\text{(Einstein)}"></div>
+</section>
+
+<section>
+<h3>十一、试试看（带提示）</h3>
+<p><strong>1. 环面的高斯曲率积分为什么是 0？外侧正 K 与内侧负 K 如何抵消？</strong><br>提示：Gauss-Bonnet 说 ∫K dA = 2πχ(环面)，而 χ(环面) = 0。几何上：环面外侧凸（K&gt;0），内侧鞍形（K&lt;0），上下圆线 K=0——加起来正好抵消。注意这是 K 的积分，不是平均曲率 H（环面的 H 并不处处为零）。</p>
+<p><strong>2. 如果二维曲面的总曲率积分 = 4π——它的拓扑是什么（亏格 = ?）</strong><br>提示：∫K dA = 2πχ(M)。χ = 4π/(2π) = 2 ⟹ χ = 2 ⟺ g = 0 ⟹ 球面。反过来，如果 χ = −4，亏格是多少？——g = 2（双环面）。</p>
+<p><strong>3. 一个直纹面（由直线扫出来的面）一定是可展的吗？</strong><br>提示：不一定。直纹面只有当"沿母线移动时切平面不变"才可展。想一想：单叶双曲面 x²+y²−z²=1 是直纹面，它的 K 是正是负？</p>
+</section>
+
+<section><h3>反例辨析——K 的符号、可展与不可展曲面</h3>
+<p><strong>反例 1（三种符号的代表曲面）：</strong></p>
+<ul>
+  <li><strong>圆柱 K = 0：</strong>平面卷成（沿母线等距展开），由绝妙定理 K = 0。主曲率 κ₁ = 0、κ₂ = 1/R，H ≠ 0。它"看似弯曲"却内禀平坦——<strong>可展曲面</strong>的原型。</li>
+  <li><strong>球面 K = 1/R² &gt; 0：</strong>主曲率同号 κ₁ = κ₂ = 1/R，局部凸向同侧，K &gt; 0。不可能无失真正形展开——所有地图投影必然失真（面积或角度）。</li>
+  <li><strong>马鞍面 K &lt; 0：</strong>z = x² − y² 在原点：沿 x 方向主曲率 κ₁ = 2、沿 y 方向 κ₂ = −2（异号）⟹ K = −4 &lt; 0，H = 0（是极小曲面的局部代表）。曲面局部像"薯片"。K 的符号 = 主曲率是否同号。</li>
+</ul>
+<p><strong>反例 2（可展与不可展）：</strong>K = 0 的曲面称为<strong>可展</strong>（可等距展开到平面）：圆柱、圆锥（去顶点）、切线面等——可摊平而不撕裂、不拉伸。反之 K ≠ 0（球面、马鞍面、环面大部分）为<strong>不可展</strong>，不可能无失真正形展开。判定准则：可展 ⟺ 与平面等距 ⟺（由绝妙定理）K = 0。这是地图学"投影必失真"的几何根源。</p>
+<p><strong>反例 3（K = 0 但非平坦整体）：</strong>环面（亏格 1）外侧 K &gt; 0、内侧 K &lt; 0、上下圆线 K = 0。整体 ∫K = 0（Gauss-Bonnet，χ = 0），但 K 不恒为零——与圆柱"处处 K = 0"形成对比。提醒：∫K = 0 只说明平均总曲率为零，不说明处处平坦。</p>
+<p><strong>反例 4（K 内禀 vs H 外在）：</strong>平面与圆柱有相同的 K = 0 却不同的 H（0 与 1/(2R)）。把平面纸条卷成圆柱是等距映射：保持 K 不变、改变 H——最直观地验证"K 内禀 / H 外在"的分野。同理球面 K 正、假想反嵌入（法向反号）时 H 变号而 K 不变。</p>
+</section>
+
+<section><h3>前沿：Ricci流与几何化猜想的后续</h3><p>Perelman用Ricci流证明了几何化猜想。Bamler(2023)给出了Ricci流的弱紧致性理论——即使流退化了,极限仍有意义。仍开放:Ricci流在4维以上的一般奇点结构——手术在4D无法像3D那样分类奇点。</p></section>
+
+<section>
+<h3>工作题——计算 K、H 与 Gauss-Bonnet 应用</h3>
+<p><strong>题 1（显式计算 K、H）：</strong>对旋转面 z = f(u)，参数化 x(u,v) = (u cos v, u sin v, f(u))。求 E, F, G 与 L, M, N，推出</p>
+<div class="formula display" data-tex="K = \frac{f'f''}{u(1+f'^2)^2},\qquad H = \frac{f'' + f'(1+f'^2)/u}{2(1+f'^2)^{3/2}}"></div>
+<p>并验证：抛物面 z = ar² 在原点 K = 4a² &gt; 0；悬链面（x = (u cos v, u sin v, arcosh u)）是极小曲面 H = 0。</p>
+<p><strong>题 2（Gauss-Bonnet 应用）：</strong>设 M 为紧致无边界可定向曲面，且处处 K &gt; 0。证明 M 必同胚于球面，并给出 ∫_M K dA 的具体值。</p>
+<p><strong>题 3（测地三角的角盈）：</strong>球面上取三条大圆劣弧围成的测地三角，顶角 α, β, γ，面积 A。用局部 Gauss-Bonnet 证明 α + β + γ = π + A/R²。再由此推出球面测地三角内角和的上界。</p>
+<p><strong>题 4（K = 0 与可展性）：</strong>证明：若连通曲面 M ⊂ R³ 的高斯曲率恒为零且主曲率不全为零，则 M 可展（等距于平面区域）。提示：K = 0 ⟹ 存在曲率为零的方向（渐近方向/直母线），结合 K = 0 的直纹面必为可展。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1：</strong>x_u = (cos v, sin v, f')，x_v = (−u sin v, u cos v, 0)。E = ⟨x_u,x_u⟩ = 1 + f'²，F = 0，G = u²。x_uu = (0,0,f'')，x_uv = (−sin v, cos v, 0)，x_vv = (−u cos v, −u sin v, 0)。x_u×x_v = (−u f'cos v, −u f'sin v, u)，模 = u√(1+f'²)，n = (−f'cos v, −f'sin v, 1)/√(1+f'²)。于是 L = f''/√(1+f'²)，M = 0，N = u f'/√(1+f'²)。代入公式：K = (LN−M²)/(EG−F²) = [f''/√(1+f'²)·u f'/√(1+f'²)]/[u²(1+f'²)] = f'f''/[u(1+f'²)²] ✓。H = (EN−2FM+GL)/(2(EG−F²)) = [(1+f'²)·u f'/√(1+f'²) + u²f''/√(1+f'²)]/[2u²(1+f'²)] = [f'' + f'(1+f'²)/u]/[2(1+f'²)^{3/2}] ✓。验证 z = ar²（f = ar²，f' = 2ar，f'' = 2a）：K = (2ar·2a)/[r(1+4a²r²)²] = 4a²/(1+4a²r²)² ⟹ 原点 K = 4a² &gt; 0 ✓。悬链面 f = arcosh u：f' = 1/√(u²−1)，f'' = −u/(u²−1)^{3/2}；H 分子 = −u/(u²−1)^{3/2} + [1/√(u²−1)]·(1 + 1/(u²−1))/u = −u/(u²−1)^{3/2} + u/(u²−1)^{3/2} = 0 ⟹ H = 0，悬链面是极小曲面 ✓。</p>
+<p><strong>题 2：</strong>Gauss-Bonnet：2πχ(M) = ∫_M K dA &gt; 0（K &gt; 0，面积为正），故 χ(M) &gt; 0。紧致可定向曲面 χ = 2 − 2g ∈ {2, 0, −2, ...}，χ &gt; 0 ⟹ χ = 2 ⟹ g = 0 ⟹ M ≅ S²。且 ∫_M K dA = 2πχ = 4π。□（注意结论只给拓扑型，不给具体度量。）</p>
+<p><strong>题 3：</strong>对测地三角 T，局部 Gauss-Bonnet：∫_T K dA + ∫_∂T k_g ds + Σ(π − θᵢ) = 2π。边界是测地线 ⟹ k_g = 0，θ₁ = α, θ₂ = β, θ₃ = γ，故 ∫_T K dA + (3π − α − β − γ) = 2π ⟹ α + β + γ = π + ∫_T K dA。球面 K = 1/R² 常数，∫_T K dA = A/R² ⟹ <strong>α + β + γ = π + A/R²</strong>（球面测地三角角盈公式）。上界：球面面积 ≤ 4πR² ⟹ α + β + γ ≤ π + 4π = 5π（三角形可取到接近整球）。</p>
+<p><strong>题 4：</strong>K = 0 且主曲率不全为零：在某点 κ₁ = 0 ≠ κ₂。第二基本形式行列式为零 ⟹ 存在<strong>渐近方向</strong>（该方向法曲率 = 0，即 κ = 0 的方向，称为直母线）。沿直母线，测地曲率与法曲率均为 0 ⟹ 该方向曲线曲率向量为零，是一段直线。让直线沿曲面扫动得到<strong>直纹面</strong>；再由定理"K = 0 的直纹面必为可展"（沿母线的切平面不变，故可展平）⟹ M 可展。□（标准证明见 do Carmo《微分几何》，"直纹面 K = 0 ⟹ 可展"。）</p>
+</details>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>本课的博士级标准教材：</p>
+<p>&rarr; <strong>M. do Carmo, Differential Geometry of Curves and Surfaces</strong></p>
+<p>&rarr; <strong>J. Lee, Introduction to Smooth Manifolds</strong></p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/geodesic.html">测地线</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/geodesic.html"><strong>测地线</strong></a>：测地线偏离方程直接用Riemann曲率描述邻近测地线的分离加速度——曲率是测地线行为的"生成器"。</p>
+<p>&rarr; <a href="/pages/parallel-transport.html"><strong>平行移动</strong></a>：曲率张量定义为沿两个坐标方向平行移动的不可交换量度——R(X,Y)Z=∇_X∇_YZ−∇_Y∇_XZ−∇_{[X,Y]}Z，即联络的"弯度"。</p>
+<p>&rarr; <a href="/pages/fiber-bundle.html"><strong>纤维丛</strong></a>：规范场的曲率F=dA+A∧A是纤维丛上的曲率2-形式——爱因斯坦方程中的Ricci曲率是切丛上曲率的缩并，而规范场的场强是主丛上的曲率。</p>
+<p>&rarr; <a href="/pages/gravitational-lens.html"><strong>引力透镜</strong></a>：光线偏折=时空曲率的直接观测效应——偏折角α=4GM/(c²b)来自Schwarzschild度规的曲率，是广义相对论三大经典检验之一。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/curvature.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>

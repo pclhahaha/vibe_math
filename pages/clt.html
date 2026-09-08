@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="蒙特卡洛掷样本：均值收敛、误差按 1/√n 缩小、直方图逼近钟形" />
+  <meta property="og:title" content="大数定律与中心极限定理 — Vibe Math" />
+  <meta property="og:description" content="蒙特卡洛掷样本：均值收敛、误差按 1/√n 缩小、直方图逼近钟形" />
+  <title>大数定律与中心极限定理 — Vibe Math</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/shared/lesson.css" />
+  <link rel="stylesheet" href="/src/shared/mobile.css" />
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="toc-toggle" id="toc-toggle" title="目录">☰</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
+<nav class="sidebar open">
+  <div class="sidebar-header"><a href="/" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="/learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="/graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="/quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="/" style="color:#58a6ff">首页</a></p></div>
+</nav>
+<button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
+
+<div class="lesson-layout">
+  <div class="sketch-col">
+    <h2>🎰 大数定律与中心极限定理 <span style="font-size:.55em;padding:2px 8px;border-radius:4px;background:#1a3a1a;color:#7ee787;vertical-align:middle">★★</span></h2>
+    <p class="subtitle">蒙特卡洛掷样本：均值收敛、误差按 1/√n 缩小、直方图逼近钟形</p>
+    <span class="cat-tag">Part 2: 核心</span>
+    <div style="margin:6px 0"><button id="doneBtn" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:6px;padding:3px 12px;font-size:.8em;cursor:pointer">标记完成</button><span id="doneStat" style="color:#3fb950;font-size:.75em;margin-left:8px"></span></div><script>(function(){try{var k='vm_done_v1',s=JSON.parse(localStorage.getItem(k)||'{}'),id='clt',b=document.getElementById('doneBtn'),st=document.getElementById('doneStat');function paint(){b.textContent=s[id]?'\u2713 已完成':'标记完成';b.style.borderColor=s[id]?'#3fb950':'#30363d';b.style.color=s[id]?'#3fb950':'#8b949e';st.textContent=Object.keys(s).filter(function(x){return s[x]}).length+'/122 已完成';}b.addEventListener('click',function(){s[id]=!s[id];localStorage.setItem(k,JSON.stringify(s));paint();});paint();}catch(e){}})();</script>
+    <div id="p5canvas"></div>
+    <p class="kb-hint">&larr; &rarr; 切换课程 &middot; B 展开目录 &middot; Esc 关闭</p>
+    
+<div class="lesson-nav" style="display:flex;justify-content:space-between;margin-top:12px;gap:8px">
+  <a href="/pages/probability.html" id="prev-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">&larr; 🎲 概率论基础</a>
+  <a href="/pages/percolation.html" id="next-lesson" style="visibility:visible;background:#161b22;color:#58a6ff;border:1px solid #30363d;padding:6px 16px;border-radius:6px;text-decoration:none;font-size:.85em">🪝 渗流与相变 &rarr;</a>
+</div>
+  </div>
+  <div class="content-col deep">
+<section>
+<h3>〇、直觉入门——掷硬币一百万次：平均会稳定，但误差永远"在"</h3>
+<p>掷一枚公平硬币 n 次，正面比例 p̂_n 会怎样？直觉告诉你两件事，而它们惊人地都对：</p>
+<ul>
+<li><strong>大数定律（LLN）：</strong> p̂_n 越来越接近 1/2——n→∞ 时"收敛"到真实概率。误差 <em>趋于消失</em>（在概率的意义上）。</li>
+<li><strong>但它"消失"得很慢：</strong> 误差的典型尺度是 1/√n。掷 100 次，比例误差 ~1/10；掷 10000 次，误差 ~1/100——想多一位精度，要掷 <strong>100 倍</strong>的硬币。误差从来不"均匀地"消失。</li>
+</ul>
+<p>大数定律说"平均去哪了"，却没说"平均怎么晃"。中心极限定理（CLT）补上后半句：</p>
+<div class="formula display" data-tex="\frac{\bar X_n-\mu}{\sigma/\sqrt n}\xrightarrow{\text{分布}} N(0,1)\qquad(\text{中心极限定理})"></div>
+<p>标准化后的样本均值（减去期望、除以 σ/√n）的分布，随着 n 增大逼近<strong>标准正态钟形曲线</strong>——无论你掷的是硬币、骰子、指数还是任何"方差有限"的分布。<strong>正态分布因此是"所有独立同分布随机和的公共极限形状"</strong>：测量误差是正态的（许多小误差相加）、身高是正态的（基因×环境相乘取对数）、热噪声是正态的（分子碰撞无数）——高斯无处不在，不是因为世界偏爱它，而是因为 CLT 强制它出现。</p>
+<div class="key-insight">洞察：大数定律与中心极限定理是一对互补的兄弟：LLN 说"样本均值 ≈ 期望"（一阶信息，收敛于一个点）；CLT 说"围绕期望的涨落服从钟形，宽度 ∝ 1/√n"（二阶信息，收敛于一条曲线）。统计推断（置信区间、民意调查的 ±3%）、物理中的扩散、数论里的 Erdős–Kac 定理，全是这对兄弟的后代。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别。<p><strong>建议先掌握</strong>：<a href="/pages/probability.html">概率论基础</a>（期望/方差）、<a href="/pages/measure-theory.html">测度论</a>（严格收敛概念）。特征函数用到复指数，<a href="/pages/fourier-transform.html">傅里叶变换</a> 课是它的近亲（特征函数 = 概率的傅里叶变换）。</p></div>
+
+<section>
+<h3>一、一个具体问题——从赌桌到整个统计学：正态分布为什么"正常"</h3>
+<p>1733 年，de Moivre 在研究赌博问题（掷硬币的"长串"偏离）时发现：二项分布的中间形状可以用一条解析曲线逼近——他得到的正是正态曲线，但当时没人觉得它重要。此后两百年的故事是一连串"把条件放宽"的接力：</p>
+<ul>
+<li><strong>Laplace（1810）：</strong> 把 de Moivre 的结果推广到一般伯努利试验（"de Moivre–Laplace 定理"）。</li>
+<li><strong>Gauss（1809）：</strong> 在最小二乘误差论里独立"发现"正态分布——"正态"（normal）之名由此而来（它被当作误差的"正常"分布）。</li>
+<li><strong>Chebyshev（1867）与 Markov：</strong> 用矩方法证明更广情形的极限定理，并留下<strong>Chebyshev 不等式</strong>（"任何分布，偏离期望 k 个标准差以上的概率 ≤ 1/k²"）——大数定律最便宜的证明工具。</li>
+<li><strong>Lyapunov（1901）：</strong> 允许不同分布、用特征函数证明（特征函数方法从此成为概率论主武器）。</li>
+<li><strong>Lindeberg（1922）：</strong> 给出最优的（几乎必要的）条件——Lindeberg 条件。至此，CLT 的"独立（弱依赖）、同分布、方差有限"版本尘埃落定。</li>
+</ul>
+<p>为什么这值得两百年？因为 CLT 不只是赌徒的算术：它解释了<strong>为什么统计学可以工作</strong>。民意调查的 ±3%、药物试验的 p 值、质量控制的控制图，全部建筑在"样本均值的分布 ≈ 正态、宽度 ∝ σ/√n"之上。普林斯顿数学指南把概率论列为现代数学分支（Part IV.21），CLT 正是概率论回赠给全人类的那件礼物。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——两条定理的证明骨架</h3>
+<p><strong>弱大数定律（证明只需三行）。</strong> 设 X₁,…,X_n iid，期望 μ、方差 σ²&lt;∞。由 Markov/Chebyshev 不等式：</p>
+<div class="formula display" data-tex="P\bigl(|\bar X_n-\mu|\ge\varepsilon\bigr)\ \le\ \frac{\operatorname{Var}(\bar X_n)}{\varepsilon^{2}}=\frac{\sigma^{2}}{n\varepsilon^{2}}\xrightarrow{n\to\infty}0"></div>
+<p>——"均值偏离期望超过 ε 的概率趋于 0"。这就是弱收敛。强大数定律（Kolmogorov，1933）更强：P(lim X̄_n = μ)=1（几乎处处），证明需要更多的测度论（三级数定理）。</p>
+<p><strong>CLT 的证明骨架（特征函数法）。</strong> 记 φ(t)=E[e^{itX}] 为 X 的特征函数（就是分布的傅里叶变换！）。和的标准化 Z_n=(S_n−nμ)/(σ√n) 的特征函数是</p>
+<div class="formula display" data-tex="\varphi_{Z_n}(t)=\Bigl[\varphi\Bigl(\frac{t}{\sigma\sqrt n}\Bigr)e^{-it\mu/\sigma\sqrt n}\Bigr]^{n}\xrightarrow{n\to\infty} e^{-t^{2}/2}"></div>
+<p>指数上的原因是：把 φ 在 0 附近泰勒展开 φ(u)=1+iμu−σ²u²/2+o(u²)，代入 u=t/(σ√n) 并取 n 次幂，指数里第一项（均值项）与 e^{−itμ/σ√n} 抵消，剩下 −t²/2。而 e^{−t²/2} 恰是标准正态的特征函数；由 Lévy 连续性定理（特征函数收敛 ⟹ 分布收敛），得 CLT。∎</p>
+<p><strong>直觉：为什么是 e^{−t²/2}？</strong> 和的特征函数是 φ 的 n 次幂——"取对数、乘 n、再取指数"。任何"方差有限"的 φ 在零点附近都长得像 1−σ²t²/2（二阶信息统一了所有分布），n 次幂后只剩下这个二阶项。<strong>正态是"无穷卷积"下的唯一公共吸引子</strong>——与 <a href="/pages/fourier-transform.html">傅里叶变换</a> 课里"盒函数反复卷积趋近高斯"是同一个现象（频域里就是反复乘 sinc 的主瓣）。</p>
+</section>
+
+<section>
+<h3>三、例题 1——硬币的算术：Chebyshev 上界 vs CLT 真值（一步步算完）</h3>
+<p><strong>题目。</strong> 掷 100 次公平硬币，正面比例偏离 1/2 超过 0.1（即多于 60 或少于 40 个正面）的概率多大？分别用 Chebyshev 与 CLT 估计。</p>
+<p><strong>第一步：参数。</strong> X_i ∈{0,1}，μ=1/2，σ²=1/4。比例 p̂_n=S_n/n，Var(p̂_n)=σ²/n=1/(4n)。</p>
+<p><strong>第二步：Chebyshev（只用到方差，任何分布成立）。</strong></p>
+<div class="formula display" data-tex="P(|\hat p_n-\tfrac12|\ge 0.1)\le\frac{1/(4n)}{0.1^2}=\frac{25}{n}=\frac{25}{100}=0.25"></div>
+<p>——只保证 ≤ 25%，非常保守。</p>
+<p><strong>第三步：CLT（更精确）。</strong> p̂_n 的标准差 = √(1/(4·100))=0.05。偏离 0.1 = 2 个标准差：</p>
+<div class="formula display" data-tex="P(|Z|\ge 2)\approx 2(1-\Phi(2))=2(1-0.9772)=0.0456"></div>
+<p><strong>第四步：对比与体会。</strong> 真值约 4.6%，Chebyshev 只给出 ≤25%——<strong>Chebyshev 不需要任何分布假设，所以它给的是"最坏情形"的粗界；CLT 用上了正态假设，换来 5 倍精度</strong>。工程里粗界用来"保证安全"，CLT 用来"估计真值"，各司其职。∎</p>
+<p><strong>第五步：n 增大时。</strong> 固定 ε=0.1：Chebyshev 上界 25/n，CLT 近似 2(1−Φ(0.1·2√n))——后者指数级快。掷 10000 次时 CLT 说偏离超 0.1 的概率 ~2(1−Φ(20))≈0（10 个标准差事件）；这就是"大数定律"在数值上的实感。</p>
+</section>
+
+<section>
+<h3>四、例题 2——骰子六千次与民意调查的 ±3%（一步步算完）</h3>
+<p><strong>题目。</strong> (a) 掷一颗骰子 6000 次，点数总和 S 的"68-95 区间"是什么？(b) 民意调查要 ±3% 的误差（95% 置信），需要多大样本？</p>
+<p><strong>第一步：(a) 的参数。</strong> 单次点数 X：μ=3.5，σ²=(1/6)Σ_{k=1}^6(k−3.5)² = 35/12 ≈ 2.9167。</p>
+<p><strong>第二步：(a) 计算。</strong> E[S]=6000·3.5=21000；SD(S)=√(6000·35/12)=√17500≈132.3。由 CLT：</p>
+<div class="formula display" data-tex="P(21000-132< S < 21000+132)\approx 0.68;\qquad \pm 2\times 132\approx \pm 265\ \Rightarrow\ 95\%"></div>
+<p>——6000 次骰子的和几乎必在 21000±400 之内（±3σ≈397）。∎</p>
+<p><strong>第三步：(b) 民意调查。</strong> 支持率 p 未知，最坏 σ²=p(1−p)≤1/4。要 ±0.03（95% ⟹ 1.96σ/√n ≤ 0.03）：</p>
+<div class="formula display" data-tex="n\ge \Bigl(\frac{1.96\cdot 0.5}{0.03}\Bigr)^{2}\approx 1067\qquad(\text{所以民调样本 ~1000 人就够 ±3\%})"></div>
+<p><strong>第四步：读出 1/√n 定律。</strong> 精度翻 10 倍（±3% → ±0.3%）需要样本 ×100（~10 万人）。"样本量决定精度、且以平方律换精度"——这是 CLT 给所有实证科学定的规矩。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——定理清单</h3>
+<ul>
+<li><strong>弱大数定律：</strong> X_i iid、E|X|&lt;∞ ⟹ X̄_n → μ 依概率。</li>
+<li><strong>强大数定律（Kolmogorov）：</strong> 同条件下 X̄_n → μ 几乎处处。</li>
+<li><strong>Lindeberg–Lévy CLT：</strong> X_i iid、E X=μ、Var=σ²∈(0,∞) ⟹ (S_n−nμ)/(σ√n) ⇝ N(0,1)。</li>
+<li><strong>推广：</strong> Lyapunov/非 iid 版（三阶矩条件）、Lindeberg–Feller 版（最优）；三角阵列的统一框架。</li>
+<li><strong>收敛速度（Berry–Esseen 1941/42）：</strong> 若 E|X|³&lt;∞，则 sup_x |F_n(x)−Φ(x)| ≤ C·ρ/(σ³√n)（ρ=E|X−μ|³）。常数 C 的最佳值至今只知在 (0.4097, 0.4748] 之间——<strong>一个"已解决 80 年"的问题仍有敞开的常数</strong>。</li>
+<li><strong>大偏差（Cramér 1938）：</strong> 均值偏离期望"很远"（非 √n 尺度）的概率以指数速率衰减：P(X̄_n ≥ μ+a) ≈ e^{−nI(a)}，I 是速率函数（Cramér 定理）——CLT 管钟形中心，大偏差管尾巴。</li>
+<li><strong>稳定分布与吸引域（Lévy 1920s）：</strong> 正态只是"稳定分布"家族的一员（α=2）；柯西（α=1）等重尾分布的标准化和收敛到别的稳定律——CLT 的完整版图是"无穷可分分布"理论。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="P(|\bar X_n-\mu|\ge\varepsilon)\le\frac{\sigma^2}{n\varepsilon^2}\quad(\text{Chebyshev})\qquad \bar X_n\to\mu\ (依概率/几乎处处)"></div>
+<div class="formula display" data-tex="\frac{S_n-n\mu}{\sigma\sqrt n}\rightsquigarrow N(0,1);\qquad \operatorname{SD}(\bar X_n)=\frac{\sigma}{\sqrt n}"></div>
+<div class="formula display" data-tex="\varphi(t)=E[e^{itX}],\quad \varphi_{Z_n}(t)\to e^{-t^{2}/2};\qquad \int e^{-x^2/2}dx/\sqrt{2\pi}=1"></div>
+<div class="formula display" data-tex="\sup_x|F_n(x)-\Phi(x)|\le \frac{C\rho}{\sigma^3\sqrt n}\quad(\text{Berry–Esseen})"></div>
+</section>
+
+<section>
+<h3>七、延伸——钟形曲线的子子孙孙</h3>
+<ul>
+<li><strong>扩散与布朗运动。</strong> 随机游走的位置 = 独立增量之和；把 CLT 的"时间标度"一起做极限（n 与 √n 同步放大），得到布朗运动（Donsker 不变原理 1951）——CLT 从"分布收敛"升级为"过程收敛"。→ <a href="/pages/brownian-motion.html">布朗运动</a> 课。</li>
+<li><strong>数论里的 CLT：Erdős–Kac（1940）。</strong> 取随机整数 n ≤ N，设 ω(n)=素因子个数（带重数）。Erdős–Kac 定理：ω(n) 标准化后收敛到正态！——素数的"随机性"用 CLT 表达。→ <a href="/pages/sieve.html">素数筛</a> 课。</li>
+<li><strong>随机矩阵。</strong> 大随机矩阵特征值的分布收敛到半圆律——"矩阵的 CLT"（Wigner 1958）；自由概率论（Voiculescu）把它做成"非交换 CLT"，连接算子代数与量子信息。→ <a href="/pages/operator-algebras.html">算子代数</a> 课。</li>
+<li><strong>统计推断。</strong> t 检验、置信区间、卡方分布全从"样本均值的正态性"派生；中心极限定理是频率学派统计学的第一块地基（民意调查例子的严格化）。</li>
+<li><strong>金融与重尾。</strong> 资产收益的"肥尾"提醒我们：真实世界的"和的极限"未必是正态——大偏差、稳定分布、极值理论是金融数学的日常工具。CLT 的边界本身就是现代概率论最活跃的地带。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——五个"看起来当然"的错误</h3>
+<p><strong>陷阱 1："大数定律说误差最终会消失"？</strong> 误差以 1/√n 缩小，<strong>永远不会等于 0</strong>；"收敛"是概率意义上的：对任意固定 ε，偏离超 ε 的概率趋于 0——但每一次具体实验的误差仍是随机量。想消除误差需要无穷样本，现实只能"控制误差"（用 √n 换精度）。</p>
+<p><strong>陷阱 2："CLT 说 n 大时样本本身服从正态"？</strong> 错。CLT 说的是<strong>标准化和</strong>的分布逼近正态——单个样本 X_i 的分布永远是原来的（硬币永远是 0/1 两点）。正态性属于"和"或"均值"的统计量，不属于原始数据。</p>
+<p><strong>陷阱 3："任何分布都能用 CLT"？</strong> 需要方差有限！标准柯西分布（密度 1/(π(1+x²))）没有期望与方差：样本均值 X̄_n 的特征函数是 e^{−n|t|} 的相应标准化……实际上柯西均值仍是柯西——<strong>标准化永远不会变成正态</strong>。重尾（α&lt;2 稳定）分布是 CLT 的禁区（画布上选柯西预设即可亲见）。</p>
+<p><strong>陷阱 4："独立性只是技术细节"？</strong> 完全依赖的反例：取 X₁=X₂=…=X（同一个随机变量重复 n 次），则 X̄_n=X 根本不收敛到常数、标准化后也非正态。弱依赖（如马尔可夫链、混合序列）需要额外条件；强依赖是 CLT 的另一个禁区。</p>
+<p><strong>陷阱 5："收敛速度与分布无关"？</strong> Berry–Esseen 保证 O(1/√n) 的一致速度，但常数依赖三阶矩 ρ：分布越偏、尾巴越重，逼近越慢。对强偏斜分布，n=30 远不够"正态"——教科书里的"n≥30 就正态"只是粗糙经验，不是定理。</p>
+</section>
+
+<section>
+<h3>九、当前状态——CLT 家族的前沿</h3>
+<ol>
+<li><strong>Berry–Esseen 常数。</strong> 最优常数 C 仍未确定（已知 0.4097 &lt; C ≤ 0.4748）——证明界的改进仍是活跃研究（近年有大量"第二代"工作）。</li>
+<li><strong>依赖数据的 CLT。</strong> 马尔可夫链、图上的函数、平稳序列的中心极限——遍历论与概率论的交叉（如 Stein 方法近年的系统化推广）。</li>
+<li><strong>高维与函数空间。</strong> 高维 CLT（Bhattacharya–Holzmann 等）、Banach 空间值随机元的 CLT、随机过程的 CLT（Donsker 及其在现代统计中的版本）——"维度"是 CLT 的下一个战场。</li>
+<li><strong>自由概率。</strong> 非交换概率中的"自由 CLT"收敛到半圆律，是 Voiculescu 自由概率论的核心，与随机矩阵、量子信息深度绑定。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>de Moivre (1733)</strong>：二项分布的正态逼近——CLT 的第一块砖（硬币问题）。</li>
+<li><strong>Laplace (1810)</strong>：de Moivre–Laplace 定理，一般伯努利情形的 CLT。</li>
+<li><strong>Chebyshev (1867)</strong>：矩方法与 Chebyshev 不等式——大数定律的通用证明工具。</li>
+<li><strong>Lyapunov (1901)</strong>：特征函数方法的 CLT（允许不同分布）。</li>
+<li><strong>Lindeberg (1922)</strong>：Lindeberg 条件——CLT 的最优充分（且近乎必要）条件。</li>
+<li><strong>Kolmogorov (1933)</strong>：强大数定律与概率测度论公理——概率论"现代化"的宣言。</li>
+<li><strong>Berry (1941) / Esseen (1942)</strong>：Berry–Esseen 定理——收敛速度的 O(1/√n) 一致界。</li>
+<li><strong>Erdős–Kac (1940)</strong>：素数因子个数的正态性——数论与概率的历史性握手。</li>
+<li><strong>Donsker (1951)</strong>：不变原理——从"分布收敛"到"过程收敛"（布朗运动）。</li>
+<li><strong>Voiculescu (1991)</strong>：自由概率论——非交换的 CLT（半圆律）。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——不等式、特征函数与反例</h3>
+<p><strong>题 1（特征函数一步）。</strong> 计算均匀分布 U[−1/2,1/2] 的特征函数，并写出其泰勒展开的前两项，验证"二阶项含 −σ²t²/2"。<strong>提示：</strong>φ(t)=∫_{−1/2}^{1/2}e^{itx}dx = sin(t/2)/(t/2)；展开 sin u/u = 1−u²/6+…，u=t/2 ⟹ 1−t²/24 = 1−σ²t²/2（σ²=1/12 ✓）。</p>
+<p><strong>题 2（Berry–Esseen 的工程用法）。</strong> 一个偏斜分布 σ=1、ρ=2。要 sup 误差 ≤0.01，n 大约要多大（取 C=0.5）？<strong>提示：</strong>Cρ/(σ³√n)≤0.01 ⟹ √n ≥ 0.5·2/0.01=100 ⟹ n ≥ 10⁴。</p>
+<p><strong>题 3（柯西反例验证）。</strong> 证明标准柯西（特征函数 e^{−|t|}）的样本均值 X̄_n 的特征函数仍是 e^{−|t|}，从而分布不随 n 变窄。<strong>提示：</strong>X̄_n 的特征函数 = [φ(t/n)]ⁿ = [e^{−|t|/n}]ⁿ = e^{−|t|}——稳定分布 α=1 的自相似性。</p>
+<p><strong>题 4（Erdős–Kac 直觉）。</strong> 说明为什么"取随机数、数它的素因子个数"能牵涉到 CLT。<strong>提示：</strong>用随机变量指示"p 整除 n"近似独立（Mertens 型估计），素因子个数 ≈ 独立伯努利之和 ⟹ 正态（ln ln N 尺度）；标准化的 ω(n) 收敛 N(0,1)。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：见提示：φ(t)=sin(t/2)/(t/2)，展开验证二阶项 −t²/24。∎</p>
+<p><strong>题 2</strong>：n ≥ 10⁴（若 C=0.5）。收敛速度 O(1/√n) 意味着"高精度要天文样本"。∎</p>
+<p><strong>题 3</strong>：见提示：均值仍是柯西（尺度不变），标准化后也非正态。∎</p>
+<p><strong>题 4</strong>：ω(n) 的方差 ~ ln ln N 发散但慢；Erdős–Kac：(ω(n)−ln ln N)/√(ln ln N) ⇝ N(0,1)。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（画布逼近）。</strong> 选"均匀"分布，把 n 从 1 滑到 256：直方图从"平顶"变成钟形，同时右上角经验方差 → 1（标准化正确）。注意 n=1 时直方图就是原分布本身——CLT 的"n 越大越正态"是渐进，不是瞬间。</p>
+<p><strong>试试看 2（1/√n 律）。</strong> 观察"经验均值 ± 区间"：n=100 时均值分布的宽度 ~σ/10，n=10000 时 ~σ/100。在画布上用"多次试验的平均"做几次，亲手体会误差按 1/√n 而非 1/n 收缩——想省一半误差，样本要 ×4。</p>
+<p><strong>试试看 3（柯西反例）。</strong> 切到"柯西"预设：无论 n 多大，直方图始终是同一个尖峰胖尾形状，标准化的"均值"根本不收敛——右上角会提示"CLT 前提失效（方差无穷）"。再切回指数（偏斜）：小 n 时明显不对称，n 大了才像钟形——体会收敛速度依赖偏度。</p>
+<p><strong>试试看 4（硬币 vs 正态）。</strong> 选"伯努利（硬币）"预设，把 n 滑到很大：直方图的柱子仍落在 0/1 的两点——但<strong>均值的</strong>直方图是钟形。这就是陷阱 2 的直观版：正态属于均值，不属于硬币。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>R. Durrett, Probability: Theory and Examples</strong>（研究生标准教材，LLN/CLT 的现代证明）</p>
+<p>&rarr; <strong>W. Feller, An Introduction to Probability Theory and Its Applications</strong>（卷 1、2 的经典，特征函数与稳定分布的深度）</p>
+<p>&rarr; <strong>S. Ross, A First Course in Probability</strong>（本科生入口）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part IV.21（概率论）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/probability.html">概率论基础</a>、<a href="/pages/measure-theory.html">测度论</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/probability.html">🎲 概率论基础</a>：期望/方差/独立，本课的全部原料。</p>
+<p>&rarr; <a href="/pages/brownian-motion.html">🏃 布朗运动</a>：Donsker 不变原理把 CLT 升级为过程极限。</p>
+<p>&rarr; <a href="/pages/fourier-transform.html">🎚️ 傅里叶变换与卷积</a>：特征函数 = 概率的傅里叶变换；反复卷积 → 高斯。</p>
+<p>&rarr; <a href="/pages/measure-theory.html">📏 测度论</a>：几乎处处收敛、L² 理论的严格地基。</p>
+<p>&rarr; <a href="/pages/sieve.html">🕸️ 素数筛</a>：Erdős–Kac：素数因子个数也是正态的。</p>
+<p>&rarr; <a href="/pages/ising-model.html">🧲 Ising 模型</a>：统计力学里的涨落与中心极限的物理版。</p>
+</section>
+  </div>
+</div>
+<button class="back-top" id="back-top" title="回到顶部">&uarr;</button>
+<script type="module" src="/src/sketches/clt.js"></script>
+<script type="module" src="/src/shared/lesson-init.js"></script>
+</body>
+</html>
