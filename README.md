@@ -110,7 +110,7 @@ npm run build        # 生产构建 → dist/
 ```
 vibe_math/
 ├── index.html / learn.html / quals.html / graph.html   # 主页 · 学习路径 · 资格考试 · 知识图谱
-├── curriculum.json          # 课程元数据（90 门）
+├── curriculum.json          # 课程元数据（122 门）
 ├── content/                 # 课程内容（博士级：证明+反例+工作题+阅读指引）
 ├── src/
 │   ├── sketches/            # 90 个 p5.js 交互画布
