@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-08T23:59
+生成时间：2026-09-09T00:04
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 46 |
-| 微缺(13-15) | 69 |
+| 完整(16) | 49 |
+| 微缺(13-15) | 66 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -30,7 +30,6 @@
 | poincare-conjecture | 13/16 | 关键论文 |
 | fractal | 14/16 | 关键论文 |
 | functional-analysis | 14/16 | 关键论文 |
-| fundamental-group | 14/16 | 关键论文 |
 | qubit-gates | 14/16 | 关键论文 |
 | soul-conjecture | 14/16 | 关键论文 |
 | algebraic-K-theory | 15/16 | 关键论文 |
@@ -50,9 +49,8 @@
 | eigenvectors | 15/16 | 关键论文 |
 | electromagnetism | 15/16 | — |
 | entanglement | 15/16 | 关键论文 |
-| epsilon-delta | 15/16 | 关键论文 |
 | fiber-bundle | 15/16 | 关键论文 |
-| fourier-series | 15/16 | 关键论文 |
+| fundamental-group | 15/16 | — |
 | galois-theory | 15/16 | 关键论文 |
 | geodesic | 15/16 | 关键论文 |
 | geometric-group-theory | 15/16 | 关键论文 |
@@ -61,7 +59,6 @@
 | gravitational-lens | 15/16 | 关键论文 |
 | harmonic-oscillator | 15/16 | 关键论文 |
 | higher-category-theory | 15/16 | 关键论文 |
-| homology | 15/16 | 关键论文 |
 | hydrogen-atom | 15/16 | 关键论文 |
 | ising-model | 15/16 | 关键论文 |
 | kalman-filter | 15/16 | 关键论文 |
@@ -108,14 +105,17 @@
 | differential-forms | 16/16 | — |
 | diophantine-approximation | 16/16 | — |
 | elliptic-curves | 16/16 | — |
+| epsilon-delta | 16/16 | — |
 | ergodic-theory | 16/16 | — |
 | feynman-diagram | 16/16 | — |
 | forcing-ch | 16/16 | — |
+| fourier-series | 16/16 | — |
 | fourier-transform | 16/16 | — |
 | geometric-measure-theory | 16/16 | — |
 | graph-theory | 16/16 | — |
 | higgs-mechanism | 16/16 | — |
 | high-dim-geometry | 16/16 | — |
+| homology | 16/16 | — |
 | hyperbolic-geometry | 16/16 | — |
 | kakeya | 16/16 | — |
 | laplace-eigenvalue | 16/16 | — |
