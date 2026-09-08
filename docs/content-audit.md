@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:13
+生成时间：2026-09-09T00:15
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 61 |
-| 微缺(13-15) | 54 |
+| 完整(16) | 64 |
+| 微缺(13-15) | 51 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -25,20 +25,18 @@
 | group-action | 12/16 | — |
 | lorentz-transform | 12/16 | 关键论文 |
 | brownian-motion | 13/16 | 关键论文 |
-| entropy | 13/16 | 关键论文 |
-| godel | 13/16 | 关键论文 |
 | poincare-conjecture | 13/16 | 关键论文 |
+| entropy | 14/16 | — |
 | fractal | 14/16 | 关键论文 |
 | functional-analysis | 14/16 | 关键论文 |
+| godel | 14/16 | — |
 | qubit-gates | 14/16 | 关键论文 |
 | algebraic-K-theory | 15/16 | 关键论文 |
 | band-structure | 15/16 | 关键论文 |
 | category-theory-adjoint | 15/16 | 关键论文 |
 | classical-mechanics | 15/16 | — |
 | convex-geometry | 15/16 | 关键论文 |
-| determinant | 15/16 | 关键论文 |
 | differential-topology-morse | 15/16 | 关键论文 |
-| eigenvectors | 15/16 | 关键论文 |
 | electromagnetism | 15/16 | — |
 | entanglement | 15/16 | 关键论文 |
 | fiber-bundle | 15/16 | 关键论文 |
@@ -46,7 +44,6 @@
 | galois-theory | 15/16 | 关键论文 |
 | geodesic | 15/16 | 关键论文 |
 | goldbach | 15/16 | 关键论文 |
-| gradient | 15/16 | 关键论文 |
 | gravitational-lens | 15/16 | 关键论文 |
 | harmonic-oscillator | 15/16 | 关键论文 |
 | higher-category-theory | 15/16 | 关键论文 |
@@ -97,8 +94,10 @@
 | cryptography | 16/16 | — |
 | curvature | 16/16 | — |
 | derivative | 16/16 | — |
+| determinant | 16/16 | — |
 | differential-forms | 16/16 | — |
 | diophantine-approximation | 16/16 | — |
+| eigenvectors | 16/16 | — |
 | elliptic-curves | 16/16 | — |
 | epsilon-delta | 16/16 | — |
 | ergodic-theory | 16/16 | — |
@@ -108,6 +107,7 @@
 | fourier-transform | 16/16 | — |
 | geometric-group-theory | 16/16 | — |
 | geometric-measure-theory | 16/16 | — |
+| gradient | 16/16 | — |
 | graph-theory | 16/16 | — |
 | higgs-mechanism | 16/16 | — |
 | high-dim-geometry | 16/16 | — |
