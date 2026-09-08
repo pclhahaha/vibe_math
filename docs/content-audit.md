@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:16
+生成时间：2026-09-09T00:18
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 68 |
-| 微缺(13-15) | 47 |
+| 完整(16) | 72 |
+| 微缺(13-15) | 43 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -25,10 +25,10 @@
 | group-action | 12/16 | — |
 | lorentz-transform | 12/16 | 关键论文 |
 | brownian-motion | 13/16 | 关键论文 |
-| poincare-conjecture | 13/16 | 关键论文 |
 | entropy | 14/16 | — |
 | functional-analysis | 14/16 | 关键论文 |
 | godel | 14/16 | — |
+| poincare-conjecture | 14/16 | — |
 | qubit-gates | 14/16 | 关键论文 |
 | algebraic-K-theory | 15/16 | 关键论文 |
 | band-structure | 15/16 | 关键论文 |
@@ -55,16 +55,12 @@
 | nuclear-physics | 15/16 | 关键论文 |
 | numerical-methods | 15/16 | 教科书与进一步阅读 |
 | operator-algebras | 15/16 | 关键论文 |
-| optics | 15/16 | 关键论文 |
 | optimal-transport | 15/16 | 关键论文 |
-| parallel-transport | 15/16 | 关键论文 |
 | real-analysis | 15/16 | 关键论文 |
 | riemann-integral | 15/16 | 关键论文 |
-| riemann-surface | 15/16 | 关键论文 |
 | sieve | 15/16 | 关键论文 |
 | soul-conjecture | 15/16 | — |
 | spectral-theorem | 15/16 | 关键论文 |
-| standard-model | 15/16 | 关键论文 |
 | svd | 15/16 | 关键论文 |
 | turing-machine | 15/16 | 关键论文 |
 | twin-prime | 15/16 | 关键论文 |
@@ -121,18 +117,22 @@
 | martingales | 16/16 | — |
 | model-theory | 16/16 | — |
 | modular-forms | 16/16 | — |
+| optics | 16/16 | — |
 | p-adic-numbers | 16/16 | — |
 | p-vs-np | 16/16 | — |
+| parallel-transport | 16/16 | — |
 | pde | 16/16 | — |
 | percolation | 16/16 | — |
 | probability | 16/16 | — |
 | proof-theory | 16/16 | — |
 | random-matrix | 16/16 | — |
 | representation-theory | 16/16 | — |
+| riemann-surface | 16/16 | — |
 | schemes | 16/16 | — |
 | several-complex-variables | 16/16 | — |
 | soliton | 16/16 | — |
 | spectral-sequences | 16/16 | — |
+| standard-model | 16/16 | — |
 | surface-topology | 16/16 | — |
 | symplectic-geometry | 16/16 | — |
 | thermodynamics | 16/16 | — |
