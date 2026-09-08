@@ -21,7 +21,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 
 /* Layout */
 .lesson-layout{display:flex;gap:24px;max-width:100%;margin:0 auto;padding:20px 24px 20px 48px;transition:margin-left .25s cubic-bezier(.4,0,.2,1)}
-.sidebar.open~.lesson-layout{margin-left:270px}
+.sidebar~.lesson-layout{margin-left:270px}
 .sketch-col{flex:0 0 auto;min-width:440px;max-width:560px;position:sticky;top:20px;align-self:flex-start}
 .content-col{flex:1 1 0px;overflow-y:auto;max-height:calc(100vh - 60px);padding-right:10px;min-width:380px}
 .content-col.deep{flex:1 1 0px;min-width:400px}
@@ -103,3 +103,10 @@ h2{font-size:1.5em;color:#58a6ff;margin-bottom:4px;font-weight:700;letter-spacin
 
 /* ===== Mobile tap (P: hardening) ===== */
 html,body{touch-action:manipulation}
+
+/* ===== Desktop: sidebar always visible (default closed on mobile) ===== */
+@media (min-width:769px){
+  .sidebar{transform:none;width:270px}
+  .sidebar-overlay{display:none!important}
+  .sidebar-toggle{display:none}
+}

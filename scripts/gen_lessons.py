@@ -14,7 +14,7 @@ with open('curriculum.json', 'r', encoding='utf-8') as f:
 lesson_ids = [l['id'] for l in lessons]
 
 sidebar_html = f'''<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open')"></div>
-<nav class="sidebar open">
+<nav class="sidebar">
   <div class="sidebar-header"><a href="{BASE}" style="text-decoration:none;color:inherit"><h2>&#127744; Vibe Math</h2></a><p><a href="{BASE}learn.html" style="color:#58a6ff">&#127760; 路径</a> · <a href="{BASE}graph.html" style="color:#58a6ff">&#129504; 图谱</a> · <a href="{BASE}quals.html" style="color:#58a6ff">&#127961; 考试</a> · <a href="{BASE}" style="color:#58a6ff">首页</a></p></div>
 </nav>
 <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">&#9776;</button>
