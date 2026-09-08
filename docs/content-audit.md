@@ -1,0 +1,145 @@
+# Vibe Math 内容体检报告（自动生成 · 勿手改）
+
+生成时间：2026-09-08T23:52
+
+## 概览
+
+| 档位 | 课程数 |
+|---|--:|
+| 完整(16) | 43 |
+| 微缺(13-15) | 72 |
+| 中缺(8-12) | 5 |
+| 骨架缺失(<8) | 2 |
+
+总课程：122
+
+## 逐课缺口
+
+| 课程 | 骨架节数/16 | 硬缺口(前置/关联/关键论文/教材/工作题/〇/一) |
+|---|---|---|
+| set-theory | 4/16 | 〇、一、、关键论文、前置知识 |
+| abstract-algebra | 6/16 | 〇、关键论文 |
+| group-action | 11/16 | 关键论文 |
+| hilbert-problems | 11/16 | 关键论文 |
+| light-cone | 11/16 | 关键论文 |
+| millennium-problems | 11/16 | — |
+| lorentz-transform | 12/16 | 关键论文 |
+| brownian-motion | 13/16 | 关键论文 |
+| entropy | 13/16 | 关键论文 |
+| godel | 13/16 | 关键论文 |
+| poincare-conjecture | 13/16 | 关键论文 |
+| fractal | 14/16 | 关键论文 |
+| functional-analysis | 14/16 | 关键论文 |
+| fundamental-group | 14/16 | 关键论文 |
+| qubit-gates | 14/16 | 关键论文 |
+| soul-conjecture | 14/16 | 关键论文 |
+| algebraic-K-theory | 15/16 | 关键论文 |
+| algebraic-topology-homology | 15/16 | 关键论文 |
+| band-structure | 15/16 | 关键论文 |
+| bloch-sphere | 15/16 | 关键论文 |
+| boltzmann | 15/16 | 关键论文 |
+| carnot-cycle | 15/16 | 关键论文 |
+| category-theory-adjoint | 15/16 | 关键论文 |
+| classical-mechanics | 15/16 | — |
+| cmb | 15/16 | 关键论文 |
+| combinatorics | 15/16 | 关键论文 |
+| commutative-algebra | 15/16 | 关键论文 |
+| complex-plane | 15/16 | 关键论文 |
+| contour-integral | 15/16 | 关键论文 |
+| convex-geometry | 15/16 | 关键论文 |
+| curvature | 15/16 | 关键论文 |
+| determinant | 15/16 | 关键论文 |
+| differential-topology-morse | 15/16 | 关键论文 |
+| eigenvectors | 15/16 | 关键论文 |
+| electromagnetism | 15/16 | — |
+| entanglement | 15/16 | 关键论文 |
+| epsilon-delta | 15/16 | 关键论文 |
+| fiber-bundle | 15/16 | 关键论文 |
+| fourier-series | 15/16 | 关键论文 |
+| galois-theory | 15/16 | 关键论文 |
+| geodesic | 15/16 | 关键论文 |
+| geometric-group-theory | 15/16 | 关键论文 |
+| goldbach | 15/16 | 关键论文 |
+| gradient | 15/16 | 关键论文 |
+| gravitational-lens | 15/16 | 关键论文 |
+| harmonic-oscillator | 15/16 | 关键论文 |
+| higher-category-theory | 15/16 | 关键论文 |
+| homology | 15/16 | 关键论文 |
+| hydrogen-atom | 15/16 | 关键论文 |
+| ising-model | 15/16 | 关键论文 |
+| kalman-filter | 15/16 | 关键论文 |
+| knot-invariant | 15/16 | 关键论文 |
+| lie-algebra | 15/16 | 关键论文 |
+| linear-transform | 15/16 | 关键论文 |
+| lorenz-attractor | 15/16 | 关键论文 |
+| measure-theory | 15/16 | 关键论文 |
+| navier-stokes | 15/16 | 关键论文 |
+| noncommutative-geometry | 15/16 | 关键论文 |
+| nuclear-physics | 15/16 | 关键论文 |
+| numerical-methods | 15/16 | 教科书与进一步阅读 |
+| operator-algebras | 15/16 | 关键论文 |
+| optics | 15/16 | 关键论文 |
+| optimal-transport | 15/16 | 关键论文 |
+| parallel-transport | 15/16 | 关键论文 |
+| proof-theory | 15/16 | 关键论文 |
+| real-analysis | 15/16 | 关键论文 |
+| riemann-integral | 15/16 | 关键论文 |
+| riemann-surface | 15/16 | 关键论文 |
+| several-complex-variables | 15/16 | 关键论文 |
+| sieve | 15/16 | 关键论文 |
+| spectral-theorem | 15/16 | 关键论文 |
+| standard-model | 15/16 | 关键论文 |
+| svd | 15/16 | 关键论文 |
+| turing-machine | 15/16 | 关键论文 |
+| twin-prime | 15/16 | 关键论文 |
+| uncertainty | 15/16 | 关键论文 |
+| universal-algebra | 15/16 | 关键论文 |
+| variational-calculus | 15/16 | 关键论文 |
+| y combinator | 15/16 | 关键论文 |
+| additive-combinatorics | 16/16 | — |
+| algebraic-geometry | 16/16 | — |
+| algebraic-number-theory | 16/16 | — |
+| bifurcation | 16/16 | — |
+| clt | 16/16 | — |
+| complex-dynamics | 16/16 | — |
+| convex-optimization | 16/16 | — |
+| cryptography | 16/16 | — |
+| derivative | 16/16 | — |
+| differential-forms | 16/16 | — |
+| diophantine-approximation | 16/16 | — |
+| elliptic-curves | 16/16 | — |
+| ergodic-theory | 16/16 | — |
+| feynman-diagram | 16/16 | — |
+| forcing-ch | 16/16 | — |
+| fourier-transform | 16/16 | — |
+| geometric-measure-theory | 16/16 | — |
+| graph-theory | 16/16 | — |
+| higgs-mechanism | 16/16 | — |
+| high-dim-geometry | 16/16 | — |
+| hyperbolic-geometry | 16/16 | — |
+| kakeya | 16/16 | — |
+| laplace-eigenvalue | 16/16 | — |
+| lattice-crypto | 16/16 | — |
+| lie-group-representations | 16/16 | — |
+| martingales | 16/16 | — |
+| model-theory | 16/16 | — |
+| modular-forms | 16/16 | — |
+| p-adic-numbers | 16/16 | — |
+| p-vs-np | 16/16 | — |
+| pde | 16/16 | — |
+| percolation | 16/16 | — |
+| probability | 16/16 | — |
+| random-matrix | 16/16 | — |
+| representation-theory | 16/16 | — |
+| schemes | 16/16 | — |
+| soliton | 16/16 | — |
+| spectral-sequences | 16/16 | — |
+| surface-topology | 16/16 | — |
+| symplectic-geometry | 16/16 | — |
+| thermodynamics | 16/16 | — |
+| yang-mills-mass-gap | 16/16 | — |
+| zeta | 16/16 | — |
+
+> 说明：
+> - “硬缺口”=建议优先补齐；结构类（〇 或 一、… 编号标题）可在正文已含同义标题时忽略。
+> - 生成命令：`python scripts/audit_sections.py`
