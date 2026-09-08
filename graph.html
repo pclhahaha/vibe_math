@@ -377,6 +377,12 @@ const sketch = (p) => {
     scale = Math.max(0.3, Math.min(3, scale * factor));
     return false;
   };
+  // touch support (graph is a p5 instance without the shared sketch shim)
+  let __tx=-1e5,__ty=-1e5,__t0=0;
+  const __syncT = () => { if (p.touches && p.touches[0]) { __tx=p.touches[0].x; __ty=p.touches[0].y; } p.mouseX=__tx; p.mouseY=__ty; };
+  p.touchStarted = (e) => { p.__touch = true; __syncT(); p.mousePressed(); return false; };
+  p.touchMoved = (e) => { __syncT(); if (p.touches.length===1) { p.mouseDragged(); } else { return true; } return false; };
+  p.touchEnded = () => { p.mouseReleased(); return false; };
 };
 
 // tier filter buttons

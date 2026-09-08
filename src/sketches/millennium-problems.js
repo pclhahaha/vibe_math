@@ -1,7 +1,8 @@
 import p5 from 'p5';const s=(p)=>{
   let __tx = -1e5, __ty = -1e5;
+  p.__touch = false;
   const __sync = () => { if (p.touches && p.touches[0]) { __tx = p.touches[0].x; __ty = p.touches[0].y; } p.mouseX = __tx; p.mouseY = __ty; };
-  p.touchStarted = () => { __sync(); if (typeof p.mousePressed === 'function') p.mousePressed(); return false; };
+  p.touchStarted = () => { p.__touch = true; __sync(); if (typeof p.mousePressed === 'function') p.mousePressed(); return false; };
   p.touchMoved = () => { __sync(); if (typeof p.mouseDragged === 'function') p.mouseDragged(); return false; };
   p.touchEnded = () => { if (typeof p.mouseReleased === 'function') p.mouseReleased(); return false; };
 const names=['P vs NP','Hodge Conjecture','Poincaré Conjecture','Riemann Hyp.','Yang-Mills Gap','Navier-Stokes','BSD Conjecture'];const descs=['Can every NP problem whose solution can be verified quickly also be solved quickly?','Are projective algebraic varieties composed of Hodge cycles? (cohomology)','Is every simply connected closed 3-manifold homeomorphic to S^3? — SOLVED','Do all nontrivial zeros of ζ(s) lie on Re(s)=1/2? (χ² test ongoing)','Does quantum Yang-Mills theory have a mass gap Δ>0?','Do smooth solutions to Navier-Stokes exist for all time in R^3?','Is the rank of elliptic curves equal to the order of L(E,s) at s=1?'];let status=[0,0,2,0,0,0,0];let hoverIdx=-1;const cols=['#f78166','#f78166','#58a6ff','#f78166','#f78166','#f78166','#f78166'];const labels=['open','partial','solved'];p.setup=()=>{

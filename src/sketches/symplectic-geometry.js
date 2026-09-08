@@ -1,7 +1,8 @@
 import p5 from "p5";const s=(p)=>{
   let __tx = -1e5, __ty = -1e5;
+  p.__touch = false;
   const __sync = () => { if (p.touches && p.touches[0]) { __tx = p.touches[0].x; __ty = p.touches[0].y; } p.mouseX = __tx; p.mouseY = __ty; };
-  p.touchStarted = () => { __sync(); if (typeof p.mousePressed === 'function') p.mousePressed(); return false; };
+  p.touchStarted = () => { p.__touch = true; __sync(); if (typeof p.mousePressed === 'function') p.mousePressed(); return false; };
   p.touchMoved = () => { __sync(); if (typeof p.mouseDragged === 'function') p.mouseDragged(); return false; };
   p.touchEnded = () => { if (typeof p.mouseReleased === 'function') p.mouseReleased(); return false; };
 let orbit=[],dragging=false,activePt=null;let pts=[{x:0.3,y:0.5},{x:0.7,y:0.2},{x:-0.5,y:-0.4},{x:-0.2,y:0.7},{x:0.0,y:0.0}];const sc=160;const catX=(x,y)=>{let nx=(x+y)%1;if(nx<0)nx+=1;let ny=(x+2*y)%1;if(ny<0)ny+=1;return{nx,ny};};p.setup=()=>{

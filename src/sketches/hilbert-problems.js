@@ -1,7 +1,8 @@
 import p5 from 'p5';const s=(p)=>{
   let __tx = -1e5, __ty = -1e5;
+  p.__touch = false;
   const __sync = () => { if (p.touches && p.touches[0]) { __tx = p.touches[0].x; __ty = p.touches[0].y; } p.mouseX = __tx; p.mouseY = __ty; };
-  p.touchStarted = () => { __sync(); if (typeof p.mousePressed === 'function') p.mousePressed(); return false; };
+  p.touchStarted = () => { p.__touch = true; __sync(); if (typeof p.mousePressed === 'function') p.mousePressed(); return false; };
   p.touchMoved = () => { __sync(); if (typeof p.mouseDragged === 'function') p.mouseDragged(); return false; };
   p.touchEnded = () => { if (typeof p.mouseReleased === 'function') p.mouseReleased(); return false; };
 const probs=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];const status='Y Y Y P Y P Y N P Y P P P P P P Y Y P P P P P'.split(' ');const titles=[ "Continuum Hypothesis","Consistency of Arithmetic","Equal-volume Tetrahedra","Straight Line = Shortest","Lie Groups Without Differentiability","Axiomatization of Physics","Irrationality/Transcendence of a^b","Riemann Hypothesis","Most General Reciprocity Law","Decision for Diophantine Eq.","Quadratic Forms","Kronecker-Weber Extension","Solution of 7th Degree Eq.","Finite Generation of Invariant Rings","Schubert's Enumerative Geometry","Topology of Algebraic Curves","Sums of Squares Representations","Polyhedra & Crystallographic Groups","Regularity of Calculus Variations","General Boundary Value Problem","Linear Differential Equations","Uniformization of Analytic Relations","Development of Calculus of Variations" ];let hoverIdx=-1,clickedIdx=-1,statusIdx=-1;const cols={Y:'#58a6ff',N:'#f78166',P:'#ffd33d'};p.setup=()=>{
