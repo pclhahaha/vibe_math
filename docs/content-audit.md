@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:04
+生成时间：2026-09-09T00:07
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 49 |
-| 微缺(13-15) | 66 |
+| 完整(16) | 52 |
+| 微缺(13-15) | 63 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -19,10 +19,10 @@
 |---|---|---|
 | set-theory | 4/16 | 〇、一、、关键论文、前置知识 |
 | abstract-algebra | 6/16 | 〇、关键论文 |
-| group-action | 11/16 | 关键论文 |
 | hilbert-problems | 11/16 | 关键论文 |
 | light-cone | 11/16 | 关键论文 |
 | millennium-problems | 11/16 | — |
+| group-action | 12/16 | — |
 | lorentz-transform | 12/16 | 关键论文 |
 | brownian-motion | 13/16 | 关键论文 |
 | entropy | 13/16 | 关键论文 |
@@ -33,7 +33,6 @@
 | qubit-gates | 14/16 | 关键论文 |
 | soul-conjecture | 14/16 | 关键论文 |
 | algebraic-K-theory | 15/16 | 关键论文 |
-| algebraic-topology-homology | 15/16 | 关键论文 |
 | band-structure | 15/16 | 关键论文 |
 | bloch-sphere | 15/16 | 关键论文 |
 | boltzmann | 15/16 | 关键论文 |
@@ -41,7 +40,6 @@
 | category-theory-adjoint | 15/16 | 关键论文 |
 | classical-mechanics | 15/16 | — |
 | cmb | 15/16 | 关键论文 |
-| combinatorics | 15/16 | 关键论文 |
 | commutative-algebra | 15/16 | 关键论文 |
 | convex-geometry | 15/16 | 关键论文 |
 | determinant | 15/16 | 关键论文 |
@@ -53,7 +51,6 @@
 | fundamental-group | 15/16 | — |
 | galois-theory | 15/16 | 关键论文 |
 | geodesic | 15/16 | 关键论文 |
-| geometric-group-theory | 15/16 | 关键论文 |
 | goldbach | 15/16 | 关键论文 |
 | gradient | 15/16 | 关键论文 |
 | gravitational-lens | 15/16 | 关键论文 |
@@ -93,8 +90,10 @@
 | additive-combinatorics | 16/16 | — |
 | algebraic-geometry | 16/16 | — |
 | algebraic-number-theory | 16/16 | — |
+| algebraic-topology-homology | 16/16 | — |
 | bifurcation | 16/16 | — |
 | clt | 16/16 | — |
+| combinatorics | 16/16 | — |
 | complex-dynamics | 16/16 | — |
 | complex-plane | 16/16 | — |
 | contour-integral | 16/16 | — |
@@ -111,6 +110,7 @@
 | forcing-ch | 16/16 | — |
 | fourier-series | 16/16 | — |
 | fourier-transform | 16/16 | — |
+| geometric-group-theory | 16/16 | — |
 | geometric-measure-theory | 16/16 | — |
 | graph-theory | 16/16 | — |
 | higgs-mechanism | 16/16 | — |
