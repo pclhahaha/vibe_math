@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:31
+生成时间：2026-09-09T00:32
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 90 |
-| 微缺(13-15) | 26 |
+| 完整(16) | 92 |
+| 微缺(13-15) | 24 |
 | 中缺(8-12) | 4 |
 | 骨架缺失(<8) | 2 |
 
@@ -17,7 +17,7 @@
 
 | 课程 | 骨架节数/16 | 硬缺口(前置/关联/关键论文/教材/工作题/〇/一) |
 |---|---|---|
-| set-theory | 4/16 | 〇、一、、关键论文、前置知识 |
+| set-theory | 5/16 | 〇、一、、前置知识 |
 | abstract-algebra | 7/16 | 〇 |
 | hilbert-problems | 11/16 | 关键论文 |
 | millennium-problems | 11/16 | — |
@@ -46,8 +46,6 @@
 | qubit-gates | 15/16 | — |
 | riemann-integral | 15/16 | 关键论文 |
 | soul-conjecture | 15/16 | — |
-| svd | 15/16 | 关键论文 |
-| universal-algebra | 15/16 | 关键论文 |
 | variational-calculus | 15/16 | 关键论文 |
 | additive-combinatorics | 16/16 | — |
 | algebraic-geometry | 16/16 | — |
@@ -131,11 +129,13 @@
 | spectral-theorem | 16/16 | — |
 | standard-model | 16/16 | — |
 | surface-topology | 16/16 | — |
+| svd | 16/16 | — |
 | symplectic-geometry | 16/16 | — |
 | thermodynamics | 16/16 | — |
 | turing-machine | 16/16 | — |
 | twin-prime | 16/16 | — |
 | uncertainty | 16/16 | — |
+| universal-algebra | 16/16 | — |
 | y combinator | 16/16 | — |
 | yang-mills-mass-gap | 16/16 | — |
 | zeta | 16/16 | — |
