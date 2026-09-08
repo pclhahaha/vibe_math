@@ -1,13 +1,13 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-08T23:52
+生成时间：2026-09-08T23:59
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 43 |
-| 微缺(13-15) | 72 |
+| 完整(16) | 46 |
+| 微缺(13-15) | 69 |
 | 中缺(8-12) | 5 |
 | 骨架缺失(<8) | 2 |
 
@@ -44,10 +44,7 @@
 | cmb | 15/16 | 关键论文 |
 | combinatorics | 15/16 | 关键论文 |
 | commutative-algebra | 15/16 | 关键论文 |
-| complex-plane | 15/16 | 关键论文 |
-| contour-integral | 15/16 | 关键论文 |
 | convex-geometry | 15/16 | 关键论文 |
-| curvature | 15/16 | 关键论文 |
 | determinant | 15/16 | 关键论文 |
 | differential-topology-morse | 15/16 | 关键论文 |
 | eigenvectors | 15/16 | 关键论文 |
@@ -102,8 +99,11 @@
 | bifurcation | 16/16 | — |
 | clt | 16/16 | — |
 | complex-dynamics | 16/16 | — |
+| complex-plane | 16/16 | — |
+| contour-integral | 16/16 | — |
 | convex-optimization | 16/16 | — |
 | cryptography | 16/16 | — |
+| curvature | 16/16 | — |
 | derivative | 16/16 | — |
 | differential-forms | 16/16 | — |
 | diophantine-approximation | 16/16 | — |
