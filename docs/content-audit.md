@@ -1,14 +1,14 @@
 # Vibe Math 内容体检报告（自动生成 · 勿手改）
 
-生成时间：2026-09-09T00:29
+生成时间：2026-09-09T00:31
 
 ## 概览
 
 | 档位 | 课程数 |
 |---|--:|
-| 完整(16) | 87 |
-| 微缺(13-15) | 28 |
-| 中缺(8-12) | 5 |
+| 完整(16) | 90 |
+| 微缺(13-15) | 26 |
+| 中缺(8-12) | 4 |
 | 骨架缺失(<8) | 2 |
 
 总课程：122
@@ -20,10 +20,10 @@
 | set-theory | 4/16 | 〇、一、、关键论文、前置知识 |
 | abstract-algebra | 7/16 | 〇 |
 | hilbert-problems | 11/16 | 关键论文 |
-| light-cone | 11/16 | 关键论文 |
 | millennium-problems | 11/16 | — |
 | group-action | 12/16 | — |
-| lorentz-transform | 12/16 | 关键论文 |
+| light-cone | 12/16 | — |
+| lorentz-transform | 13/16 | — |
 | brownian-motion | 14/16 | — |
 | entropy | 14/16 | — |
 | godel | 14/16 | — |
@@ -37,11 +37,8 @@
 | fractal | 15/16 | — |
 | functional-analysis | 15/16 | — |
 | fundamental-group | 15/16 | — |
-| gravitational-lens | 15/16 | 关键论文 |
 | higher-category-theory | 15/16 | 关键论文 |
-| lie-algebra | 15/16 | 关键论文 |
 | measure-theory | 15/16 | 关键论文 |
-| navier-stokes | 15/16 | 关键论文 |
 | noncommutative-geometry | 15/16 | 关键论文 |
 | numerical-methods | 15/16 | 教科书与进一步阅读 |
 | operator-algebras | 15/16 | 关键论文 |
@@ -92,6 +89,7 @@
 | goldbach | 16/16 | — |
 | gradient | 16/16 | — |
 | graph-theory | 16/16 | — |
+| gravitational-lens | 16/16 | — |
 | harmonic-oscillator | 16/16 | — |
 | higgs-mechanism | 16/16 | — |
 | high-dim-geometry | 16/16 | — |
@@ -104,12 +102,14 @@
 | knot-invariant | 16/16 | — |
 | laplace-eigenvalue | 16/16 | — |
 | lattice-crypto | 16/16 | — |
+| lie-algebra | 16/16 | — |
 | lie-group-representations | 16/16 | — |
 | linear-transform | 16/16 | — |
 | lorenz-attractor | 16/16 | — |
 | martingales | 16/16 | — |
 | model-theory | 16/16 | — |
 | modular-forms | 16/16 | — |
+| navier-stokes | 16/16 | — |
 | nuclear-physics | 16/16 | — |
 | optics | 16/16 | — |
 | p-adic-numbers | 16/16 | — |
