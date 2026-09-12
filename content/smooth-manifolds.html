@@ -1,0 +1,173 @@
+<section>
+<h3>〇、直觉入门——为什么地球仪配的是"地图册"而不是"一张地图"</h3>
+<p>把整个地球画在一张平面纸上，你一定见过这种图：格陵兰比非洲还大，南极被拉成一条横贯底部的长带。这不是画得不好——<strong>球面根本无法连续、可逆地铺平到平面上</strong>。球面是紧致的，平面不是；拓扑上一个也变不成另一个。</p>
+<p>但只要把地球切成许多小块，每一块都近似平坦：城市地图、省地图、区域图。把它们装订成册，翻到哪一页就用哪一页的坐标——这就是<strong>地图册（atlas）</strong>。相邻两页在重叠区域给出两套坐标，必须能互相换算，而且换算式要足够光滑，否则"沿着走"就会出现断口。</p>
+<p>流形（manifold）就是这套想法的抽象化：<strong>一个空间，局部看起来像 ℝⁿ，整体由一族彼此光滑相容的坐标卡粘起来</strong>。地球仪 → 球面 S²；相空间 → 辛流形；时空 → 洛伦兹流形；机器人的关节角 → 环面 Tⁿ。整条现代几何与物理的语法都从这里开始。</p>
+<div class="key-insight">洞察：流形把"整体弯曲/复杂"与"局部平坦"分开处理。你永远只在局部用 ℝⁿ 做微积分（坐标卡），整体的弯曲与拓扑藏在<strong>转移映射</strong>的相容性里。这就是为什么"切空间""微分形式""联络"都能在任意维数、任意弯曲的空间上定义。</div>
+</section>
+<div class="key-insight" style="border-left-color:#f78166"><strong>⚠️ 背景提示</strong>：本课属于 <strong>核心</strong> 级别，是微分几何与拓扑的共同入口。<p><strong>建议先掌握</strong>：<a href="/pages/gradient.html">梯度与方向导数</a>（多元微积分与全导数）、<a href="/pages/linear-transform.html">线性变换</a>（切空间是线性空间）、<a href="/pages/real-analysis.html">实分析</a>（开集、连续、紧致）。</p></div>
+
+<section>
+<h3>一、一个具体问题——一张地图真的画不完地球吗？</h3>
+<p>试一个"最好"的投影：<strong>球极投影（stereographic projection）</strong>。从北极 N 出发，把球面上的点 P 沿直线 N–P 投到赤道平面上。它保持角度（共形），是制图学里最漂亮的投影之一。可是 P 越靠近 N，投影点跑得越远；P = N 时直线退化成一点，投影"到了无穷远"。所以<strong>这一张图卡覆盖了整个球面，唯独漏掉北极</strong>。</p>
+<p>反过来，从南极再投一次：得到第二张图卡，它覆盖整个球面、唯独漏掉南极。两张图卡合起来，S² 上的每个点至少落在一张里。在两张都覆盖的区域（赤道附近），同一个点有两套坐标 u 与 v，它们之间的关系是</p>
+<div class="formula display" data-tex="v=\frac{u}{|u|^2}\qquad(|u|\ne 0)"></div>
+<p>——单位圆反演，光滑且自逆。于是"两张图卡 + 一个光滑的换算规则"就完整地描述了整个球面。这就是流形定义的原型。</p>
+<p>历史上，Riemann 在 1854 年的就职演讲里第一次把"流形"当作独立于外在空间的抽象对象；1913 年 Weyl 在《黎曼面的理念》中给出了第一个严格的流形定义。此前几何对象总被设想为"嵌在某个 ℝ^N 里"；流形概念的解绑，让广义相对论（时空是 4 维流形，不必嵌入）成为可能。</p>
+</section>
+
+<section>
+<h3>二、先直觉后严格——图卡、图册、转移映射</h3>
+<p><strong>图卡（chart）。</strong> 在流形 M 上取一个开集 U，配一个映射 φ: U → ℝⁿ。要求 φ 是同胚：连续、可逆、逆也连续，把 U 送到 ℝⁿ 的一个开集。φ 就是"这一小块上的坐标系"，n 个分量 (x¹,…,xⁿ) 就是局部坐标。</p>
+<p><strong>图册（atlas）。</strong> 一族图卡 {(U_α, φ_α)}，使得 ⋃U_α = M（覆盖整个空间）。</p>
+<p><strong>转移映射（transition map）。</strong> 两张图卡重叠 U_α∩U_β 上，同一个点有两套坐标。换算是 φ_β∘φ_α⁻¹，定义在 φ_α(U_α∩U_β) ⊂ ℝⁿ 上，取值在 ℝⁿ 中。<strong>光滑相容</strong>要求这个映射是 C^∞ 的。注意：它本身就是 ℝⁿ 中两个开集之间的映射，所以"光滑"是微积分里现成的概念，不需要新的定义。</p>
+<p><strong>为什么必须要求转移映射光滑？</strong> 因为一切计算最终都在坐标里做。"f 在 M 上光滑"要成为一个与图卡无关的性质，就必须让换坐标不破坏光滑性——链式法则正好保证：C^∞ 函数的复合仍是 C^∞。这就是流形定义的动机，而非附加的技术条件。</p>
+<p><strong>拓扑流形</strong>还要加两条：Hausdorff（任意两点可用开集分离）与第二可数（有可数拓扑基）。它们排除病态例子（见第八节），并保证单位分解存在，从而能在流形上积分。</p>
+</section>
+
+<section>
+<h3>三、例题 1——S² 的两张图卡与转移映射（一步步算完）</h3>
+<p><strong>题目。</strong> 单位球面 S² = {(x,y,z) ∈ ℝ³ : x²+y²+z²=1}。取北极 N=(0,0,1)。定义 U_N = S²∖{N}，φ_N(P) = (x/(1−z), y/(1−z))。(a) 验证 φ_N: U_N → ℝ² 是双射并求逆；(b) 对南极同理写出 φ_S；(c) 在重叠区域求 φ_S∘φ_N⁻¹，验证它光滑且自逆。</p>
+<p><strong>(a) 正算。</strong> 设 P=(x,y,z) ∈ S²，P≠N。记 (u,v)=φ_N(P)，即 u=x/(1−z)、v=y/(1−z)。由 x²+y²=1−z²=(1−z)(1+z)，得</p>
+<div class="formula display" data-tex="u^2+v^2=\frac{x^2+y^2}{(1-z)^2}=\frac{(1-z)(1+z)}{(1-z)^2}=\frac{1+z}{1-z}"></div>
+<p>记 r²=u²+v²，则 z=(r²−1)/(r²+1)，进而 1−z = 2/(r²+1)，于是</p>
+<div class="formula display" data-tex="\varphi_N^{-1}(u,v)=\Bigl(\frac{2u}{r^2+1},\ \frac{2v}{r^2+1},\ \frac{r^2-1}{r^2+1}\Bigr),\qquad r^2=u^2+v^2"></div>
+<p>代入可验证 x²+y²+z²=1 且 z≠1，故 φ_N 是到 ℝ² 的双射（对任意 (u,v) 都能解出唯一球面点）。∎</p>
+<p><strong>(b) 南极图卡。</strong> 取 S=(0,0,−1)，U_S=S²∖{S}，对称地定义</p>
+<div class="formula display" data-tex="\varphi_S(x,y,z)=\Bigl(\frac{x}{1+z},\ \frac{y}{1+z}\Bigr)"></div>
+<p>同样的计算给出逆映射，并把 N 送到无穷远。U_N∪U_S = S²，两张图卡就覆盖了整个球面。∎</p>
+<p><strong>(c) 转移映射。</strong> 在重叠 U_N∩U_S（即 z≠±1，等价于 (u,v)≠(0,0)）上，由 (a) 的解：1+z = 2r²/(r²+1)，故</p>
+<div class="formula display" data-tex="\varphi_S\circ\varphi_N^{-1}(u,v)=\Bigl(\frac{x}{1+z},\frac{y}{1+z}\Bigr)=\Bigl(\frac{u}{r^2},\frac{v}{r^2}\Bigr)=\frac{(u,v)}{u^2+v^2}"></div>
+<p>两个分量都是 u,v 的有理函数，分母 r²≠0，故在定义域 ℝ²∖{0} 上 C^∞（实际上解析）。再算一次：把 (u,v) 换成 (u/r², v/r²)，其模平方为 1/r²，再除以它自己得到 (u,v)，所以这个映射<strong>自逆</strong>——正是单位圆反演。∎</p>
+<div class="key-insight">洞察：整张球面只需两幅图卡；重叠区的换算光滑。球面的"弯曲"完全体现在转移映射 (u,v)↦(u,v)/|u|² 里，而每一幅图卡内部都只是普通的 ℝ² 微积分。这就是"局部平坦、整体弯曲"的精确定义。</div>
+</section>
+
+<section>
+<h3>四、例题 2——切空间：不靠"嵌在 ℝ³ 里"，靠微分（一步步算完）</h3>
+<p><strong>题目。</strong> 设 f: ℝ³→ℝ，f(x,y,z)=x²+y²+z²，则 S²=f⁻¹(1)。对 P∈S²，求 T_P S²，并验证它与"过 P 且垂直于半径的平面"一致。</p>
+<p><strong>第一步：算微分。</strong> 全导数（Jacobian）是 1×3 矩阵</p>
+<div class="formula display" data-tex="df_P=(2x,\ 2y,\ 2z),\qquad df_P(v)=2\,P\cdot v"></div>
+<p>由于 P≠0，df_P 是满射（秩 1 = dim ℝ），故 1 是 f 的正则值。隐函数/正则值定理立刻给出：S² 是 2 维光滑流形，并且</p>
+<div class="formula display" data-tex="T_P S^2=\ker df_P=\{\,v\in\mathbb{R}^3:\ P\cdot v=0\,\}"></div>
+<p><strong>第二步：用曲线验证。</strong> 设 γ: (−ε,ε)→S² 光滑、γ(0)=P、γ′(0)=v。对恒等式 f(γ(t))=1 求导：</p>
+<div class="formula display" data-tex="\left.\frac{d}{dt}\right|_{t=0} f(\gamma(t))=df_P(\gamma'(0))=2\,P\cdot v=0"></div>
+<p>所以每条过 P 的球面曲线的速度向量都落在 P^⊥ 里。反过来，给定任意 v⊥P（v≠0），令 γ(t)=cos(t|v|)P + sin(t|v|)\,v/|v|，则 |γ(t)|=1 且 γ′(0)=v。两种定义给出同一个 2 维线性空间。∎</p>
+<p><strong>第三步：与嵌入图像对照。</strong> 在 ℝ³ 里，过 P 且垂直于 P 的平面正是 {P+v : P·v=0}，与上式吻合。但<strong>切空间的定义并不依赖这个平面</strong>：即使流形没有嵌入任何 ℝ^N，我们仍可以用"曲线速度等价类"或"导子"定义 T_P M，再用图卡把它同构到 ℝⁿ。这一步是从"曲面论"跨到"流形论"的关键。</p>
+<p><strong>第四步：换图卡不改变切空间。</strong> 用 φ_N 或 φ_S，P 的坐标不同，但 T_P S² 中同一个向量 v 的坐标表示之间只差一个 Jacobian 矩阵。切向量作为"几何对象"与图卡无关，这正是定义良好的证明。∎</p>
+</section>
+
+<section>
+<h3>五、严格陈述——流形的完整骨架</h3>
+<ul>
+<li><strong>拓扑流形（n 维）。</strong> 第二可数 Hausdorff 空间 M，每点有邻域同胚于 ℝⁿ 的开子集。</li>
+<li><strong>图卡与图册。</strong> 图卡 (U,φ)，φ: U→φ(U)⊂ℝⁿ 同胚；图册是覆盖 M 的图卡族。两图卡 C^∞ 相容 ⟺ φ_β∘φ_α⁻¹ 与 φ_α∘φ_β⁻¹ 在其定义域上光滑。</li>
+<li><strong>光滑流形。</strong> 拓扑流形 + 一个<strong>极大</strong> C^∞ 图册（称光滑结构）。极大性保证"光滑"不依赖人为选择。</li>
+<li><strong>光滑映射。</strong> F: M→N 光滑 ⟺ 对每对图卡 (U,φ)、(V,ψ) 且 F(U)⊂V，ψ∘F∘φ⁻¹ 在 ℝ^m→ℝ^n 上光滑。<strong>微分同胚</strong> = 光滑双射且逆光滑。</li>
+<li><strong>切空间 T_P M。</strong> 三种等价定义：过 P 的曲线模"速度相同"；在 P 处满足 Leibniz 法则的导子 v(fg)=v(f)g(P)+f(P)v(g)；图卡下的 (φ(P),ℝⁿ) 并沿转移映射粘合。三者自然同构。</li>
+<li><strong>微分 dF_P。</strong> 线性映射 T_P M→T_{F(P)}N，在坐标里就是 Jacobian；链式法则 d(G∘F)_P=dG_{F(P)}∘dF_P 是它唯一的公理化定义。</li>
+<li><strong>正则值定理。</strong> 若 F: M→N 光滑，q∈N 是正则值（∀P∈F⁻¹(q)，dF_P 满射），则 F⁻¹(q) 是维数 dim M−dim N 的光滑子流形，且 T_P F⁻¹(q)=ker dF_P。S²=f⁻¹(1) 是它的标准应用。</li>
+<li><strong>单位分解与积分。</strong> 第二可数 + Hausdorff ⟹ 存在从属于任意开覆盖的光滑单位分解；它是"把局部构造拼成整体"的工具，也是定义流形上积分、黎曼度量的前提。</li>
+<li><strong>Whitney 嵌入定理（1936）。</strong> 任何 n 维光滑流形都能嵌入 ℝ^{2n}（可微嵌入），从而抽象流形与 ℝ^N 中的子流形在光滑范畴内等价——但抽象定义让论证不再依赖嵌入。</li>
+</ul>
+</section>
+
+<section>
+<h3>六、关键公式</h3>
+<div class="formula display" data-tex="\varphi_N(x,y,z)=\Bigl(\frac{x}{1-z},\frac{y}{1-z}\Bigr),\qquad \varphi_S(x,y,z)=\Bigl(\frac{x}{1+z},\frac{y}{1+z}\Bigr)"></div>
+<div class="formula display" data-tex="\varphi_N^{-1}(u,v)=\Bigl(\frac{2u}{1+u^2+v^2},\frac{2v}{1+u^2+v^2},\frac{u^2+v^2-1}{1+u^2+v^2}\Bigr)"></div>
+<div class="formula display" data-tex="\varphi_S\circ\varphi_N^{-1}(u,v)=\frac{(u,v)}{u^2+v^2}\qquad(\text{单位圆反演，自逆且光滑})"></div>
+<div class="formula display" data-tex="T_P M=\ker dF_P,\qquad \dim F^{-1}(q)=\dim M-\dim N\quad(q\ \text{正则值})"></div>
+<div class="formula display" data-tex="d(G\circ F)_P=dG_{F(P)}\circ dF_P\qquad(\text{链式法则})"></div>
+<div class="formula display" data-tex="v(fg)=v(f)\,g(P)+f(P)\,v(g)\qquad(\text{导子定义切向量})"></div>
+</section>
+
+<section>
+<h3>七、延伸——流形的现代足迹</h3>
+<ul>
+<li><strong>广义相对论。</strong> 时空是 4 维洛伦兹流形，度规 g 是光滑 (0,2) 张量场，Einstein 方程 G_{μν}=8πT_{μν} 是流形上的张量方程。没有抽象的流形概念，"弯曲时空"无从谈起。→ <a href="/pages/light-cone.html">光锥与因果</a>、<a href="/pages/geodesic.html">测地线</a>。</li>
+<li><strong>规范场论与纤维丛。</strong> 主丛上的联络是 1-形式、曲率是 2-形式；电磁、弱、强相互作用都由流形上的几何语言书写。→ <a href="/pages/fiber-bundle.html">纤维丛</a>、<a href="/pages/differential-forms.html">微分形式</a>。</li>
+<li><strong>李群与对称性。</strong> 李群 = 流形 + 群结构；Lie 代数是单位元处的切空间。→ <a href="/pages/lie-algebra.html">李代数</a>、<a href="/pages/lie-group-representations.html">紧李群表示</a>。</li>
+<li><strong>辛流形与哈密顿力学。</strong> 相空间是辛流形 (M,ω)，哈密顿向量场由 ω 生成。→ <a href="/pages/symplectic-geometry.html">辛几何</a>。</li>
+<li><strong>流形学习。</strong> "高维数据落在低维流形上"（manifold hypothesis）是 ISOMAP、t-SNE、UMAP、自编码器的共同假设；局部线性嵌入直接在数据上估计切空间。→ <a href="/pages/high-dim-geometry.html">高维几何</a>。</li>
+<li><strong>机器人学与控制。</strong> 关节角空间、位姿空间（SE(3)）都是流形，轨迹规划 = 流形上的最优控制。</li>
+</ul>
+</section>
+
+<section>
+<h3>八、反例与陷阱——六个常见误解</h3>
+<p><strong>陷阱 1："局部欧几里得就够了"。</strong> 不够。<strong>长直线（long line）</strong>局部同胚于 ℝ，但不是第二可数的，因此不是流形；没有第二可数就没有单位分解，积分理论崩塌。"局部欧几里得"只是三条要求之一。</p>
+<p><strong>陷阱 2："Hausdorff 是自动的"。</strong> 不是。<strong>双原点直线</strong>：取两条 ℝ，去掉各自的 0，再把两个"除 0 外的所有点"按 x≠0 对应粘起来，得到一条有两个原点的直线。它局部同胚于 ℝ，却不是 Hausdorff（两个原点无法用开集分开），所以不是流形。</p>
+<p><strong>陷阱 3："坐标就是点本身"。</strong> 坐标 (u,v) 是图卡 φ 下的像，换一幅图卡就变。把"P 的坐标"与"P"混为一谈，会在换坐标、切向量变换、张量定义时全面出错。物理里"坐标系无关"的坚持正是这个道理。</p>
+<p><strong>陷阱 4："切向量是箭头"。</strong> 在 ℝⁿ 里切向量可以画成箭头；在抽象流形上它只是"曲线速度的等价类"或"导子"，没有箭头可言。嵌入 ℝ³ 的球面上箭头图像是特例，不是定义。</p>
+<p><strong>陷阱 5："用一张图卡就够了"。</strong> S² 这样紧致且非同胚于 ℝ² 的流形，一张图卡永远不够。即便像 ℝ²∖{0} 这样"平"的空间，也常需要多张图卡来分别描述"洞"的两侧。</p>
+<p><strong>陷阱 6："同胚就同构"。</strong> 在光滑范畴里不是。<strong>怪球（exotic spheres）</strong>：Milnor（1956）发现 7 维球面存在多个彼此不同胚（但都同胚于标准 S⁷）的光滑结构；<strong>ℝ⁴ 更是唯一存在不可数多个互不微分同胚的光滑结构的欧几里得空间</strong>（Donaldson 与 Freedman 的 4 维奇迹）。拓扑相同不代表光滑结构相同。</p>
+</section>
+
+<section>
+<h3>九、当前状态——流形理论的边界与前沿</h3>
+<ol>
+<li><strong>高维拓扑基本完成。</strong> 维数 ≥5 的 Poincaré 猜想由 Smale（1961）解决，4 维由 Freedman（1982）解决，3 维由 Perelman（2002–03）用 Ricci 流解决——庞加莱猜想就此成为定理。</li>
+<li><strong>4 维是永恒的例外。</strong> 4 维流形同时受 Donaldson 的规范论不变量与 Freedman 的拓扑分类约束，存在无穷多怪 ℝ⁴ 与不可光滑化的拓扑流形；4 维光滑 Poincaré 猜想仍未解决。</li>
+<li><strong>光滑结构分类。</strong> 怪球群 Θ_n、Kirby–Siebenmann 不变量、surgery 理论给出高维的近乎完整答案；低维依赖 gauge theory、Floer 同调、Heegaard Floer 等新不变量。</li>
+<li><strong>几何化纲领。</strong> Thurston 的几何化猜想（Perelman 证明）把 3 维流形分解为八种几何的块，是流形结构理论的里程碑。</li>
+<li><strong>与拓扑数据分析、机器学习交汇。</strong> 持久同调、流形学习、离散曲率把流形思想带进数据科学与计算几何；同时"流形假设"本身仍是活跃的经验问题。</li>
+</ol>
+</section>
+
+<section>
+<h3>关键论文</h3>
+<ul>
+<li><strong>Riemann (1854)</strong>：<em>Über die Hypothesen, welche der Geometrie zu Grunde liegen</em>——首次抽象地定义 n 维流形与度规。</li>
+<li><strong>Poincaré (1895)</strong>：<em>Analysis Situs</em>——流形的同调与基本群，拓扑学的奠基之作。</li>
+<li><strong>Weyl (1913)</strong>：<em>Die Idee der Riemannschen Fläche</em>——第一个严格的流形定义，把复分析建立在拓扑之上。</li>
+<li><strong>Whitney (1936)</strong>：<em>Differentiable manifolds</em>——嵌入定理，抽象流形与 ℝ^N 子流形等价。</li>
+<li><strong>Milnor (1956)</strong>：<em>On manifolds homeomorphic to the 7-sphere</em>——怪球，微分拓扑的开端。</li>
+<li><strong>Smale (1961)</strong>：<em>Generalized Poincaré conjecture in dimensions greater than four</em>——h-配边定理与高维庞加莱。</li>
+<li><strong>Donaldson (1983)</strong>：<em>Self-dual connections and the topology of smooth 4-manifolds</em>——规范论颠覆 4 维直觉。</li>
+<li><strong>Perelman (2002–2003)</strong>：<em>Ricci flow with surgery on three-manifolds</em>——3 维庞加莱与几何化。</li>
+</ul>
+</section>
+
+<section>
+<h3>工作题——图卡与切空间的手感</h3>
+<p><strong>题 1（图卡逆映射）。</strong> 从 (u,v)=(x/(1−z), y/(1−z)) 出发，利用 x²+y²=(1−z)(1+z) 推出 φ_N⁻¹ 的公式。</p>
+<p><strong>题 2（转移映射）。</strong> 证明 φ_S∘φ_N⁻¹(u,v)=(u,v)/(u²+v²)，并直接验证它两次复合等于恒等。</p>
+<p><strong>题 3（切空间）。</strong> 对 P=(0,0,1)（北极）求 T_P S²。注意北极不在 φ_N 的定义域内——这说明切空间的定义不依赖某一张特定图卡。</p>
+<p><strong>题 4（正则值）。</strong> 证明 f(x,y,z)=x²+y²−z² 的 0 是正则值当且仅当去掉原点；并描述 f⁻¹(0)∖{0} 是几维流形。</p>
+<p><strong>题 5（S¹ 版本）。</strong> 对单位圆重复例题 1，写出两张图卡与转移映射，并说明它是 1 维流形。</p>
+<details><summary>显示解答</summary>
+<p><strong>题 1</strong>：由 x=u(1−z)、y=v(1−z)，代入 x²+y²=(1+z)(1−z)：r²(1−z)²=(1+z)(1−z)，因 1−z≠0 得 r²(1−z)=1+z，解出 z=(r²−1)/(r²+1)；代回得 x=2u/(r²+1)、y=2v/(r²+1)。∎</p>
+<p><strong>题 2</strong>：在重叠区 1+z=2r²/(r²+1)，故 x/(1+z)=[2u/(r²+1)]·[(r²+1)/(2r²)]=u/r²，y 同理。两次复合：u↦u/r²↦(u/r²)/(r²/r⁴)=u。∎</p>
+<p><strong>题 3</strong>：P=(0,0,1)，df_P(v)=2P·v=2v_z，故 T_P S²={v_z=0}=xy 平面。北极处 φ_N 不可用，但 φ_S 可用（P≠S），算出的切空间相同——切空间是流形的内在对象。∎</p>
+<p><strong>题 4</strong>：df=(2x,2y,−2z)，在原点全为零（不满射）；其余点至少一个分量非零，满射。故 f⁻¹(0)∖{0} 是 3−1=2 维流形——它是锥面去顶点，含两个连通分支（z&gt;0 与 z&lt;0），每支都微分同胚于 ℝ²∖{0}。∎</p>
+<p><strong>题 5</strong>：S¹={(x,y):x²+y²=1}，N=(0,1)，φ_N(x,y)=x/(1−y)∈ℝ，逆 u↦(2u/(1+u²),(u²−1)/(1+u²))；φ_S(x,y)=x/(1+y)；转移 v=1/u，光滑自逆。∎</p>
+</details>
+</section>
+
+<section><h3>试试看——练习与提示</h3>
+<p><strong>试试看 1（看坐标跑到无穷）。</strong> 拖动画布上的 θ 滑块，让 P 从南极慢慢移向北极。观察活跃图卡下的坐标 (u,v)：在北极附近迅速增大，提示"这点不在这张图卡里"。切到另一张图卡，同一区域的坐标立刻变得正常。</p>
+<p><strong>试试看 2（切向量正交）。</strong> 打开切平面显示，拖动 φ 滑块旋转切向量。画布读数 p·v 始终 ≈0，与 T_P S²={P·v=0} 一致——切向量永远落在与半径垂直的平面里。</p>
+<p><strong>试试看 3（换图卡）。</strong> 把 P 放在赤道附近（θ≈π/2），此时两张图卡都有效。读出 u，再切换到南图卡读 v，检验 v≈1/u。这就是转移映射在具体点上的表现。</p>
+<p><strong>试试看 4（与后续课程对照）。</strong> 在 <a href="/pages/geodesic.html">测地线</a> 课里，球面上的测地线是大圆——它们在每点的速度向量都落在切空间里且"不转弯"。在 <a href="/pages/differential-forms.html">微分形式</a> 课里，形式是切空间上的反对称测量器，其定义正需要本课的切空间概念。</p>
+</section>
+
+<section><h3>教科书与进一步阅读</h3>
+<p>&rarr; <strong>J. M. Lee, Introduction to Smooth Manifolds</strong>（现代标准教材；图卡、切空间、单位分解一应俱全）</p>
+<p>&rarr; <strong>L. W. Tu, An Introduction to Manifolds</strong>（更温和、更可计算，适合第一遍）</p>
+<p>&rarr; <strong>M. do Carmo, Differential Geometry of Curves and Surfaces</strong>（先看具体的曲面，再看抽象流形）</p>
+<p>&rarr; <strong>J. Milnor, Topology from the Differentiable Viewpoint</strong>（60 页，用正则值重构微分拓扑）</p>
+<p>&rarr; <strong>M. Spivak, Calculus on Manifolds</strong>（薄而锋利，形式与 Stokes 的经典入口）</p>
+<p>&rarr; <strong>普林斯顿数学指南 Part III（微分几何、微分拓扑条目）</strong>：本项目课程地图的蓝本</p>
+</section>
+<section><h3>前置知识</h3>
+<p>学习本课前，建议先掌握：<a href="/pages/gradient.html">梯度与方向导数</a>、<a href="/pages/linear-transform.html">线性变换</a>、<a href="/pages/real-analysis.html">实分析</a>。</p>
+</section>
+<section><h3>关联课程</h3>
+<p>&rarr; <a href="/pages/geodesic.html">🌐 测地线</a>：流形上的"直线"，其方程用切向量与联络写出。</p>
+<p>&rarr; <a href="/pages/curvature.html">📐 曲率</a>：度量流形弯曲的量化，完全建立在切空间与联络之上。</p>
+<p>&rarr; <a href="/pages/differential-forms.html">🌀 微分形式与外微分</a>：形式是切空间上的反对称测量器，Stokes 定理活在带边流形上。</p>
+<p>&rarr; <a href="/pages/fiber-bundle.html">🧵 纤维丛</a>：把流形逐点粘上向量空间，联络与曲率的舞台。</p>
+<p>&rarr; <a href="/pages/differential-topology-morse.html">⛰️ Morse理论</a>：用光滑函数临界点读流形的拓扑。</p>
+<p>&rarr; <a href="/pages/surface-topology.html">🫓 曲面拓扑：分类与覆盖</a>：2 维流形的完整分类与覆盖空间。</p>
+<p>&rarr; <a href="/pages/lie-group-representations.html">🎻 紧李群表示与 Peter–Weyl</a>：李群 = 流形 + 群，表示论在其上展开。</p>
+</section>

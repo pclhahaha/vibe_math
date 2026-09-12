@@ -26,7 +26,9 @@ for f in glob.glob('src/sketches/*.js'):
         jsfail.append(os.path.basename(f))
 print('js syntax fails:', jsfail or 'none')
 g=json.load(open('public/graph.json',encoding='utf-8')); s=json.load(open('public/search-index.json',encoding='utf-8'))
-print('graph', g['stats'], '| search', len(s))
-ok = not missing and not bad and not jsfail
+prereq=len(g.get('prereq_edges',[]))
+print('graph', g['stats'], '| prereq_edges', prereq, '| search', len(s))
+ok = not missing and not bad and not jsfail and prereq > 0
+if prereq == 0: print('  graph.json missing prereq_edges (knowledge graph will collapse to one row)')
 print('QA:', 'PASS' if ok else 'FAIL')
 sys.exit(0 if ok else 1)

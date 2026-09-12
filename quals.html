@@ -92,6 +92,9 @@
   <div class="prob"><div class="q"><b>题 14</b>（◆）：证明测地线方程（Christoffel 符号形式）。<span class="diff">Geodesic equation</span><span style="color:#484f58">·</span> <a href="/pages/geodesic.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🌐 测地线</a></div>
   <details><summary>显示解答</summary><p>测地线 = 能量泛函 E[γ]=½∫g(γ̇,γ̇)dt 的临界点。变分 δE=0 得 Euler-Lagrange：d/dt(∂L/∂ẋ^μ) − ∂L/∂x^μ = 0，其中 L=½g_{μν}ẋ^μẋ^ν。展开得 ẍ^μ + Γ^μ_{αβ}ẋ^αẋ^β = 0，其中 Christoffel 符号 Γ^μ_{αβ} = ½g^{μσ}(∂_αg_{βσ}+∂_βg_{ασ}−∂_σg_{αβ})。这是测地线的标准方程，也是广义相对论中自由落体的运动方程。</p></details></div>
 
+  <div class="prob"><div class="q"><b>题 15</b>（◆）：证明球极投影的转移映射 φ_S∘φ_N⁻¹(u,v)=(u,v)/(u²+v²) 光滑且自逆，并说明 S² 是 2 维光滑流形。<span class="diff">Transition map</span><span style="color:#484f58">·</span> <a href="/pages/smooth-manifolds.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🗺️ 光滑流形</a></div>
+  <details><summary>显示解答</summary><p>由 φ_N(x,y,z)=(x/(1−z),y/(1−z)) 与其逆 φ_N⁻¹(u,v)=(2u/(1+r²),2v/(1+r²),(r²−1)/(1+r²))（r²=u²+v²），代入 φ_S(x,y,z)=(x/(1+z),y/(1+z))，利用 1+z=2r²/(1+r²) 得 φ_S∘φ_N⁻¹(u,v)=(u/r²,v/r²)。分量为有理函数、分母 r²≠0，故在 ℝ²∖{0} 上 C^∞；两次复合：u↦u/r²↦(u/r²)/(r²/r⁴)=u，自逆。两图卡 U_N=S²∖{N}、U_S=S²∖{S} 覆盖 S²，转移映射光滑，故 {S², (U_N,φ_N), (U_S,φ_S)} 是 2 维光滑图册，S² 为 2 维光滑流形。∎</p></details></div>
+
   <!-- 复分析 -->
   <div class="area"><h2>复分析 <span class="tag">Complex Analysis</span></h2></div>
   <div class="prob"><div class="q"><b>题 15</b>（◆）：证明 f(z)=z̄ 处处不可导。<span class="diff">CR equations</span><span style="color:#484f58">·</span> <a href="/pages/complex-plane.html" style="color:#58a6ff;font-size:.78em;text-decoration:none;margin-left:4px">→ 🔄 复平面与全纯函数</a></div>

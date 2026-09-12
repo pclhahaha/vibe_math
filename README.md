@@ -1,10 +1,10 @@
 # 🌀 Vibe Math
 
-> **交互式数学物理可视化实验室** — 122 门互动课程，从本科微积分到千禧年难题。  
+> **交互式数学物理可视化实验室** — 123 门互动课程，从本科微积分到千禧年难题。  
 > *Drag matrices. Flip spheres. Trace particles. Feel the math.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Lessons](https://img.shields.io/badge/Lessons-122-brightgreen)]()
+[![Lessons](https://img.shields.io/badge/Lessons-123-brightgreen)]()
 [![p5.js](https://img.shields.io/badge/p5.js-v2.3-ED225D)]()
 [![KaTeX](https://img.shields.io/badge/KaTeX-formulas-00C853)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
@@ -110,7 +110,7 @@ npm run build        # 生产构建 → dist/
 ```
 vibe_math/
 ├── index.html / learn.html / quals.html / graph.html   # 主页 · 学习路径 · 资格考试 · 知识图谱
-├── curriculum.json          # 课程元数据（122 门）
+├── curriculum.json          # 课程元数据（123 门）
 ├── content/                 # 课程内容（博士级：证明+反例+工作题+阅读指引）
 ├── src/
 │   ├── sketches/            # 90 个 p5.js 交互画布

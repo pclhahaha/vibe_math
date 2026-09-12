@@ -50,6 +50,19 @@ graph = {
     'stats': {'nodes': len(nodes), 'edges': len(edges)},
 }
 
+# Preserve prerequisite edges written by add_prereqs.py (runs earlier in `npm run gen`).
+# Without this, this script overwrites graph.json and the knowledge graph loses its
+# prerequisite tree (all nodes collapse to depth 0).
+_prev_path = 'public/graph.json'
+if os.path.exists(_prev_path):
+    try:
+        with open(_prev_path, 'r', encoding='utf-8') as f:
+            _prev = json.load(f)
+        if _prev.get('prereq_edges'):
+            graph['prereq_edges'] = _prev['prereq_edges']
+    except (ValueError, OSError):
+        pass
+
 with open('public/graph.json', 'w', encoding='utf-8') as f:
     json.dump(graph, f, ensure_ascii=False)
 

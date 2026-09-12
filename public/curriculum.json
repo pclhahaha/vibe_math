@@ -126,6 +126,15 @@
   "part": "Part 3: 前沿与问题"
  },
  {
+  "id": "smooth-manifolds",
+  "title": "光滑流形",
+  "emoji": "🗺️",
+  "category": "微分几何",
+  "desc": "拖动球面上的点，看两幅图卡如何拼出整个球面",
+  "tier": "★★",
+  "part": "Part 2: 核心"
+ },
+ {
   "id": "geodesic",
   "title": "测地线",
   "emoji": "🌐",

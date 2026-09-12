@@ -141,6 +141,7 @@ PREREQS = {
     'p-vs-np': ['turing-machine', 'godel'],
     'elliptic-curves': ['modular-forms', 'galois-theory', 'representation-theory'],
     'differential-forms': ['gradient', 'riemann-integral', 'contour-integral'],
+    'smooth-manifolds': ['gradient', 'linear-transform', 'real-analysis'],
     'fourier-transform': ['fourier-series', 'riemann-integral', 'complex-plane'],
     'clt': ['probability', 'measure-theory'],
     'hyperbolic-geometry': ['geodesic', 'complex-plane'],
